@@ -574,6 +574,8 @@ Expected: failures — `Cannot find module './Navbar'`.
 
 - [ ] **Step 3: Implement `src/components/Navbar.tsx`**
 
+React Router v6's `NavLink` automatically adds `aria-current="page"` to the active link — no extra wiring needed.
+
 ```tsx
 import { NavLink } from 'react-router-dom';
 
@@ -591,62 +593,8 @@ export default function Navbar({ siteName }: NavbarProps) {
         {siteName}
       </NavLink>
       <div className="flex gap-8">
-        <NavLink to="/cv" className={linkClass} aria-current={undefined}
-          {...({} as Record<string, unknown>)}
-        >
-          {({ isActive }) => (
-            <span aria-current={isActive ? 'page' : undefined}>CV</span>
-          )}
-        </NavLink>
-        <NavLink to="/work" className={linkClass}>
-          {({ isActive }) => (
-            <span aria-current={isActive ? 'page' : undefined}>Work</span>
-          )}
-        </NavLink>
-      </div>
-    </nav>
-  );
-}
-```
-
-Wait — NavLink's render prop doesn't pass `aria-current` through naturally with the above approach. Use a simpler pattern that satisfies the test:
-
-```tsx
-import { NavLink } from 'react-router-dom';
-
-interface NavbarProps {
-  siteName: string;
-}
-
-export default function Navbar({ siteName }: NavbarProps) {
-  return (
-    <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-8 py-5 bg-white border-b border-black">
-      <NavLink to="/work" className="text-sm font-semibold tracking-widest uppercase">
-        {siteName}
-      </NavLink>
-      <div className="flex gap-8">
-        <NavLink
-          to="/cv"
-          aria-current={undefined}
-          className={({ isActive }) =>
-            `text-sm tracking-wide transition-opacity ${isActive ? 'font-semibold' : 'opacity-50 hover:opacity-100'}`
-          }
-        >
-          {({ isActive }) => (
-            <span aria-current={isActive ? 'page' : undefined}>CV</span>
-          )}
-        </NavLink>
-        <NavLink
-          to="/work"
-          aria-current={undefined}
-          className={({ isActive }) =>
-            `text-sm tracking-wide transition-opacity ${isActive ? 'font-semibold' : 'opacity-50 hover:opacity-100'}`
-          }
-        >
-          {({ isActive }) => (
-            <span aria-current={isActive ? 'page' : undefined}>Work</span>
-          )}
-        </NavLink>
+        <NavLink to="/cv" className={linkClass}>CV</NavLink>
+        <NavLink to="/work" className={linkClass}>Work</NavLink>
       </div>
     </nav>
   );
@@ -883,7 +831,7 @@ import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import Work from './Work';
 
-vi.mock('../lib/content', () => ({
+vi.mock('@/lib/content', () => ({
   getAllWorks: vi.fn(() => [
     { slug: 'project-a', title: 'Project A', year: '2024', description: 'Desc A', thumbnail: '' },
     { slug: 'project-b', title: 'Project B', year: '2023', description: 'Desc B', thumbnail: '' },
@@ -999,7 +947,7 @@ import { render, screen } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import WorkItem from './WorkItem';
 
-vi.mock('../lib/content', () => ({
+vi.mock('@/lib/content', () => ({
   getWorkDetail: vi.fn((slug: string) => {
     if (slug === 'project-a') {
       return {
