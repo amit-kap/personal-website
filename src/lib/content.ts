@@ -1,46 +1,33 @@
-import { slugFromPath } from './utils';
-
-export interface WorkMeta {
+export interface ExperienceDetail {
   slug: string;
-  title: string;
-  year: string;
-  description: string;
-  thumbnail: string;
-}
-
-export interface WorkDetail extends WorkMeta {
+  content: string;
   images: string[];
 }
 
-const metaModules = import.meta.glob<{ default: { title: string; year: string; description: string } }>(
-  '../content/works/*/index.json',
+const expContentModules = import.meta.glob<string>(
+  '../content/experience/*/index.md',
+  { query: '?raw', import: 'default', eager: true }
+);
+
+const expImageModules = import.meta.glob<{ default: string }>(
+  '../content/experience/*/*.{jpg,jpeg,png,webp,gif}',
   { eager: true }
 );
 
-const imageModules = import.meta.glob<{ default: string }>(
-  '../content/works/*/*.{jpg,jpeg,png,webp,gif}',
-  { eager: true }
-);
+function slugFromPath(path: string): string {
+  const match = path.match(/experience\/([^/]+)\//);
+  return match ? match[1] : '';
+}
 
 function getImagesForSlug(slug: string): string[] {
-  return Object.entries(imageModules)
-    .filter(([path]) => path.includes(`/works/${slug}/`))
+  return Object.entries(expImageModules)
+    .filter(([path]) => path.includes(`/experience/${slug}/`))
     .sort(([a], [b]) => a.localeCompare(b))
     .map(([, mod]) => mod.default);
 }
 
-export function getAllWorks(): WorkMeta[] {
-  return Object.entries(metaModules).map(([path, mod]) => {
-    const slug = slugFromPath(path);
-    const images = getImagesForSlug(slug);
-    return { slug, ...mod.default, thumbnail: images[0] ?? '' };
-  });
-}
-
-export function getWorkDetail(slug: string): WorkDetail | undefined {
-  const entry = Object.entries(metaModules).find(([path]) => slugFromPath(path) === slug);
+export function getExperienceDetail(slug: string): ExperienceDetail | undefined {
+  const entry = Object.entries(expContentModules).find(([path]) => slugFromPath(path) === slug);
   if (!entry) return undefined;
-  const [, mod] = entry;
-  const images = getImagesForSlug(slug);
-  return { slug, ...mod.default, thumbnail: images[0] ?? '', images };
+  return { slug, content: entry[1], images: getImagesForSlug(slug) };
 }

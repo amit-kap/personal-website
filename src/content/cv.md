@@ -1,17 +1,43 @@
-# Your Name
-**Designer & Developer** · your@email.com · linkedin.com/in/yourhandle
+# Amit Kaplinsky
+**Product Designer** · amitka111@gmail.com · Tel Aviv, Israel
 
 ## Experience
 
-### Senior Designer — Studio Name (2022–Present)
-Brand identity, editorial design, and digital product work for clients across Europe.
+### [Product Design Lead — Stealth Startup (2024–Present)](/experience/stealth-startup)
+Shhhhh....
 
-### Designer — Agency Name (2019–2022)
-Visual identity and campaign design for consumer brands.
+### [Product Design Lead — Onyxia Cyber (2024)](/experience/onyxia-cyber)
+Elevated the product's UX and UI to the highest possible standard, shaping a new experience that customers find highly enjoyable.
+
+### [Product Design Lead — Veriti (2021–2024)](/experience/veriti)
+Initiated from a blank slate, transforming a concept into a vibrant, mature product collaborating with industry-leading talent.
+
+### [UX Team Lead — Semperis (2020–2021)](/experience/semperis)
+Established an in-house design team, transitioning from an outsourced model and aligning UX with fast-paced development.
+
+### [UX Expert — Check Point Software Technologies (2014–2020)](/experience/checkpoint)
+Translated complex technical requirements into intuitive user flows across desktop, web, and mobile.
+
+### [User Experience Designer — VMP International (2010–2014)](/experience/vmp)
+Shaped a B2C platform for automated sales centers, overseeing the full product lifecycle.
+
+### [Freelance Designer & Developer (2000–2009)](/experience/freelance)
+Web design and development, broadcast design, VFX, and animation across a decade of independent work.
 
 ## Education
 
-### BFA Graphic Design — School of Art (2015–2019)
+### Camera Obscura School of Arts
+Diploma, Digital Communication and Media/Multimedia · 1996–2000
 
-## Skills
-Typography · Brand Identity · Art Direction · React · Figma
+### Tel Aviv University
+B.A., Economics · 1994–1996
+
+## Certifications
+
+- Claude Code in Action
+- Generative AI for Everyone
+- Meta Front-End Developer Certificate
+- Figma to Lottie
+- Internet History, Technology, and Security
+- Full Stack Web Development — freeCodeCamp (2017)
+- Programming the .NET Framework — John Bryce (2010–2011)
