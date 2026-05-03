@@ -3,6 +3,9 @@ import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import cvContent from '../content/cv.md?raw'
 import FreeCodeCampIcon from '@/components/FreeCodeCampIcon'
+import CourseraIcon from '@/components/CourseraIcon'
+import LottieIcon from '@/components/LottieIcon'
+import AnthropicIcon from '@/components/AnthropicIcon'
 
 function extractText(node: React.ReactNode): string {
   if (typeof node === 'string') return node
@@ -42,10 +45,19 @@ const components = {
     <ul className="mb-6 space-y-1">{children}</ul>
   ),
   li: ({ children }: { children?: React.ReactNode }) => {
-    const isFCC = extractText(children).includes('freeCodeCamp')
+    const text = extractText(children)
+    const isFCC = text.includes('freeCodeCamp')
+    const isCoursera = text.includes('Coursera')
+    const isLottie = text.includes('Lottie')
+    const isAnthropic = text.includes('Claude Code')
+    const isJohnBryce = text.includes('John Bryce')
     return (
       <li className="text-[14px] leading-7 text-black/60 flex items-center gap-2">
         {isFCC && <FreeCodeCampIcon className="w-6 h-6 shrink-0" />}
+        {isCoursera && <CourseraIcon className="w-6 h-6 shrink-0" />}
+        {isLottie && <LottieIcon className="w-6 h-6 shrink-0" />}
+        {isAnthropic && <AnthropicIcon className="w-6 h-6 shrink-0" />}
+        {isJohnBryce && <img src={`${import.meta.env.BASE_URL}john-bryce.png`} alt="John Bryce" className="h-6 w-auto shrink-0" />}
         {children}
       </li>
     )
@@ -62,6 +74,13 @@ const components = {
         >
           {children}
         </Link>
+      )
+    }
+    if (href?.startsWith('tel:')) {
+      return (
+        <a href={href} className="hover:text-black/50 transition-colors">
+          {children}
+        </a>
       )
     }
     return (
