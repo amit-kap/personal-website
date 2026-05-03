@@ -15,7 +15,7 @@ const components = {
   h1: ({ children }: { children?: React.ReactNode }) => (
     <div className="flex items-center gap-5 sm:gap-6 mb-6">
       <img
-        src="/profile.jpg"
+        src={`${import.meta.env.BASE_URL}profile.jpg`}
         alt="Profile"
         className="w-[72px] h-[72px] sm:w-[88px] sm:h-[88px] shrink-0 object-cover bg-black/[0.06] rounded-full"
       />
