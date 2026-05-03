@@ -7,7 +7,10 @@ import FreeCodeCampIcon from '@/components/FreeCodeCampIcon'
 function extractText(node: React.ReactNode): string {
   if (typeof node === 'string') return node
   if (Array.isArray(node)) return node.map(extractText).join('')
-  if (node && typeof node === 'object' && 'props' in node) return extractText((node as React.ReactElement).props.children)
+  if (node && typeof node === 'object' && 'props' in node) {
+    const el = node as { props: { children?: React.ReactNode } }
+    return extractText(el.props.children)
+  }
   return ''
 }
 
