@@ -1,24 +1,35 @@
 @import '@fontsource/bodoni-moda/400.css';
 @import '@fontsource/bodoni-moda/400-italic.css';
-@import '@fontsource/dm-sans/300.css';
-@import '@fontsource/dm-sans/400.css';
-@import '@fontsource/dm-sans/500.css';
+@import '@fontsource/plus-jakarta-sans/300.css';
+@import '@fontsource/plus-jakarta-sans/400.css';
+@import '@fontsource/plus-jakarta-sans/500.css';
+@import '@fontsource/plus-jakarta-sans/700.css';
 @import "tailwindcss";
 @import "shadcn/tailwind.css";
+@import "lenis/dist/lenis.css";
 
 @theme {
-  --font-sans: 'DM Sans', ui-sans-serif, system-ui, sans-serif;
+  --font-sans: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
   --font-heading: 'Bodoni Moda', Georgia, serif;
+  --font-mono: ui-monospace, 'SFMono-Regular', Menlo, monospace;
 }
 
 @keyframes fade-up {
-  from { opacity: 0; transform: translateY(20px); }
+  from { opacity: 0; transform: translateY(16px); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 @layer utilities {
   .animate-fade-up {
-    animation: fade-up 0.65s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+    animation: fade-up 0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+  }
+  .animate-fade-in {
+    animation: fade-in 0.3s ease both;
   }
 }
 

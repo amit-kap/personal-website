@@ -3,8 +3,8 @@ import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import path from 'path'
 
-export default defineConfig({
-  base: '/personal-website/',
+export default defineConfig(({ command }) => ({
+  base: command === 'serve' ? '/' : '/personal-website/',
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {
@@ -16,4 +16,4 @@ export default defineConfig({
     setupFiles: ['./src/test/setup.ts'],
     globals: true,
   },
-})
+}))

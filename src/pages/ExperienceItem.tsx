@@ -6,31 +6,31 @@ import { getExperienceDetail } from '@/lib/content'
 
 const components = {
   h1: ({ children }: { children?: React.ReactNode }) => (
-    <h1 className="font-heading text-5xl sm:text-6xl md:text-7xl font-normal italic leading-none tracking-tight mb-6">
+    <h1 className="text-[24px] sm:text-[30px] font-medium tracking-tight leading-tight mb-2">
       {children}
     </h1>
   ),
   h2: ({ children }: { children?: React.ReactNode }) => (
-    <h2 className="text-[10px] font-medium uppercase tracking-[0.25em] mt-12 sm:mt-16 mb-5 pb-3 border-b border-black/20 text-black/60">
+    <h2 className="text-[10px] font-mono uppercase tracking-[0.25em] mt-12 mb-5 pb-3 border-b border-black/10 text-black/35">
       {children}
     </h2>
   ),
   h3: ({ children }: { children?: React.ReactNode }) => (
-    <h3 className="text-[15px] font-medium mb-0.5">{children}</h3>
+    <h3 className="text-[14px] font-medium mb-0.5">{children}</h3>
   ),
   p: ({ children }: { children?: React.ReactNode }) => (
-    <p className="text-[14px] leading-7 mb-4 text-black/60">{children}</p>
+    <p className="text-[14px] leading-7 mb-4 text-black/55">{children}</p>
   ),
   ul: ({ children }: { children?: React.ReactNode }) => (
     <ul className="mb-6 space-y-1">{children}</ul>
   ),
   li: ({ children }: { children?: React.ReactNode }) => (
-    <li className="text-[14px] leading-7 text-black/60 flex gap-3 items-baseline">
+    <li className="text-[14px] leading-7 text-black/55">
       <span>{children}</span>
     </li>
   ),
   strong: ({ children }: { children?: React.ReactNode }) => (
-    <strong className="font-medium text-black/80">{children}</strong>
+    <strong className="font-medium text-black/75">{children}</strong>
   ),
 }
 
@@ -53,76 +53,78 @@ export default function ExperienceItem() {
 
   if (!exp) {
     return (
-      <div className="max-w-2xl mx-auto px-8 pt-24 pb-24">
-        <Link to="/" className="text-[11px] uppercase tracking-[0.18em] text-black/35 hover:text-black transition-colors duration-300">
-          ←
-        </Link>
-        <p className="text-[14px] text-black/50 mt-8">Experience item not found.</p>
+      <div className="relative z-10 min-h-screen bg-white">
+        <div className="max-w-xl mx-auto px-5 sm:px-8 pt-24 pb-24">
+          <p className="text-[14px] text-black/40">Experience item not found.</p>
+        </div>
       </div>
     )
   }
 
   return (
     <>
-      <article className="max-w-2xl mx-auto px-6 sm:px-8 pt-14 sm:pt-20 md:pt-24 pb-16 sm:pb-24 animate-fade-up">
-        <Link
-          to="/"
-          className="text-[11px] uppercase tracking-[0.18em] text-black/35 hover:text-black transition-colors duration-300"
-        >
-          ← Back
-        </Link>
+      <div className="relative z-10 min-h-screen bg-white">
+        <article className="px-5 sm:px-8 pb-20 animate-fade-up" style={{ paddingTop: '5.75rem' }}>
+          <div className="grid md:grid-cols-12 gap-10 md:gap-16">
+            <div className={`${exp.images.length > 0 ? 'md:col-span-5' : 'md:col-span-12'} order-1`}>
+              <div className={exp.images.length > 0 ? 'md:sticky' : ''} style={exp.images.length > 0 ? { top: '5.75rem' } : undefined}>
+                <Link
+                  to="/"
+                  className="inline-block text-[11px] font-mono uppercase tracking-[0.2em] text-black/30 hover:text-black transition-colors duration-200 mb-10"
+                >
+                  ← Back
+                </Link>
+                <ReactMarkdown remarkPlugins={[remarkGfm]} components={components}>
+                  {exp.content}
+                </ReactMarkdown>
+              </div>
+            </div>
 
-        <div className="mt-10 sm:mt-16">
-          <ReactMarkdown remarkPlugins={[remarkGfm]} components={components}>
-            {exp.content}
-          </ReactMarkdown>
-        </div>
-
-        {exp.images.length > 0 && (
-          <div className="flex flex-col gap-6 mt-8">
-            {exp.images.map((src, i) => (
-              <img
-                key={src}
-                src={src}
-                alt={`Image ${i + 1}`}
-                className="w-full block cursor-pointer"
-                onClick={() => setLightboxIndex(i)}
-              />
-            ))}
+            {exp.images.length > 0 ? (
+              <div className="md:col-span-7 order-2 flex flex-col gap-5">
+                {exp.images.map((src, i) => (
+                  <img
+                    key={src}
+                    src={src}
+                    alt={`Image ${i + 1}`}
+                    className="w-full block cursor-pointer rounded-[6px]"
+                    loading={i === 0 ? 'eager' : 'lazy'}
+                    onClick={() => setLightboxIndex(i)}
+                  />
+                ))}
+              </div>
+            ) : null}
           </div>
-        )}
-      </article>
+        </article>
+      </div>
 
       {lightboxIndex !== null && (
         <div
-          className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center"
+          className="fixed inset-0 bg-black/85 z-50 flex items-center justify-center"
           onClick={() => setLightboxIndex(null)}
         >
           <button
-            className="absolute top-4 right-5 text-white/50 hover:text-white text-3xl leading-none transition-colors"
+            className="absolute top-4 right-5 text-white/40 hover:text-white text-3xl leading-none transition-colors"
             onClick={() => setLightboxIndex(null)}
             aria-label="Close"
           >
             ×
           </button>
-
           <button
-            className="absolute left-4 text-white/50 hover:text-white text-3xl leading-none transition-colors select-none px-2"
+            className="absolute left-4 text-white/40 hover:text-white text-3xl leading-none transition-colors select-none px-2"
             onClick={(e) => { e.stopPropagation(); setLightboxIndex(i => ((i ?? 0) - 1 + exp.images.length) % exp.images.length) }}
             aria-label="Previous"
           >
             ‹
           </button>
-
           <img
             src={exp.images[lightboxIndex]}
             alt={`Image ${lightboxIndex + 1}`}
-            className="w-[90vw] max-h-[90vh] object-contain"
+            className="max-w-[90vw] max-h-[90vh] object-contain"
             onClick={(e) => e.stopPropagation()}
           />
-
           <button
-            className="absolute right-4 text-white/50 hover:text-white text-3xl leading-none transition-colors select-none px-2"
+            className="absolute right-4 text-white/40 hover:text-white text-3xl leading-none transition-colors select-none px-2"
             onClick={(e) => { e.stopPropagation(); setLightboxIndex(i => ((i ?? 0) + 1) % exp.images.length) }}
             aria-label="Next"
           >

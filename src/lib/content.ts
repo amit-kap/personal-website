@@ -31,3 +31,7 @@ export function getExperienceDetail(slug: string): ExperienceDetail | undefined 
   if (!entry) return undefined;
   return { slug, content: entry[1], images: getImagesForSlug(slug) };
 }
+
+export function getCoverImage(slug: string, index = 0): string | undefined {
+  return getImagesForSlug(slug)[index];
+}
