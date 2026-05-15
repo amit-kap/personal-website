@@ -38,12 +38,21 @@ export default function ExperienceItem() {
   const { slug } = useParams<{ slug: string }>()
   const exp = getExperienceDetail(slug ?? '')
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null)
+  const [closing, setClosing] = useState(false)
+
+  const closeLightbox = () => {
+    setClosing(true)
+    setTimeout(() => {
+      setLightboxIndex(null)
+      setClosing(false)
+    }, 200)
+  }
 
   useEffect(() => {
     if (lightboxIndex === null || !exp) return
     const total = exp.images.length
     const handleKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setLightboxIndex(null)
+      if (e.key === 'Escape') closeLightbox()
       else if (e.key === 'ArrowRight') setLightboxIndex(i => ((i ?? 0) + 1) % total)
       else if (e.key === 'ArrowLeft') setLightboxIndex(i => ((i ?? 0) - 1 + total) % total)
     }
@@ -100,12 +109,12 @@ export default function ExperienceItem() {
 
       {lightboxIndex !== null && (
         <div
-          className="fixed inset-0 bg-black/85 z-50 flex items-center justify-center"
-          onClick={() => setLightboxIndex(null)}
+          className={`fixed inset-0 bg-black/85 z-50 flex items-center justify-center ${closing ? 'animate-fade-out' : 'animate-fade-in'}`}
+          onClick={closeLightbox}
         >
           <button
             className="absolute top-4 right-5 text-white/40 hover:text-white text-3xl leading-none transition-colors"
-            onClick={() => setLightboxIndex(null)}
+            onClick={closeLightbox}
             aria-label="Close"
           >
             ×
@@ -118,9 +127,10 @@ export default function ExperienceItem() {
             ‹
           </button>
           <img
+            key={lightboxIndex}
             src={exp.images[lightboxIndex]}
             alt={`Image ${lightboxIndex + 1}`}
-            className="max-w-[90vw] max-h-[90vh] object-contain"
+            className={`max-w-[90vw] max-h-[90vh] object-contain ${closing ? 'animate-zoom-out' : 'animate-zoom-in'}`}
             onClick={(e) => e.stopPropagation()}
           />
           <button

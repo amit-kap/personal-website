@@ -12,13 +12,13 @@ const experiences = [
 
 function Section({ label, children }: { label: string; children: React.ReactNode }) {
   return (
-    <section className="grid md:grid-cols-12 gap-6 md:gap-16 py-16 border-t border-black/10">
-      <div className="md:col-span-6">
+    <section className="grid md:grid-cols-12 gap-10 md:gap-16 py-16 border-t border-black/10">
+      <div className="md:col-span-5">
         <h2 className="text-[17px] font-mono uppercase tracking-[0.25em] text-black/35">
           {label}
         </h2>
       </div>
-      <div className="md:col-span-6">{children}</div>
+      <div className="md:col-span-7">{children}</div>
     </section>
   )
 }

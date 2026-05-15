@@ -24,12 +24,36 @@
   to { opacity: 1; }
 }
 
+@keyframes fade-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes zoom-in {
+  from { opacity: 0; transform: scale(0.96); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes zoom-out {
+  from { opacity: 1; transform: scale(1); }
+  to { opacity: 0; transform: scale(0.96); }
+}
+
 @layer utilities {
   .animate-fade-up {
     animation: fade-up 0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
   }
   .animate-fade-in {
-    animation: fade-in 0.3s ease both;
+    animation: fade-in 0.25s ease both;
+  }
+  .animate-fade-out {
+    animation: fade-out 0.2s ease both;
+  }
+  .animate-zoom-in {
+    animation: zoom-in 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+  .animate-zoom-out {
+    animation: zoom-out 0.2s cubic-bezier(0.65, 0, 0.35, 1) both;
   }
 }
 
