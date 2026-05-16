@@ -39,6 +39,11 @@
   to { opacity: 0; transform: scale(0.96); }
 }
 
+@keyframes slide-down-in {
+  from { opacity: 0; transform: translateY(-100%); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 @layer utilities {
   .animate-fade-up {
     animation: fade-up 0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
@@ -54,6 +59,9 @@
   }
   .animate-zoom-out {
     animation: zoom-out 0.2s cubic-bezier(0.65, 0, 0.35, 1) both;
+  }
+  .animate-slide-down-in {
+    animation: slide-down-in 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
   }
 }
 

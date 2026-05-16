@@ -8,7 +8,7 @@ export default function Work() {
       <main className="flex-1 pt-14">
         {/* Intro */}
         <div className="px-5 sm:px-8 pt-16 sm:pt-24 pb-10 sm:pb-16">
-          <p className="text-[22px] sm:text-[28px] md:text-[32px] leading-[1.2] tracking-[-0.03em] font-normal text-black max-w-2xl">
+          <p className="text-[22px] sm:text-[28px] md:text-[32px] leading-[1.2] tracking-[-0.03em] font-normal text-black max-w-2xl animate-fade-up">
             <span className="font-bold">Amit Kaplinsky</span> is a Product Designer with 25 years of experience crafting enterprise software that people actually enjoy using.
           </p>
         </div>
