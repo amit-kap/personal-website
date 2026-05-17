@@ -2,7 +2,7 @@ import { useParams, Link } from 'react-router-dom'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import { getWritingDetail } from '@/lib/content'
-import { getPostMeta } from '@/content/writing/posts'
+import { getPostMeta } from '@/content/posts'
 
 const components = (images: Record<string, string>) => ({
   // h1 is intentionally suppressed — the title is already shown in the sticky meta column

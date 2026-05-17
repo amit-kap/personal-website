@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { posts } from '@/content/writing/posts'
+import { posts } from '@/content/posts'
 
 export default function Writing() {
   return (
