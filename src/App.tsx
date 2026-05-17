@@ -7,6 +7,8 @@ import Work from '@/pages/Work'
 import About from '@/pages/About'
 import Playground from '@/pages/Playground'
 import ExperienceItem from '@/pages/ExperienceItem'
+import Writing from '@/pages/Writing'
+import WritingPost from '@/pages/WritingPost'
 
 export default function App() {
   const location = useLocation()
@@ -56,6 +58,8 @@ export default function App() {
           <Route path="/" element={<Work />} />
           <Route path="/about" element={<About />} />
           <Route path="/playground" element={<Playground />} />
+          <Route path="/writing" element={<Writing />} />
+          <Route path="/writing/:slug" element={<WritingPost />} />
           <Route path="/experience/:slug" element={<ExperienceItem />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>

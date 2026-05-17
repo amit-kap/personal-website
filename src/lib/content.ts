@@ -35,3 +35,42 @@ export function getExperienceDetail(slug: string): ExperienceDetail | undefined 
 export function getCoverImage(slug: string, index = 0): string | undefined {
   return getImagesForSlug(slug)[index];
 }
+
+// ---- Writing ----
+
+export interface WritingDetail {
+  slug: string;
+  content: string;
+  images: Record<string, string>;
+}
+
+const writingContentModules = import.meta.glob<string>(
+  '../content/writing/*/index.md',
+  { query: '?raw', import: 'default', eager: true }
+);
+
+const writingImageModules = import.meta.glob<{ default: string }>(
+  '../content/writing/*/*.{jpg,jpeg,png,webp,gif,svg}',
+  { eager: true }
+);
+
+function writingSlugFromPath(path: string): string {
+  const m = path.match(/writing\/([^/]+)\//);
+  return m ? m[1] : '';
+}
+
+function writingImagesMap(slug: string): Record<string, string> {
+  const map: Record<string, string> = {};
+  for (const [path, mod] of Object.entries(writingImageModules)) {
+    if (!path.includes(`/writing/${slug}/`)) continue;
+    const filename = path.split('/').pop();
+    if (filename) map[filename] = mod.default;
+  }
+  return map;
+}
+
+export function getWritingDetail(slug: string): WritingDetail | undefined {
+  const entry = Object.entries(writingContentModules).find(([p]) => writingSlugFromPath(p) === slug);
+  if (!entry) return undefined;
+  return { slug, content: entry[1], images: writingImagesMap(slug) };
+}
