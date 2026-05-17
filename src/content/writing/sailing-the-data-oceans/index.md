@@ -1,9 +1,5 @@
 # Sailing the Data Oceans
 
-### Or how we assisted our users in maximizing the use of our product
-
-![Cover](cover-image.webp)
-
 ### Filtering for better user experience
 
 ---

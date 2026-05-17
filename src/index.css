@@ -65,6 +65,16 @@
   }
 }
 
+.prose-figures {
+  counter-reset: figure;
+}
+.prose-figures .prose-figure {
+  counter-increment: figure;
+}
+.prose-figures .prose-figure figcaption::before {
+  content: 'Fig. ' counter(figure, decimal-leading-zero);
+}
+
 @theme inline {
   --font-heading: 'Bodoni Moda', Georgia, serif;
   --color-ring: var(--ring);
