@@ -9,6 +9,14 @@ export interface PostMeta {
 
 export const posts: PostMeta[] = [
   {
+    slug: 'designing-for-the-supervisor',
+    title: 'Designing for the Supervisor',
+    subtitle: 'Or how we reframed TPRM around the agent doing the work',
+    excerpt: 'Reframing TPRM software around the agent that does the work — from competitor scan to design direction.',
+    date: '2026',
+    readMin: 6,
+  },
+  {
     slug: 'sailing-the-data-oceans',
     title: 'Sailing the Data Oceans',
     subtitle: 'Or how we assisted our users in maximizing the use of our product',
