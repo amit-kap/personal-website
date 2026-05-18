@@ -36,6 +36,13 @@ export function getCoverImage(slug: string, index = 0): string | undefined {
   return getImagesForSlug(slug)[index];
 }
 
+export function getAllExperienceImages(): Array<{ slug: string; src: string }> {
+  return Object.entries(expImageModules).map(([path, mod]) => ({
+    slug: slugFromPath(path),
+    src: mod.default,
+  }));
+}
+
 // ---- Writing ----
 
 export interface WritingDetail {

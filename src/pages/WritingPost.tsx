@@ -44,7 +44,7 @@ const components = (images: Record<string, string>) => ({
       : src
     return (
       <figure className="my-8 prose-figure">
-        <img src={resolved} alt={alt ?? ''} className="w-full rounded-[6px]" loading="lazy" />
+        <img src={resolved} alt={alt ?? ''} className="w-full rounded-[6px] border border-black/[0.05]" loading="lazy" />
         <figcaption className="text-[12px] font-mono uppercase tracking-[0.15em] text-black/40 mt-3 text-center">
           {alt ? ` — ${alt}` : null}
         </figcaption>
@@ -80,7 +80,7 @@ export default function WritingPost() {
       <article className="px-5 sm:px-8 pb-20 animate-fade-up" style={{ paddingTop: '5.75rem' }}>
         <div className="grid md:grid-cols-12 gap-10 md:gap-16">
           <div className="md:col-span-5 order-1">
-            <div className="md:sticky relative overflow-hidden rounded-[6px]" style={{ top: '5.75rem' }}>
+            <div className="md:sticky relative overflow-hidden rounded-[6px] border border-black/[0.05]" style={{ top: '5.75rem' }}>
               {cover && (
                 <>
                   <div

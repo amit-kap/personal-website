@@ -23,7 +23,7 @@ const components = {
       <img
         src={`${import.meta.env.BASE_URL}profile.jpg`}
         alt="Profile"
-        className="w-[72px] h-[72px] sm:w-[88px] sm:h-[88px] shrink-0 object-cover bg-black/[0.06] rounded-full"
+        className="w-[72px] h-[72px] sm:w-[88px] sm:h-[88px] shrink-0 object-cover bg-black/[0.06] rounded-full border border-black/[0.05]"
       />
       <h1 className="font-heading text-5xl sm:text-6xl md:text-7xl font-normal italic leading-none tracking-tight">
         {children}

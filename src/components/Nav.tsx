@@ -1,5 +1,5 @@
 import { useState, useRef, useLayoutEffect, useEffect } from 'react'
-import { NavLink, useLocation } from 'react-router-dom'
+import { Link, NavLink, useLocation } from 'react-router-dom'
 
 const links = [
   { to: '/', label: 'Work' },
@@ -41,59 +41,80 @@ export default function Nav() {
   return (
     <>
       <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-5 sm:px-8 h-14 animate-slide-down-in">
-        {/* Desktop: pill container */}
-        <div className="hidden md:flex items-center bg-neutral-100 rounded-full px-1 py-1 relative">
-          {/* Sliding indicator */}
-          <div
-            className="absolute top-1 bottom-1 bg-white rounded-full shadow-sm transition-all duration-200 ease-out pointer-events-none"
-            style={{ left: pill.left, width: pill.width }}
+        {/* Left: avatar + name */}
+        <Link
+          to="/"
+          className="flex items-center gap-3 hover:opacity-70 transition-opacity"
+          aria-label="Home"
+        >
+          <img
+            src={`${import.meta.env.BASE_URL}profile.jpg`}
+            alt="Amit Kaplinsky"
+            className="h-8 w-8 rounded-full object-cover"
           />
-          {links.map(({ to, label }, i) => {
-            const active = to === '/' ? isWorkActive : location.pathname.startsWith(to)
-            return (
-              <div key={to} ref={el => { itemRefs.current[i] = el }} className="relative z-10">
-                <NavLink
-                  to={to}
-                  end={to === '/'}
-                  className={() =>
-                    `text-[13px] px-3.5 py-1.5 rounded-full transition-colors duration-200 block ${
-                      active ? 'text-black' : 'text-black/45 hover:text-black'
-                    }`
-                  }
-                >
-                  {label}
-                </NavLink>
-              </div>
-            )
-          })}
+          <span className="text-[13px] font-medium text-black whitespace-nowrap">
+            Amit Kaplinsky
+          </span>
+        </Link>
+
+        {/* Center: pill (desktop only, absolutely centered) */}
+        <div className="hidden md:block absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+          <div className="flex items-center bg-neutral-100 rounded-full px-1 py-1 relative">
+            {/* Sliding indicator */}
+            <div
+              className="absolute top-1 bottom-1 bg-white rounded-full shadow-sm transition-all duration-200 ease-out pointer-events-none"
+              style={{ left: pill.left, width: pill.width }}
+            />
+            {links.map(({ to, label }, i) => {
+              const active = to === '/' ? isWorkActive : location.pathname.startsWith(to)
+              return (
+                <div key={to} ref={el => { itemRefs.current[i] = el }} className="relative z-10">
+                  <NavLink
+                    to={to}
+                    end={to === '/'}
+                    className={() =>
+                      `text-[13px] px-3.5 py-1.5 rounded-full transition-colors duration-200 block ${
+                        active ? 'text-black' : 'text-black/45 hover:text-black'
+                      }`
+                    }
+                  >
+                    {label}
+                  </NavLink>
+                </div>
+              )
+            })}
+          </div>
         </div>
 
-        {/* Mobile hamburger */}
-        <button
-          className="md:hidden flex flex-col gap-[5px] py-2 pr-2"
-          onClick={() => setOpen(true)}
-          aria-label="Open menu"
-        >
-          <span className="block w-5 h-px bg-black/70" />
-          <span className="block w-5 h-px bg-black/70" />
-          <span className="block w-5 h-px bg-black/70" />
-        </button>
+        {/* Right: Contact + mobile hamburger */}
+        <div className="flex items-center gap-2">
+          {/* Desktop: Contact button */}
+          <a
+            href="mailto:amitka111@gmail.com"
+            className="hidden md:flex items-center px-4 py-2 bg-black text-white text-[12px] rounded-full hover:bg-black/75 transition-colors duration-200"
+          >
+            Contact
+          </a>
 
-        {/* Desktop: Contact button */}
-        <a
-          href="mailto:amitka111@gmail.com"
-          className="hidden md:flex items-center px-4 py-2 bg-black text-white text-[12px] rounded-full hover:bg-black/75 transition-colors duration-200"
-        >
-          Contact
-        </a>
+          {/* Mobile: Contact link */}
+          <a
+            href="mailto:amitka111@gmail.com"
+            className="md:hidden px-4 py-1.5 bg-black text-white text-[12px] rounded-full"
+          >
+            Contact
+          </a>
 
-        {/* Mobile: Contact link */}
-        <a
-          href="mailto:amitka111@gmail.com"
-          className="md:hidden px-4 py-1.5 bg-black text-white text-[12px] rounded-full"
-        >
-          Contact
-        </a>
+          {/* Mobile hamburger */}
+          <button
+            className="md:hidden flex flex-col gap-[5px] py-2 pl-1"
+            onClick={() => setOpen(true)}
+            aria-label="Open menu"
+          >
+            <span className="block w-5 h-px bg-black/70" />
+            <span className="block w-5 h-px bg-black/70" />
+            <span className="block w-5 h-px bg-black/70" />
+          </button>
+        </div>
       </nav>
 
       {/* Mobile overlay */}

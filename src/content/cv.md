@@ -4,7 +4,7 @@
 
 ## Experience
 
-### [Product Design Lead — Stealth Startup (2024–Present)](/experience/stealth-startup)
+### [Product Design Lead — Shift (2024–Present)](/experience/shift)
 
 Shhhhh....
 

@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 
 const experiences = [
-  { slug: 'stealth-startup', company: 'Stealth Startup', role: 'Product Design Lead', period: '2024–Present', hasImages: false },
+  { slug: 'shift', company: 'Shift', role: 'Product Design Lead', period: '2024–Present', hasImages: true },
   { slug: 'onyxia-cyber', company: 'Onyxia Cyber', role: 'Product Design Lead', period: '2024', hasImages: true },
   { slug: 'veriti', company: 'Veriti', role: 'Product Design Lead', period: '2021–2024', hasImages: true },
   { slug: 'semperis', company: 'Semperis', role: 'UX Team Lead', period: '2020–2021', hasImages: false },
@@ -14,7 +14,7 @@ function Section({ label, children }: { label: string; children: React.ReactNode
   return (
     <section className="grid md:grid-cols-12 gap-10 md:gap-16 py-16 border-t border-black/10">
       <div className="md:col-span-5">
-        <h2 className="text-[17px] font-mono uppercase tracking-[0.25em] text-black/35">
+        <h2 className="text-[11px] font-mono uppercase tracking-[0.25em] text-black/35">
           {label}
         </h2>
       </div>
@@ -31,28 +31,25 @@ export default function About() {
 
           <Section label="About">
             <div className="space-y-5">
-              <h1 className="text-[24px] sm:text-[30px] font-medium tracking-tight leading-tight">
-                Amit Kaplinsky
-              </h1>
-              <p className="text-[17px] leading-8 text-black">
-                Product Designer based in Tel Aviv with over two decades of experience crafting enterprise software that people actually enjoy using.
+              <p className="text-[19px] leading-8 tracking-[-0.01em] text-black">
+                Tel Aviv. A decade designing enterprise software, mostly cybersecurity, mostly 0→1.
               </p>
-              <p className="text-[17px] leading-8 text-black">
-                I've led design at cybersecurity companies including Onyxia Cyber, Veriti, Semperis, and Check Point — turning complex security problems into clear, intuitive interfaces.
+              <p className="text-[19px] leading-8 tracking-[-0.01em] text-black">
+                Led design at Onyxia Cyber, Veriti, Semperis, and Check Point. Currently at Shift — AI-powered vendor security, designed from zero.
               </p>
-              <p className="text-[17px] leading-8 text-black">
-                I care about details, structure, and shipping work that earns its place.
+              <p className="text-[19px] leading-8 tracking-[-0.01em] text-black">
+                Product designer and AI builder by trade. I care about details, structure, and shipping work that earns its place.
               </p>
               <div className="grid grid-cols-2 gap-4 mt-8">
                 <img
                   src={`${import.meta.env.BASE_URL}profile.jpg`}
                   alt="Amit Kaplinsky"
-                  className="w-full aspect-square object-cover rounded-[6px] bg-black/[0.04]"
+                  className="w-full aspect-square object-cover rounded-[6px] bg-black/[0.04] border border-black/[0.05]"
                 />
                 <img
                   src={`${import.meta.env.BASE_URL}tel-aviv.jpg`}
                   alt="Tel Aviv"
-                  className="w-full aspect-square object-cover rounded-[6px] bg-black/[0.04]"
+                  className="w-full aspect-square object-cover rounded-[6px] bg-black/[0.04] border border-black/[0.05]"
                 />
               </div>
             </div>

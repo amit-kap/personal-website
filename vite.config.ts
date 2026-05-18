@@ -6,6 +6,10 @@ import path from 'path'
 export default defineConfig(({ command }) => ({
   base: command === 'serve' ? '/' : '/personal-website/',
   plugins: [react(), tailwindcss()],
+  server: {
+    port: 5175,
+    strictPort: true,
+  },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),

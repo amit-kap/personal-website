@@ -96,7 +96,7 @@ export default function ExperienceItem() {
                     key={src}
                     src={src}
                     alt={`Image ${i + 1}`}
-                    className="w-full block cursor-pointer rounded-[6px]"
+                    className="w-full block cursor-pointer rounded-[6px] border border-black/[0.05]"
                     loading={i === 0 ? 'eager' : 'lazy'}
                     onClick={() => setLightboxIndex(i)}
                   />
