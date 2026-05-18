@@ -2,14 +2,9 @@ import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
-import { getExperienceDetail } from '@/lib/content'
+import { getExperienceBySlug } from '@/lib/content'
 
 const components = {
-  h1: ({ children }: { children?: React.ReactNode }) => (
-    <h1 className="text-[24px] sm:text-[30px] font-medium tracking-tight leading-tight mb-2">
-      {children}
-    </h1>
-  ),
   h2: ({ children }: { children?: React.ReactNode }) => (
     <h2 className="text-[10px] font-mono uppercase tracking-[0.25em] mt-12 mb-5 pb-3 border-b border-black/10 text-black/35">
       {children}
@@ -36,7 +31,7 @@ const components = {
 
 export default function ExperienceItem() {
   const { slug } = useParams<{ slug: string }>()
-  const exp = getExperienceDetail(slug ?? '')
+  const exp = getExperienceBySlug(slug ?? '')
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null)
   const [closing, setClosing] = useState(false)
 
@@ -83,8 +78,16 @@ export default function ExperienceItem() {
                 >
                   ← Back
                 </Link>
+                <h1 className="text-[24px] sm:text-[30px] font-medium tracking-tight leading-tight mb-2">
+                  {exp.role}
+                </h1>
+                <p className="text-[13px] text-black/45 mb-8">
+                  <span className="font-medium text-black/75">{exp.company}</span>
+                  <span className="mx-1.5">·</span>
+                  <span className="font-mono">{exp.period}</span>
+                </p>
                 <ReactMarkdown remarkPlugins={[remarkGfm]} components={components}>
-                  {exp.content}
+                  {exp.body}
                 </ReactMarkdown>
               </div>
             </div>

@@ -1,53 +1,72 @@
 # Amit Kaplinsky
 
-**Product Designer** · amitka111@gmail.com · Tel Aviv, Israel · [+972-544878882](https://wa.me/972544878882)
+Product Designer. AI Builder.
+
+[amitka111@gmail.com](mailto:amitka111@gmail.com) · [+972 54-4878882](https://wa.me/972544878882) · Israel · [LinkedIn](https://www.linkedin.com/in/amitka/)
 
 ## Experience
 
-### [Product Design Lead — Shift (2024–Present)](/experience/shift)
+### [Shift](/experience/shift)
 
-Shhhhh....
+**Product Design Lead** · 10/2024 – Now
 
-### [Product Design Lead — Onyxia Cyber (2024)](/experience/onyxia-cyber)
+AI-powered vendor security platform. I came in to design the product from zero — defining the design system, shaping onboarding, and owning every surface end to end. Most of the work lives behind the curtain for now. More once we're public.
 
-Elevated the product's UX and UI to the highest possible standard, shaping a new experience that customers find highly enjoyable.
+### [Onyxia](/experience/onyxia-cyber)
 
-### [Product Design Lead — Veriti (2021–2024)](/experience/veriti)
+**Product Design Lead** · 04/2024 – 10/2024
 
-Initiated from a blank slate, transforming a concept into a vibrant, mature product collaborating with industry-leading talent.
+This journey began differently, as I joined an already established team. My role was to elevate the current state of the product and enhance both its UX and UI to the highest possible standard. Drawing from my past experience handling complex challenges, we are now shaping a new experience that, according to customer feedback, is highly enjoyable.
 
-### [UX Team Lead — Semperis (2020–2021)](/experience/semperis)
+### [Veriti](/experience/veriti)
 
-Established an in-house design team, transitioning from an outsourced model and aligning UX with fast-paced development.
+**Product Design Lead** · 11/2021 – 04/2024
 
-### [UX Expert — Check Point Software Technologies (2014–2020)](/experience/checkpoint)
+Embarking on the ultimate challenge: initiating from a blank slate. Leveraging deep research and extensive experience, our goal is to breathe life into innovative products. As a product designer, this is the pinnacle of creative fulfillment. Collaborating with industry-leading talents, we've transformed a mere concept into a vibrant, mature product. It's more than just a tool; it's a solution where users discover real value and utility.
 
-Translated complex technical requirements into intuitive user flows across desktop, web, and mobile.
+### [Semperis](/experience/semperis)
 
-### [User Experience Designer — VMP International (2010–2014)](/experience/vmp)
+**UX Team Lead** · 08/2020 – 11/2021
 
-Shaped a B2C platform for automated sales centers, overseeing the full product lifecycle.
+As a key member of the founding team, my mandate was to establish an in-house design team, pivotal for supporting our fast-paced development process. This involved transitioning from an outsourced model, where I took over the existing design framework, to setting up robust in-house concepts and processes. My focus was on leading and nurturing the UX team to align with our evolving project goals and company vision.
 
-### [Freelance Designer & Developer (2000–2009)](/experience/freelance)
+### [Check Point Software Security](/experience/checkpoint)
 
-Web design and development, broadcast design, VFX, and animation across a decade of independent work.
+**UX Expert** · 03/2014 – 08/2020
+
+As a UX expert on the product design team, attached to an R&D group across desktop, web, and mobile. I translated technical requirements into user flows and interactive wireframes, oversaw the build, and wrote production code alongside the engineers.
+
+## Certificates
+
+### Meta Front-End Developer Certificate
+
+Coursera · August 2023
+
+### Certified, Programming the .NET Framework
+
+John Bryce · 2010–2011
 
 ## Education
 
-### Camera Obscura School of Arts
+### Diploma of Education, Digital Communications and Media
 
-Diploma, Digital Communication and Media/Multimedia · 1996–2000
+Camera Obscura School of Arts · 1996–2000
 
-### Tel Aviv University
+### Bachelor of Arts (B.A), Economics
 
-B.A., Economics · 1994–1996
+Tel Aviv University · 1994–1996
 
-## Certifications
+## Skills
 
-- Claude Code in Action, Antropic
-- Generative AI for Everyone, Coursera
-- Meta Front-End Developer Certificate, Coursera
-- Figma to Lottie, Lottie Academy
-- Internet History, Technology, and Security, Coursera
-- Full Stack Web Development, freeCodeCamp
-- Programming the .NET Framework, John Bryce
+### Softwares
+
+- Figma
+- Adobe Creative Suite
+- Visual Studio Code / Cursor
+- Claude / Claude Desktop
+- Codex
+
+### Languages
+
+- Hebrew (Native)
+- English (High Level)

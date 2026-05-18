@@ -9,6 +9,7 @@ import Playground from '@/pages/Playground'
 import ExperienceItem from '@/pages/ExperienceItem'
 import Writing from '@/pages/Writing'
 import WritingPost from '@/pages/WritingPost'
+import CV from '@/pages/CV'
 
 export default function App() {
   const location = useLocation()
@@ -53,7 +54,7 @@ export default function App() {
         <Footer />
       </div>
       <Nav />
-      <div style={{ marginBottom: footerH }}>
+      <div className="app-content" style={{ marginBottom: footerH }}>
         <Routes>
           <Route path="/" element={<Work />} />
           <Route path="/about" element={<About />} />
@@ -61,6 +62,7 @@ export default function App() {
           <Route path="/writing" element={<Writing />} />
           <Route path="/writing/:slug" element={<WritingPost />} />
           <Route path="/experience/:slug" element={<ExperienceItem />} />
+          <Route path="/cv" element={<CV />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </div>

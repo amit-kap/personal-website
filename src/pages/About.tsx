@@ -1,14 +1,7 @@
 import { Link } from 'react-router-dom'
+import { getCV } from '@/lib/content'
 
-const experiences = [
-  { slug: 'shift', company: 'Shift', role: 'Product Design Lead', period: '2024–Present', hasImages: true },
-  { slug: 'onyxia-cyber', company: 'Onyxia Cyber', role: 'Product Design Lead', period: '2024', hasImages: true },
-  { slug: 'veriti', company: 'Veriti', role: 'Product Design Lead', period: '2021–2024', hasImages: true },
-  { slug: 'semperis', company: 'Semperis', role: 'UX Team Lead', period: '2020–2021', hasImages: false },
-  { slug: 'checkpoint', company: 'Check Point Software Technologies', role: 'UX Expert', period: '2014–2020', hasImages: true },
-  { slug: 'vmp', company: 'VMP International', role: 'UX Designer', period: '2010–2014', hasImages: false },
-  { slug: 'freelance', company: 'Freelance', role: 'Designer & Developer', period: '2000–2009', hasImages: false },
-]
+const { experience } = getCV()
 
 function Section({ label, children }: { label: string; children: React.ReactNode }) {
   return (
@@ -56,26 +49,40 @@ export default function About() {
           </Section>
 
           <Section label="CV">
-            <div className="space-y-5">
-              {experiences.map(({ slug, company, role, period, hasImages }) => (
-                <div key={slug} className="flex items-baseline justify-between gap-4">
-                  <div>
-                    {hasImages ? (
-                      <Link
-                        to={`/experience/${slug}`}
-                        className="text-[14px] font-medium text-black hover:text-black/50 transition-colors duration-200 group"
-                      >
-                        {company}
-                        <span className="ml-1.5 text-black/25 group-hover:text-black/40 transition-colors text-[12px]">→</span>
-                      </Link>
-                    ) : (
-                      <p className="text-[14px] font-medium text-black">{company}</p>
-                    )}
-                    <p className="text-[12px] text-black/35 font-mono mt-0.5">{role}</p>
+            <div className="space-y-6">
+              {experience.map(({ slug, company, role, period, summary, hasImages }) => (
+                <div key={slug}>
+                  <div className="flex items-baseline justify-between gap-4">
+                    <div>
+                      {hasImages ? (
+                        <Link
+                          to={`/experience/${slug}`}
+                          className="text-[14px] font-medium text-black hover:text-black/50 transition-colors duration-200 group"
+                        >
+                          {company}
+                          <span className="ml-1.5 text-black/25 group-hover:text-black/40 transition-colors text-[12px]">→</span>
+                        </Link>
+                      ) : (
+                        <p className="text-[14px] font-medium text-black">{company}</p>
+                      )}
+                      <p className="text-[12px] text-black/35 font-mono mt-0.5">{role}</p>
+                    </div>
+                    <span className="text-[12px] text-black/30 font-mono shrink-0">{period}</span>
                   </div>
-                  <span className="text-[12px] text-black/30 font-mono shrink-0">{period}</span>
+                  {summary && (
+                    <p className="text-[13px] leading-6 text-black/55 mt-2">{summary}</p>
+                  )}
                 </div>
               ))}
+              <div className="pt-2">
+                <Link
+                  to="/cv"
+                  className="inline-flex items-baseline text-[12px] font-mono uppercase tracking-[0.2em] text-black/45 hover:text-black transition-colors duration-200"
+                >
+                  View as printable CV
+                  <span className="ml-2 text-black/30">→</span>
+                </Link>
+              </div>
             </div>
           </Section>
 
