@@ -8,7 +8,7 @@ export default function Writing() {
         <div className="px-5 sm:px-8 pb-20 animate-fade-up" style={{ paddingTop: '5.75rem' }}>
           <section className="grid md:grid-cols-12 gap-10 md:gap-16 py-16 border-t border-black/10">
             <div className="md:col-span-5">
-              <h2 className="text-[17px] font-mono uppercase tracking-[0.25em] text-black/35">
+              <h2 className="text-[11px] font-mono uppercase tracking-[0.25em] text-black/35">
                 Writing
               </h2>
             </div>
