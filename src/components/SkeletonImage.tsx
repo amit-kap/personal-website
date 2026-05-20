@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, ImgHTMLAttributes } from 'react'
+import { useEffect, useRef, useState, type ImgHTMLAttributes } from 'react'
 
 interface Props extends Omit<ImgHTMLAttributes<HTMLImageElement>, 'onLoad' | 'className'> {
   src: string
