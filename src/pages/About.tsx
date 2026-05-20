@@ -20,7 +20,7 @@ export default function About() {
   return (
     <div className="relative z-10 min-h-screen flex flex-col bg-white">
       <main className="flex-1">
-        <div className="px-5 sm:px-8 pb-20 animate-fade-up" style={{ paddingTop: '5.75rem' }}>
+        <div className="2xl:mx-auto 2xl:max-w-[1440px] px-5 sm:px-8 pb-20 animate-fade-up" style={{ paddingTop: '5.75rem' }}>
 
           <Section label="About">
             <div className="space-y-5">

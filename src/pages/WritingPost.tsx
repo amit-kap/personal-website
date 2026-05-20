@@ -77,7 +77,7 @@ export default function WritingPost() {
 
   return (
     <div className="relative z-10 min-h-screen bg-white">
-      <article className="px-5 sm:px-8 pb-20 animate-fade-up" style={{ paddingTop: '5.75rem' }}>
+      <article className="2xl:mx-auto 2xl:max-w-[1440px] px-5 sm:px-8 pb-20 animate-fade-up" style={{ paddingTop: '5.75rem' }}>
         <div className="grid md:grid-cols-12 gap-10 md:gap-16">
           <div className="md:col-span-5 order-1">
             <div className="md:sticky relative overflow-hidden rounded-[6px] border border-black/[0.05]" style={{ top: '5.75rem' }}>

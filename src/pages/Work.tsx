@@ -16,11 +16,17 @@ function slugLabel(slug: string): string {
 }
 
 export default function Work() {
-  const [picks] = useState(() => shuffled(getAllExperienceImages()).slice(0, 8))
+  const [picks, setPicks] = useState(() => shuffled(getAllExperienceImages()).slice(0, 8))
+  const [shuffleKey, setShuffleKey] = useState(0)
+
+  const handleShuffle = () => {
+    setPicks(shuffled(getAllExperienceImages()).slice(0, 8))
+    setShuffleKey(k => k + 1)
+  }
 
   return (
     <div className="relative z-10 min-h-screen flex flex-col bg-white">
-      <main className="flex-1 pt-14">
+      <main className="flex-1 pt-14 w-full 2xl:mx-auto 2xl:max-w-[1440px]">
         {/* Intro */}
         <div className="px-5 sm:px-8 pt-16 sm:pt-24 pb-10 sm:pb-16">
           <p className="text-[22px] sm:text-[28px] md:text-[32px] leading-[1.2] tracking-[-0.03em] font-normal text-black max-w-2xl animate-fade-up">
@@ -30,7 +36,14 @@ export default function Work() {
 
         {/* Grid */}
         <div className="px-5 sm:px-8 pb-24">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <button
+            onClick={handleShuffle}
+            className="block mb-3 text-[10px] font-mono uppercase tracking-[0.25em] text-black/40 hover:text-black transition-colors duration-200 cursor-pointer animate-fade-up"
+            aria-label="Shuffle work tiles"
+          >
+            Shuffle
+          </button>
+          <div key={shuffleKey} className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {picks.map((pick, i) => (
               <Link
                 key={pick.src}

@@ -68,7 +68,7 @@ export default function ExperienceItem() {
   return (
     <>
       <div className="relative z-10 min-h-screen bg-white">
-        <article className="px-5 sm:px-8 pb-20 animate-fade-up" style={{ paddingTop: '5.75rem' }}>
+        <article className="2xl:mx-auto 2xl:max-w-[1440px] px-5 sm:px-8 pb-20 animate-fade-up" style={{ paddingTop: '5.75rem' }}>
           <div className="grid md:grid-cols-12 gap-10 md:gap-16">
             <div className={`${exp.images.length > 0 ? 'md:col-span-5' : 'md:col-span-12'} order-1`}>
               <div className={exp.images.length > 0 ? 'md:sticky' : ''} style={exp.images.length > 0 ? { top: '5.75rem' } : undefined}>

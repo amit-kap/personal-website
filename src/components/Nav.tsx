@@ -40,7 +40,8 @@ export default function Nav() {
 
   return (
     <>
-      <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-5 sm:px-8 h-14 animate-slide-down-in">
+      <nav className="fixed top-0 left-0 right-0 z-50 h-14 animate-slide-down-in">
+        <div className="relative 2xl:mx-auto 2xl:max-w-[1440px] h-full px-5 sm:px-8 flex items-center justify-between">
         {/* Left: avatar + name */}
         <Link
           to="/"
@@ -57,7 +58,7 @@ export default function Nav() {
           </span>
         </Link>
 
-        {/* Center: pill (desktop only, absolutely centered) */}
+        {/* Center: pill (desktop only, absolutely centered within 1440 box) */}
         <div className="hidden md:block absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
           <div className="flex items-center bg-neutral-100 rounded-full px-1 py-1 relative">
             {/* Sliding indicator */}
@@ -114,6 +115,7 @@ export default function Nav() {
             <span className="block w-5 h-px bg-black/70" />
             <span className="block w-5 h-px bg-black/70" />
           </button>
+        </div>
         </div>
       </nav>
 

@@ -5,7 +5,7 @@ export default function Writing() {
   return (
     <div className="relative z-10 min-h-screen flex flex-col bg-white">
       <main className="flex-1">
-        <div className="px-5 sm:px-8 pb-20 animate-fade-up" style={{ paddingTop: '5.75rem' }}>
+        <div className="2xl:mx-auto 2xl:max-w-[1440px] px-5 sm:px-8 pb-20 animate-fade-up" style={{ paddingTop: '5.75rem' }}>
           <section className="grid md:grid-cols-12 gap-10 md:gap-16 py-16 border-t border-black/10">
             <div className="md:col-span-5">
               <h2 className="text-[11px] font-mono uppercase tracking-[0.25em] text-black/35">
