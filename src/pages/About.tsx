@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { getCV } from '@/lib/content'
+import SkeletonImage from '@/components/SkeletonImage'
 
 const { experience } = getCV()
 
@@ -34,15 +35,17 @@ export default function About() {
                 Product designer and AI builder by trade. I care about details, structure, and shipping work that earns its place.
               </p>
               <div className="grid grid-cols-2 gap-4 mt-8">
-                <img
+                <SkeletonImage
                   src={`${import.meta.env.BASE_URL}profile.jpg`}
                   alt="Amit Kaplinsky"
-                  className="w-full aspect-square object-cover rounded-[6px] bg-black/[0.04] border border-black/[0.05]"
+                  wrapperClassName="w-full aspect-square rounded-[6px] border border-black/[0.05]"
+                  className="w-full h-full object-cover"
                 />
-                <img
+                <SkeletonImage
                   src={`${import.meta.env.BASE_URL}tel-aviv.jpg`}
                   alt="Tel Aviv"
-                  className="w-full aspect-square object-cover rounded-[6px] bg-black/[0.04] border border-black/[0.05]"
+                  wrapperClassName="w-full aspect-square rounded-[6px] border border-black/[0.05]"
+                  className="w-full h-full object-cover"
                 />
               </div>
             </div>

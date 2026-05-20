@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { getAllExperienceImages } from '@/lib/content'
+import SkeletonImage from '@/components/SkeletonImage'
 
 function shuffled<T>(arr: T[]): T[] {
   const a = [...arr]
@@ -51,14 +52,13 @@ export default function Work() {
                 className="group block animate-fade-up"
                 style={{ animationDelay: `${i * 0.07}s` }}
               >
-                <div className="overflow-hidden rounded-[6px] bg-black/[0.04] aspect-video border border-black/[0.05]">
-                  <img
-                    src={pick.src}
-                    alt={slugLabel(pick.slug)}
-                    className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
-                    loading={i === 0 ? 'eager' : 'lazy'}
-                  />
-                </div>
+                <SkeletonImage
+                  src={pick.src}
+                  alt={slugLabel(pick.slug)}
+                  loading={i === 0 ? 'eager' : 'lazy'}
+                  wrapperClassName="rounded-[6px] aspect-video border border-black/[0.05]"
+                  className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+                />
               </Link>
             ))}
           </div>

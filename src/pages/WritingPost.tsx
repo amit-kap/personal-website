@@ -3,6 +3,7 @@ import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import { getWritingDetail } from '@/lib/content'
 import { getPostMeta } from '@/content/posts'
+import SkeletonImage from '@/components/SkeletonImage'
 
 const components = (images: Record<string, string>) => ({
   // h1 is intentionally suppressed — the title is already shown in the sticky meta column
@@ -44,7 +45,13 @@ const components = (images: Record<string, string>) => ({
       : src
     return (
       <figure className="my-8 prose-figure">
-        <img src={resolved} alt={alt ?? ''} className="w-full rounded-[6px] border border-black/[0.05]" loading="lazy" />
+        <SkeletonImage
+          src={resolved ?? ''}
+          alt={alt ?? ''}
+          loading="lazy"
+          wrapperClassName="w-full rounded-[6px] border border-black/[0.05] min-h-[180px]"
+          className="w-full block"
+        />
         <figcaption className="text-[12px] font-mono uppercase tracking-[0.15em] text-black/40 mt-3 text-center">
           {alt ? ` — ${alt}` : null}
         </figcaption>

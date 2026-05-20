@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import { getExperienceBySlug } from '@/lib/content'
+import SkeletonImage from '@/components/SkeletonImage'
 
 const components = {
   h2: ({ children }: { children?: React.ReactNode }) => (
@@ -95,13 +96,14 @@ export default function ExperienceItem() {
             {exp.images.length > 0 ? (
               <div className="md:col-span-7 order-2 flex flex-col gap-5">
                 {exp.images.map((src, i) => (
-                  <img
+                  <SkeletonImage
                     key={src}
                     src={src}
                     alt={`Image ${i + 1}`}
-                    className="w-full block cursor-pointer rounded-[6px] border border-black/[0.05]"
                     loading={i === 0 ? 'eager' : 'lazy'}
                     onClick={() => setLightboxIndex(i)}
+                    wrapperClassName="w-full block cursor-pointer rounded-[6px] border border-black/[0.05] min-h-[180px]"
+                    className="w-full block"
                   />
                 ))}
               </div>
