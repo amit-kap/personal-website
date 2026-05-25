@@ -95,11 +95,13 @@ export default function ExperienceItem() {
 
             {exp.images.length > 0 ? (
               <div className="md:col-span-7 order-2 flex flex-col gap-5">
-                {exp.images.map((src, i) => (
+                {exp.images.map((image, i) => (
                   <SkeletonImage
-                    key={src}
-                    src={src}
+                    key={image.src}
+                    src={image.src}
                     alt={`Image ${i + 1}`}
+                    width={image.width}
+                    height={image.height}
                     loading={i === 0 ? 'eager' : 'lazy'}
                     onClick={() => setLightboxIndex(i)}
                     wrapperClassName="w-full block cursor-pointer rounded-[6px] border border-black/[0.05] min-h-[180px]"
@@ -133,7 +135,7 @@ export default function ExperienceItem() {
           </button>
           <img
             key={lightboxIndex}
-            src={exp.images[lightboxIndex]}
+            src={exp.images[lightboxIndex].src}
             alt={`Image ${lightboxIndex + 1}`}
             className={`max-w-[90vw] max-h-[90vh] object-contain ${closing ? 'animate-zoom-out' : 'animate-zoom-in'}`}
             onClick={(e) => e.stopPropagation()}

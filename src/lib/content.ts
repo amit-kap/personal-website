@@ -17,7 +17,13 @@ export interface CVExperience {
   summary: string;   // first paragraph of body, plain text — used by About
   body: string;      // full body as markdown — used by /experience/<slug>
   hasImages: boolean;
-  images: string[];
+  images: ContentImage[];
+}
+
+export interface ContentImage {
+  src: string;
+  width: number;
+  height: number;
 }
 
 export interface CVNamedEntry {
@@ -50,16 +56,44 @@ const expImageModules = import.meta.glob<{ default: string }>(
   { eager: true }
 );
 
+const defaultImageDimensions = { width: 1920, height: 1080 };
+
+const imageDimensionsByPath: Record<string, { width: number; height: number }> = {
+  '../content/experience/onyxia-cyber/03-frameworks.jpg': { width: 1920, height: 930 },
+  '../content/experience/onyxia-cyber/04-insights.jpg': { width: 1920, height: 930 },
+  '../content/experience/onyxia-cyber/05-p-hub.jpg': { width: 1920, height: 930 },
+  '../content/experience/checkpoint/EndPoint_Ani_Ref.gif': { width: 1600, height: 1000 },
+  '../content/experience/checkpoint/MonitorWire.gif': { width: 2000, height: 1144 },
+  '../content/experience/checkpoint/MTP_Ani_Ref.gif': { width: 1366, height: 768 },
+  '../content/experience/checkpoint/ZA_Ani_Ref.gif': { width: 1366, height: 768 },
+  '../content/experience/shift/00-login.jpg': { width: 3840, height: 1920 },
+  '../content/experience/shift/01-shift-home.png': { width: 5120, height: 2582 },
+  '../content/experience/shift/02-inventory-vendors.png': { width: 5150, height: 2580 },
+  '../content/experience/shift/03-inventory-vendors-card.png': { width: 5122, height: 2578 },
+  '../content/experience/shift/04-access-graph.png': { width: 5120, height: 2580 },
+  '../content/experience/shift/05-findings-threat-center.png': { width: 5124, height: 2582 },
+  '../content/experience/shift/06-integrations-grid.jpg': { width: 3840, height: 1920 },
+  '../content/writing/designing-for-the-supervisor/cover-image.webp': { width: 1672, height: 941 },
+  '../content/writing/falling-down-the-rabbit-hole/cover-image.webp': { width: 1320, height: 720 },
+  '../content/writing/sailing-the-data-oceans/cover-image.webp': { width: 1792, height: 1024 },
+  '../content/writing/sailing-the-data-oceans/search-results-picker.webp': { width: 1920, height: 640 },
+};
+
+function imageAssetFromPath(path: string, src: string): ContentImage {
+  const dimensions = imageDimensionsByPath[path] ?? defaultImageDimensions;
+  return { src, ...dimensions };
+}
+
 function slugFromPath(path: string): string {
   const match = path.match(/experience\/([^/]+)\//);
   return match ? match[1] : '';
 }
 
-function getImagesForSlug(slug: string): string[] {
+function getImagesForSlug(slug: string): ContentImage[] {
   return Object.entries(expImageModules)
     .filter(([path]) => path.includes(`/experience/${slug}/`))
     .sort(([a], [b]) => a.localeCompare(b))
-    .map(([, mod]) => mod.default);
+    .map(([path, mod]) => imageAssetFromPath(path, mod.default));
 }
 
 function splitByDepth(nodes: RootContent[], depth: 2 | 3): Array<{ heading: Heading; body: RootContent[] }> {
@@ -191,13 +225,13 @@ export function getExperienceBySlug(slug: string): CVExperience | undefined {
 }
 
 export function getCoverImage(slug: string, index = 0): string | undefined {
-  return getImagesForSlug(slug)[index];
+  return getImagesForSlug(slug)[index]?.src;
 }
 
-export function getAllExperienceImages(): Array<{ slug: string; src: string }> {
+export function getAllExperienceImages(): Array<{ slug: string } & ContentImage> {
   return Object.entries(expImageModules).map(([path, mod]) => ({
     slug: slugFromPath(path),
-    src: mod.default,
+    ...imageAssetFromPath(path, mod.default),
   }));
 }
 
@@ -206,7 +240,7 @@ export function getAllExperienceImages(): Array<{ slug: string; src: string }> {
 export interface WritingDetail {
   slug: string;
   content: string;
-  images: Record<string, string>;
+  images: Record<string, ContentImage>;
 }
 
 const writingContentModules = import.meta.glob<string>(
@@ -224,12 +258,12 @@ function writingSlugFromPath(path: string): string {
   return m ? m[1] : '';
 }
 
-function writingImagesMap(slug: string): Record<string, string> {
-  const map: Record<string, string> = {};
+function writingImagesMap(slug: string): Record<string, ContentImage> {
+  const map: Record<string, ContentImage> = {};
   for (const [path, mod] of Object.entries(writingImageModules)) {
     if (!path.includes(`/writing/${slug}/`)) continue;
     const filename = path.split('/').pop();
-    if (filename) map[filename] = mod.default;
+    if (filename) map[filename] = imageAssetFromPath(path, mod.default);
   }
   return map;
 }

@@ -1,11 +1,24 @@
+import { Children, isValidElement } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
-import { getWritingDetail } from '@/lib/content'
+import { getWritingDetail, type ContentImage } from '@/lib/content'
 import { getPostMeta } from '@/content/posts'
 import SkeletonImage from '@/components/SkeletonImage'
 
-const components = (images: Record<string, string>) => ({
+function isImageOnlyParagraph(children: React.ReactNode) {
+  const childArray = Children
+    .toArray(children)
+    .filter(child => typeof child !== 'string' || child.trim().length > 0)
+
+  if (childArray.length !== 1 || !isValidElement<{ node?: { tagName?: string } }>(childArray[0])) {
+    return false
+  }
+
+  return childArray[0].props.node?.tagName === 'img'
+}
+
+const components = (images: Record<string, ContentImage>) => ({
   // h1 is intentionally suppressed — the title is already shown in the sticky meta column
   h1: () => null,
   h2: ({ children }: { children?: React.ReactNode }) => (
@@ -18,7 +31,9 @@ const components = (images: Record<string, string>) => ({
     <h4 className="text-[16px] font-medium mt-10 mb-2">{children}</h4>
   ),
   p: ({ children }: { children?: React.ReactNode }) => (
-    <p className="text-[16px] leading-8 mb-5 text-black/75">{children}</p>
+    isImageOnlyParagraph(children)
+      ? <>{children}</>
+      : <p className="text-[16px] leading-8 mb-5 text-black/75">{children}</p>
   ),
   ul: ({ children }: { children?: React.ReactNode }) => (
     <ul className="list-disc pl-5 mb-5 space-y-1 text-[16px] leading-8 text-black/75">{children}</ul>
@@ -41,13 +56,17 @@ const components = (images: Record<string, string>) => ({
   img: ({ src, alt }: { src?: string; alt?: string }) => {
     // Resolve filename-only refs (e.g. "01.jpg") via the images map
     const resolved = src && !src.startsWith('http') && !src.startsWith('/')
-      ? images[src] ?? src
+      ? images[src]
       : src
+        ? { src, width: undefined, height: undefined }
+        : undefined
     return (
       <figure className="my-8 prose-figure">
         <SkeletonImage
-          src={resolved ?? ''}
+          src={resolved?.src ?? ''}
           alt={alt ?? ''}
+          width={resolved?.width}
+          height={resolved?.height}
           loading="lazy"
           wrapperClassName="w-full rounded-[6px] border border-black/[0.05] min-h-[180px]"
           className="w-full block"
@@ -61,7 +80,7 @@ const components = (images: Record<string, string>) => ({
   hr: () => <hr className="mt-1 mb-8 border-black/10" />,
 })
 
-function getCover(images: Record<string, string>): string | undefined {
+function getCover(images: Record<string, ContentImage>): ContentImage | undefined {
   const key = Object.keys(images).find(k => /^cover[-_.]/i.test(k))
   return key ? images[key] : undefined
 }
@@ -92,7 +111,7 @@ export default function WritingPost() {
                 <>
                   <div
                     className="absolute inset-0 bg-cover bg-center"
-                    style={{ backgroundImage: `url(${cover})` }}
+                    style={{ backgroundImage: `url(${cover.src})` }}
                   />
                   <div
                     className="absolute inset-0"
