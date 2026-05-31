@@ -3,13 +3,15 @@ import { Link, useLocation } from 'react-router-dom'
 
 export default function Nav() {
   const location = useLocation()
-  const isHome = location.pathname === '/'
-  const [overHero, setOverHero] = useState(isHome)
+  // Pages with a full-bleed dark hero at the top
+  const hasHero =
+    location.pathname === '/' || location.pathname.startsWith('/work/')
+  const [overHero, setOverHero] = useState(hasHero)
   const [hidden, setHidden] = useState(false)
   const lastScrollY = useRef(0)
 
   useEffect(() => {
-    if (!isHome) setOverHero(false)
+    if (!hasHero) setOverHero(false)
 
     const onScroll = () => {
       const y = window.scrollY
@@ -24,8 +26,8 @@ export default function Nav() {
         setHidden(false)
       }
 
-      // Over-hero state on home only
-      if (isHome) {
+      // Over-hero state — white treatment while hero is in view
+      if (hasHero) {
         setOverHero(y < window.innerHeight * 0.6)
       }
 
@@ -35,7 +37,7 @@ export default function Nav() {
     onScroll()
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
-  }, [isHome])
+  }, [hasHero])
 
   const navTextClass = overHero ? 'text-white' : 'text-black'
 

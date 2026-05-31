@@ -1,4 +1,4 @@
-import { Children, isValidElement, useEffect, useState } from 'react'
+import { Children, isValidElement } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
@@ -21,20 +21,16 @@ function isImageOnlyParagraph(children: React.ReactNode) {
 }
 
 const markdownComponents = (images: Record<string, ContentImage>) => ({
-  // H1 from the case-study body is preserved and styled as the section title.
-  h1: ({ children }: { children?: React.ReactNode }) => (
-    <h2 className="text-[24px] sm:text-[30px] font-medium tracking-tight leading-tight mt-2 mb-6">
-      {children}
-    </h2>
-  ),
+  // H1 is the case-study title, shown in the hero; suppressed in the body.
+  h1: () => null,
   h2: ({ children }: { children?: React.ReactNode }) => (
-    <h3 className="text-[22px] font-medium mt-16 mb-3 leading-tight">{children}</h3>
+    <h2 className="text-[24px] sm:text-[28px] font-medium mt-16 mb-3 leading-tight">{children}</h2>
   ),
   h3: ({ children }: { children?: React.ReactNode }) => (
-    <h4 className="text-[20px] font-medium mt-14 mb-3 leading-tight">{children}</h4>
+    <h3 className="text-[20px] font-medium mt-14 mb-3 leading-tight">{children}</h3>
   ),
   h4: ({ children }: { children?: React.ReactNode }) => (
-    <h5 className="text-[16px] font-medium mt-10 mb-2">{children}</h5>
+    <h4 className="text-[16px] font-medium mt-10 mb-2">{children}</h4>
   ),
   p: ({ children }: { children?: React.ReactNode }) => (
     isImageOnlyParagraph(children)
@@ -92,30 +88,6 @@ export default function WorkItem() {
   const work = slug ? getWorkBySlug(slug) : undefined
   const caseStudy = slug ? getCaseStudyForWork(slug) : undefined
 
-  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null)
-  const [closing, setClosing] = useState(false)
-
-  const gallery = work?.galleryImages ?? []
-
-  const closeLightbox = () => {
-    setClosing(true)
-    setTimeout(() => {
-      setLightboxIndex(null)
-      setClosing(false)
-    }, 200)
-  }
-
-  useEffect(() => {
-    if (lightboxIndex === null || gallery.length === 0) return
-    const handleKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') closeLightbox()
-      else if (e.key === 'ArrowRight') setLightboxIndex(i => ((i ?? 0) + 1) % gallery.length)
-      else if (e.key === 'ArrowLeft') setLightboxIndex(i => ((i ?? 0) - 1 + gallery.length) % gallery.length)
-    }
-    window.addEventListener('keydown', handleKey)
-    return () => window.removeEventListener('keydown', handleKey)
-  }, [lightboxIndex, gallery.length])
-
   if (!work) {
     return (
       <div className="relative z-10 min-h-screen bg-white">
@@ -126,10 +98,58 @@ export default function WorkItem() {
     )
   }
 
+  const heroImage = caseStudy?.coverImage ?? work.heroImage
+  const heroTitle = caseStudy?.title ?? work.company
+  const heroExcerpt = caseStudy?.excerpt
+  const bodyContent = caseStudy?.body ?? work.body
+  const bodyImagesMap = caseStudy?.bodyImages ?? work.bodyImages
+
   return (
-    <>
-      <div className="relative z-10 min-h-screen bg-white">
-        <article className="2xl:mx-auto 2xl:max-w-[1440px] px-5 sm:px-8 pb-20 animate-fade-up" style={{ paddingTop: '5.75rem' }}>
+    <div className="relative z-10 min-h-screen bg-white">
+      <main className="pt-14 w-full">
+        {/* Full-bleed hero — same shape as the Home hero */}
+        <section className="relative -mt-14 animate-fade-up">
+          <div className="relative w-full h-[88vh] min-h-[560px] max-h-[860px] overflow-hidden bg-black">
+            {heroImage && (
+              <SkeletonImage
+                src={heroImage.src}
+                alt={heroTitle}
+                width={heroImage.width}
+                height={heroImage.height}
+                loading="eager"
+                wrapperClassName="absolute inset-0 w-full h-full"
+                className="w-full h-full object-cover"
+              />
+            )}
+            <div
+              className="absolute inset-0 pointer-events-none"
+              style={{
+                background:
+                  'linear-gradient(to bottom, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.10) 14%, rgba(0,0,0,0) 28%, rgba(0,0,0,0.30) 48%, rgba(0,0,0,0.70) 78%, rgba(0,0,0,0.88) 100%)',
+              }}
+            />
+          </div>
+
+          {/* Title overlay at the bottom of the image */}
+          <div className="absolute bottom-0 left-0 right-0 pb-12 sm:pb-16 px-5 sm:px-8 pointer-events-none">
+            <div className="2xl:mx-auto 2xl:max-w-[1440px]">
+              <h1 className="text-[36px] sm:text-[52px] md:text-[68px] leading-[1.02] tracking-[-0.025em] font-medium text-white max-w-3xl">
+                {heroTitle}
+              </h1>
+              {heroExcerpt && (
+                <p className="mt-4 sm:mt-5 text-[16px] sm:text-[19px] leading-[1.45] text-white/85 max-w-2xl">
+                  {heroExcerpt}
+                </p>
+              )}
+            </div>
+          </div>
+        </section>
+
+        {/* Body — case study text + its own inline images */}
+        <article
+          id="case-study"
+          className="2xl:mx-auto 2xl:max-w-[1440px] px-5 sm:px-8 pt-16 sm:pt-20 pb-20 animate-fade-up scroll-mt-20"
+        >
           <div className="max-w-3xl mx-auto">
             <Link
               to="/"
@@ -137,105 +157,22 @@ export default function WorkItem() {
             >
               ← Back
             </Link>
-
-            {work.heroImage && (
-              <div className="rounded-[6px] overflow-hidden border border-black/[0.05] mb-10">
-                <SkeletonImage
-                  src={work.heroImage.src}
-                  alt={work.company}
-                  width={work.heroImage.width}
-                  height={work.heroImage.height}
-                  loading="eager"
-                  wrapperClassName="w-full"
-                  className="w-full block"
-                />
-              </div>
-            )}
-
-            <h1 className="text-[28px] sm:text-[34px] font-medium tracking-tight leading-tight mb-2">
-              {work.company}
-            </h1>
-            <p className="text-[13px] text-black/45 mb-10">
+            <p className="text-[13px] text-black/45 mb-12">
               <span className="font-medium text-black/75">{work.role}</span>
+              <span className="mx-1.5">·</span>
+              <span>{work.company}</span>
               <span className="mx-1.5">·</span>
               <span className="font-mono">{work.period}</span>
             </p>
 
-            {work.body && (
-              <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents(work.bodyImages)}>
-                {work.body}
+            {bodyContent && (
+              <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents(bodyImagesMap)}>
+                {bodyContent}
               </ReactMarkdown>
             )}
           </div>
-
-          {/* Gallery — full container width for impact */}
-          {gallery.length > 0 && (
-            <div className="mt-12 flex flex-col gap-5 max-w-3xl mx-auto">
-              {gallery.map((image, i) => (
-                <SkeletonImage
-                  key={image.src}
-                  src={image.src}
-                  alt={`${work.company} — ${i + 1}`}
-                  width={image.width}
-                  height={image.height}
-                  loading="lazy"
-                  onClick={() => setLightboxIndex(i)}
-                  wrapperClassName="w-full block cursor-pointer rounded-[6px] border border-black/[0.05] min-h-[180px]"
-                  className="w-full block"
-                />
-              ))}
-            </div>
-          )}
-
-          {/* Case study section (conditional) */}
-          {caseStudy && (
-            <section id="case-study" className="mt-20 pt-12 border-t border-black/10 max-w-3xl mx-auto scroll-mt-20">
-              <p className="text-[10px] font-mono uppercase tracking-[0.25em] text-black/40 mb-2">
-                Case Study
-              </p>
-              <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents(caseStudy.bodyImages)}>
-                {caseStudy.body}
-              </ReactMarkdown>
-            </section>
-          )}
         </article>
-      </div>
-
-      {lightboxIndex !== null && (
-        <div
-          className={`fixed inset-0 bg-black/85 z-50 flex items-center justify-center ${closing ? 'animate-fade-out' : 'animate-fade-in'}`}
-          onClick={closeLightbox}
-        >
-          <button
-            className="absolute top-4 right-5 text-white/40 hover:text-white text-3xl leading-none transition-colors"
-            onClick={closeLightbox}
-            aria-label="Close"
-          >
-            ×
-          </button>
-          <button
-            className="absolute left-4 text-white/40 hover:text-white text-3xl leading-none transition-colors select-none px-2"
-            onClick={(e) => { e.stopPropagation(); setLightboxIndex(i => ((i ?? 0) - 1 + gallery.length) % gallery.length) }}
-            aria-label="Previous"
-          >
-            ‹
-          </button>
-          <img
-            key={lightboxIndex}
-            src={gallery[lightboxIndex].src}
-            alt={`${work.company} — ${lightboxIndex + 1}`}
-            className={`max-w-[90vw] max-h-[90vh] object-contain ${closing ? 'animate-zoom-out' : 'animate-zoom-in'}`}
-            onClick={(e) => e.stopPropagation()}
-          />
-          <button
-            className="absolute right-4 text-white/40 hover:text-white text-3xl leading-none transition-colors select-none px-2"
-            onClick={(e) => { e.stopPropagation(); setLightboxIndex(i => ((i ?? 0) + 1) % gallery.length) }}
-            aria-label="Next"
-          >
-            ›
-          </button>
-        </div>
-      )}
-    </>
+      </main>
+    </div>
   )
 }
