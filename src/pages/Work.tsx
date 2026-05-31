@@ -168,19 +168,26 @@ export default function Work() {
           </section>
         )}
 
-        {/* Recent Work — single-column rows, text left / image right */}
-        <div className="2xl:mx-auto 2xl:max-w-[1440px]">
-          <section className="px-5 sm:px-8 pt-10 sm:pt-12 pb-24">
-            <p className="text-[14px] font-mono uppercase tracking-[0.2em] text-black/45 mb-10 sm:mb-12 animate-fade-up">
+        {/* Recent Work — full-bleed zebra bands, content centered inside each */}
+        <section className="pt-10 sm:pt-12 pb-16">
+          <div className="2xl:mx-auto 2xl:max-w-[1440px] px-5 sm:px-8 mb-6 sm:mb-8">
+            <p className="text-[14px] font-mono uppercase tracking-[0.2em] text-black/45 animate-fade-up">
               Recent Work
             </p>
-            <div className="flex flex-col gap-14 md:gap-20">
-              {works.map((work, i) => (
-                <WorkRow key={work.slug} work={work} index={i} />
-              ))}
-            </div>
-          </section>
-        </div>
+          </div>
+          <div className="flex flex-col">
+            {works.map((work, i) => (
+              <div
+                key={work.slug}
+                className={i % 2 === 1 ? 'bg-neutral-50' : ''}
+              >
+                <div className="2xl:mx-auto 2xl:max-w-[1440px] px-5 sm:px-8 py-12 md:py-16">
+                  <WorkRow work={work} index={i} />
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
       </main>
     </div>
   )
