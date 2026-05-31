@@ -79,18 +79,18 @@ export default function Work() {
                   className="group block animate-fade-up"
                   style={{ animationDelay: `${i * 0.06}s` }}
                 >
-                  <div className="grid md:grid-cols-12 gap-6 md:gap-10 items-center">
+                  <div className="grid md:grid-cols-12 gap-6 md:gap-10 items-start">
                     {/* Text — left on desktop */}
                     <div className="md:col-span-5 md:order-1 order-2">
-                      <h2 className="text-[22px] sm:text-[26px] font-medium tracking-tight text-black group-hover:text-black/60 transition-colors mb-1.5 leading-tight">
+                      <h2 className="text-[22px] sm:text-[26px] font-medium tracking-tight text-black/70 group-hover:text-black transition-colors mb-1.5 leading-tight">
                         {work.company}
                       </h2>
-                      <p className="text-[12px] text-black/45 font-mono mb-4">
+                      <p className="text-[12px] text-black/40 group-hover:text-black/60 transition-colors font-mono mb-4">
                         {work.role}
                         <span className="text-black/25 mx-2">·</span>
                         {work.period}
                       </p>
-                      <p className="text-[15px] leading-[1.55] text-black/65 max-w-md">
+                      <p className="text-[15px] leading-[1.55] text-black/55 group-hover:text-black/80 transition-colors max-w-md">
                         {work.blurb}
                       </p>
                     </div>
