@@ -5,7 +5,27 @@ import { toString as mdastToString } from 'mdast-util-to-string';
 import { toMarkdown } from 'mdast-util-to-markdown';
 import { gfmToMarkdown } from 'mdast-util-gfm';
 import type { Root, RootContent, Heading, Link, Paragraph, List } from 'mdast';
+import { parse as parseYaml } from 'yaml';
 import cvRaw from '../content/cv.md?raw';
+
+// ---- Front-matter helper ----
+
+function stripFrontMatter(raw: string): {
+  frontMatter: Record<string, unknown> | null;
+  body: string;
+} {
+  const match = raw.match(/^---\s*\n([\s\S]*?)\n---\s*\n([\s\S]*)$/);
+  if (!match) return { frontMatter: null, body: raw };
+  const [, fmText, body] = match;
+  try {
+    return {
+      frontMatter: parseYaml(fmText) as Record<string, unknown>,
+      body,
+    };
+  } catch {
+    return { frontMatter: null, body: raw };
+  }
+}
 
 // ---- CV (single source of truth, parsed from cv.md) ----
 
@@ -271,5 +291,169 @@ function writingImagesMap(slug: string): Record<string, ContentImage> {
 export function getWritingDetail(slug: string): WritingDetail | undefined {
   const entry = Object.entries(writingContentModules).find(([p]) => writingSlugFromPath(p) === slug);
   if (!entry) return undefined;
-  return { slug, content: entry[1], images: writingImagesMap(slug) };
+  const { body } = stripFrontMatter(entry[1]);
+  return { slug, content: body, images: writingImagesMap(slug) };
+}
+
+// ---- Work (per-experience-folder work.md) ----
+
+export interface Work {
+  slug: string;
+  company: string;
+  role: string;
+  period: string;
+  cvSummary: string;             // first paragraph from cv.md (fallback for blurb)
+  blurb: string;                 // tile copy (work.md `blurb`, falls back to cvSummary)
+  order: number;                 // ascending sort key
+  heroImage?: ContentImage;      // top of work page
+  tileImage?: ContentImage;      // Recent Work tile
+  body: string;                  // work.md markdown body (overview paragraphs)
+  bodyImages: Record<string, ContentImage>; // keyed by filename, for inline image refs
+  galleryImages: ContentImage[]; // everything in folder excluding heroImage
+}
+
+interface WorkFrontMatter {
+  blurb?: string;
+  order?: number;
+  hero?: string;
+  tileImage?: string;
+}
+
+const workContentModules = import.meta.glob<string>(
+  '../content/experience/*/work.md',
+  { query: '?raw', import: 'default', eager: true }
+);
+
+function workSlugFromPath(path: string): string {
+  const m = path.match(/experience\/([^/]+)\//);
+  return m ? m[1] : '';
+}
+
+function buildWorks(): Work[] {
+  const out: Work[] = [];
+  for (const [path, raw] of Object.entries(workContentModules)) {
+    const slug = workSlugFromPath(path);
+    if (!slug) continue;
+    const { frontMatter, body } = stripFrontMatter(raw);
+    const fm = (frontMatter ?? {}) as WorkFrontMatter;
+
+    const cvEntry = cv.experience.find(e => e.slug === slug);
+    if (!cvEntry) continue;
+
+    const allImages = getImagesForSlug(slug);
+    const imageMap: Record<string, ContentImage> = {};
+    for (const img of allImages) {
+      const filename = img.src.split('/').pop();
+      if (filename) imageMap[filename] = img;
+    }
+
+    const heroByName = fm.hero
+      ? Object.entries(imageMap).find(([k]) => k.startsWith(fm.hero!))?.[1]
+      : undefined;
+    const tileByName = fm.tileImage
+      ? Object.entries(imageMap).find(([k]) => k.startsWith(fm.tileImage!))?.[1]
+      : undefined;
+
+    const heroImage = heroByName ?? allImages[0];
+    const tileImage = tileByName ?? heroImage;
+
+    const galleryImages = heroImage
+      ? allImages.filter(img => img.src !== heroImage.src)
+      : allImages;
+
+    out.push({
+      slug,
+      company: cvEntry.company,
+      role: cvEntry.role,
+      period: cvEntry.period,
+      cvSummary: cvEntry.summary,
+      blurb: fm.blurb?.trim() || cvEntry.summary,
+      order: typeof fm.order === 'number' ? fm.order : 999,
+      heroImage,
+      tileImage,
+      body: body.trim(),
+      bodyImages: imageMap,
+      galleryImages,
+    });
+  }
+  return out.sort((a, b) => a.order - b.order);
+}
+
+const works = buildWorks();
+
+export function getAllWorks(): Work[] {
+  return works;
+}
+
+export function getWorkBySlug(slug: string): Work | undefined {
+  return works.find(w => w.slug === slug);
+}
+
+// ---- Case Studies (writing/<slug>/index.md with front-matter) ----
+
+export interface CaseStudy {
+  slug: string;                    // writing folder name
+  workSlug: string;                // links to a Work
+  excerpt: string;                 // 1–2 sentence narrative summary for Home Hero
+  featured: boolean;
+  coverImage?: ContentImage;
+  body: string;                    // markdown body (includes H1)
+  bodyImages: Record<string, ContentImage>;
+}
+
+interface CaseStudyFrontMatter {
+  work?: string;
+  excerpt?: string;
+  featured?: boolean;
+  cover?: string;
+}
+
+function buildCaseStudies(): CaseStudy[] {
+  const out: CaseStudy[] = [];
+  for (const [path, raw] of Object.entries(writingContentModules)) {
+    const slug = writingSlugFromPath(path);
+    if (!slug) continue;
+    const { frontMatter, body } = stripFrontMatter(raw);
+    const fm = (frontMatter ?? {}) as CaseStudyFrontMatter;
+
+    // Skip files that haven't been migrated yet (no `work` field)
+    if (!fm.work) continue;
+
+    const images = writingImagesMap(slug);
+
+    let coverImage: ContentImage | undefined;
+    if (fm.cover) {
+      const key = Object.keys(images).find(k => k.startsWith(fm.cover!));
+      if (key) coverImage = images[key];
+    }
+    if (!coverImage) {
+      const key = Object.keys(images).find(k => /^cover[-_.]/i.test(k));
+      if (key) coverImage = images[key];
+    }
+
+    out.push({
+      slug,
+      workSlug: fm.work,
+      excerpt: fm.excerpt ?? '',
+      featured: fm.featured === true,
+      coverImage,
+      body: body.trim(),
+      bodyImages: images,
+    });
+  }
+  return out;
+}
+
+const caseStudies = buildCaseStudies();
+
+export function getAllCaseStudies(): CaseStudy[] {
+  return caseStudies;
+}
+
+export function getFeaturedCaseStudy(): CaseStudy | undefined {
+  return caseStudies.find(cs => cs.featured);
+}
+
+export function getCaseStudyForWork(workSlug: string): CaseStudy | undefined {
+  return caseStudies.find(cs => cs.workSlug === workSlug);
 }
