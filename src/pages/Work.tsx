@@ -46,10 +46,7 @@ export default function Work() {
                   >
                     Featured
                   </p>
-                  <h1
-                    className="text-[36px] sm:text-[52px] md:text-[68px] leading-[1.02] tracking-[-0.025em] font-medium text-white max-w-3xl"
-                    style={{ textShadow: '0 1px 2px rgba(0,0,0,0.35), 0 6px 24px rgba(0,0,0,0.45)' }}
-                  >
+                  <h1 className="text-[36px] sm:text-[52px] md:text-[68px] leading-[1.02] tracking-[-0.025em] font-medium text-white max-w-3xl">
                     {featured.title}
                   </h1>
                   {featured.excerpt && (
@@ -63,9 +60,7 @@ export default function Work() {
                   <span className="inline-flex items-baseline gap-2 mt-6 sm:mt-7 text-[13px] font-medium text-white pointer-events-auto">
                     <span className="relative pb-1">
                       <span>Read the case study</span>
-                      {/* base underline */}
-                      <span className="absolute left-0 right-0 bottom-0 h-px bg-white/30" />
-                      {/* hover underline — grows from left */}
+                      {/* hover underline — grows from left, no underline at rest */}
                       <span className="absolute left-0 right-0 bottom-0 h-px bg-white origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]" />
                     </span>
                     <span className="inline-block transition-transform duration-300 ease-out group-hover:translate-x-1.5">→</span>

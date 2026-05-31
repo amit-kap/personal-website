@@ -58,11 +58,20 @@ export default function Nav() {
               overHero ? 'ring-1 ring-white/40' : ''
             }`}
           />
-          <span
-            className={`text-[13px] font-medium whitespace-nowrap transition-colors duration-300 ${navTextClass}`}
-          >
-            Amit Kaplinsky
-          </span>
+          <div className="flex flex-col leading-[1.15]">
+            <span
+              className={`text-[13px] font-medium whitespace-nowrap transition-colors duration-300 ${navTextClass}`}
+            >
+              Amit Kaplinsky
+            </span>
+            <span
+              className={`text-[10px] whitespace-nowrap transition-colors duration-300 ${
+                overHero ? 'text-white/65' : 'text-black/50'
+              }`}
+            >
+              Product Designer. AI Builder.
+            </span>
+          </div>
         </Link>
 
         <a
