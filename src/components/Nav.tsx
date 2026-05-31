@@ -65,8 +65,8 @@ export default function Nav() {
               Amit Kaplinsky
             </span>
             <span
-              className={`text-[10px] whitespace-nowrap transition-colors duration-300 ${
-                overHero ? 'text-white/65' : 'text-black/50'
+              className={`text-[11.5px] whitespace-nowrap transition-colors duration-300 ${
+                overHero ? 'text-white/70' : 'text-black/55'
               }`}
             >
               Product Designer. AI Builder.
