@@ -86,7 +86,7 @@ export default function CV() {
                     <article key={slug} className="cv-experience">
                       <h3 className="text-[13px] leading-snug">
                         {hasImages ? (
-                          <Link to={`/experience/${slug}`} className="hover:opacity-60 transition-opacity">
+                          <Link to={`/work/${slug}`} className="hover:opacity-60 transition-opacity">
                             {CompanyName}
                           </Link>
                         ) : (
