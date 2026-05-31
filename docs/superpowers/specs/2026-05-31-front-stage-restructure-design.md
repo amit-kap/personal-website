@@ -1,11 +1,13 @@
 # Front-Stage Restructure — Design Spec
 
 **Date:** 2026-05-31
-**Status:** Draft
+**Status:** Draft v2 (revised after user review of v1)
 
 ## Overview
 
-Restructure the personal site so the work itself sits front and centre. Collapse the surface to two visible pages — Home (`/`) and Work item (`/work/<slug>`) — plus a hidden printable CV at `/cv`. The CV becomes a global mega-footer present on every page. The three existing "writing" posts are case studies of specific roles; each is merged into the work it belongs to. The result: a portfolio whose primary unit is *the work*, with the CV as supporting evidence in the footer.
+Restructure the personal site so the work itself sits front and centre. Collapse the surface to two visible pages — Home (`/`) and Work item (`/work/<slug>`) — plus a hidden printable CV at `/cv`. The CV becomes a global mega-footer present on every page. The three existing "writing" posts are case studies of specific roles; each gets folded into the work it belongs to.
+
+`cv.md` stays exactly as it is. The display layer reads from it where needed.
 
 Guiding aesthetic: minimal UX, minimal design, content-heavy.
 
@@ -16,40 +18,58 @@ Guiding aesthetic: minimal UX, minimal design, content-heavy.
   - `/work/<slug>` — Work item
   - `/cv` — Printable HTML CV (no nav link; reached only via the footer "Download CV" link)
   - Anything else → redirect to `/`
-- **Nav reduces** to just `[avatar] Amit Kaplinsky` on the top-left. The centre pill, the Contact button, and the mobile hamburger menu all go.
+- **Nav reduces** to just `[avatar] Amit Kaplinsky` on the top-left. The centre pill, the Contact button, and the mobile hamburger all go.
 - **Home becomes** Hero → Recent Work (5 tiles) → Mega Footer.
 - **Experience entries become "Work"** in URLs and labels (`/experience/:slug` → `/work/:slug`).
 - **Writing posts merge into their parent work** as the long-form body of that work item. The `/writing` index and post pages go away.
-- **About and the linked CV page go away**; their content lives in the mega footer (globally).
-- **Per-work content moves to per-work folders** owning a single `work.md` plus images.
+- **About and the linked CV page go away**; their content lives in the mega footer (globally on every page).
+- **`cv.md` is not modified.** A new `work.md` is added per work folder, providing case-study-specific fields and the long-form body.
 
 ## Information architecture
 
-| Route          | Purpose                                                        | Source of content                                              |
-| -------------- | -------------------------------------------------------------- | -------------------------------------------------------------- |
-| `/`            | Home: Hero + Recent Work + Mega Footer                         | `work.md` front-matter for all works; selected work's hero image |
-| `/work/<slug>` | One work item: hero image + meta + body + image gallery + footer | `experience/<slug>/work.md` + images in that folder            |
-| `/cv` (hidden) | Printable HTML CV. Not linked in nav.                          | `cv.md` (non-work parts) + all `work.md` front-matter          |
-| `*`            | Redirect to `/`                                                | —                                                              |
+| Route          | Purpose                                                                 | Sources                                                          |
+| -------------- | ----------------------------------------------------------------------- | ---------------------------------------------------------------- |
+| `/`            | Home: Hero + Recent Work + Mega Footer                                  | `cv.md` (work meta) + each `work.md` (blurb, excerpt, featured flag) + hero images |
+| `/work/<slug>` | One work item: hero image + meta + body + image gallery + footer        | `cv.md` (meta) + `experience/<slug>/work.md` (body) + images     |
+| `/cv` (hidden) | Printable HTML CV. Not linked in nav. Reached via footer "Download CV". | `cv.md` only                                                     |
+| `*`            | Redirect to `/`                                                         | —                                                                |
 
 ## Home page (`/`)
 
-### Hero
-- A single, manually-chosen featured work, rendered as a full-bleed editorial block (image + headline + 1-line frame + "Read →" affordance).
-- Image source: the featured work's hero image.
-- Headline source: the work's `title` (e.g., "Designing for the Supervisor").
-- Frame source: the work's `blurb` (1–2 sentences, challenge + outcome).
-- Clicking anywhere in the hero → `/work/<slug>` for the featured work.
-- Featured-work selection: a `featured: true` flag in exactly one `work.md` front-matter. Build fails (or content loader throws) if zero or more than one work is marked featured.
-- Initial featured pick: **Shift** (`experience/shift/work.md`).
+### Hero — the *case study* framing
 
-### Recent Work
-- A 5-item grid (one per workplace). One column on mobile, two on desktop. Order: reverse-chronological — explicitly Shift → Onyxia → Veriti → Semperis → Check Point. (The featured work — Shift — also appears here as tile #1. Intentional repetition for emphasis.)
-- Each tile: hero image, title (`company`), role + period meta line, and the 1–2 sentence `blurb` from `work.md`. Click → `/work/<slug>`.
-- The existing "Shuffle" button is removed.
-- Semperis has no images yet. Its tile renders with the existing `SkeletonImage` pulsing placeholder until images are added.
+The Hero promotes a specific case study, not a role. Layout: full-bleed (or wide-contained) editorial block with image + title + 1-line frame + "Read the case study →" affordance.
+
+Fields it reads from the featured work:
+- **Image:** the `hero` field in the featured work's `work.md` front-matter (or the first image alphabetically in the folder if `hero` is unset).
+- **Title:** the H1 in the markdown body of the featured work's `work.md` (e.g. "Designing for the Supervisor").
+- **Frame:** the `excerpt` field in front-matter — 1–2 sentence narrative-flavoured summary of the case study.
+
+Clicking the Hero → `/work/<slug>` for the featured work.
+
+Featured-work selection: a `featured: true` flag in exactly one `work.md`. Build (or content loader) errors if zero or more than one work is flagged. Initial featured pick: **Shift**.
+
+### Recent Work — the *role* framing
+
+A 5-item grid (one tile per workplace). One column on mobile, two on desktop.
+
+Each tile reads:
+- **Image:** the same `hero` field from the work's `work.md` (or first alphabetical), unless `tileImage` is set in front-matter.
+- **Title:** `company` from the `cv.md` Experience section (e.g. "Shift").
+- **Meta line:** `role · period` from `cv.md`.
+- **Blurb:** the `blurb` field in `work.md` front-matter — 1–2 sentences, challenge + outcome shape. (Falls back to the `cv.md` summary paragraph if `blurb` is absent — but for this restructure all 5 works will define their own `blurb`.)
+- **Click:** `/work/<slug>`.
+
+Order: reverse-chronological, taken from a `order` field in each `work.md` (lower = earlier on the page). Locked initial order: Shift (1), Onyxia (2), Veriti (3), Semperis (4), Check Point (5). Matches the current order in `cv.md`.
+
+The featured work (Shift) appears here as tile #1 *in addition to* being in the Hero. The Hero and the tile are complementary, not repeats — Hero = case-study presentation, tile = role-level presentation. Same destination URL, different framings.
+
+Semperis has no images yet. Its tile renders with the existing `SkeletonImage` pulsing placeholder until images are added.
+
+The current "Shuffle" button is removed.
 
 ### Mega Footer
+
 See the "Mega Footer" section below.
 
 ## Work item (`/work/<slug>`)
@@ -57,66 +77,61 @@ See the "Mega Footer" section below.
 Single centred column. Top to bottom:
 
 1. **Back link** (`← Back` → `/`).
-2. **Hero image.** Determined by: (a) the `hero` field in `work.md` front-matter if present; otherwise (b) the first image in the folder by alphabetical filename.
-3. **Title** (`title` from front-matter — defaults to `company` if `title` not set).
-4. **Meta line.** `Role · Company · Period`, all from front-matter.
-5. **Body.** Markdown body of `work.md`. May include inline images that reference sibling files by filename (`![alt](image.webp)`).
-6. **Image gallery.** All images in the folder, excluding the hero and any images already referenced inline in the body. Stacked vertically, full-width within the column. Click → lightbox (existing component reused).
+2. **Hero image.** From `work.md` front-matter `hero` field, or the first image alphabetically.
+3. **Title.** The H1 of `work.md`'s markdown body if present (the case-study title — e.g. "Designing for the Supervisor"); otherwise the `company` from `cv.md`.
+4. **Meta line.** `Role · Company · Period`, read from `cv.md`.
+5. **Body.** The markdown body of `work.md` (rendered with `react-markdown` + `remark-gfm`). Inline images reference sibling files by filename. For works where `work.md`'s body holds the full case-study narrative (Shift, Veriti, Check Point), this section is long-form. For works without a case study (Onyxia, Semperis), the body is short — a paragraph or two.
+6. **Image gallery.** All images in the folder, excluding the hero image and any images already referenced inline in the body. Stacked vertically, full-width. Click → lightbox (existing component reused).
 7. **Mega Footer.**
 
-The same template handles both short (Onyxia, Semperis) and long-form (Shift, Veriti, Check Point) bodies. The only difference is body length.
+One layout template handles short and long bodies — only the body length differs.
 
 ## Mega Footer (global)
 
-Present at the bottom of every page (Home and Work item). Layout: two columns on desktop (`md:` and up), stacked on mobile.
+Lives at the bottom of every page (Home and Work item). Two columns on desktop (`md:` and up); stacked on mobile.
 
 **Left column:**
 - Profile photo (larger than nav avatar — target ~120 × 120).
 - Name: `Amit Kaplinsky`.
 - 1-line tagline: `Product designer. AI builder.`
-- Contact links (vertical list): email, WhatsApp, LinkedIn. Same style as the current `/about` Contact section.
+- Contact links (vertical): email, WhatsApp, LinkedIn. Same style as the current `/about` Contact section.
 
 **Right column:**
-- A condensed Experience list — 5 rows, one per work, each showing `Role · Company · Period`. Source: `work.md` front-matter for each work.
-- "Download CV" link, styled as a button. Target: `/cv` (the hidden printable HTML page; user prints to PDF from there).
+- A condensed Experience list — 5 rows, one per work, each showing `Role · Company · Period`. Read directly from the `## Experience` section of `cv.md` (untouched).
+- "Download CV" link, styled as a button → `/cv` (the hidden printable HTML; user prints to PDF from the browser when they want a file).
 
-Behavioural note: the footer's `position: fixed`-reveal mechanic (App.tsx + `marginBottom: footerH`) needs verification against this taller content. If the reveal exposes the entire footer immediately on short pages, switch the footer to in-flow (`position: static` at end of page) and remove the reveal trick. Decide at implementation time based on what looks right.
+**Reveal mechanic.** The current footer uses `position: fixed` behind content + `marginBottom: footerH` to reveal on scroll. Need to verify this still feels right with a taller two-column footer. Likely fine on Home (long page) and on long Work items; potentially overwhelming on short Work items (Onyxia, Semperis). Decide at implementation time: keep reveal mechanic, or switch to in-flow static footer at the end of content. The spec stays neutral on which.
 
 ## Content model
 
 ```
 src/content/
-  cv.md                   ← header (name/tagline/contacts), certs, education, skills only
-                            (no Experience section — moved out)
+  cv.md                       ← UNCHANGED. Existing format and structure preserved exactly.
   experience/
     shift/
-      work.md             ← front-matter + body
-      hero.webp           ← optional; if missing, first image alphabetically is hero
-      00-login.jpg
-      01-shift-home.png
-      ...
+      work.md                 ← new; front-matter + case-study body
+      [existing images]       ← keep
+      cover-image.webp        ← moved from writing/designing-for-the-supervisor/
     onyxia-cyber/
-      work.md
-      01-SSM-1.jpg
-      ...
+      work.md                 ← new; front-matter + short body
+      [existing images]
     veriti/
-      work.md
-      01.jpg ... 07.jpg
-      cover-image.webp    ← moved from writing/sailing-the-data-oceans/
+      work.md                 ← new; front-matter + case-study body
+      [existing images]
+      cover-image.webp        ← moved from writing/sailing-the-data-oceans/
       dropdown-row.webp
       outlook-layout.webp
       picker-container.webp
       picker-2.webp
       search-results-picker.webp
     semperis/
-      work.md             ← present even with no images yet
+      work.md                 ← new; front-matter + short body (no images yet)
     checkpoint/
-      work.md
-      01-details.jpg ... 06-mainPage.jpg
-      EndPoint_Ani_Ref.gif ... ZA_Ani_Ref.gif
-      cover-image.webp    ← moved from writing/falling-down-the-rabbit-hole/
-      InitialConcept.webp
+      work.md                 ← new; front-matter + case-study body
+      [existing images]
+      cover-image.webp        ← moved from writing/falling-down-the-rabbit-hole/
       HomeTabConcepts.webp
+      InitialConcept.webp
       ItemPage.webp
       OnBoarding.webp
       OtherVendors.webp
@@ -129,54 +144,45 @@ YAML front-matter + markdown body:
 
 ```markdown
 ---
-company: Shift
-role: Product Design Lead
-period: 10/2024 – Now
-title: Designing for the Supervisor          # optional, defaults to company
-blurb: Reframing TPRM around the agent doing the work — and designing the workspace for the supervisor of that agent.
-featured: true                                # at most one work has this
-hero: 01-shift-home.png                       # optional; defaults to first image alphabetically
-order: 1                                      # used for tile + footer ordering
+blurb: AI-powered vendor security designed from zero — design system, onboarding, every surface owned end to end.
+excerpt: Reframing TPRM around the agent doing the work — and the workspace for the human who supervises it.
+featured: true                      # at most one work
+order: 1                            # tile + footer ordering (asc)
+hero: 01-shift-home.png             # optional; defaults to first image alphabetically
+tileImage: 01-shift-home.png        # optional; defaults to value of `hero` (or first alphabetical)
 ---
 
-In my current role at Shift, I've been working on the next generation of vendor risk software...
-[full case study body — moved from writing/designing-for-the-supervisor/index.md]
+# Designing for the Supervisor
+
+[case-study body — moved from writing/designing-for-the-supervisor/index.md]
 ```
 
-Parser changes: extend `src/lib/content.ts` to use `remark-frontmatter` + a YAML parser (e.g. `yaml` package) to read each `work.md` front-matter into a typed object. Existing `parseCV()` shrinks to handle only header + certs + education + skills.
+The two front-matter blurb fields differ in *what* they describe:
+- `blurb` describes the **work** (role-shaped: "I did X at Shift").
+- `excerpt` describes the **case study** (narrative-shaped: "Here's the story this case study tells").
 
-### What lives in `cv.md` after this change
+**Field semantics:**
+- `blurb` — tile copy on the home page (role-level, challenge + outcome).
+- `excerpt` — hero copy on the home page (case-study narrative summary). Only meaningful when `featured: true`. Often the same shape/text as `blurb`, but distinct so they can diverge.
+- `featured` — boolean. Exactly one `work.md` may set this to `true`.
+- `order` — integer used to sort tiles on Home and rows in the footer Experience list.
+- `hero` — filename of the hero image used in: the home-page Hero (if featured) AND the work-page hero. Defaults to first alphabetical.
+- `tileImage` — filename of the tile image. Defaults to `hero`. Allows the home tile to show a different image from the page hero if desired.
+- **Body H1** — used as the case-study title in: the home-page Hero (if featured) AND the work-page title. If absent, the work-page title falls back to `company` from `cv.md`.
 
-```markdown
-# Amit Kaplinsky
+For works without a case study (Onyxia, Semperis), `work.md` still exists but:
+- `excerpt` and `featured` are omitted.
+- Body has no H1 (or just a placeholder); the work-page title falls back to `company`.
+- Body is short — a paragraph or two.
 
-Product Designer. AI Builder.
+### What `cv.md` is used for, post-restructure
 
-Tel Aviv · [email] · [phone] · [LinkedIn] · [Portfolio]
+Unchanged source. Display layer reads:
+- **Header** (name, tagline, contacts) — used by `/cv` printable page and (selectively) by the mega footer.
+- **Experience entries** — `role`, `company`, `period`, and summary — used to compose work-item meta lines, mega-footer Experience list, and `/cv` page. The summary text is no longer surfaced on the home page (the per-work `blurb` field takes that slot).
+- **Certificates, Education, Skills** — used by `/cv`.
 
-## Certificates
-...
-
-## Education
-...
-
-## Skills
-...
-```
-
-No `## Experience` section — that's now distributed across per-work `work.md` files.
-
-### Tile/footer ordering
-
-Use the `order` field in `work.md` front-matter as the canonical sort key (ascending). Locked initial order:
-
-1. Shift
-2. Onyxia
-3. Veriti
-4. Semperis
-5. Check Point
-
-(Matches the current order in cv.md.)
+The existing `parseCV()` in `src/lib/content.ts` does not change. New code parses `work.md` files separately and joins on slug.
 
 ## Migration
 
@@ -186,71 +192,81 @@ Use the `order` field in `work.md` front-matter as the canonical sort key (ascen
 - `src/pages/WritingPost.tsx`
 - `src/pages/Playground.tsx`
 - `src/content/posts.ts`
-- `src/content/writing/` (entire folder — files move into experience folders; see below)
+- `src/content/writing/` (entire folder, after content/image migration below)
 
 ### Move
-- `src/content/writing/designing-for-the-supervisor/index.md` → merged into `src/content/experience/shift/work.md` (as body). Front-matter populated from the corresponding cv.md Shift section.
-- `src/content/writing/designing-for-the-supervisor/cover-image.webp` → `src/content/experience/shift/cover-image.webp` (or rename if a clash).
-- `src/content/writing/falling-down-the-rabbit-hole/index.md` → merged into `src/content/experience/checkpoint/work.md`.
+- `src/content/writing/designing-for-the-supervisor/index.md` → merged into the body of `src/content/experience/shift/work.md` (H1 preserved as case-study title).
+- `src/content/writing/designing-for-the-supervisor/cover-image.webp` → `src/content/experience/shift/cover-image.webp`.
+- `src/content/writing/falling-down-the-rabbit-hole/index.md` → merged into the body of `src/content/experience/checkpoint/work.md`.
 - `src/content/writing/falling-down-the-rabbit-hole/*.{webp,jpg,png,gif}` → `src/content/experience/checkpoint/`.
-- `src/content/writing/sailing-the-data-oceans/index.md` → merged into `src/content/experience/veriti/work.md`.
+- `src/content/writing/sailing-the-data-oceans/index.md` → merged into the body of `src/content/experience/veriti/work.md`.
 - `src/content/writing/sailing-the-data-oceans/*.{webp,jpg,png,gif}` → `src/content/experience/veriti/`.
 
 ### Create (new files)
-- `src/content/experience/shift/work.md` (front-matter + merged case-study body; `featured: true`)
-- `src/content/experience/onyxia-cyber/work.md` (front-matter + short body from cv.md summary)
-- `src/content/experience/veriti/work.md` (front-matter + merged case-study body)
-- `src/content/experience/semperis/work.md` (front-matter + short body from cv.md summary; no images yet — flagged)
-- `src/content/experience/checkpoint/work.md` (front-matter + merged case-study body)
+- `src/content/experience/shift/work.md` — front-matter (`featured: true`, `order: 1`, `blurb`, `excerpt`, `hero`) + body (case-study, moved from writing).
+- `src/content/experience/onyxia-cyber/work.md` — front-matter (`order: 2`, `blurb`) + short body.
+- `src/content/experience/veriti/work.md` — front-matter (`order: 3`, `blurb`, `hero`) + body (case-study, moved from writing).
+- `src/content/experience/semperis/work.md` — front-matter (`order: 4`, `blurb`) + short body. No images yet.
+- `src/content/experience/checkpoint/work.md` — front-matter (`order: 5`, `blurb`, `hero`) + body (case-study, moved from writing).
+
+### Do NOT modify
+- `src/content/cv.md` — stays as-is. Source of truth for header, experience meta, certs, education, skills.
 
 ### Rename
-- Route `/experience/:slug` → `/work/:slug`
-- `src/pages/ExperienceItem.tsx` → `src/pages/WorkItem.tsx`
-- `src/pages/Work.tsx` keeps its name (now serves the Home route).
+- Route `/experience/:slug` → `/work/:slug`.
+- `src/pages/ExperienceItem.tsx` → `src/pages/WorkItem.tsx`.
+- `src/pages/Work.tsx` retains its filename (now serves the Home route, since the Home and the Work-index were one and the same).
 
 ### Rewrite
-- `src/pages/Work.tsx` — new Home layout (Hero + Recent Work). Remove Shuffle. Read from `getAllWorks()`.
-- `src/pages/WorkItem.tsx` — body + gallery layout per "Work item" section above. Replaces the current `md:sticky` two-column layout with a single centred column.
-- `src/components/Nav.tsx` — strip down to avatar + name only. Drop centre pill, hamburger, Contact button. Mobile overlay also removed.
+- `src/pages/Work.tsx` — new Home layout (Hero + Recent Work). Remove Shuffle. Reads `getFeaturedWork()` + `getAllWorks()`.
+- `src/pages/WorkItem.tsx` — body + gallery layout per the "Work item" section above. Replaces the current `md:sticky` two-column layout with a single centred column.
+- `src/components/Nav.tsx` — strip down to avatar + name only. Drop centre pill, hamburger, Contact button, mobile overlay.
 - `src/components/Footer.tsx` — replace existing decorative footer with the mega-footer content above.
-- `src/App.tsx` — routes: `/`, `/work/:slug`, `/cv` (hidden, no nav surface), `*` → `/`.
-- `src/lib/content.ts` — replace `parseCV` to handle the shrunken cv.md (no Experience section). Add `loadWorks()` reading all `work.md` files, parsing YAML front-matter via `remark-frontmatter` + `yaml`, exposing typed `Work[]`. Add `getFeaturedWork()`, `getAllWorks()`, `getWorkBySlug()`. Remove `getAllExperienceImages()` (no longer used). Remove writing-related exports.
-- `src/lib/content.ts` — update `imageDimensionsByPath`: remove entries under `../content/writing/...`, add entries under the new `../content/experience/<slug>/...` paths for the moved images that need explicit dimensions.
+- `src/App.tsx` — routes: `/`, `/work/:slug`, `/cv` (no nav surface), `*` → `/`.
+- `src/lib/content.ts`:
+  - Keep `parseCV()` and existing CV-related exports intact.
+  - Add `loadWorks()` that reads all `experience/*/work.md` files via `import.meta.glob` with `?raw`, parses YAML front-matter (via `remark-frontmatter` + `yaml` package, or equivalent), and joins each work's body + front-matter with the matching `cv.md` Experience entry (by slug).
+  - Add exports: `getAllWorks()`, `getWorkBySlug()`, `getFeaturedWork()`.
+  - Update `imageDimensionsByPath`: remove entries under `../content/writing/...`; add entries under `../content/experience/<slug>/...` for the moved images that need explicit dimensions (Shift cover, Veriti images, Check Point images).
+  - Remove `getAllExperienceImages()` (used only by the Shuffle button, which is going away).
+  - Remove writing-related exports (`getWritingDetail`).
 
 ### Keep (unchanged)
-- `src/pages/CV.tsx` (hidden printable view, reachable only via footer "Download CV")
-- `src/content/cv.md` (still source of truth for non-work parts)
-- `src/components/SkeletonImage.tsx`, brand icons, `LottieIcon.tsx`
-- Lenis smooth scroll, fade-up animations, slide-down nav, scroll-to-top on route change, lightbox open/close transitions
-- `vite.config.ts`, build/dev scripts
+- `src/pages/CV.tsx` — hidden printable view, not linked in nav. Reached only via mega-footer "Download CV".
+- `src/content/cv.md`.
+- `src/components/SkeletonImage.tsx`, brand icons, `LottieIcon.tsx`.
+- Lenis smooth scroll, fade-up animations, slide-down nav, scroll-to-top on route change, lightbox open/close transitions.
+- `vite.config.ts`, build/dev scripts, package config.
 
-### Dependencies
-- Add `remark-frontmatter` and `yaml` (or equivalent YAML parser already compatible with unified pipeline).
+### Dependencies to add
+- `remark-frontmatter` and a YAML parser (`yaml` or equivalent) for front-matter parsing.
 
 ## Design principles
 
-1. **Minimal chrome.** The avatar/name in the top-left is the entire nav. The page itself is the UI.
-2. **Content carries.** Long-form case studies are the headline content; layouts get out of the way (single centred column, generous spacing, no decoration beyond what's already in the site).
-3. **One source per concept.** `cv.md` owns identity + credentials. Each work's folder owns that work end to end (text + images). No duplicated metadata.
+1. **Minimal chrome.** Avatar + name in the top-left is the entire nav. The page itself is the UI.
+2. **Content carries.** Case studies are the headline content; layouts get out of the way (single centred column, generous spacing, no decoration beyond what's already in the site).
+3. **One source per concept.** `cv.md` owns identity + credentials + the experience meta line. Each work's folder owns the per-work narrative (body) + the home-page framing fields (blurb, excerpt, featured, hero). No content lives in two places.
 
-## Decisions made along the way (call out at review)
+## Decisions made along the way (surface at review)
 
-- **Tile order = reverse-chronological**, mirroring current `cv.md` order. Driven by `order` field in `work.md`.
-- **Featured work appears in both Hero and Recent Work tiles** (intentional repetition; first tile is the same work as the hero).
-- **Tile blurb shape = challenge + outcome in 1–2 sentences**, lifted from the `blurb` field in `work.md`. Existing `cv.md` summaries (role narratives) are *not* reused for tiles — Amit will write fresh blurbs as part of populating each `work.md`.
-- **`/cv` stays as a hidden printable HTML route**, not linked in nav. The footer "Download CV" goes there; user prints to PDF when desired.
-- **Mega-footer reveal mechanic** (current fixed-position + reveal-on-scroll) is preserved tentatively; verify during implementation. Fallback: switch to in-flow footer.
+- **Tile order = reverse-chronological** (Shift → Onyxia → Veriti → Semperis → Check Point), driven by the `order` field in each `work.md`. Matches current `cv.md` order.
+- **Hero and Recent Work tile #1 are the same work but different framings.** Hero shows the case-study presentation (image + case-study title + excerpt); tile shows the role presentation (image + company + role/period + work blurb). Same `/work/<slug>` destination.
+- **`cv.md` stays exactly as it is.** No content moves out of it. The display layer reads from it.
+- **Tile blurbs are net-new copy.** Amit writes 5 fresh challenge/outcome lines as part of populating each `work.md`. The existing `cv.md` summaries are role narratives, not challenge/outcome blurbs; they remain in `cv.md` but are not displayed in the new Home.
+- **`/cv` stays as a hidden printable HTML route**, not linked in nav. Mega-footer "Download CV" goes there; user prints to PDF if they want a file.
+- **Mega-footer reveal mechanic** stays tentatively; verify during implementation, fall back to in-flow static footer if it fights short-page layouts.
 
 ## Out of scope
 
 - No CMS, no runtime fetching, no API. File-driven, rebuild to publish (same as today).
 - No new colours, fonts, type tokens, or motion patterns.
 - No SEO/meta-tag work as part of this restructure (separate concern).
-- No new content beyond what Amit will write for the blurbs and the Onyxia/Semperis short bodies.
+- No new content beyond what Amit writes for the blurbs/excerpts and the Onyxia + Semperis short bodies.
+- No automatic redirects from old URLs (`/about`, `/writing/*`, `/experience/*`, etc.) — they fall through to the `*` route, which redirects to `/`. (A future improvement could preserve `/experience/<slug>` → `/work/<slug>`; not part of this change.)
 
-## Open items (Amit's to resolve later)
+## Open items (Amit owns)
 
-- Writing the 5 `blurb` lines for each `work.md`.
-- Choosing the hero image filename per work (or accepting the alphabetical-first default).
-- Eventually adding Semperis images. Until then, its tile + page render with the SkeletonImage placeholder.
-- A static `cv.pdf` deliverable can be generated from `/cv` once content stabilises — not required for this restructure to ship.
+- Writing each work's `blurb` (1–2 sentences, challenge + outcome) and, for Shift, the `excerpt` (case-study narrative blurb).
+- Choosing the hero image filename per work (`hero` field), or accepting the alphabetical-first default.
+- Eventually adding Semperis images. Until then, its tile + work page render with the `SkeletonImage` placeholder.
+- Generating a static `cv.pdf` from `/cv` if desired (manual one-time export); not required for this restructure to ship.
