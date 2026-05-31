@@ -82,9 +82,12 @@ export default function Work() {
                   <div className="grid md:grid-cols-12 gap-6 md:gap-10 items-start">
                     {/* Text — left on desktop */}
                     <div className="md:col-span-5 md:order-1 order-2">
-                      <h2 className="text-[22px] sm:text-[26px] font-medium tracking-tight text-black/70 group-hover:text-black transition-colors mb-1.5 leading-tight">
-                        {work.company}
+                      <h2 className="text-[22px] sm:text-[26px] font-medium tracking-tight text-black/70 group-hover:text-black transition-colors mb-3 leading-[1.2]">
+                        {work.productTitle}
                       </h2>
+                      <p className="text-[14px] font-medium text-black/55 group-hover:text-black/80 transition-colors mb-1">
+                        {work.company}
+                      </p>
                       <p className="text-[12px] text-black/40 group-hover:text-black/60 transition-colors font-mono mb-4">
                         {work.role}
                         <span className="text-black/25 mx-2">·</span>

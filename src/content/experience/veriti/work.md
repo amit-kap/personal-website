@@ -1,4 +1,5 @@
 ---
+productTitle: Threat exposure management with one-click remediation across the security stack
 blurb: From blank slate to mature product — transformed a concept into a solution where users discover real value, through deep research and patterns that scale.
 order: 3
 ---

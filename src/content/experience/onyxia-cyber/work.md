@@ -1,4 +1,5 @@
 ---
+productTitle: Cybersecurity performance management for the CISO
 blurb: Joined an established team to elevate the UX and UI of an existing product — now landing with customers as a highly enjoyable experience.
 order: 2
 ---

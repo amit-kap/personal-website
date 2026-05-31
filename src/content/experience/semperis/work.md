@@ -1,4 +1,5 @@
 ---
+productTitle: Identity threat detection and response for Active Directory
 blurb: Built an in-house design team from scratch on a founding-stage product — transitioning from outsourced, establishing concepts and processes for fast-paced development.
 order: 4
 ---

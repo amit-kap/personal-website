@@ -1,4 +1,5 @@
 ---
+productTitle: AI agents that run third-party risk management end to end
 blurb: Designing an AI-powered vendor security platform from zero — design system, onboarding, every surface owned end to end.
 order: 1
 ---
