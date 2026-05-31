@@ -40,7 +40,7 @@ export default function Work() {
               {/* Title content overlaid at the bottom of the image */}
               <div className="absolute bottom-0 left-0 right-0 pb-12 sm:pb-16 px-5 sm:px-8 pointer-events-none">
                 <div className="2xl:mx-auto 2xl:max-w-[1440px]">
-                  <p className="text-[10px] font-mono uppercase tracking-[0.25em] text-white/75 mb-3 sm:mb-4">
+                  <p className="text-[14px] font-mono uppercase tracking-[0.2em] text-white/80 mb-4 sm:mb-5">
                     Featured
                   </p>
                   <h1 className="text-[36px] sm:text-[52px] md:text-[68px] leading-[1.02] tracking-[-0.025em] font-medium text-white max-w-3xl">
@@ -65,13 +65,13 @@ export default function Work() {
           </section>
         )}
 
-        {/* Recent Work — centered */}
+        {/* Recent Work — single-column rows, text left / image right */}
         <div className="2xl:mx-auto 2xl:max-w-[1440px]">
-          <section className="px-5 sm:px-8 pt-20 sm:pt-24 pb-24">
-            <p className="text-[10px] font-mono uppercase tracking-[0.25em] text-black/40 mb-6 animate-fade-up">
+          <section className="px-5 sm:px-8 pt-10 sm:pt-12 pb-24">
+            <p className="text-[14px] font-mono uppercase tracking-[0.2em] text-black/45 mb-10 sm:mb-12 animate-fade-up">
               Recent Work
             </p>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-12">
+            <div className="flex flex-col gap-14 md:gap-20">
               {works.map((work, i) => (
                 <Link
                   key={work.slug}
@@ -79,28 +79,40 @@ export default function Work() {
                   className="group block animate-fade-up"
                   style={{ animationDelay: `${i * 0.06}s` }}
                 >
-                  <div className="rounded-[6px] overflow-hidden border border-black/[0.05] mb-4">
-                    {work.tileImage ? (
-                      <SkeletonImage
-                        src={work.tileImage.src}
-                        alt={work.company}
-                        width={work.tileImage.width}
-                        height={work.tileImage.height}
-                        wrapperClassName="aspect-video w-full"
-                        className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
-                      />
-                    ) : (
-                      <div className="aspect-video w-full bg-black/[0.04] animate-pulse" />
-                    )}
+                  <div className="grid md:grid-cols-12 gap-6 md:gap-10 items-center">
+                    {/* Text — left on desktop */}
+                    <div className="md:col-span-5 md:order-1 order-2">
+                      <h2 className="text-[22px] sm:text-[26px] font-medium tracking-tight text-black group-hover:text-black/60 transition-colors mb-1.5 leading-tight">
+                        {work.company}
+                      </h2>
+                      <p className="text-[12px] text-black/45 font-mono mb-4">
+                        {work.role}
+                        <span className="text-black/25 mx-2">·</span>
+                        {work.period}
+                      </p>
+                      <p className="text-[15px] leading-[1.55] text-black/65 max-w-md">
+                        {work.blurb}
+                      </p>
+                    </div>
+
+                    {/* Image — right on desktop */}
+                    <div className="md:col-span-7 md:order-2 order-1">
+                      <div className="rounded-[6px] overflow-hidden border border-black/[0.05]">
+                        {work.tileImage ? (
+                          <SkeletonImage
+                            src={work.tileImage.src}
+                            alt={work.company}
+                            width={work.tileImage.width}
+                            height={work.tileImage.height}
+                            wrapperClassName="aspect-video w-full"
+                            className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+                          />
+                        ) : (
+                          <div className="aspect-video w-full bg-black/[0.04] animate-pulse" />
+                        )}
+                      </div>
+                    </div>
                   </div>
-                  <div className="flex items-baseline justify-between gap-3 mb-1.5">
-                    <h2 className="text-[16px] font-medium text-black group-hover:text-black/60 transition-colors">
-                      {work.company}
-                    </h2>
-                    <span className="text-[11px] font-mono text-black/35 shrink-0">{work.period}</span>
-                  </div>
-                  <p className="text-[12px] text-black/45 font-mono mb-3">{work.role}</p>
-                  <p className="text-[14px] leading-6 text-black/65">{work.blurb}</p>
                 </Link>
               ))}
             </div>
