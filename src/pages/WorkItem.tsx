@@ -21,7 +21,7 @@ function isImageOnlyParagraph(children: React.ReactNode) {
 }
 
 const markdownComponents = (images: Record<string, ContentImage>) => ({
-  // H1 is the case-study title, shown in the hero; suppressed in the body.
+  // H1 is the case-study title, rendered above the markdown body; suppressed here.
   h1: () => null,
   h2: ({ children }: { children?: React.ReactNode }) => (
     <h2 className="text-[24px] sm:text-[28px] font-medium mt-16 mb-3 leading-tight">{children}</h2>
@@ -106,48 +106,37 @@ export default function WorkItem() {
 
   return (
     <div className="relative z-10 min-h-screen bg-white">
-      <main className="pt-14 w-full">
-        {/* Full-bleed hero — same shape as the Home hero */}
-        <section className="relative -mt-14 animate-fade-up">
-          <div className="relative w-full h-[88vh] min-h-[560px] max-h-[860px] overflow-hidden bg-black">
-            {heroImage && (
-              <SkeletonImage
-                src={heroImage.src}
-                alt={heroTitle}
-                width={heroImage.width}
-                height={heroImage.height}
-                loading="eager"
-                wrapperClassName="absolute inset-0 w-full h-full"
-                className="w-full h-full object-cover"
-              />
-            )}
-            <div
-              className="absolute inset-0 pointer-events-none"
-              style={{
-                background:
-                  'linear-gradient(to bottom, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.10) 14%, rgba(0,0,0,0) 28%, rgba(0,0,0,0.30) 48%, rgba(0,0,0,0.70) 78%, rgba(0,0,0,0.88) 100%)',
-              }}
-            />
-          </div>
-
-          {/* Title overlay at the bottom of the image */}
-          <div className="absolute bottom-0 left-0 right-0 pb-12 sm:pb-16 px-5 sm:px-8 pointer-events-none">
-            <div className="2xl:mx-auto 2xl:max-w-[1440px]">
-              <h1 className="text-[36px] sm:text-[52px] md:text-[68px] leading-[1.02] tracking-[-0.025em] font-medium text-white max-w-3xl">
-                {heroTitle}
-              </h1>
-              {heroExcerpt && (
-                <p className="mt-4 sm:mt-5 text-[16px] sm:text-[19px] leading-[1.45] text-white/85 max-w-2xl">
-                  {heroExcerpt}
-                </p>
-              )}
-            </div>
-          </div>
-        </section>
-
-        {/* Body — case study text + its own inline images */}
-        <article className="2xl:mx-auto 2xl:max-w-[1440px] px-5 sm:px-8 pt-16 sm:pt-20 pb-20 animate-fade-up">
+      <main className="flex-1 pt-14 w-full">
+        <article className="2xl:mx-auto 2xl:max-w-[1440px] px-5 sm:px-8 pt-14 sm:pt-20 pb-20 animate-fade-up">
           <div className="max-w-3xl mx-auto">
+            {/* Hero image, contained — aligns with the article text */}
+            {heroImage && (
+              <div className="rounded-[6px] overflow-hidden border border-black/[0.05] mb-10 sm:mb-12">
+                <SkeletonImage
+                  src={heroImage.src}
+                  alt={heroTitle}
+                  width={heroImage.width}
+                  height={heroImage.height}
+                  loading="eager"
+                  wrapperClassName="aspect-[16/9] w-full"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            )}
+
+            {/* Title */}
+            <h1 className="text-[30px] sm:text-[38px] md:text-[46px] leading-[1.05] tracking-[-0.02em] font-medium text-black mb-4">
+              {heroTitle}
+            </h1>
+
+            {/* Excerpt */}
+            {heroExcerpt && (
+              <p className="text-[17px] sm:text-[19px] leading-[1.5] text-black/55 mb-12">
+                {heroExcerpt}
+              </p>
+            )}
+
+            {/* Body */}
             {bodyContent && (
               <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents(bodyImagesMap)}>
                 {bodyContent}
