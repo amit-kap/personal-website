@@ -394,11 +394,17 @@ export function getWorkBySlug(slug: string): Work | undefined {
 export interface CaseStudy {
   slug: string;                    // writing folder name
   workSlug: string;                // links to a Work
+  title: string;                   // parsed from the first H1 in body
   excerpt: string;                 // 1–2 sentence narrative summary for Home Hero
   featured: boolean;
   coverImage?: ContentImage;
   body: string;                    // markdown body (includes H1)
   bodyImages: Record<string, ContentImage>;
+}
+
+function extractH1(body: string): string {
+  const m = body.match(/^#\s+(.+?)\s*$/m);
+  return m ? m[1].trim() : '';
 }
 
 interface CaseStudyFrontMatter {
@@ -431,13 +437,15 @@ function buildCaseStudies(): CaseStudy[] {
       if (key) coverImage = images[key];
     }
 
+    const trimmedBody = body.trim();
     out.push({
       slug,
       workSlug: fm.work,
+      title: extractH1(trimmedBody),
       excerpt: fm.excerpt ?? '',
       featured: fm.featured === true,
       coverImage,
-      body: body.trim(),
+      body: trimmedBody,
       bodyImages: images,
     });
   }
