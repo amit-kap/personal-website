@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
-import Lenis from 'lenis'
 import Nav from '@/components/Nav'
 import Footer from '@/components/Footer'
 import Work from '@/pages/Work'
@@ -11,7 +10,6 @@ export default function App() {
   const location = useLocation()
   const footerRef = useRef<HTMLDivElement | null>(null)
   const [footerH, setFooterH] = useState(0)
-  const lenisRef = useRef<Lenis | null>(null)
 
   useEffect(() => {
     const el = footerRef.current
@@ -24,33 +22,15 @@ export default function App() {
   }, [])
 
   useEffect(() => {
-    const lenis = new Lenis({ duration: 0.9, easing: (t) => 1 - Math.pow(1 - t, 3) })
-    lenisRef.current = lenis
-    let rafId = 0
-    const raf = (time: number) => {
-      lenis.raf(time)
-      rafId = requestAnimationFrame(raf)
-    }
-    rafId = requestAnimationFrame(raf)
-    return () => {
-      cancelAnimationFrame(rafId)
-      lenis.destroy()
-      lenisRef.current = null
-    }
-  }, [])
-
-  useEffect(() => {
     const scrollTo = () => {
       if (location.hash) {
         const el = document.getElementById(location.hash.slice(1))
         if (el) {
-          if (lenisRef.current) lenisRef.current.scrollTo(el, { offset: -60 })
-          else el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+          el.scrollIntoView({ behavior: 'smooth', block: 'start' })
           return
         }
       }
-      if (lenisRef.current) lenisRef.current.scrollTo(0, { immediate: true })
-      else window.scrollTo(0, 0)
+      window.scrollTo(0, 0)
     }
     // Defer one frame so the new route's DOM is in place
     const raf = requestAnimationFrame(scrollTo)
