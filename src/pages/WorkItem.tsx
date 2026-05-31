@@ -189,7 +189,7 @@ export default function WorkItem() {
 
           {/* Case study section (conditional) */}
           {caseStudy && (
-            <section className="mt-20 pt-12 border-t border-black/10 max-w-3xl mx-auto">
+            <section id="case-study" className="mt-20 pt-12 border-t border-black/10 max-w-3xl mx-auto scroll-mt-20">
               <p className="text-[10px] font-mono uppercase tracking-[0.25em] text-black/40 mb-2">
                 Case Study
               </p>

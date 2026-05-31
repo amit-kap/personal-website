@@ -40,9 +40,22 @@ export default function App() {
   }, [])
 
   useEffect(() => {
-    if (lenisRef.current) lenisRef.current.scrollTo(0, { immediate: true })
-    else window.scrollTo(0, 0)
-  }, [location.pathname])
+    const scrollTo = () => {
+      if (location.hash) {
+        const el = document.getElementById(location.hash.slice(1))
+        if (el) {
+          if (lenisRef.current) lenisRef.current.scrollTo(el, { offset: -60 })
+          else el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+          return
+        }
+      }
+      if (lenisRef.current) lenisRef.current.scrollTo(0, { immediate: true })
+      else window.scrollTo(0, 0)
+    }
+    // Defer one frame so the new route's DOM is in place
+    const raf = requestAnimationFrame(scrollTo)
+    return () => cancelAnimationFrame(raf)
+  }, [location.pathname, location.hash])
 
   return (
     <>

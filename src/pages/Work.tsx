@@ -13,7 +13,7 @@ export default function Work() {
         {/* Hero — featured case study */}
         {featured && featuredWork && (
           <section className="px-5 sm:px-8 pt-16 sm:pt-24 pb-20 sm:pb-28 animate-fade-up">
-            <Link to={`/work/${featured.workSlug}`} className="group block">
+            <Link to={`/work/${featured.workSlug}#case-study`} className="group block">
               {featured.coverImage && (
                 <div className="rounded-[8px] overflow-hidden border border-black/[0.05] mb-10">
                   <SkeletonImage
