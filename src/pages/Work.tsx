@@ -1,6 +1,55 @@
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { getAllWorks, getFeaturedCaseStudy, getWorkBySlug } from '@/lib/content'
+import { getAllWorks, getFeaturedCaseStudy, getWorkBySlug, type ContentImage } from '@/lib/content'
 import SkeletonImage from '@/components/SkeletonImage'
+
+function CyclingImage({
+  images,
+  alt,
+  startDelay = 0,
+}: {
+  images: ContentImage[]
+  alt: string
+  startDelay?: number
+}) {
+  const [idx, setIdx] = useState(0)
+
+  useEffect(() => {
+    if (images.length <= 1) return
+    let intervalId: ReturnType<typeof setInterval> | undefined
+    const timeoutId = setTimeout(() => {
+      intervalId = setInterval(() => {
+        setIdx((i) => (i + 1) % images.length)
+      }, 3000)
+    }, startDelay)
+    return () => {
+      clearTimeout(timeoutId)
+      if (intervalId) clearInterval(intervalId)
+    }
+  }, [images.length, startDelay])
+
+  if (images.length === 0) {
+    return <div className="aspect-video w-full bg-black/[0.04] animate-pulse" />
+  }
+
+  return (
+    <div className="relative aspect-video w-full bg-black/[0.04]">
+      {images.map((img, i) => (
+        <img
+          key={img.src}
+          src={img.src}
+          alt={i === 0 ? alt : ''}
+          width={img.width}
+          height={img.height}
+          loading={i === 0 ? 'eager' : 'lazy'}
+          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ease-out ${
+            i === idx ? 'opacity-100' : 'opacity-0'
+          }`}
+        />
+      ))}
+    </div>
+  )
+}
 
 export default function Work() {
   const works = getAllWorks()
@@ -98,21 +147,14 @@ export default function Work() {
                       </p>
                     </div>
 
-                    {/* Image — right on desktop */}
+                    {/* Image — right on desktop, auto-cycles through folder */}
                     <div className="md:col-span-7 md:order-2 order-1">
-                      <div className="rounded-[6px] overflow-hidden border border-black/[0.05]">
-                        {work.tileImage ? (
-                          <SkeletonImage
-                            src={work.tileImage.src}
-                            alt={work.company}
-                            width={work.tileImage.width}
-                            height={work.tileImage.height}
-                            wrapperClassName="aspect-video w-full"
-                            className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
-                          />
-                        ) : (
-                          <div className="aspect-video w-full bg-black/[0.04] animate-pulse" />
-                        )}
+                      <div className="rounded-[6px] overflow-hidden border border-black/[0.05] transition-transform duration-700 ease-out group-hover:scale-[1.03]">
+                        <CyclingImage
+                          images={work.allImages}
+                          alt={work.company}
+                          startDelay={i * 450}
+                        />
                       </div>
                     </div>
                   </div>

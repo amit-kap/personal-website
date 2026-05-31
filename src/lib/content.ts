@@ -282,9 +282,10 @@ export interface Work {
   blurb: string;                 // tile copy (work.md `blurb`, falls back to cvSummary)
   order: number;                 // ascending sort key
   heroImage?: ContentImage;      // top of work page
-  tileImage?: ContentImage;      // Recent Work tile
+  tileImage?: ContentImage;      // Recent Work tile (first frame of cycle)
   body: string;                  // work.md markdown body (overview paragraphs)
   bodyImages: Record<string, ContentImage>; // keyed by filename, for inline image refs
+  allImages: ContentImage[];     // every image in the folder, sorted (Recent Work cycles through these)
   galleryImages: ContentImage[]; // everything in folder excluding heroImage
 }
 
@@ -351,6 +352,7 @@ function buildWorks(): Work[] {
       tileImage,
       body: body.trim(),
       bodyImages: imageMap,
+      allImages,
       galleryImages,
     });
   }
