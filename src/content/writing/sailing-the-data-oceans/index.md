@@ -1,3 +1,9 @@
+---
+work: veriti
+excerpt: How we helped Veriti users wade through their data with a filtering pattern that scales.
+cover: cover-image.webp
+---
+
 # Sailing the Data Oceans
 
 ### Filtering for better user experience
