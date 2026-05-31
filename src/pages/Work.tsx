@@ -1,36 +1,44 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { getAllWorks, getFeaturedCaseStudy, getWorkBySlug, type ContentImage } from '@/lib/content'
+import { getAllWorks, getFeaturedCaseStudy, getWorkBySlug, type ContentImage, type Work } from '@/lib/content'
 import SkeletonImage from '@/components/SkeletonImage'
 
 function CyclingImage({
   images,
   alt,
+  intervalMs,
   startDelay = 0,
 }: {
   images: ContentImage[]
   alt: string
+  intervalMs: number
   startDelay?: number
 }) {
   const [idx, setIdx] = useState(0)
+  const [armed, setArmed] = useState(startDelay === 0)
 
+  // Honour the initial stagger delay once, then keep the row "armed"
   useEffect(() => {
-    if (images.length <= 1) return
-    let intervalId: ReturnType<typeof setInterval> | undefined
-    const timeoutId = setTimeout(() => {
-      intervalId = setInterval(() => {
-        setIdx((i) => (i + 1) % images.length)
-      }, 3000)
-    }, startDelay)
-    return () => {
-      clearTimeout(timeoutId)
-      if (intervalId) clearInterval(intervalId)
-    }
-  }, [images.length, startDelay])
+    if (startDelay === 0) return
+    const t = setTimeout(() => setArmed(true), startDelay)
+    return () => clearTimeout(t)
+  }, [startDelay])
+
+  // Cycle. Re-runs when intervalMs changes (e.g. on hover).
+  useEffect(() => {
+    if (!armed || images.length <= 1) return
+    const id = setInterval(() => {
+      setIdx((i) => (i + 1) % images.length)
+    }, intervalMs)
+    return () => clearInterval(id)
+  }, [armed, images.length, intervalMs])
 
   if (images.length === 0) {
     return <div className="aspect-video w-full bg-black/[0.04] animate-pulse" />
   }
+
+  const fast = intervalMs < 1000
+  const fadeClass = fast ? 'duration-200' : 'duration-700'
 
   return (
     <div className="relative aspect-video w-full bg-black/[0.04]">
@@ -42,12 +50,58 @@ function CyclingImage({
           width={img.width}
           height={img.height}
           loading={i === 0 ? 'eager' : 'lazy'}
-          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ease-out ${
+          className={`absolute inset-0 w-full h-full object-cover transition-opacity ease-out ${fadeClass} ${
             i === idx ? 'opacity-100' : 'opacity-0'
           }`}
         />
       ))}
     </div>
+  )
+}
+
+function WorkRow({ work, index }: { work: Work; index: number }) {
+  const [hovered, setHovered] = useState(false)
+
+  return (
+    <Link
+      to={`/work/${work.slug}`}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      className="group block animate-fade-up"
+      style={{ animationDelay: `${index * 0.06}s` }}
+    >
+      <div className="grid md:grid-cols-12 gap-6 md:gap-10 items-start">
+        {/* Text — left on desktop */}
+        <div className="md:col-span-5 md:order-1 order-2">
+          <h2 className="text-[22px] sm:text-[26px] font-medium tracking-tight text-black/70 group-hover:text-black transition-colors mb-3 leading-[1.2]">
+            {work.productTitle}
+          </h2>
+          <p className="text-[14px] font-medium text-black/55 group-hover:text-black/80 transition-colors mb-1">
+            {work.company}
+          </p>
+          <p className="text-[12px] text-black/40 group-hover:text-black/60 transition-colors font-mono mb-4">
+            {work.role}
+            <span className="text-black/25 mx-2">·</span>
+            {work.period}
+          </p>
+          <p className="text-[15px] leading-[1.55] text-black/55 group-hover:text-black/80 transition-colors max-w-md">
+            {work.blurb}
+          </p>
+        </div>
+
+        {/* Image — right on desktop, auto-cycles through folder (fast on hover) */}
+        <div className="md:col-span-7 md:order-2 order-1">
+          <div className="rounded-[6px] overflow-hidden border border-black/[0.05] transition-transform duration-700 ease-out group-hover:scale-[1.03]">
+            <CyclingImage
+              images={work.allImages}
+              alt={work.company}
+              intervalMs={hovered ? 500 : 3000}
+              startDelay={index * 450}
+            />
+          </div>
+        </div>
+      </div>
+    </Link>
   )
 }
 
@@ -122,43 +176,7 @@ export default function Work() {
             </p>
             <div className="flex flex-col gap-14 md:gap-20">
               {works.map((work, i) => (
-                <Link
-                  key={work.slug}
-                  to={`/work/${work.slug}`}
-                  className="group block animate-fade-up"
-                  style={{ animationDelay: `${i * 0.06}s` }}
-                >
-                  <div className="grid md:grid-cols-12 gap-6 md:gap-10 items-start">
-                    {/* Text — left on desktop */}
-                    <div className="md:col-span-5 md:order-1 order-2">
-                      <h2 className="text-[22px] sm:text-[26px] font-medium tracking-tight text-black/70 group-hover:text-black transition-colors mb-3 leading-[1.2]">
-                        {work.productTitle}
-                      </h2>
-                      <p className="text-[14px] font-medium text-black/55 group-hover:text-black/80 transition-colors mb-1">
-                        {work.company}
-                      </p>
-                      <p className="text-[12px] text-black/40 group-hover:text-black/60 transition-colors font-mono mb-4">
-                        {work.role}
-                        <span className="text-black/25 mx-2">·</span>
-                        {work.period}
-                      </p>
-                      <p className="text-[15px] leading-[1.55] text-black/55 group-hover:text-black/80 transition-colors max-w-md">
-                        {work.blurb}
-                      </p>
-                    </div>
-
-                    {/* Image — right on desktop, auto-cycles through folder */}
-                    <div className="md:col-span-7 md:order-2 order-1">
-                      <div className="rounded-[6px] overflow-hidden border border-black/[0.05] transition-transform duration-700 ease-out group-hover:scale-[1.03]">
-                        <CyclingImage
-                          images={work.allImages}
-                          alt={work.company}
-                          startDelay={i * 450}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </Link>
+                <WorkRow key={work.slug} work={work} index={i} />
               ))}
             </div>
           </section>
