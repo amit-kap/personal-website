@@ -4,11 +4,7 @@ import Lenis from 'lenis'
 import Nav from '@/components/Nav'
 import Footer from '@/components/Footer'
 import Work from '@/pages/Work'
-import About from '@/pages/About'
-import Playground from '@/pages/Playground'
-import ExperienceItem from '@/pages/ExperienceItem'
-import Writing from '@/pages/Writing'
-import WritingPost from '@/pages/WritingPost'
+import WorkItem from '@/pages/WorkItem'
 import CV from '@/pages/CV'
 
 export default function App() {
@@ -57,11 +53,7 @@ export default function App() {
       <div className="app-content" style={{ marginBottom: footerH }}>
         <Routes>
           <Route path="/" element={<Work />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/playground" element={<Playground />} />
-          <Route path="/writing" element={<Writing />} />
-          <Route path="/writing/:slug" element={<WritingPost />} />
-          <Route path="/experience/:slug" element={<ExperienceItem />} />
+          <Route path="/work/:slug" element={<WorkItem />} />
           <Route path="/cv" element={<CV />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
