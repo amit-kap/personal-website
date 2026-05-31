@@ -40,20 +40,14 @@ export default function Work() {
               {/* Title content overlaid at the bottom of the image */}
               <div className="absolute bottom-0 left-0 right-0 pb-12 sm:pb-16 px-5 sm:px-8 pointer-events-none">
                 <div className="2xl:mx-auto 2xl:max-w-[1440px]">
-                  <p
-                    className="text-[10px] font-mono uppercase tracking-[0.25em] text-white/75 mb-3 sm:mb-4"
-                    style={{ textShadow: '0 1px 8px rgba(0,0,0,0.55)' }}
-                  >
+                  <p className="text-[10px] font-mono uppercase tracking-[0.25em] text-white/75 mb-3 sm:mb-4">
                     Featured
                   </p>
                   <h1 className="text-[36px] sm:text-[52px] md:text-[68px] leading-[1.02] tracking-[-0.025em] font-medium text-white max-w-3xl">
                     {featured.title}
                   </h1>
                   {featured.excerpt && (
-                    <p
-                      className="mt-4 sm:mt-5 text-[16px] sm:text-[19px] leading-[1.45] text-white/85 max-w-2xl"
-                      style={{ textShadow: '0 1px 12px rgba(0,0,0,0.5)' }}
-                    >
+                    <p className="mt-4 sm:mt-5 text-[16px] sm:text-[19px] leading-[1.45] text-white/85 max-w-2xl">
                       {featured.excerpt}
                     </p>
                   )}
