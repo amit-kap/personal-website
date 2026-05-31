@@ -104,11 +104,6 @@ function imageAssetFromPath(path: string, src: string): ContentImage {
   return { src, ...dimensions };
 }
 
-function slugFromPath(path: string): string {
-  const match = path.match(/experience\/([^/]+)\//);
-  return match ? match[1] : '';
-}
-
 function getImagesForSlug(slug: string): ContentImage[] {
   return Object.entries(expImageModules)
     .filter(([path]) => path.includes(`/experience/${slug}/`))
@@ -248,20 +243,7 @@ export function getCoverImage(slug: string, index = 0): string | undefined {
   return getImagesForSlug(slug)[index]?.src;
 }
 
-export function getAllExperienceImages(): Array<{ slug: string } & ContentImage> {
-  return Object.entries(expImageModules).map(([path, mod]) => ({
-    slug: slugFromPath(path),
-    ...imageAssetFromPath(path, mod.default),
-  }));
-}
-
-// ---- Writing ----
-
-export interface WritingDetail {
-  slug: string;
-  content: string;
-  images: Record<string, ContentImage>;
-}
+// ---- Writing folder loaders (used by case-study loader below) ----
 
 const writingContentModules = import.meta.glob<string>(
   '../content/writing/*/index.md',
@@ -286,13 +268,6 @@ function writingImagesMap(slug: string): Record<string, ContentImage> {
     if (filename) map[filename] = imageAssetFromPath(path, mod.default);
   }
   return map;
-}
-
-export function getWritingDetail(slug: string): WritingDetail | undefined {
-  const entry = Object.entries(writingContentModules).find(([p]) => writingSlugFromPath(p) === slug);
-  if (!entry) return undefined;
-  const { body } = stripFrontMatter(entry[1]);
-  return { slug, content: body, images: writingImagesMap(slug) };
 }
 
 // ---- Work (per-experience-folder work.md) ----
