@@ -1,5 +1,5 @@
 import { Children, isValidElement } from 'react'
-import { useParams, Link } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import {
@@ -151,20 +151,6 @@ export default function WorkItem() {
           className="2xl:mx-auto 2xl:max-w-[1440px] px-5 sm:px-8 pt-16 sm:pt-20 pb-20 animate-fade-up scroll-mt-20"
         >
           <div className="max-w-3xl mx-auto">
-            <Link
-              to="/"
-              className="inline-block text-[11px] font-mono uppercase tracking-[0.2em] text-black/30 hover:text-black transition-colors duration-200 mb-10"
-            >
-              ← Back
-            </Link>
-            <p className="text-[13px] text-black/45 mb-12">
-              <span className="font-medium text-black/75">{work.role}</span>
-              <span className="mx-1.5">·</span>
-              <span>{work.company}</span>
-              <span className="mx-1.5">·</span>
-              <span className="font-mono">{work.period}</span>
-            </p>
-
             {bodyContent && (
               <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents(bodyImagesMap)}>
                 {bodyContent}
