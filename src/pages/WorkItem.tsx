@@ -146,10 +146,7 @@ export default function WorkItem() {
         </section>
 
         {/* Body — case study text + its own inline images */}
-        <article
-          id="case-study"
-          className="2xl:mx-auto 2xl:max-w-[1440px] px-5 sm:px-8 pt-16 sm:pt-20 pb-20 animate-fade-up scroll-mt-20"
-        >
+        <article className="2xl:mx-auto 2xl:max-w-[1440px] px-5 sm:px-8 pt-16 sm:pt-20 pb-20 animate-fade-up">
           <div className="max-w-3xl mx-auto">
             {bodyContent && (
               <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents(bodyImagesMap)}>

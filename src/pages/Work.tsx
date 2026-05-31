@@ -116,7 +116,7 @@ export default function Work() {
         {/* Hero — featured case study (full-bleed, image extends to top of viewport behind nav) */}
         {featured && featuredWork && (
           <section className="relative -mt-14 animate-fade-up">
-            <Link to={`/work/${featured.workSlug}#case-study`} className="group block relative">
+            <Link to={`/work/${featured.workSlug}`} className="group block relative">
               {/* Full-bleed hero image */}
               <div className="relative w-full h-[88vh] min-h-[560px] max-h-[860px] overflow-hidden bg-black">
                 {featured.coverImage && (
