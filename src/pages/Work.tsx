@@ -37,8 +37,8 @@ function CyclingImage({
     return <div className="aspect-video w-full bg-black/[0.04] animate-pulse" />
   }
 
-  const fast = intervalMs < 1000
-  const fadeClass = fast ? 'duration-200' : 'duration-700'
+  const fast = intervalMs <= 1500
+  const fadeClass = fast ? 'duration-[350ms]' : 'duration-1000'
 
   return (
     <div className="relative aspect-video w-full bg-black/[0.04]">
@@ -91,11 +91,11 @@ function WorkRow({ work, index }: { work: Work; index: number }) {
 
         {/* Image — right on desktop, auto-cycles through folder (fast on hover) */}
         <div className="md:col-span-7 md:order-2 order-1">
-          <div className="rounded-[6px] overflow-hidden border border-black/[0.05] transition-transform duration-700 ease-out group-hover:scale-[1.03]">
+          <div className="rounded-[6px] overflow-hidden border border-black/[0.05]">
             <CyclingImage
               images={work.allImages}
               alt={work.company}
-              intervalMs={hovered ? 500 : 3000}
+              intervalMs={hovered ? 1000 : 8000}
               startDelay={index * 450}
             />
           </div>
