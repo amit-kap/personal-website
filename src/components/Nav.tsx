@@ -1,28 +1,51 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 
 export default function Nav() {
   const location = useLocation()
   const isHome = location.pathname === '/'
   const [overHero, setOverHero] = useState(isHome)
+  const [hidden, setHidden] = useState(false)
+  const lastScrollY = useRef(0)
 
   useEffect(() => {
-    if (!isHome) {
-      setOverHero(false)
-      return
-    }
+    if (!isHome) setOverHero(false)
+
     const onScroll = () => {
-      // Switch to light treatment once the hero image is mostly off-screen.
-      setOverHero(window.scrollY < window.innerHeight * 0.6)
+      const y = window.scrollY
+      const diff = y - lastScrollY.current
+
+      // Auto-hide on scroll down, reveal on scroll up
+      if (y < 60) {
+        setHidden(false)
+      } else if (diff > 6) {
+        setHidden(true)
+      } else if (diff < -6) {
+        setHidden(false)
+      }
+
+      // Over-hero state on home only
+      if (isHome) {
+        setOverHero(y < window.innerHeight * 0.6)
+      }
+
+      lastScrollY.current = y
     }
+
     onScroll()
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
   }, [isHome])
 
+  const navTextClass = overHero ? 'text-white' : 'text-black'
+
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 h-14 animate-slide-down-in">
-      <div className="relative 2xl:mx-auto 2xl:max-w-[1440px] h-full px-5 sm:px-8 flex items-center">
+    <nav
+      className={`fixed top-0 left-0 right-0 z-50 h-14 animate-slide-down-in transition-transform duration-300 ease-out ${
+        hidden ? '-translate-y-full' : 'translate-y-0'
+      }`}
+    >
+      <div className="relative 2xl:mx-auto 2xl:max-w-[1440px] h-full px-5 sm:px-8 flex items-center justify-between">
         <Link
           to="/"
           className="flex items-center gap-3 hover:opacity-70 transition-opacity"
@@ -36,13 +59,22 @@ export default function Nav() {
             }`}
           />
           <span
-            className={`text-[13px] font-medium whitespace-nowrap transition-colors duration-300 ${
-              overHero ? 'text-white' : 'text-black'
-            }`}
+            className={`text-[13px] font-medium whitespace-nowrap transition-colors duration-300 ${navTextClass}`}
           >
             Amit Kaplinsky
           </span>
         </Link>
+
+        <a
+          href="mailto:amitka111@gmail.com"
+          className={`text-[12px] px-4 py-2 rounded-full border transition-colors duration-300 ${
+            overHero
+              ? 'border-white/45 text-white hover:bg-white hover:text-black hover:border-white'
+              : 'border-transparent bg-black text-white hover:bg-black/75'
+          }`}
+        >
+          Contact
+        </a>
       </div>
     </nav>
   )

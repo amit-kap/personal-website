@@ -24,15 +24,15 @@ export default function Work() {
                     height={featured.coverImage.height}
                     loading="eager"
                     wrapperClassName="absolute inset-0 w-full h-full"
-                    className="w-full h-full object-cover transition-transform duration-[1100ms] ease-out group-hover:scale-[1.025]"
+                    className="w-full h-full object-cover"
                   />
                 )}
-                {/* Gradient overlay — darken top (nav legibility) and bottom (title legibility) */}
+                {/* Gradient overlay — top fade (nav legibility) + stronger bottom fade (title legibility) */}
                 <div
                   className="absolute inset-0 pointer-events-none"
                   style={{
                     background:
-                      'linear-gradient(to bottom, rgba(0,0,0,0.42) 0%, rgba(0,0,0,0.12) 16%, rgba(0,0,0,0) 38%, rgba(0,0,0,0) 55%, rgba(0,0,0,0.72) 100%)',
+                      'linear-gradient(to bottom, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.10) 14%, rgba(0,0,0,0) 28%, rgba(0,0,0,0.30) 48%, rgba(0,0,0,0.70) 78%, rgba(0,0,0,0.88) 100%)',
                   }}
                 />
               </div>
@@ -40,20 +40,35 @@ export default function Work() {
               {/* Title content overlaid at the bottom of the image */}
               <div className="absolute bottom-0 left-0 right-0 pb-12 sm:pb-16 px-5 sm:px-8 pointer-events-none">
                 <div className="2xl:mx-auto 2xl:max-w-[1440px]">
-                  <p className="text-[10px] font-mono uppercase tracking-[0.25em] text-white/70 mb-3 sm:mb-4">
-                    Case Study
+                  <p
+                    className="text-[10px] font-mono uppercase tracking-[0.25em] text-white/75 mb-3 sm:mb-4"
+                    style={{ textShadow: '0 1px 8px rgba(0,0,0,0.55)' }}
+                  >
+                    Featured
                   </p>
-                  <h1 className="text-[36px] sm:text-[52px] md:text-[68px] leading-[1.02] tracking-[-0.025em] font-medium text-white max-w-3xl">
+                  <h1
+                    className="text-[36px] sm:text-[52px] md:text-[68px] leading-[1.02] tracking-[-0.025em] font-medium text-white max-w-3xl"
+                    style={{ textShadow: '0 1px 2px rgba(0,0,0,0.35), 0 6px 24px rgba(0,0,0,0.45)' }}
+                  >
                     {featured.title}
                   </h1>
                   {featured.excerpt && (
-                    <p className="mt-4 sm:mt-5 text-[16px] sm:text-[19px] leading-[1.45] text-white/80 max-w-2xl">
+                    <p
+                      className="mt-4 sm:mt-5 text-[16px] sm:text-[19px] leading-[1.45] text-white/85 max-w-2xl"
+                      style={{ textShadow: '0 1px 12px rgba(0,0,0,0.5)' }}
+                    >
                       {featured.excerpt}
                     </p>
                   )}
-                  <span className="inline-flex items-baseline gap-2 mt-6 sm:mt-7 text-[13px] font-medium text-white border-b border-white/40 group-hover:border-white transition-colors pb-1 pointer-events-auto">
-                    Read the case study
-                    <span className="text-white/70 group-hover:text-white transition-colors">→</span>
+                  <span className="inline-flex items-baseline gap-2 mt-6 sm:mt-7 text-[13px] font-medium text-white pointer-events-auto">
+                    <span className="relative pb-1">
+                      <span>Read the case study</span>
+                      {/* base underline */}
+                      <span className="absolute left-0 right-0 bottom-0 h-px bg-white/30" />
+                      {/* hover underline — grows from left */}
+                      <span className="absolute left-0 right-0 bottom-0 h-px bg-white origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]" />
+                    </span>
+                    <span className="inline-block transition-transform duration-300 ease-out group-hover:translate-x-1.5">→</span>
                   </span>
                 </div>
               </div>
