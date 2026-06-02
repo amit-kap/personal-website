@@ -448,16 +448,28 @@ export function getCaseStudyBySlug(slug: string): CaseStudy | undefined {
   return caseStudies.find(cs => cs.slug === slug);
 }
 
+// Wrap-around adjacency so every page has both a prev and a next —
+// the last item's "next" loops back to the first, and vice versa.
 export function getAdjacentCaseStudies(slug: string): { prev?: CaseStudy; next?: CaseStudy } {
+  const n = caseStudies.length;
+  if (n <= 1) return {};
   const i = caseStudies.findIndex(cs => cs.slug === slug);
   if (i === -1) return {};
-  return { prev: caseStudies[i - 1], next: caseStudies[i + 1] };
+  return {
+    prev: caseStudies[(i - 1 + n) % n],
+    next: caseStudies[(i + 1) % n],
+  };
 }
 
 export function getAdjacentWorks(slug: string): { prev?: Work; next?: Work } {
+  const n = works.length;
+  if (n <= 1) return {};
   const i = works.findIndex(w => w.slug === slug);
   if (i === -1) return {};
-  return { prev: works[i - 1], next: works[i + 1] };
+  return {
+    prev: works[(i - 1 + n) % n],
+    next: works[(i + 1) % n],
+  };
 }
 
 export function getFeaturedCaseStudy(): CaseStudy | undefined {
