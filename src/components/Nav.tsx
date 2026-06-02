@@ -3,40 +3,33 @@ import { Link, useLocation } from 'react-router-dom'
 
 export default function Nav() {
   const location = useLocation()
-  // Only the home page has the full-bleed dark hero at the top.
   const isHome = location.pathname === '/'
-  const [overHero, setOverHero] = useState(isHome)
+
+  const [scrollY, setScrollY] = useState(() =>
+    typeof window !== 'undefined' ? window.scrollY : 0,
+  )
   const [hidden, setHidden] = useState(false)
   const lastScrollY = useRef(0)
 
   useEffect(() => {
-    if (!isHome) setOverHero(false)
-
     const onScroll = () => {
       const y = window.scrollY
+      setScrollY(y)
+
       const diff = y - lastScrollY.current
-
-      // Auto-hide on scroll down, reveal on scroll up
-      if (y < 60) {
-        setHidden(false)
-      } else if (diff > 6) {
-        setHidden(true)
-      } else if (diff < -6) {
-        setHidden(false)
-      }
-
-      // Over-hero state — white treatment while the home hero is in view
-      if (isHome) {
-        setOverHero(y < window.innerHeight * 0.6)
-      }
+      if (y < 60) setHidden(false)
+      else if (diff > 6) setHidden(true)
+      else if (diff < -6) setHidden(false)
 
       lastScrollY.current = y
     }
-
-    onScroll()
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
-  }, [isHome])
+  }, [])
+
+  const heroThreshold =
+    typeof window !== 'undefined' ? window.innerHeight * 0.6 : 0
+  const overHero = isHome && scrollY < heroThreshold
 
   const navTextClass = overHero ? 'text-white' : 'text-black'
 
