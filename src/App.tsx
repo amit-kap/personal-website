@@ -4,6 +4,7 @@ import Nav from '@/components/Nav'
 import Footer from '@/components/Footer'
 import Work from '@/pages/Work'
 import WorkItem from '@/pages/WorkItem'
+import CaseStudyPage from '@/pages/CaseStudyPage'
 import CV from '@/pages/CV'
 
 export default function App() {
@@ -47,6 +48,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Work />} />
           <Route path="/work/:slug" element={<WorkItem />} />
+          <Route path="/case-studies/:slug" element={<CaseStudyPage />} />
           <Route path="/cv" element={<CV />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>

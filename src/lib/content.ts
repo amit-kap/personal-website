@@ -429,13 +429,35 @@ function buildCaseStudies(): CaseStudy[] {
       bodyImages: images,
     });
   }
-  return out;
+  // Order case studies by their parent work's order, so the prev/next
+  // navigation on case-study pages follows the same rhythm as Recent Work.
+  return out.sort((a, b) => {
+    const orderA = works.find(w => w.slug === a.workSlug)?.order ?? 999;
+    const orderB = works.find(w => w.slug === b.workSlug)?.order ?? 999;
+    return orderA - orderB;
+  });
 }
 
 const caseStudies = buildCaseStudies();
 
 export function getAllCaseStudies(): CaseStudy[] {
   return caseStudies;
+}
+
+export function getCaseStudyBySlug(slug: string): CaseStudy | undefined {
+  return caseStudies.find(cs => cs.slug === slug);
+}
+
+export function getAdjacentCaseStudies(slug: string): { prev?: CaseStudy; next?: CaseStudy } {
+  const i = caseStudies.findIndex(cs => cs.slug === slug);
+  if (i === -1) return {};
+  return { prev: caseStudies[i - 1], next: caseStudies[i + 1] };
+}
+
+export function getAdjacentWorks(slug: string): { prev?: Work; next?: Work } {
+  const i = works.findIndex(w => w.slug === slug);
+  if (i === -1) return {};
+  return { prev: works[i - 1], next: works[i + 1] };
 }
 
 export function getFeaturedCaseStudy(): CaseStudy | undefined {
