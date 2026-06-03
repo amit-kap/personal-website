@@ -6,7 +6,6 @@
 @import '@fontsource/plus-jakarta-sans/700.css';
 @import "tailwindcss";
 @import "shadcn/tailwind.css";
-@import "lenis/dist/lenis.css";
 
 @theme {
   --font-sans: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;

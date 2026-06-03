@@ -1,54 +1,90 @@
-export default function Footer({ className = '' }: { className?: string }) {
+import { Link } from 'react-router-dom'
+import { getCV } from '@/lib/content'
+
+export default function Footer() {
+  const { header, experience } = getCV()
+
   return (
-    <footer className={`bg-black text-white ${className}`}>
-      <div className="2xl:mx-auto 2xl:max-w-[1440px] px-5 sm:px-8 pt-10 pb-5 sm:pt-12 sm:pb-6">
-        {/* Dateline */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-y-7 gap-x-8 md:gap-x-12 pb-8 sm:pb-10 border-b border-white/10">
-          <div>
-            <p className="text-[10px] font-mono uppercase tracking-[0.25em] text-white/35 mb-2.5">
-              Location
-            </p>
-            <p className="text-[14px] text-white leading-snug">Tel Aviv · GMT+3</p>
+    <footer className="bg-black text-white">
+      <div className="2xl:mx-auto 2xl:max-w-[1440px] px-5 sm:px-8 pt-12 pb-6 sm:pt-16 sm:pb-8">
+        <div className="grid md:grid-cols-2 gap-10 md:gap-16 pb-10 border-b border-white/10">
+          {/* Left: identity + contact */}
+          <div className="flex flex-col gap-6">
+            <img
+              src={`${import.meta.env.BASE_URL}profile.jpg`}
+              alt={header.name}
+              className="h-28 w-28 sm:h-32 sm:w-32 rounded-full object-cover"
+            />
+            <div>
+              <h2 className="text-[20px] font-medium text-white leading-tight">{header.name}</h2>
+              <p className="text-[14px] text-white/55 mt-1">{header.tagline}</p>
+            </div>
+            <div className="flex flex-col gap-2">
+              <a
+                href="mailto:amitka111@gmail.com"
+                className="text-[14px] text-white hover:text-white/60 transition-colors inline-flex items-baseline gap-1.5 self-start"
+              >
+                amitka111@gmail.com
+                <span className="text-white/35 text-[11px]">↗</span>
+              </a>
+              <a
+                href="https://wa.me/972544878882"
+                className="text-[14px] text-white hover:text-white/60 transition-colors inline-flex items-baseline gap-1.5 self-start"
+              >
+                +972-54-487-8882
+                <span className="text-white/35 text-[11px]">↗</span>
+              </a>
+              <a
+                href="https://www.linkedin.com/in/amitka/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[14px] text-white hover:text-white/60 transition-colors inline-flex items-baseline gap-1.5 self-start"
+              >
+                linkedin.com/in/amitka
+                <span className="text-white/35 text-[11px]">↗</span>
+              </a>
+            </div>
           </div>
-          <div>
-            <p className="text-[10px] font-mono uppercase tracking-[0.25em] text-white/35 mb-2.5">
-              Currently
+
+          {/* Right: experience + Download CV */}
+          <div className="flex flex-col gap-5">
+            <p className="text-[10px] font-mono uppercase tracking-[0.25em] text-white/35">
+              Experience
             </p>
-            <p className="text-[14px] text-white leading-snug">Design Lead at Shift</p>
-          </div>
-          <div>
-            <p className="text-[10px] font-mono uppercase tracking-[0.25em] text-white/35 mb-2.5">
-              Focus
-            </p>
-            <p className="text-[14px] text-white leading-snug">AI products, 0→1</p>
-          </div>
-          <div>
-            <p className="text-[10px] font-mono uppercase tracking-[0.25em] text-white/35 mb-2.5">
-              Reach
-            </p>
-            <a
-              href="mailto:amitka111@gmail.com"
-              className="text-[14px] text-white hover:text-white/60 transition-colors leading-snug inline-flex items-baseline gap-1"
-            >
-              amitka111@gmail.com
-              <span className="text-white/40 text-[11px]">↗</span>
-            </a>
+            <ul className="flex flex-col gap-3">
+              {experience.map(({ slug, company, role, period }) => (
+                <li key={slug}>
+                  <div className="flex items-baseline justify-between gap-4">
+                    <p className="text-[14px] text-white">
+                      <span className="font-medium">{role}</span>
+                      <span className="text-white/35 mx-1.5">·</span>
+                      <span className="text-white/75">{company}</span>
+                    </p>
+                    <span className="text-[11px] font-mono text-white/35 shrink-0">{period}</span>
+                  </div>
+                </li>
+              ))}
+            </ul>
+            <div className="pt-3">
+              <Link
+                to="/cv"
+                className="inline-flex items-center gap-2 px-4 py-2 border border-white/25 rounded-full text-[12px] text-white hover:bg-white hover:text-black transition-colors"
+              >
+                Download CV
+                <span className="text-[11px]">→</span>
+              </Link>
+            </div>
           </div>
         </div>
 
         {/* Bottom row */}
-        <div className="flex items-center justify-between pt-5 sm:pt-6">
+        <div className="flex items-center justify-between pt-5">
           <span className="text-[10px] text-white/25 uppercase tracking-[0.2em]">
             © 2026 Amit Kaplinsky
           </span>
-          <a
-            href="https://www.linkedin.com/in/amitka/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-[10px] text-white/25 hover:text-white transition-colors uppercase tracking-[0.2em]"
-          >
-            LinkedIn ↗
-          </a>
+          <span className="text-[10px] text-white/25 uppercase tracking-[0.2em]">
+            Tel Aviv · GMT+3
+          </span>
         </div>
       </div>
     </footer>

@@ -1,3 +1,10 @@
+---
+work: shift
+excerpt: Reframing TPRM software around the agent that does the work — from competitor scan to design direction.
+featured: true
+cover: cover-image.webp
+---
+
 # Designing for the Supervisor
 
 ### Or how we reframed TPRM around the agent doing the work
