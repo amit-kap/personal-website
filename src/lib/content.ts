@@ -111,6 +111,19 @@ function getImagesForSlug(slug: string): ContentImage[] {
     .map(([path, mod]) => imageAssetFromPath(path, mod.default));
 }
 
+// Optional brand icon per work folder: drop an `icon.svg` into the folder.
+const workIconModules = import.meta.glob<{ default: string }>(
+  '../content/experience/*/icon.svg',
+  { eager: true }
+);
+
+function getIconForSlug(slug: string): string | undefined {
+  const entry = Object.entries(workIconModules).find(([path]) =>
+    path.includes(`/experience/${slug}/`),
+  );
+  return entry?.[1].default;
+}
+
 function splitByDepth(nodes: RootContent[], depth: 2 | 3): Array<{ heading: Heading; body: RootContent[] }> {
   const entries: Array<{ heading: Heading; body: RootContent[] }> = [];
   let current: { heading: Heading; body: RootContent[] } | null = null;
@@ -281,6 +294,7 @@ export interface Work {
   productTitle: string;          // product-value sentence; falls back to company
   blurb: string;                 // tile copy (work.md `blurb`, falls back to cvSummary)
   order: number;                 // ascending sort key
+  icon?: string;                 // optional brand icon (icon.svg in the folder)
   heroImage?: ContentImage;      // top of work page
   tileImage?: ContentImage;      // Recent Work tile (first frame of cycle)
   body: string;                  // work.md markdown body (overview paragraphs)
@@ -348,6 +362,7 @@ function buildWorks(): Work[] {
       productTitle: fm.productTitle?.trim() || cvEntry.company,
       blurb: fm.blurb?.trim() || cvEntry.summary,
       order: typeof fm.order === 'number' ? fm.order : 999,
+      icon: getIconForSlug(slug),
       heroImage,
       tileImage,
       body: body.trim(),

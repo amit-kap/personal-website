@@ -68,7 +68,7 @@ function WorkCard({ work, index }: { work: Work; index: number }) {
       className="group relative block w-full overflow-hidden rounded-[8px] bg-black animate-fade-up"
       style={{ animationDelay: `${index * 0.06}s` }}
     >
-      <div className="relative h-[64vh] min-h-[440px] max-h-[760px]">
+      <div className="relative h-[46vh] min-h-[300px] max-h-[480px]">
         <CyclingImage
           images={work.allImages}
           alt={work.company}
@@ -86,14 +86,24 @@ function WorkCard({ work, index }: { work: Work; index: number }) {
           }}
         />
 
-        {/* Text overlay — bottom-left */}
+        {/* Text overlay — bottom-left, padded from the card edge */}
         <div className="absolute inset-x-0 bottom-0 p-6 sm:p-10">
           <h2 className="text-white text-[26px] sm:text-[36px] md:text-[46px] font-medium tracking-tight leading-[1.08] max-w-2xl">
             {work.productTitle}
           </h2>
-          <p className="mt-3 text-[14px] sm:text-[15px] font-medium text-white/85">
-            {work.company}
-          </p>
+          <div className="mt-3 flex items-center gap-2">
+            {work.icon && (
+              <img
+                src={work.icon}
+                alt=""
+                aria-hidden="true"
+                className="h-5 w-5 sm:h-6 sm:w-6 flex-none brightness-0 invert"
+              />
+            )}
+            <p className="text-[14px] sm:text-[15px] font-medium text-white/85">
+              {work.company}
+            </p>
+          </div>
           <p className="mt-1 font-mono text-[12px] text-white/60">
             {work.role}
             <span className="mx-2 text-white/30">·</span>
@@ -178,7 +188,7 @@ export default function Work() {
               Recent Work
             </p>
           </div>
-          <div className="2xl:mx-auto 2xl:max-w-[1440px] px-5 sm:px-8 flex flex-col gap-4 sm:gap-6">
+          <div className="2xl:mx-auto 2xl:max-w-[1440px] px-5 sm:px-8 2xl:px-0 flex flex-col gap-4 sm:gap-6">
             {works.map((work, i) => (
               <WorkCard key={work.slug} work={work} index={i} />
             ))}

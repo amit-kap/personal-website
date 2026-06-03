@@ -92,12 +92,15 @@ export default function WorkItem() {
     pausedRef.current = false
   }
 
+  // Only scroll when there's more than one image; a single image is shown contained.
+  const isStrip = images.length > 1
+
   return (
     <>
       <div className="relative z-10 min-h-screen bg-white">
         <main className="flex-1 pt-14 w-full">
           {/* Full-bleed auto-scrolling image strip — click to open lightbox */}
-          {images.length > 0 && (
+          {isStrip && (
             <div
               ref={scrollerRef}
               className="mt-6 sm:mt-8 flex gap-3 sm:gap-4 overflow-x-auto h-[58vh] min-h-[340px] max-h-[560px] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden animate-fade-up"
@@ -131,9 +134,28 @@ export default function WorkItem() {
 
           <article className="2xl:mx-auto 2xl:max-w-[1440px] px-5 sm:px-8 pt-3 sm:pt-4 pb-20 animate-fade-up">
             <div className="max-w-3xl mx-auto">
+              {/* Single image — contained in the center column (no scroll) */}
+              {images.length === 1 && (
+                <button
+                  type="button"
+                  onClick={() => setLightboxIndex(0)}
+                  aria-label={`${work.company} — open image`}
+                  className="group block w-full cursor-pointer overflow-hidden rounded-[6px] border border-black/[0.05] mb-3 sm:mb-4"
+                >
+                  <img
+                    src={images[0].src}
+                    alt=""
+                    width={images[0].width}
+                    height={images[0].height}
+                    loading="eager"
+                    className="block w-full h-auto transition-opacity duration-300 group-hover:opacity-90"
+                  />
+                </button>
+              )}
+
               {images.length > 0 && (
                 <p className="text-[12px] font-mono text-black/35 mb-10 sm:mb-12">
-                  swipe to scroll · click to enlarge
+                  {isStrip ? 'swipe to scroll · click to enlarge' : 'click to enlarge'}
                 </p>
               )}
 
@@ -141,7 +163,12 @@ export default function WorkItem() {
               <h1 className="text-[30px] sm:text-[38px] md:text-[46px] leading-[1.05] tracking-[-0.02em] font-medium text-black mb-2">
                 {work.productTitle}
               </h1>
-              <p className="text-[14px] font-medium text-black/55 mb-1">{work.company}</p>
+              <div className="flex items-center gap-2 mb-1">
+                {work.icon && (
+                  <img src={work.icon} alt="" aria-hidden="true" className="h-5 w-5 flex-none" />
+                )}
+                <p className="text-[14px] font-medium text-black/55">{work.company}</p>
+              </div>
               <p className="text-[12px] text-black/40 font-mono mb-10 sm:mb-12">
                 {work.role}
                 <span className="text-black/25 mx-2">·</span>
