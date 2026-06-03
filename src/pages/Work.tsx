@@ -8,11 +8,13 @@ function CyclingImage({
   alt,
   intervalMs,
   startDelay = 0,
+  fill = false,
 }: {
   images: ContentImage[]
   alt: string
   intervalMs: number
   startDelay?: number
+  fill?: boolean
 }) {
   const [idx, setIdx] = useState(0)
   const [armed, setArmed] = useState(startDelay === 0)
@@ -34,14 +36,14 @@ function CyclingImage({
   }, [armed, images.length, intervalMs])
 
   if (images.length === 0) {
-    return <div className="aspect-video w-full bg-black/[0.04] animate-pulse" />
+    return <div className={`${fill ? 'absolute inset-0' : 'aspect-video w-full'} bg-black/[0.04] animate-pulse`} />
   }
 
   const fast = intervalMs <= 1500
   const fadeClass = fast ? 'duration-[350ms]' : 'duration-1000'
 
   return (
-    <div className="relative aspect-video w-full bg-black/[0.04]">
+    <div className={`${fill ? 'absolute inset-0' : 'relative aspect-video w-full'} bg-black/[0.04]`}>
       {images.map((img, i) => (
         <img
           key={img.src}
@@ -59,66 +61,47 @@ function CyclingImage({
   )
 }
 
-function RecentWorkIndex({ works }: { works: Work[] }) {
-  const [active, setActive] = useState<number | null>(null)
-  const [pos, setPos] = useState({ x: 0, y: 0 })
-
+function WorkCard({ work, index }: { work: Work; index: number }) {
   return (
-    <div
-      className="relative"
-      onMouseMove={(e) => setPos({ x: e.clientX, y: e.clientY })}
-      onMouseLeave={() => setActive(null)}
+    <Link
+      to={`/work/${work.slug}`}
+      className="group relative block w-full overflow-hidden rounded-[8px] bg-black animate-fade-up"
+      style={{ animationDelay: `${index * 0.06}s` }}
     >
-      <ul className="border-t border-black/10 animate-fade-up">
-        {works.map((work, i) => (
-          <li key={work.slug} onMouseEnter={() => setActive(i)}>
-            <Link
-              to={`/work/${work.slug}`}
-              className="group flex items-baseline gap-5 sm:gap-8 border-b border-black/10 py-6 md:py-8 transition-opacity duration-300"
-              style={{ opacity: active === null || active === i ? 1 : 0.35 }}
-            >
-              <span className="pt-1 text-[12px] font-mono text-black/35 tabular-nums">
-                {String(i + 1).padStart(2, '0')}
-              </span>
-              <span className="min-w-0 flex-1">
-                <span className="block text-[24px] sm:text-[32px] md:text-[42px] font-medium tracking-tight leading-[1.1] text-black transition-transform duration-300 ease-out group-hover:translate-x-2">
-                  {work.productTitle}
-                </span>
-                <span className="mt-1.5 block text-[13px] font-medium text-black/45 md:hidden">
-                  {work.company}
-                </span>
-              </span>
-              <span className="hidden self-center whitespace-nowrap text-[13px] font-medium text-black/50 md:block">
-                {work.company}
-              </span>
-              <span className="self-center text-[20px] text-black/25 transition-all duration-300 ease-out group-hover:translate-x-1 group-hover:text-black">
-                →
-              </span>
-            </Link>
-          </li>
-        ))}
-      </ul>
+      <div className="relative h-[64vh] min-h-[440px] max-h-[760px]">
+        <CyclingImage
+          images={work.allImages}
+          alt={work.company}
+          intervalMs={4500}
+          startDelay={index * 400}
+          fill
+        />
 
-      {/* Cursor-following image preview (desktop only) */}
-      <div
-        className="pointer-events-none fixed top-0 left-0 z-40 hidden w-[340px] transition-opacity duration-200 ease-out md:block"
-        style={{
-          transform: `translate(${pos.x}px, ${pos.y}px) translate(28px, -50%)`,
-          opacity: active === null ? 0 : 1,
-        }}
-      >
-        {active !== null && (
-          <div className="overflow-hidden rounded-[6px] border border-black/[0.06] shadow-2xl shadow-black/25">
-            <CyclingImage
-              key={works[active].slug}
-              images={works[active].allImages}
-              alt={works[active].company}
-              intervalMs={1400}
-            />
-          </div>
-        )}
+        {/* Legibility gradient — strongest at bottom-left where the text sits */}
+        <div
+          className="absolute inset-0 pointer-events-none transition-opacity duration-500 group-hover:opacity-90"
+          style={{
+            background:
+              'linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.45) 26%, rgba(0,0,0,0.10) 52%, rgba(0,0,0,0) 72%)',
+          }}
+        />
+
+        {/* Text overlay — bottom-left */}
+        <div className="absolute inset-x-0 bottom-0 p-6 sm:p-10">
+          <h2 className="text-white text-[26px] sm:text-[36px] md:text-[46px] font-medium tracking-tight leading-[1.08] max-w-2xl">
+            {work.productTitle}
+          </h2>
+          <p className="mt-3 text-[14px] sm:text-[15px] font-medium text-white/85">
+            {work.company}
+          </p>
+          <p className="mt-1 font-mono text-[12px] text-white/60">
+            {work.role}
+            <span className="mx-2 text-white/30">·</span>
+            {work.period}
+          </p>
+        </div>
       </div>
-    </div>
+    </Link>
   )
 }
 
@@ -188,13 +171,17 @@ export default function Work() {
           </section>
         )}
 
-        {/* Recent Work — typographic index with cursor-following image preview */}
+        {/* Recent Work — full-bleed image cards with cross-fading folder images */}
         <section className="pt-12 sm:pt-16 pb-20 sm:pb-24">
-          <div className="2xl:mx-auto 2xl:max-w-[1440px] px-5 sm:px-8">
-            <p className="text-[14px] font-mono uppercase tracking-[0.2em] text-black/45 mb-8 sm:mb-10 animate-fade-up">
+          <div className="2xl:mx-auto 2xl:max-w-[1440px] px-5 sm:px-8 mb-8 sm:mb-10">
+            <p className="text-[14px] font-mono uppercase tracking-[0.2em] text-black/45 animate-fade-up">
               Recent Work
             </p>
-            <RecentWorkIndex works={works} />
+          </div>
+          <div className="2xl:mx-auto 2xl:max-w-[1440px] px-5 sm:px-8 flex flex-col gap-4 sm:gap-6">
+            {works.map((work, i) => (
+              <WorkCard key={work.slug} work={work} index={i} />
+            ))}
           </div>
         </section>
       </main>
