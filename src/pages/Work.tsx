@@ -59,49 +59,66 @@ function CyclingImage({
   )
 }
 
-function WorkRow({ work, index }: { work: Work; index: number }) {
-  const [hovered, setHovered] = useState(false)
+function RecentWorkIndex({ works }: { works: Work[] }) {
+  const [active, setActive] = useState<number | null>(null)
+  const [pos, setPos] = useState({ x: 0, y: 0 })
 
   return (
-    <Link
-      to={`/work/${work.slug}`}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      className="group block animate-fade-up"
-      style={{ animationDelay: `${index * 0.06}s` }}
+    <div
+      className="relative"
+      onMouseMove={(e) => setPos({ x: e.clientX, y: e.clientY })}
+      onMouseLeave={() => setActive(null)}
     >
-      <div className="grid md:grid-cols-12 gap-6 md:gap-10 items-start">
-        {/* Text — left on desktop */}
-        <div className="md:col-span-5 md:order-1 order-2">
-          <h2 className="text-[22px] sm:text-[26px] font-medium tracking-tight text-black/70 group-hover:text-black transition-colors mb-3 leading-[1.2]">
-            {work.productTitle}
-          </h2>
-          <p className="text-[14px] font-medium text-black/55 group-hover:text-black/80 transition-colors mb-1">
-            {work.company}
-          </p>
-          <p className="text-[12px] text-black/40 group-hover:text-black/60 transition-colors font-mono mb-4">
-            {work.role}
-            <span className="text-black/25 mx-2">·</span>
-            {work.period}
-          </p>
-          <p className="text-[15px] leading-[1.55] text-black/55 group-hover:text-black/80 transition-colors max-w-md">
-            {work.blurb}
-          </p>
-        </div>
+      <ul className="border-t border-black/10 animate-fade-up">
+        {works.map((work, i) => (
+          <li key={work.slug} onMouseEnter={() => setActive(i)}>
+            <Link
+              to={`/work/${work.slug}`}
+              className="group flex items-baseline gap-5 sm:gap-8 border-b border-black/10 py-6 md:py-8 transition-opacity duration-300"
+              style={{ opacity: active === null || active === i ? 1 : 0.35 }}
+            >
+              <span className="pt-1 text-[12px] font-mono text-black/35 tabular-nums">
+                {String(i + 1).padStart(2, '0')}
+              </span>
+              <span className="min-w-0 flex-1">
+                <span className="block text-[24px] sm:text-[32px] md:text-[42px] font-medium tracking-tight leading-[1.1] text-black transition-transform duration-300 ease-out group-hover:translate-x-2">
+                  {work.productTitle}
+                </span>
+                <span className="mt-1.5 block text-[13px] font-medium text-black/45 md:hidden">
+                  {work.company}
+                </span>
+              </span>
+              <span className="hidden self-center whitespace-nowrap text-[13px] font-medium text-black/50 md:block">
+                {work.company}
+              </span>
+              <span className="self-center text-[20px] text-black/25 transition-all duration-300 ease-out group-hover:translate-x-1 group-hover:text-black">
+                →
+              </span>
+            </Link>
+          </li>
+        ))}
+      </ul>
 
-        {/* Image — right on desktop, auto-cycles through folder (fast on hover) */}
-        <div className="md:col-span-7 md:order-2 order-1">
-          <div className="rounded-[6px] overflow-hidden border border-black/[0.05]">
+      {/* Cursor-following image preview (desktop only) */}
+      <div
+        className="pointer-events-none fixed top-0 left-0 z-40 hidden w-[340px] transition-opacity duration-200 ease-out md:block"
+        style={{
+          transform: `translate(${pos.x}px, ${pos.y}px) translate(28px, -50%)`,
+          opacity: active === null ? 0 : 1,
+        }}
+      >
+        {active !== null && (
+          <div className="overflow-hidden rounded-[6px] border border-black/[0.06] shadow-2xl shadow-black/25">
             <CyclingImage
-              images={work.allImages}
-              alt={work.company}
-              intervalMs={hovered ? 1000 : 8000}
-              startDelay={index * 450}
+              key={works[active].slug}
+              images={works[active].allImages}
+              alt={works[active].company}
+              intervalMs={1400}
             />
           </div>
-        </div>
+        )}
       </div>
-    </Link>
+    </div>
   )
 }
 
@@ -146,7 +163,10 @@ export default function Work() {
                   <p className="text-[14px] font-mono uppercase tracking-[0.2em] text-white/80 mb-4 sm:mb-5">
                     Featured
                   </p>
-                  <h1 className="text-[36px] sm:text-[52px] md:text-[68px] leading-[1.02] tracking-[-0.025em] font-medium text-white max-w-3xl">
+                  <h1
+                    className="leading-[1.02] tracking-[-0.025em] font-medium text-white"
+                    style={{ fontSize: 'clamp(22px, 6.6vw, 68px)' }}
+                  >
                     {featured.title}
                   </h1>
                   {featured.excerpt && (
@@ -168,24 +188,13 @@ export default function Work() {
           </section>
         )}
 
-        {/* Recent Work — full-bleed zebra bands, content centered inside each */}
-        <section className="pt-10 sm:pt-12 pb-16">
-          <div className="2xl:mx-auto 2xl:max-w-[1440px] px-5 sm:px-8 mb-6 sm:mb-8">
-            <p className="text-[14px] font-mono uppercase tracking-[0.2em] text-black/45 animate-fade-up">
+        {/* Recent Work — typographic index with cursor-following image preview */}
+        <section className="pt-12 sm:pt-16 pb-20 sm:pb-24">
+          <div className="2xl:mx-auto 2xl:max-w-[1440px] px-5 sm:px-8">
+            <p className="text-[14px] font-mono uppercase tracking-[0.2em] text-black/45 mb-8 sm:mb-10 animate-fade-up">
               Recent Work
             </p>
-          </div>
-          <div className="flex flex-col">
-            {works.map((work, i) => (
-              <div
-                key={work.slug}
-                className={i % 2 === 1 ? 'bg-neutral-50' : ''}
-              >
-                <div className="2xl:mx-auto 2xl:max-w-[1440px] px-5 sm:px-8 py-12 md:py-16">
-                  <WorkRow work={work} index={i} />
-                </div>
-              </div>
-            ))}
+            <RecentWorkIndex works={works} />
           </div>
         </section>
       </main>

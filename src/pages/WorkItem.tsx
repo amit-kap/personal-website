@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
@@ -6,7 +6,6 @@ import {
   getWorkBySlug,
   getAdjacentWorks,
 } from '@/lib/content'
-import SkeletonImage from '@/components/SkeletonImage'
 
 const bodyComponents = {
   p: ({ children }: { children?: React.ReactNode }) => (
@@ -31,7 +30,11 @@ export default function WorkItem() {
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null)
   const [closing, setClosing] = useState(false)
 
-  const gallery = work?.galleryImages ?? []
+  const images = work?.allImages ?? []
+
+  const scrollerRef = useRef<HTMLDivElement>(null)
+  const pausedRef = useRef(false)
+  const posRef = useRef(0)
 
   const closeLightbox = () => {
     setClosing(true)
@@ -41,16 +44,37 @@ export default function WorkItem() {
     }, 200)
   }
 
+  // Lightbox keyboard navigation
   useEffect(() => {
-    if (lightboxIndex === null || gallery.length === 0) return
+    if (lightboxIndex === null || images.length === 0) return
     const handleKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') closeLightbox()
-      else if (e.key === 'ArrowRight') setLightboxIndex(i => ((i ?? 0) + 1) % gallery.length)
-      else if (e.key === 'ArrowLeft') setLightboxIndex(i => ((i ?? 0) - 1 + gallery.length) % gallery.length)
+      else if (e.key === 'ArrowRight') setLightboxIndex(i => ((i ?? 0) + 1) % images.length)
+      else if (e.key === 'ArrowLeft') setLightboxIndex(i => ((i ?? 0) - 1 + images.length) % images.length)
     }
     window.addEventListener('keydown', handleKey)
     return () => window.removeEventListener('keydown', handleKey)
-  }, [lightboxIndex, gallery.length])
+  }, [lightboxIndex, images.length])
+
+  // Auto horizontal scroll (right → left), seamless via a duplicated set.
+  // Pauses while the user interacts so manual scrolling stays smooth.
+  useEffect(() => {
+    const el = scrollerRef.current
+    if (!el || images.length === 0) return
+    let raf = 0
+    const tick = () => {
+      if (el && !pausedRef.current) {
+        const marker = el.children[images.length] as HTMLElement | undefined
+        const setWidth = marker?.offsetLeft ?? 0
+        posRef.current += 0.5
+        if (setWidth && posRef.current >= setWidth) posRef.current -= setWidth
+        el.scrollLeft = posRef.current
+      }
+      raf = requestAnimationFrame(tick)
+    }
+    raf = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(raf)
+  }, [images.length])
 
   if (!work) {
     return (
@@ -62,25 +86,55 @@ export default function WorkItem() {
     )
   }
 
+  const pause = () => { pausedRef.current = true }
+  const resume = () => {
+    if (scrollerRef.current) posRef.current = scrollerRef.current.scrollLeft
+    pausedRef.current = false
+  }
+
   return (
     <>
       <div className="relative z-10 min-h-screen bg-white">
         <main className="flex-1 pt-14 w-full">
-          <article className="2xl:mx-auto 2xl:max-w-[1440px] px-5 sm:px-8 pt-14 sm:pt-20 pb-20 animate-fade-up">
-            <div className="max-w-3xl mx-auto">
-              {/* Hero image, contained */}
-              {work.heroImage && (
-                <div className="rounded-[6px] overflow-hidden border border-black/[0.05] mb-10 sm:mb-12">
-                  <SkeletonImage
-                    src={work.heroImage.src}
-                    alt={work.company}
-                    width={work.heroImage.width}
-                    height={work.heroImage.height}
-                    loading="eager"
-                    wrapperClassName="aspect-[16/9] w-full"
-                    className="w-full h-full object-cover"
+          {/* Full-bleed auto-scrolling image strip — click to open lightbox */}
+          {images.length > 0 && (
+            <div
+              ref={scrollerRef}
+              className="mt-6 sm:mt-8 flex gap-3 sm:gap-4 overflow-x-auto h-[58vh] min-h-[340px] max-h-[560px] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden animate-fade-up"
+              onMouseEnter={pause}
+              onMouseLeave={resume}
+              onTouchStart={pause}
+              onTouchEnd={resume}
+            >
+              {[...images, ...images].map((img, i) => (
+                <button
+                  key={i}
+                  type="button"
+                  onClick={() => setLightboxIndex(i % images.length)}
+                  aria-label={`${work.company} — open image ${(i % images.length) + 1}`}
+                  className="group relative h-full flex-none cursor-pointer overflow-hidden bg-black/[0.04] first:ml-0"
+                >
+                  <img
+                    src={img.src}
+                    alt=""
+                    width={img.width}
+                    height={img.height}
+                    loading={i < images.length ? 'eager' : 'lazy'}
+                    draggable={false}
+                    className="h-full w-auto object-cover transition-opacity duration-300 group-hover:opacity-90"
+                    style={{ aspectRatio: img.width && img.height ? `${img.width} / ${img.height}` : undefined }}
                   />
-                </div>
+                </button>
+              ))}
+            </div>
+          )}
+
+          <article className="2xl:mx-auto 2xl:max-w-[1440px] px-5 sm:px-8 pt-3 sm:pt-4 pb-20 animate-fade-up">
+            <div className="max-w-3xl mx-auto">
+              {images.length > 0 && (
+                <p className="text-[12px] font-mono text-black/35 mb-10 sm:mb-12">
+                  swipe to scroll · click to enlarge
+                </p>
               )}
 
               {/* Title */}
@@ -99,25 +153,6 @@ export default function WorkItem() {
                 <ReactMarkdown remarkPlugins={[remarkGfm]} components={bodyComponents}>
                   {work.body}
                 </ReactMarkdown>
-              )}
-
-              {/* Image gallery */}
-              {gallery.length > 0 && (
-                <div className="mt-12 flex flex-col gap-5">
-                  {gallery.map((image, i) => (
-                    <SkeletonImage
-                      key={image.src}
-                      src={image.src}
-                      alt={`${work.company} — ${i + 1}`}
-                      width={image.width}
-                      height={image.height}
-                      loading="lazy"
-                      onClick={() => setLightboxIndex(i)}
-                      wrapperClassName="w-full block cursor-pointer rounded-[6px] border border-black/[0.05] min-h-[180px]"
-                      className="w-full block"
-                    />
-                  ))}
-                </div>
               )}
 
               {/* Prev / Next work */}
@@ -175,21 +210,21 @@ export default function WorkItem() {
           </button>
           <button
             className="absolute left-4 text-white/40 hover:text-white text-3xl leading-none transition-colors select-none px-2"
-            onClick={(e) => { e.stopPropagation(); setLightboxIndex(i => ((i ?? 0) - 1 + gallery.length) % gallery.length) }}
+            onClick={(e) => { e.stopPropagation(); setLightboxIndex(i => ((i ?? 0) - 1 + images.length) % images.length) }}
             aria-label="Previous"
           >
             ‹
           </button>
           <img
             key={lightboxIndex}
-            src={gallery[lightboxIndex].src}
+            src={images[lightboxIndex].src}
             alt={`${work.company} — ${lightboxIndex + 1}`}
             className={`max-w-[90vw] max-h-[90vh] object-contain ${closing ? 'animate-zoom-out' : 'animate-zoom-in'}`}
             onClick={(e) => e.stopPropagation()}
           />
           <button
             className="absolute right-4 text-white/40 hover:text-white text-3xl leading-none transition-colors select-none px-2"
-            onClick={(e) => { e.stopPropagation(); setLightboxIndex(i => ((i ?? 0) + 1) % gallery.length) }}
+            onClick={(e) => { e.stopPropagation(); setLightboxIndex(i => ((i ?? 0) + 1) % images.length) }}
             aria-label="Next"
           >
             ›
