@@ -9,15 +9,34 @@ import {
 } from '@/lib/content'
 import SkeletonImage from '@/components/SkeletonImage'
 
-function isImageOnlyParagraph(children: React.ReactNode) {
-  const childArray = Children
+function meaningfulChildren(children: React.ReactNode) {
+  return Children
     .toArray(children)
     .filter(child => typeof child !== 'string' || child.trim().length > 0)
+}
 
-  if (childArray.length !== 1 || !isValidElement<{ node?: { tagName?: string } }>(childArray[0])) {
-    return false
+function isMarkdownImage(child: React.ReactNode) {
+  return isValidElement<{ node?: { tagName?: string } }>(child) && child.props.node?.tagName === 'img'
+}
+
+function isImageOnlyParagraph(children: React.ReactNode) {
+  const childArray = meaningfulChildren(children)
+
+  return childArray.length === 1 && isMarkdownImage(childArray[0])
+}
+
+function isImageRowParagraph(children: React.ReactNode) {
+  const childArray = meaningfulChildren(children)
+
+  return childArray.length > 1 && childArray.every(isMarkdownImage)
+}
+
+function imageLookupKey(src: string) {
+  try {
+    return decodeURIComponent(src)
+  } catch {
+    return src
   }
-  return childArray[0].props.node?.tagName === 'img'
 }
 
 const markdownComponents = (images: Record<string, ContentImage>) => ({
@@ -35,6 +54,8 @@ const markdownComponents = (images: Record<string, ContentImage>) => ({
   p: ({ children }: { children?: React.ReactNode }) => (
     isImageOnlyParagraph(children)
       ? <>{children}</>
+      : isImageRowParagraph(children)
+        ? <div className="case-study-image-row my-8 grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 items-start">{children}</div>
       : <p className="text-[16px] leading-8 mb-5 text-black/75">{children}</p>
   ),
   ul: ({ children }: { children?: React.ReactNode }) => (
@@ -51,13 +72,13 @@ const markdownComponents = (images: Record<string, ContentImage>) => ({
   ),
   em: ({ children }: { children?: React.ReactNode }) => <em className="italic">{children}</em>,
   a: ({ children, href }: { children?: React.ReactNode; href?: string }) => (
-    <a href={href} target="_blank" rel="noopener noreferrer" className="text-black underline underline-offset-2 decoration-black/30 hover:decoration-black">
+    <a href={href} target="_blank" rel="noopener noreferrer" className="font-medium text-black underline decoration-[1.5px] underline-offset-4 decoration-black/55 transition-colors hover:bg-black/[0.04] hover:decoration-black">
       {children}
     </a>
   ),
   img: ({ src, alt }: { src?: string; alt?: string }) => {
     const resolved = src && !src.startsWith('http') && !src.startsWith('/')
-      ? images[src]
+      ? images[imageLookupKey(src)] ?? images[src]
       : src
         ? { src, width: undefined, height: undefined }
         : undefined

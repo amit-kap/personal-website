@@ -74,6 +74,11 @@
   content: 'Fig. ' counter(figure, decimal-leading-zero);
 }
 
+.case-study-image-row > figure {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
 @theme inline {
   --font-heading: 'Bodoni Moda', Georgia, serif;
   --color-ring: var(--ring);
