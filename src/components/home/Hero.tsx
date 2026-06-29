@@ -30,7 +30,8 @@ export default function Hero() {
             <img
               src={`${import.meta.env.BASE_URL}profile.jpg`}
               alt={header.name}
-              className="absolute inset-0 w-full h-full object-cover"
+              data-parallax="0.08"
+              className="absolute inset-0 w-full h-full object-cover scale-[1.18]"
             />
           </div>
         </div>

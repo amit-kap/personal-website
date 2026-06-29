@@ -9,10 +9,14 @@ gsap.registerPlugin(useGSAP, ScrollTrigger)
  * Scroll-driven reveals for a page scope.
  *
  * Markup contract (set by section components):
- *  - `data-reveal` → element fades + rises into place when it first enters the viewport.
+ *  - `data-reveal`         → element fades + rises into place when it first enters the viewport.
+ *  - `data-parallax="0.1"` → element drifts vertically (yPercent ±n*100) as its container
+ *                            passes through the viewport, scrubbed to scroll. The element must
+ *                            sit in an `overflow-hidden` container and be oversized by
+ *                            `scale ≥ 1 + 2*drift` so its edges never expose the background.
  *
  * Implementation notes:
- *  - Uses `ScrollTrigger.batch` so elements entering together animate with a stagger.
+ *  - Uses `ScrollTrigger.batch` so reveal elements entering together animate with a stagger.
  *  - `useGSAP` reverts all tweens/ScrollTriggers automatically (incl. React StrictMode
  *    double-invoke and unmount).
  *  - Calls `ScrollTrigger.refresh()` once web fonts are ready: Bodoni/Jakarta swapping in
@@ -47,6 +51,26 @@ export function useScrollMotion(scope: RefObject<HTMLElement | null>) {
               stagger: 0.08,
               overwrite: true,
             }),
+        })
+
+        // Parallax: each [data-parallax] drifts vertically, scrubbed to scroll, over the
+        // span its container passes through the viewport.
+        root.querySelectorAll<HTMLElement>('[data-parallax]').forEach((el) => {
+          const drift = Number(el.dataset.parallax) || 0.12
+          gsap.fromTo(
+            el,
+            { yPercent: -drift * 100 },
+            {
+              yPercent: drift * 100,
+              ease: 'none',
+              scrollTrigger: {
+                trigger: el.parentElement ?? el,
+                start: 'top bottom',
+                end: 'bottom top',
+                scrub: true,
+              },
+            },
+          )
         })
 
         // Recompute trigger positions after fonts swap in (heading heights change).
