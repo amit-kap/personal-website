@@ -10,6 +10,9 @@ export default function Footer() {
         <div className="grid md:grid-cols-2 gap-10 md:gap-16 pb-10 border-b border-white/10">
           {/* Left: identity + contact */}
           <div className="flex flex-col gap-6">
+            <p className="font-mono uppercase tracking-[0.25em] text-white/35 text-[12px] sm:text-[13px]">
+              Contact
+            </p>
             <h2
               className="font-heading font-normal text-white leading-[1.05] tracking-[-0.01em] max-w-md"
               style={{ fontSize: 'clamp(28px, 3.6vw, 44px)' }}
