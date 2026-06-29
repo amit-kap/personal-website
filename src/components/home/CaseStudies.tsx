@@ -16,7 +16,7 @@ export default function CaseStudies() {
           Case Studies
         </h2>
 
-        <div className="mt-6 grid sm:grid-cols-2 gap-6 sm:gap-10">
+        <div className="mt-[72px] sm:mt-24 grid sm:grid-cols-2 gap-6 sm:gap-10">
           {studies.map((study) => (
             <Link
               key={study.slug}
