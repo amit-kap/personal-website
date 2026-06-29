@@ -31,8 +31,9 @@ export default function FeaturedCaseStudy() {
           }}
         />
 
-        <div className="absolute inset-x-0 bottom-0 px-5 sm:px-8 pb-14 sm:pb-20">
-          <div className="2xl:mx-auto 2xl:max-w-[1440px]">
+        {/* Overlay text — full-bleed image, content capped to the centered 1440 column */}
+        <div className="absolute inset-x-0 bottom-0 pb-14 sm:pb-20">
+          <div className="mx-auto max-w-[1440px] px-5 sm:px-8">
             <p
               data-reveal
               className="font-mono uppercase tracking-[0.25em] text-white/75 text-[12px] sm:text-[13px] mb-4"
