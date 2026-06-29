@@ -9,12 +9,12 @@ export default function Hero() {
       {/* Centered inner column — full-bleed section, content capped at 1440px */}
       <div className="relative mx-auto max-w-[1440px] w-full px-5 sm:px-8 min-h-[86svh] flex flex-col justify-center py-28">
         {/* Portrait — top-right of the centered column, native image size */}
-        <div className="pointer-events-none absolute top-0 right-0 hidden md:block">
+        <div className="pointer-events-none absolute top-0 right-0 hidden md:block z-10">
           <img src={img} alt={header.name} data-parallax="0.12" />
         </div>
 
         {/* Top label row */}
-        <div className="absolute top-8 sm:top-10 inset-x-5 sm:inset-x-8 z-20 flex items-center justify-between border-b border-foreground/10 pb-4">
+        <div className="absolute top-8 sm:top-10 inset-x-5 sm:inset-x-8 z-0 flex items-center justify-between border-b border-foreground/10 pb-4">
           <span
             data-reveal
             className="font-heading font-semibold uppercase tracking-[0.14em] text-label text-foreground"
@@ -30,7 +30,7 @@ export default function Hero() {
         </div>
 
         {/* Content */}
-        <div className="relative z-10 max-w-3xl">
+        <div className="relative z-20 max-w-3xl">
           <h1
             data-reveal
             aria-label={header.name}
