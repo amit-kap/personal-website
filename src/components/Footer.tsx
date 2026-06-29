@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 import { getCV } from '@/lib/content'
 
 export default function Footer() {
-  const { header, experience } = getCV()
+  const { experience } = getCV()
 
   return (
     <footer className="bg-foreground text-background">
@@ -10,15 +10,12 @@ export default function Footer() {
         <div className="grid md:grid-cols-2 gap-10 md:gap-16 pb-10 border-b border-white/10">
           {/* Left: identity + contact */}
           <div className="flex flex-col gap-6">
-            <img
-              src={`${import.meta.env.BASE_URL}profile.jpg`}
-              alt={header.name}
-              className="h-28 w-28 sm:h-32 sm:w-32 rounded-full object-cover"
-            />
-            <div>
-              <h2 className="text-[20px] font-medium text-white leading-tight">{header.name}</h2>
-              <p className="text-[14px] text-white/55 mt-1">{header.tagline}</p>
-            </div>
+            <h2
+              className="font-heading font-normal text-white leading-[1.05] tracking-[-0.01em] max-w-md"
+              style={{ fontSize: 'clamp(28px, 3.6vw, 44px)' }}
+            >
+              Let’s work together
+            </h2>
             <div className="flex flex-col gap-2">
               <a
                 href="mailto:amitka111@gmail.com"
