@@ -34,8 +34,7 @@ function WorkSection({ work }: { work: Work }) {
                 width={img.width}
                 height={img.height}
                 loading="lazy"
-                data-parallax={i === 0 ? '0.06' : '0.1'}
-                className="absolute inset-0 w-full h-full object-cover scale-[1.22]"
+                className="absolute inset-0 w-full h-full object-cover"
               />
             </div>
           ))}

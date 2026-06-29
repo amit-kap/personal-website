@@ -9,7 +9,7 @@ export default function FeaturedCaseStudy() {
     <section className="relative w-full">
       <Link
         to={`/case-studies/${featured.slug}`}
-        className="group block relative w-full h-[100svh] min-h-[560px] overflow-hidden bg-foreground"
+        className="group block relative w-full h-[78svh] min-h-[520px] overflow-hidden bg-foreground"
       >
         {featured.coverImage && (
           <img
@@ -17,8 +17,7 @@ export default function FeaturedCaseStudy() {
             alt={featured.title}
             width={featured.coverImage.width}
             height={featured.coverImage.height}
-            data-parallax="0.12"
-            className="absolute inset-0 w-full h-full object-cover scale-[1.26]"
+            className="absolute inset-0 w-full h-full object-cover"
           />
         )}
 

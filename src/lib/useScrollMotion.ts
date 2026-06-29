@@ -1,73 +1,64 @@
-import { useGSAP } from '@gsap/react'
-import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { useLayoutEffect } from 'react'
 import type { RefObject } from 'react'
 
-gsap.registerPlugin(useGSAP, ScrollTrigger)
+const EASE = 'cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+const DURATION = '0.9s'
 
 /**
- * Scroll-driven reveals + parallax for a page scope.
+ * Scroll-driven reveals for a page scope.
  *
  * Markup contract (set by section components):
- *  - `data-reveal`         → element fades + rises into place when it enters the viewport.
- *  - `data-parallax="0.1"` → element drifts vertically as its container passes through
- *                            the viewport. The number is the drift fraction (yPercent = ±n*100).
- *                            Parallax elements should sit in an `overflow-hidden` container and
- *                            be slightly oversized (e.g. `scale-110`) so edges never show.
+ *  - `data-reveal` → element fades + rises into place when it first enters the viewport.
  *
- * All motion is gated behind `prefers-reduced-motion: no-preference`. Under reduced motion,
- * reveal elements are simply made visible and nothing animates.
+ * Implemented with IntersectionObserver + a CSS transition (no scroll-linked work, so it
+ * never competes with native scrolling). Honors `prefers-reduced-motion`: content is shown
+ * immediately with no transition.
  */
 export function useScrollMotion(scope: RefObject<HTMLElement | null>) {
-  useGSAP(
-    () => {
-      const root = scope.current
-      if (!root) return
+  useLayoutEffect(() => {
+    const root = scope.current
+    if (!root) return
+    const els = Array.from(root.querySelectorAll<HTMLElement>('[data-reveal]'))
+    if (els.length === 0) return
 
-      const mm = gsap.matchMedia()
-
-      mm.add('(prefers-reduced-motion: no-preference)', () => {
-        root.querySelectorAll<HTMLElement>('[data-reveal]').forEach((el) => {
-          gsap.fromTo(
-            el,
-            { autoAlpha: 0, y: 24 },
-            {
-              autoAlpha: 1,
-              y: 0,
-              duration: 0.9,
-              ease: 'power2.out',
-              scrollTrigger: { trigger: el, start: 'top 85%', once: true },
-            },
-          )
-        })
-
-        root.querySelectorAll<HTMLElement>('[data-parallax]').forEach((el) => {
-          const drift = Number(el.dataset.parallax) || 0.12
-          gsap.fromTo(
-            el,
-            { yPercent: -drift * 100 },
-            {
-              yPercent: drift * 100,
-              ease: 'none',
-              scrollTrigger: {
-                trigger: el.parentElement ?? el,
-                start: 'top bottom',
-                end: 'bottom top',
-                scrub: true,
-              },
-            },
-          )
-        })
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    if (reduce) {
+      els.forEach((el) => {
+        el.style.opacity = '1'
+        el.style.transform = 'none'
       })
+      return
+    }
 
-      mm.add('(prefers-reduced-motion: reduce)', () => {
-        root.querySelectorAll<HTMLElement>('[data-reveal]').forEach((el) => {
-          gsap.set(el, { autoAlpha: 1, y: 0 })
+    // Set the hidden start state synchronously (before paint) to avoid a flash.
+    els.forEach((el) => {
+      el.style.opacity = '0'
+      el.style.transform = 'translateY(24px)'
+      el.style.transition = `opacity ${DURATION} ${EASE}, transform ${DURATION} ${EASE}`
+      el.style.willChange = 'opacity, transform'
+    })
+
+    const io = new IntersectionObserver(
+      (entries, obs) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return
+          const el = entry.target as HTMLElement
+          el.style.opacity = '1'
+          el.style.transform = 'none'
+          el.addEventListener(
+            'transitionend',
+            () => {
+              el.style.willChange = ''
+            },
+            { once: true },
+          )
+          obs.unobserve(el)
         })
-      })
+      },
+      { rootMargin: '0px 0px -10% 0px', threshold: 0.01 },
+    )
 
-      return () => mm.revert()
-    },
-    { scope },
-  )
+    els.forEach((el) => io.observe(el))
+    return () => io.disconnect()
+  }, [scope])
 }
