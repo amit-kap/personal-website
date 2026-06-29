@@ -79,10 +79,10 @@ export default function Footer() {
 
         {/* Bottom row */}
         <div className="flex items-center justify-between pt-5">
-          <span className="font-mono uppercase tracking-[0.25em] text-white/40 text-[12px] sm:text-[13px]">
+          <span className="font-mono uppercase tracking-[0.25em] text-white/35 text-[12px] sm:text-[13px]">
             Product Design portfolio
           </span>
-          <span className="font-mono uppercase tracking-[0.25em] text-white/40 text-[12px] sm:text-[13px]">
+          <span className="font-mono uppercase tracking-[0.25em] text-white/35 text-[12px] sm:text-[13px]">
             Tel Aviv · 2026
           </span>
         </div>
