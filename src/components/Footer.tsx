@@ -79,10 +79,10 @@ export default function Footer() {
 
         {/* Bottom row */}
         <div className="flex items-center justify-between pt-5">
-          <span className="text-[10px] text-white/25 uppercase tracking-[0.2em]">
+          <span className="text-caption text-white/25 uppercase tracking-[0.2em]">
             © 2026 Amit Kaplinsky
           </span>
-          <span className="text-[10px] text-white/25 uppercase tracking-[0.2em]">
+          <span className="text-caption text-white/25 uppercase tracking-[0.2em]">
             Tel Aviv · GMT+3
           </span>
         </div>
