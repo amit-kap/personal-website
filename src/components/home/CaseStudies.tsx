@@ -11,13 +11,12 @@ export default function CaseStudies() {
       <div className="mx-auto max-w-[1440px] px-5 sm:px-8">
         <h2
           data-reveal
-          className="font-heading font-normal text-foreground leading-[1.04] tracking-[-0.01em]"
-          style={{ fontSize: 'clamp(30px, 5.5vw, 68px)' }}
+          className="font-mono uppercase tracking-[0.25em] text-muted-foreground text-[12px] sm:text-[13px]"
         >
           Case Studies
         </h2>
 
-        <div className="mt-10 grid sm:grid-cols-2 gap-6 sm:gap-10">
+        <div className="mt-6 grid sm:grid-cols-2 gap-6 sm:gap-10">
           {studies.map((study) => (
             <Link
               key={study.slug}
