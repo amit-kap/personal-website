@@ -48,7 +48,7 @@ export default function Footer() {
 
           {/* Right: experience + Download CV */}
           <div className="flex flex-col gap-5">
-            <p className="text-[10px] font-mono uppercase tracking-[0.25em] text-white/35">
+            <p className="font-mono uppercase tracking-[0.25em] text-white/35 text-[12px] sm:text-[13px]">
               Experience
             </p>
             <ul className="flex flex-col gap-3">
