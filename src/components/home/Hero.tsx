@@ -6,15 +6,13 @@ export default function Hero() {
 
   return (
     <section className="relative w-full min-h-[86svh] overflow-hidden bg-background text-foreground">
-      {/* Portrait — fits the hero height at its natural aspect ratio, anchored right */}
-      <div className="pointer-events-none absolute inset-y-0 right-0 hidden md:block overflow-hidden">
+      {/* Portrait — absolute top-right, natural aspect ratio */}
+      <div className="pointer-events-none absolute top-0 right-0 hidden md:block w-[40%] lg:w-[36%]">
         <img
           src={img}
           alt={header.name}
-          className="h-full w-auto object-contain object-bottom"
+          className="w-full h-auto object-contain"
         />
-        {/* blend the photo's left edge into the page background */}
-        <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-background to-transparent" />
       </div>
 
       {/* Top label row */}
