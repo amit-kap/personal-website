@@ -50,7 +50,7 @@ export default function FeaturedCaseStudy() {
             {featured.excerpt && (
               <p
                 data-reveal
-                className="mt-5 text-white/85 leading-[1.5] max-w-2xl text-[16px] sm:text-[19px]"
+                className="mt-5 text-white/85 leading-[1.5] max-w-2xl text-[clamp(16px,1.6vw,22px)]"
               >
                 {featured.excerpt}
               </p>
