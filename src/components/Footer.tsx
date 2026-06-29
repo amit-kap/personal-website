@@ -6,7 +6,7 @@ export default function Footer() {
 
   return (
     <footer className="bg-foreground text-background">
-      <div className="2xl:mx-auto 2xl:max-w-[1440px] px-5 sm:px-8 pt-12 pb-6 sm:pt-16 sm:pb-8">
+      <div className="mx-auto max-w-[1440px] px-5 sm:px-8 pt-12 pb-6 sm:pt-16 sm:pb-8">
         <div className="grid md:grid-cols-2 gap-10 md:gap-16 pb-10 border-b border-white/10">
           {/* Left: identity + contact */}
           <div className="flex flex-col gap-6">
