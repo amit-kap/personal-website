@@ -12,7 +12,7 @@ export default function CaseStudies() {
         <h2
           data-reveal
           className="font-heading font-normal text-foreground leading-[1.04] tracking-[-0.01em]"
-          style={{ fontSize: 'clamp(30px, 4.5vw, 56px)' }}
+          style={{ fontSize: 'clamp(30px, 5.5vw, 68px)' }}
         >
           Case Studies
         </h2>
