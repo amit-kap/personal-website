@@ -110,9 +110,9 @@
 }
 
 :root {
-  --background: oklch(0.925 0.003 75);   /* warm light grey (greige) — matches ref-4 */
+  --background: #f1f0ed;                 /* warm light grey (greige) — ref-4 */
   --foreground: #21262b;                 /* dark blue-grey ink (ref-4) */
-  --card: oklch(0.925 0.003 75);
+  --card: #f1f0ed;
   --card-foreground: #21262b;
   --popover: oklch(0.97 0.003 75);
   --popover-foreground: #21262b;
