@@ -6,30 +6,31 @@ export default function Hero() {
 
   return (
     <section className="relative w-full min-h-[86svh] overflow-hidden bg-background text-foreground">
-      {/* Portrait — absolute top-right, native image size */}
-      <div className="pointer-events-none absolute top-0 right-0 hidden md:block">
-        <img src={img} alt={header.name} />
-      </div>
+      {/* Centered inner column — full-bleed section, content capped at 1440px */}
+      <div className="relative mx-auto max-w-[1440px] w-full px-5 sm:px-8 min-h-[86svh] flex flex-col justify-center py-28">
+        {/* Portrait — top-right of the centered column, native image size */}
+        <div className="pointer-events-none absolute top-0 right-0 hidden md:block">
+          <img src={img} alt={header.name} />
+        </div>
 
-      {/* Top label row */}
-      <div className="absolute top-8 sm:top-10 left-5 right-5 sm:left-8 sm:right-8 z-20 flex items-center justify-between 2xl:mx-auto 2xl:max-w-[1440px]">
-        <span
-          data-reveal
-          className="font-heading font-semibold uppercase tracking-[0.14em] text-[11px] sm:text-[13px] text-foreground"
-        >
-          Product Design portfolio
-        </span>
-        <span
-          data-reveal
-          className="font-heading font-semibold uppercase tracking-[0.14em] text-[11px] sm:text-[13px] text-muted-foreground"
-        >
-          Tel Aviv · 2026
-        </span>
-      </div>
+        {/* Top label row */}
+        <div className="absolute top-8 sm:top-10 inset-x-5 sm:inset-x-8 z-20 flex items-center justify-between">
+          <span
+            data-reveal
+            className="font-heading font-semibold uppercase tracking-[0.14em] text-[11px] sm:text-[13px] text-foreground"
+          >
+            Product Design portfolio
+          </span>
+          <span
+            data-reveal
+            className="font-heading font-semibold uppercase tracking-[0.14em] text-[11px] sm:text-[13px] text-muted-foreground"
+          >
+            Tel Aviv · 2026
+          </span>
+        </div>
 
-      {/* Content */}
-      <div className="relative z-10 2xl:mx-auto 2xl:max-w-[1440px] w-full px-5 sm:px-8 min-h-[86svh] flex flex-col justify-center py-28">
-        <div className="max-w-3xl">
+        {/* Content */}
+        <div className="relative z-10 max-w-3xl">
           <h1
             data-reveal
             aria-label={header.name}
