@@ -17,7 +17,7 @@ export default function FeaturedCaseStudy() {
             alt={featured.title}
             width={featured.coverImage.width}
             height={featured.coverImage.height}
-            data-parallax="0.28"
+            data-parallax="0.2"
             className="absolute inset-0 w-full h-full object-cover scale-[1.6]"
           />
         )}
