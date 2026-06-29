@@ -55,13 +55,6 @@ export default function FeaturedCaseStudy() {
                 {featured.excerpt}
               </p>
             )}
-            <span className="inline-flex items-baseline gap-2 mt-7 text-[13px] font-medium text-white">
-              <span className="relative pb-1">
-                Read the case study
-                <span className="absolute left-0 right-0 bottom-0 h-px bg-white origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]" />
-              </span>
-              <span className="inline-block transition-transform duration-300 ease-out group-hover:translate-x-1.5">→</span>
-            </span>
           </div>
         </div>
       </Link>
