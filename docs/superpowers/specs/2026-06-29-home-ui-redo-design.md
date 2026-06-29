@@ -21,7 +21,7 @@ reference only** — not a pixel/style copy.
 
 ## Non-Goals
 
-- No redesign of detail pages, `Nav`, or the shared `Footer` used by detail pages.
+- No redesign of detail pages or `Nav`.
 - No information-architecture changes (same routes, same content).
 - No new content, no CMS changes, no copy rewrites.
 
@@ -54,10 +54,14 @@ reference only** — not a pixel/style copy.
    - Each row links to `/case-studies/:slug`.
    - Motion: rows reveal with stagger on enter; thumbnails slight parallax.
 
-5. **Footer** (dark band)
+5. **Footer** (dark band) — **single shared footer**
    - Profile image + name, contact links.
-   - Built as a home-only section component (`HomeFooter`) so the shared `Footer`
-     used by detail pages is untouched.
+   - **Restyle the existing shared `src/components/Footer.tsx`** to the new visual
+     language; it is reused on the home page and all detail pages via the existing
+     reveal mechanism in `App.tsx` (fixed footer, content scrolls over it). Home does
+     not render its own footer — it inherits the shared one like every page.
+   - Footer restyle is now **in scope** and must be verified on both home and detail
+     pages.
 
 ---
 
@@ -97,8 +101,8 @@ reference only** — not a pixel/style copy.
 - `src/components/home/FeaturedCaseStudy.tsx`
 - `src/components/home/RecentWork.tsx` (renders 3 work sections)
 - `src/components/home/CaseStudies.tsx`
-- `src/components/home/HomeFooter.tsx`
 - `src/lib/useScrollMotion.ts` (or similar) — shared `useGSAP` reveal/parallax helper.
+- Restyle existing `src/components/Footer.tsx` (shared, not a new component).
 
 ### Data (no changes to `content.ts`)
 
@@ -123,4 +127,6 @@ reference only** — not a pixel/style copy.
 - `prefers-reduced-motion` disables parallax and instant-reveals content (verified).
 - Detail pages (`/work/:slug`, `/case-studies/:slug`, `/cv`) still render correctly
   after the shared CSS-token changes (verified in browser).
+- Restyled shared `Footer` looks correct on both the home page and detail pages
+  (verified in browser).
 - Responsive: sections degrade to a single-column, stacked layout on narrow viewports.
