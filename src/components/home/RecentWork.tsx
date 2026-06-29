@@ -8,7 +8,7 @@ function WorkSection({ work, index }: { work: Work; index: number }) {
     <Link to={`/work/${work.slug}`} className="group block w-full">
       {/* max-w column; divider sits inside the padding so it matches the content block */}
       <div className="mx-auto max-w-[1440px] px-5 sm:px-8">
-        <div className={`py-14 sm:py-20 ${index > 0 ? 'border-t border-border' : ''}`}>
+        <div className={`flex flex-col gap-10 py-14 sm:py-20 ${index > 0 ? 'border-t border-border' : ''}`}>
           <h3
             data-reveal
             className="font-heading font-normal leading-[1.06] tracking-[-0.02em] text-foreground max-w-4xl"
@@ -20,7 +20,7 @@ function WorkSection({ work, index }: { work: Work; index: number }) {
           {/* Meta: icon + company · role + period */}
           <div
             data-reveal
-            className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1 text-[clamp(16px,1.6vw,22px)]"
+            className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[clamp(16px,1.6vw,22px)]"
           >
             {work.icon && (
               <img src={work.icon} alt="" aria-hidden="true" className="h-8 w-8 object-contain" />
@@ -31,7 +31,7 @@ function WorkSection({ work, index }: { work: Work; index: number }) {
             <span className="inline-block transition-transform duration-300 ease-out group-hover:translate-x-1.5">→</span>
           </div>
 
-          <div className="mt-8 grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-5">
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-5">
             {images.map((img, i) => (
               <div
                 key={img.src}
