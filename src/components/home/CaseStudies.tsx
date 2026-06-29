@@ -23,7 +23,7 @@ function Row({ study, index }: { study: CaseStudy; index: number }) {
             height={study.coverImage.height}
             loading="lazy"
             data-parallax="0.07"
-            className="absolute inset-0 w-full h-full object-cover scale-110"
+            className="absolute inset-0 w-full h-full object-cover scale-[1.16]"
           />
         )}
       </div>

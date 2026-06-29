@@ -35,7 +35,7 @@ function WorkSection({ work }: { work: Work }) {
                 height={img.height}
                 loading="lazy"
                 data-parallax={i === 0 ? '0.06' : '0.1'}
-                className="absolute inset-0 w-full h-full object-cover scale-110"
+                className="absolute inset-0 w-full h-full object-cover scale-[1.22]"
               />
             </div>
           ))}
@@ -51,12 +51,12 @@ export default function RecentWork() {
   return (
     <section className="w-full bg-background py-12 sm:py-16">
       <div className="2xl:mx-auto 2xl:max-w-[1440px] px-5 sm:px-8">
-        <p
+        <h2
           data-reveal
           className="font-mono uppercase tracking-[0.25em] text-muted-foreground text-[12px] sm:text-[13px]"
         >
           Recent Work
-        </p>
+        </h2>
       </div>
       <div className="mt-4">
         {works.map((work) => (
