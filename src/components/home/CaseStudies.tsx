@@ -1,57 +1,14 @@
 import { Link } from 'react-router-dom'
-import { getAllCaseStudies, type CaseStudy } from '@/lib/content'
-
-function Row({ study, index }: { study: CaseStudy; index: number }) {
-  const imageLeft = index % 2 === 0
-
-  return (
-    <Link
-      to={`/case-studies/${study.slug}`}
-      data-reveal
-      className="group grid sm:grid-cols-2 gap-6 sm:gap-10 items-center py-10 border-t border-border"
-    >
-      <div
-        className={`relative aspect-[16/9] overflow-hidden rounded-lg bg-muted ${
-          imageLeft ? 'sm:order-1' : 'sm:order-2'
-        }`}
-      >
-        {study.coverImage && (
-          <img
-            src={study.coverImage.src}
-            alt={study.title}
-            width={study.coverImage.width}
-            height={study.coverImage.height}
-            loading="lazy"
-            data-parallax="0.12"
-            className="absolute inset-0 w-full h-full object-cover scale-[1.26]"
-          />
-        )}
-      </div>
-
-      <div className={imageLeft ? 'sm:order-2' : 'sm:order-1'}>
-        <h3 className="font-heading font-normal text-foreground leading-[1.1] tracking-[-0.01em] text-[24px] sm:text-[30px]">
-          {study.title}
-        </h3>
-        {study.excerpt && (
-          <p className="mt-3 text-muted-foreground leading-[1.5] text-[15px] sm:text-[16px] max-w-md">
-            {study.excerpt}
-          </p>
-        )}
-        <span className="inline-flex items-baseline gap-2 mt-5 text-[13px] font-medium text-foreground">
-          Read
-          <span className="inline-block transition-transform duration-300 ease-out group-hover:translate-x-1.5">→</span>
-        </span>
-      </div>
-    </Link>
-  )
-}
+import { getAllCaseStudies } from '@/lib/content'
 
 export default function CaseStudies() {
-  const studies = getAllCaseStudies()
+  // The featured study is already shown in the Featured band above.
+  const studies = getAllCaseStudies().filter((cs) => !cs.featured)
+  if (studies.length === 0) return null
 
   return (
     <section className="w-full bg-background py-20 sm:py-28">
-      <div className="2xl:mx-auto 2xl:max-w-[1440px] px-5 sm:px-8">
+      <div className="mx-auto max-w-[1440px] px-5 sm:px-8">
         <h2
           data-reveal
           className="font-heading font-normal text-foreground leading-[1.04] tracking-[-0.01em]"
@@ -59,9 +16,42 @@ export default function CaseStudies() {
         >
           Case Studies
         </h2>
-        <div className="mt-10">
-          {studies.map((study, i) => (
-            <Row key={study.slug} study={study} index={i} />
+
+        <div className="mt-10 grid sm:grid-cols-2 gap-6 sm:gap-10">
+          {studies.map((study) => (
+            <Link
+              key={study.slug}
+              to={`/case-studies/${study.slug}`}
+              data-reveal
+              className="group block"
+            >
+              <div className="relative aspect-[16/9] overflow-hidden rounded-lg bg-muted">
+                {study.coverImage && (
+                  <img
+                    src={study.coverImage.src}
+                    alt={study.title}
+                    width={study.coverImage.width}
+                    height={study.coverImage.height}
+                    loading="lazy"
+                    data-parallax="0.12"
+                    className="absolute inset-0 w-full h-full object-cover scale-[1.26]"
+                  />
+                )}
+              </div>
+
+              <h3 className="mt-5 font-heading font-normal text-foreground leading-[1.12] tracking-[-0.01em] text-[22px] sm:text-[28px]">
+                {study.title}
+              </h3>
+              {study.excerpt && (
+                <p className="mt-3 text-muted-foreground leading-[1.5] text-[15px] sm:text-[16px] max-w-xl">
+                  {study.excerpt}
+                </p>
+              )}
+              <span className="inline-flex items-baseline gap-2 mt-4 text-[13px] font-medium text-foreground">
+                Read
+                <span className="inline-block transition-transform duration-300 ease-out group-hover:translate-x-1.5">→</span>
+              </span>
+            </Link>
           ))}
         </div>
       </div>
