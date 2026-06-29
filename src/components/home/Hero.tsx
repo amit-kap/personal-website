@@ -17,13 +17,13 @@ export default function Hero() {
         <div className="absolute top-8 sm:top-10 inset-x-5 sm:inset-x-8 z-0 flex items-center justify-between border-b border-foreground/10 pb-4">
           <span
             data-reveal
-            className="font-heading font-normal uppercase tracking-[0.14em] text-label text-[#a9a9a9]"
+            className="font-mono uppercase tracking-[0.25em] text-muted-foreground text-[12px] sm:text-[13px]"
           >
             Product Design portfolio
           </span>
           <span
             data-reveal
-            className="font-heading font-normal uppercase tracking-[0.14em] text-label text-[#a9a9a9]"
+            className="font-mono uppercase tracking-[0.25em] text-muted-foreground text-[12px] sm:text-[13px]"
           >
             Tel Aviv · 2026
           </span>
