@@ -14,7 +14,7 @@ export default function Hero() {
         </div>
 
         {/* Top label row */}
-        <div className="absolute top-8 sm:top-10 inset-x-5 sm:inset-x-8 z-20 flex items-center justify-between">
+        <div className="absolute top-8 sm:top-10 inset-x-5 sm:inset-x-8 z-20 flex items-center justify-between border-b border-foreground/10 pb-4">
           <span
             data-reveal
             className="font-heading font-semibold uppercase tracking-[0.14em] text-label text-foreground"
