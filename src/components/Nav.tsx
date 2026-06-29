@@ -1,20 +1,13 @@
 import { useEffect, useRef, useState } from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
 export default function Nav() {
-  const location = useLocation()
-  const isHome = location.pathname === '/'
-
-  const [scrollY, setScrollY] = useState(() =>
-    typeof window !== 'undefined' ? window.scrollY : 0,
-  )
   const [hidden, setHidden] = useState(false)
   const lastScrollY = useRef(0)
 
   useEffect(() => {
     const onScroll = () => {
       const y = window.scrollY
-      setScrollY(y)
 
       const diff = y - lastScrollY.current
       if (y < 60) setHidden(false)
@@ -27,9 +20,8 @@ export default function Nav() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  const heroThreshold =
-    typeof window !== 'undefined' ? window.innerHeight * 0.6 : 0
-  const overHero = isHome && scrollY < heroThreshold
+  // Home hero is now light (off-white); keep the nav in its dark-on-light treatment.
+  const overHero = false
 
   const navTextClass = overHero ? 'text-white' : 'text-black'
 
