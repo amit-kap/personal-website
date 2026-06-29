@@ -79,10 +79,10 @@ export default function Footer() {
 
         {/* Bottom row */}
         <div className="flex items-center justify-between pt-5">
-          <span className="font-heading font-semibold text-label uppercase tracking-[0.14em] text-white/75">
+          <span className="font-heading font-normal text-label uppercase tracking-[0.14em] text-[#a9a9a9]">
             Product Design portfolio
           </span>
-          <span className="font-heading font-semibold text-label uppercase tracking-[0.14em] text-white/40">
+          <span className="font-heading font-normal text-label uppercase tracking-[0.14em] text-[#a9a9a9]">
             Tel Aviv · 2026
           </span>
         </div>
