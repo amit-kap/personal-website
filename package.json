@@ -13,6 +13,8 @@
   },
   "dependencies": {
     "@fontsource/bodoni-moda": "^5.2.7",
+    "@fontsource/geist-sans": "^5.2.5",
+    "@fontsource/ibm-plex-sans": "^5.2.8",
     "@fontsource/plus-jakarta-sans": "^5.2.8",
     "@gsap/react": "^2.1.2",
     "gsap": "^3.15.0",

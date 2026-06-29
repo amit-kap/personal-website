@@ -1,5 +1,8 @@
-@import '@fontsource/bodoni-moda/400.css';
-@import '@fontsource/bodoni-moda/400-italic.css';
+@import '@fontsource/geist-sans/400.css';
+@import '@fontsource/geist-sans/500.css';
+@import '@fontsource/geist-sans/600.css';
+@import '@fontsource/geist-sans/800.css';
+@import '@fontsource/ibm-plex-sans/400-italic.css';
 @import '@fontsource/plus-jakarta-sans/300.css';
 @import '@fontsource/plus-jakarta-sans/400.css';
 @import '@fontsource/plus-jakarta-sans/500.css';
@@ -9,7 +12,8 @@
 
 @theme {
   --font-sans: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
-  --font-heading: 'Bodoni Moda', Georgia, serif;
+  --font-heading: 'Geist', ui-sans-serif, system-ui, sans-serif;
+  --font-tagline: 'IBM Plex Sans', Georgia, serif;
   --font-mono: ui-monospace, 'SFMono-Regular', Menlo, monospace;
 }
 
@@ -80,7 +84,7 @@
 }
 
 @theme inline {
-  --font-heading: 'Bodoni Moda', Georgia, serif;
+  --font-heading: 'Geist', ui-sans-serif, system-ui, sans-serif;
   --color-ring: var(--ring);
   --color-input: var(--input);
   --color-border: var(--border);
@@ -106,24 +110,24 @@
 }
 
 :root {
-  --background: oklch(0.985 0.004 95);   /* warm off-white */
-  --foreground: oklch(0.18 0.005 280);   /* soft near-black ink */
-  --card: oklch(0.985 0.004 95);
-  --card-foreground: oklch(0.18 0.005 280);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.18 0.005 280);
-  --primary: oklch(0.18 0.005 280);
-  --primary-foreground: oklch(0.985 0.004 95);
-  --secondary: oklch(0.96 0.003 95);
-  --secondary-foreground: oklch(0.18 0.005 280);
-  --muted: oklch(0.96 0.003 95);
-  --muted-foreground: oklch(0.5 0.006 280);  /* muted grey secondary text */
-  --accent: oklch(0.96 0.003 95);
-  --accent-foreground: oklch(0.18 0.005 280);
+  --background: oklch(0.925 0.003 75);   /* warm light grey (greige) — matches ref-4 */
+  --foreground: #21262b;                 /* dark blue-grey ink (ref-4) */
+  --card: oklch(0.925 0.003 75);
+  --card-foreground: #21262b;
+  --popover: oklch(0.97 0.003 75);
+  --popover-foreground: #21262b;
+  --primary: #21262b;
+  --primary-foreground: oklch(0.97 0.003 75);
+  --secondary: oklch(0.9 0.003 75);
+  --secondary-foreground: #21262b;
+  --muted: oklch(0.9 0.003 75);
+  --muted-foreground: #6b7177;           /* muted grey secondary text */
+  --accent: oklch(0.9 0.003 75);
+  --accent-foreground: #21262b;
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.9 0.003 95);
-  --input: oklch(0.9 0.003 95);
-  --ring: oklch(0.18 0.005 280);
+  --border: #d8d6d0;
+  --input: #d8d6d0;
+  --ring: #21262b;
   --radius: 0.75rem;
 }
 

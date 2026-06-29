@@ -9,6 +9,7 @@ import CV from '@/pages/CV'
 
 export default function App() {
   const location = useLocation()
+  const isHome = location.pathname === '/'
   const footerRef = useRef<HTMLDivElement | null>(null)
   const [footerH, setFooterH] = useState(0)
 
@@ -43,7 +44,7 @@ export default function App() {
       <div ref={footerRef} className="fixed bottom-0 left-0 right-0 z-0">
         <Footer />
       </div>
-      <Nav />
+      {!isHome && <Nav />}
       <div className="app-content" style={{ marginBottom: footerH }}>
         <Routes>
           <Route path="/" element={<Home />} />

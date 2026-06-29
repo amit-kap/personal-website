@@ -2,38 +2,72 @@ import { getCV } from '@/lib/content'
 
 export default function Hero() {
   const { header } = getCV()
+  const img = `${import.meta.env.BASE_URL}hero.png`
 
   return (
-    <section className="relative w-full min-h-[76svh] flex items-center bg-background text-foreground">
-      <div className="2xl:mx-auto 2xl:max-w-[1440px] w-full px-5 sm:px-8 grid md:grid-cols-2 gap-10 md:gap-16 items-center py-24">
-        {/* Left: name + tagline */}
-        <div className="order-2 md:order-1">
+    <section className="relative w-full min-h-[86svh] overflow-hidden bg-background text-foreground">
+      {/* Portrait — bleeds off the top-right on desktop */}
+      <div className="pointer-events-none absolute inset-y-0 right-0 hidden md:block md:w-[52%] lg:w-[46%] overflow-hidden">
+        <img
+          src={img}
+          alt={header.name}
+          data-parallax="0.06"
+          className="absolute inset-0 h-full w-full object-cover object-top scale-[1.14]"
+        />
+        {/* blend the photo's left edge into the page background */}
+        <div className="absolute inset-y-0 left-0 w-40 bg-gradient-to-r from-background to-transparent" />
+      </div>
+
+      {/* Top label row */}
+      <div className="absolute top-8 sm:top-10 left-5 right-5 sm:left-8 sm:right-8 z-20 flex items-center justify-between 2xl:mx-auto 2xl:max-w-[1440px]">
+        <span
+          data-reveal
+          className="font-heading font-semibold uppercase tracking-[0.14em] text-[11px] sm:text-[13px] text-foreground"
+        >
+          Product Design portfolio
+        </span>
+        <span
+          data-reveal
+          className="font-heading font-semibold uppercase tracking-[0.14em] text-[11px] sm:text-[13px] text-muted-foreground"
+        >
+          Tel Aviv · 2026
+        </span>
+      </div>
+
+      {/* Content */}
+      <div className="relative z-10 2xl:mx-auto 2xl:max-w-[1440px] w-full px-5 sm:px-8 min-h-[86svh] flex flex-col justify-center py-28">
+        <div className="max-w-3xl">
           <h1
             data-reveal
-            className="font-heading font-normal leading-[1.02] tracking-[-0.01em] text-foreground"
-            style={{ fontSize: 'clamp(40px, 7vw, 88px)' }}
+            aria-label={header.name}
+            className="font-heading font-extrabold leading-[0.92] tracking-[-0.04em]"
+            style={{ fontSize: 'clamp(52px, 11vw, 128px)' }}
           >
-            {header.name}
+            <span className="block text-foreground">Amit</span>
+            <span className="block text-[#a9a9a9]">Kaplinsky</span>
           </h1>
+
           <p
             data-reveal
-            className="mt-6 font-heading italic text-muted-foreground leading-snug max-w-xl"
-            style={{ fontSize: 'clamp(18px, 2.4vw, 28px)' }}
+            className="mt-6 font-tagline italic text-foreground/90 leading-[1.15] max-w-xl"
+            style={{ fontSize: 'clamp(20px, 3.2vw, 40px)' }}
           >
-            {header.tagline}
+            Over a decade of turning raw ideas into slick user experiences
           </p>
+
+          <a
+            data-reveal
+            href="mailto:amitka111@gmail.com"
+            className="mt-9 inline-flex items-center gap-2 rounded-full bg-foreground text-background px-6 py-3 text-[13px] font-medium font-sans hover:opacity-85 transition-opacity"
+          >
+            Contact
+            <span aria-hidden="true">→</span>
+          </a>
         </div>
 
-        {/* Right: portrait */}
-        <div className="order-1 md:order-2">
-          <div className="relative w-full aspect-[4/5] max-h-[60vh] overflow-hidden rounded-xl bg-muted">
-            <img
-              src={`${import.meta.env.BASE_URL}profile.jpg`}
-              alt={header.name}
-              data-parallax="0.08"
-              className="absolute inset-0 w-full h-full object-cover scale-[1.18]"
-            />
-          </div>
+        {/* Portrait on mobile — normal flow below the text */}
+        <div className="md:hidden mt-12 -mx-5 sm:-mx-8">
+          <img src={img} alt="" className="w-full max-h-[60vh] object-cover object-top" />
         </div>
       </div>
     </section>
