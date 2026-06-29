@@ -17,13 +17,13 @@ export default function Hero() {
         <div className="absolute top-8 sm:top-10 inset-x-5 sm:inset-x-8 z-20 flex items-center justify-between">
           <span
             data-reveal
-            className="font-heading font-semibold uppercase tracking-[0.14em] text-[11px] sm:text-[13px] text-foreground"
+            className="font-heading font-semibold uppercase tracking-[0.14em] text-label text-foreground"
           >
             Product Design portfolio
           </span>
           <span
             data-reveal
-            className="font-heading font-semibold uppercase tracking-[0.14em] text-[11px] sm:text-[13px] text-muted-foreground"
+            className="font-heading font-semibold uppercase tracking-[0.14em] text-label text-muted-foreground"
           >
             Tel Aviv · 2026
           </span>
@@ -34,8 +34,7 @@ export default function Hero() {
           <h1
             data-reveal
             aria-label={header.name}
-            className="font-heading font-extrabold leading-[0.92] tracking-[-0.04em]"
-            style={{ fontSize: 'clamp(52px, 11vw, 128px)' }}
+            className="font-heading font-extrabold text-display tracking-[-0.04em]"
           >
             <span className="block text-foreground">Amit</span>
             <span className="block text-[#a9a9a9]">Kaplinsky</span>
@@ -43,8 +42,7 @@ export default function Hero() {
 
           <p
             data-reveal
-            className="mt-6 font-tagline italic text-foreground/90 leading-[1.15] max-w-xl"
-            style={{ fontSize: 'clamp(20px, 3.2vw, 40px)' }}
+            className="mt-6 font-tagline italic text-lead text-foreground/90 max-w-xl"
           >
             Over a decade of turning raw ideas into slick user experiences
           </p>
@@ -52,7 +50,7 @@ export default function Hero() {
           <a
             data-reveal
             href="mailto:amitka111@gmail.com"
-            className="mt-9 inline-flex items-center gap-2 rounded-full bg-foreground text-background px-6 py-3 text-[13px] font-medium font-sans hover:opacity-85 transition-opacity"
+            className="mt-9 inline-flex items-center gap-2 rounded-full bg-foreground text-background px-6 py-3 text-label font-medium font-sans hover:opacity-85 transition-opacity"
           >
             Contact
             <span aria-hidden="true">→</span>
