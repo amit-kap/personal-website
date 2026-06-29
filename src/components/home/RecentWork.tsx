@@ -12,7 +12,7 @@ function WorkSection({ work, index }: { work: Work; index: number }) {
           <h3
             data-reveal
             className="font-heading font-normal leading-[1.06] tracking-[-0.02em] text-foreground max-w-4xl"
-            style={{ fontSize: 'clamp(26px, 4vw, 48px)' }}
+            style={{ fontSize: 'clamp(30px, 5.5vw, 68px)' }}
           >
             {work.productTitle}
           </h3>
