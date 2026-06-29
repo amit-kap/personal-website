@@ -5,7 +5,7 @@ export default function Footer() {
   const { header, experience } = getCV()
 
   return (
-    <footer className="bg-black text-white">
+    <footer className="bg-foreground text-background">
       <div className="2xl:mx-auto 2xl:max-w-[1440px] px-5 sm:px-8 pt-12 pb-6 sm:pt-16 sm:pb-8">
         <div className="grid md:grid-cols-2 gap-10 md:gap-16 pb-10 border-b border-white/10">
           {/* Left: identity + contact */}
@@ -68,7 +68,7 @@ export default function Footer() {
             <div className="pt-3">
               <Link
                 to="/cv"
-                className="inline-flex items-center gap-2 px-4 py-2 border border-white/25 rounded-full text-[12px] text-white hover:bg-white hover:text-black transition-colors"
+                className="inline-flex items-center gap-2 px-4 py-2 border border-background/25 rounded-full text-[12px] text-white hover:bg-background hover:text-foreground transition-colors"
               >
                 Download CV
                 <span className="text-[11px]">→</span>
