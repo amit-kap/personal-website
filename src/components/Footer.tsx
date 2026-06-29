@@ -57,7 +57,7 @@ export default function Footer() {
                       <span className="text-white/35 mx-1.5">·</span>
                       <span className="text-white/75">{company}</span>
                     </p>
-                    <span className="text-[11px] font-mono text-white/35 shrink-0">{period}</span>
+                    <span className="text-[14px] font-mono text-white/35 shrink-0">{period}</span>
                   </div>
                 </li>
               ))}
