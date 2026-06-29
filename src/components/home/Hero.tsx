@@ -7,7 +7,7 @@ export default function Hero() {
   return (
     <section className="relative w-full min-h-[86svh] overflow-hidden bg-background text-foreground">
       {/* Portrait — absolute top-right, natural aspect ratio */}
-      <div className="pointer-events-none absolute top-0 right-0 hidden md:block w-[40%] lg:w-[36%]">
+      <div className="pointer-events-none absolute top-0 right-0 hidden md:block w-[50%] lg:w-[46%]">
         <img
           src={img}
           alt={header.name}
