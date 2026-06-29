@@ -1,15 +1,16 @@
 import { Link } from 'react-router-dom'
 import { getAllWorks, type Work } from '@/lib/content'
 
-function WorkSection({ work }: { work: Work }) {
+function WorkSection({ work, index }: { work: Work; index: number }) {
   const images = work.allImages.slice(0, 2)
 
   return (
-    <Link
-      to={`/work/${work.slug}`}
-      className="group block w-full py-16 sm:py-24 border-t border-border first:border-t-0"
-    >
-      <div className="2xl:mx-auto 2xl:max-w-[1440px] px-5 sm:px-8">
+    <Link to={`/work/${work.slug}`} className="group block w-full">
+      <div
+        className={`mx-auto max-w-[1440px] px-5 sm:px-8 py-16 sm:py-24 ${
+          index > 0 ? 'border-t border-border' : ''
+        }`}
+      >
         <h3
           data-reveal
           className="font-heading font-normal leading-[1.06] tracking-[-0.01em] text-foreground max-w-4xl"
@@ -50,7 +51,7 @@ export default function RecentWork() {
 
   return (
     <section className="w-full bg-background py-12 sm:py-16">
-      <div className="2xl:mx-auto 2xl:max-w-[1440px] px-5 sm:px-8">
+      <div className="mx-auto max-w-[1440px] px-5 sm:px-8">
         <h2
           data-reveal
           className="font-mono uppercase tracking-[0.25em] text-muted-foreground text-[12px] sm:text-[13px]"
@@ -59,8 +60,8 @@ export default function RecentWork() {
         </h2>
       </div>
       <div className="mt-4">
-        {works.map((work) => (
-          <WorkSection key={work.slug} work={work} />
+        {works.map((work, i) => (
+          <WorkSection key={work.slug} work={work} index={i} />
         ))}
       </div>
     </section>
