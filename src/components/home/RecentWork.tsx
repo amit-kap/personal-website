@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 import { getAllWorks, type Work } from '@/lib/content'
 
 function WorkSection({ work, index }: { work: Work; index: number }) {
-  const images = work.allImages.slice(0, 4)
+  const images = work.allImages.slice(0, 3)
 
   return (
     <Link to={`/work/${work.slug}`} className="group block w-full">
@@ -28,11 +28,10 @@ function WorkSection({ work, index }: { work: Work; index: number }) {
             <span className="font-medium text-foreground">
               {work.company} · {work.role}
             </span>
-            <span className="text-muted-foreground">{work.period}</span>
             <span className="inline-block transition-transform duration-300 ease-out group-hover:translate-x-1.5">→</span>
           </div>
 
-          <div className="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-5">
+          <div className="mt-8 grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-5">
             {images.map((img, i) => (
               <div
                 key={img.src}
@@ -57,7 +56,7 @@ function WorkSection({ work, index }: { work: Work; index: number }) {
 }
 
 export default function RecentWork() {
-  const works = getAllWorks().slice(0, 3)
+  const works = getAllWorks()
 
   return (
     <section className="w-full bg-background py-12 sm:py-16">
