@@ -10,7 +10,7 @@ export default function Hero() {
       <div className="relative mx-auto max-w-[1440px] w-full px-5 sm:px-8 min-h-[86svh] flex flex-col justify-center py-28">
         {/* Portrait — top-right of the centered column, native image size */}
         <div className="pointer-events-none absolute top-0 right-0 hidden md:block">
-          <img src={img} alt={header.name} data-parallax="0.05" />
+          <img src={img} alt={header.name} data-parallax="0.12" />
         </div>
 
         {/* Top label row */}
