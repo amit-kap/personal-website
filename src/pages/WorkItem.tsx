@@ -7,14 +7,14 @@ import PrevNextNav from '@/components/PrevNextNav'
 
 const bodyComponents = {
   p: ({ children }: { children?: React.ReactNode }) => (
-    <p className="text-body leading-8 mb-5 text-black/75">{children}</p>
+    <p className="text-body leading-8 mb-5 text-foreground/75">{children}</p>
   ),
   strong: ({ children }: { children?: React.ReactNode }) => (
-    <strong className="font-medium text-black">{children}</strong>
+    <strong className="font-medium text-foreground">{children}</strong>
   ),
   em: ({ children }: { children?: React.ReactNode }) => <em className="italic">{children}</em>,
   a: ({ children, href }: { children?: React.ReactNode; href?: string }) => (
-    <a href={href} target="_blank" rel="noopener noreferrer" className="text-black underline underline-offset-2 decoration-black/30 hover:decoration-black">
+    <a href={href} target="_blank" rel="noopener noreferrer" className="text-foreground underline underline-offset-2 decoration-foreground/30 hover:decoration-foreground">
       {children}
     </a>
   ),
@@ -78,7 +78,7 @@ export default function WorkItem() {
     return (
       <div className="relative z-10 min-h-screen bg-background">
         <div className="max-w-xl mx-auto px-5 sm:px-8 pt-24 pb-24">
-          <p className="text-meta text-black/40">Work not found.</p>
+          <p className="text-meta text-foreground/40">Work not found.</p>
         </div>
       </div>
     )
@@ -113,7 +113,7 @@ export default function WorkItem() {
                   type="button"
                   onClick={() => setLightboxIndex(i % images.length)}
                   aria-label={`${work.company} — open image ${(i % images.length) + 1}`}
-                  className="group relative h-full flex-none cursor-pointer overflow-hidden bg-black/[0.04] first:ml-0"
+                  className="group relative h-full flex-none cursor-pointer overflow-hidden bg-foreground/[0.04] first:ml-0"
                 >
                   <img
                     src={img.src}
@@ -138,7 +138,7 @@ export default function WorkItem() {
                   type="button"
                   onClick={() => setLightboxIndex(0)}
                   aria-label={`${work.company} — open image`}
-                  className="group block w-full cursor-pointer overflow-hidden rounded-[6px] border border-black/[0.05] mb-3 sm:mb-4"
+                  className="group block w-full cursor-pointer overflow-hidden rounded-[6px] border border-foreground/[0.05] mb-3 sm:mb-4"
                 >
                   <img
                     src={images[0].src}
@@ -152,7 +152,7 @@ export default function WorkItem() {
               )}
 
               {images.length > 0 && (
-                <p className="text-caption font-mono text-black/35 mb-10 sm:mb-12">
+                <p className="text-caption font-mono text-foreground/35 mb-10 sm:mb-12">
                   {isStrip ? 'swipe to scroll · click to enlarge' : 'click to enlarge'}
                 </p>
               )}
