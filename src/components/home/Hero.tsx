@@ -113,7 +113,7 @@ export default function Hero() {
               src={img}
               alt={header.name}
               data-parallax="0.12"
-              className="shadow-[20px_20px_36px_0_rgba(0,0,0,0.10)]"
+              style={{ boxShadow: '-20px 20px 36px 0 rgba(0, 0, 0, 0.10)' }}
             />
           </div>
         </div>
