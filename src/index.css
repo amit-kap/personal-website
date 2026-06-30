@@ -76,9 +76,9 @@
 
 /* Scale up on hover, back down on leave */
 .btn-pop {
-  transition: scale 0.3s ease-in-out;
+  transition: transform 0.3s ease-in-out;
 }
-.btn-pop:hover { scale: 1.05; }
+.btn-pop:hover { transform: scale(1.05); }
 
 @layer utilities {
   .animate-fade-up {
