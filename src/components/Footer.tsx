@@ -13,7 +13,7 @@ export default function Footer() {
             <img
               src={`${import.meta.env.BASE_URL}hero.png`}
               alt="Amit Kaplinsky"
-              className="w-full max-w-[260px] rounded-xl"
+              className="w-40 h-40 sm:w-48 sm:h-48 rounded-full object-cover object-top"
             />
             <div className="flex flex-col gap-2">
               <a
