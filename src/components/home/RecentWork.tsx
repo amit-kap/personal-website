@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 import { getAllWorks, type Work } from '@/lib/content'
 
 function WorkSection({ work, index }: { work: Work; index: number }) {
-  const images = work.allImages.slice(0, 3)
+  const images = work.allImages
 
   return (
     <Link to={`/work/${work.slug}`} className="group block w-full">
@@ -31,23 +31,34 @@ function WorkSection({ work, index }: { work: Work; index: number }) {
             <span className="inline-block transition-transform duration-300 ease-out group-hover:translate-x-1.5">→</span>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-5">
-            {images.map((img, i) => (
-              <div
-                key={img.src}
-                className="relative aspect-[16/9] overflow-hidden rounded-lg bg-muted"
-              >
-                <img
-                  src={img.src}
-                  alt={`${work.company} ${i + 1}`}
-                  width={img.width}
-                  height={img.height}
-                  loading="lazy"
-                  data-parallax="0.12"
-                  className="absolute inset-0 w-full h-full object-cover scale-[1.26]"
-                />
+          {/* Horizontal swipe carousel of all images — moves only on left/right
+              swipe (native scroll-snap), never hijacks vertical page scroll. */}
+          <div>
+            <div className="flex gap-3 sm:gap-5 overflow-x-auto overscroll-x-contain snap-x snap-mandatory [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+              {images.map((img, i) => (
+                <div
+                  key={img.src}
+                  className="snap-start shrink-0 basis-[78%] sm:basis-[31.5%] relative aspect-[16/9] overflow-hidden rounded-lg bg-muted"
+                >
+                  <img
+                    src={img.src}
+                    alt={`${work.company} ${i + 1}`}
+                    width={img.width}
+                    height={img.height}
+                    loading="lazy"
+                    className="absolute inset-0 w-full h-full object-cover"
+                  />
+                </div>
+              ))}
+            </div>
+
+            {images.length > 1 && (
+              <div className="mt-4 flex items-center gap-2 text-muted-foreground text-caption font-mono uppercase tracking-[0.25em]">
+                <span aria-hidden="true">←</span>
+                <span>Swipe</span>
+                <span aria-hidden="true">→</span>
               </div>
-            ))}
+            )}
           </div>
         </div>
       </div>
