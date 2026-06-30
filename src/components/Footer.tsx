@@ -8,17 +8,13 @@ export default function Footer() {
     <footer className="bg-foreground text-background">
       <div className="mx-auto max-w-[1440px] px-5 sm:px-8 pt-12 pb-6 sm:pt-16 sm:pb-8">
         <div className="grid md:grid-cols-2 gap-10 md:gap-16 pb-10 border-b border-white/10">
-          {/* Left: identity + contact */}
+          {/* Left: portrait + contact */}
           <div className="flex flex-col gap-6">
-            <p className="font-mono uppercase tracking-[0.25em] text-white/35 text-[12px] sm:text-[13px]">
-              Contact
-            </p>
-            <h2
-              className="font-heading font-normal text-white leading-[1.05] tracking-[-0.01em] max-w-md"
-              style={{ fontSize: 'clamp(28px, 3.6vw, 44px)' }}
-            >
-              Let’s work together
-            </h2>
+            <img
+              src={`${import.meta.env.BASE_URL}hero.png`}
+              alt="Amit Kaplinsky"
+              className="w-full max-w-[260px] rounded-xl"
+            />
             <div className="flex flex-col gap-2">
               <a
                 href="mailto:amitka111@gmail.com"

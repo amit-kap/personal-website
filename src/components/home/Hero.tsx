@@ -8,8 +8,12 @@ gsap.registerPlugin(useGSAP)
 export default function Hero() {
   const { header } = getCV()
   const img = `${import.meta.env.BASE_URL}hero.png`
-  const btnRef = useRef<HTMLAnchorElement>(null)
+  const btnRef = useRef<HTMLButtonElement>(null)
   const arrowRef = useRef<HTMLSpanElement>(null)
+
+  // Slide down to the footer (it's fixed at the bottom, revealed as content scrolls up).
+  const scrollToContact = () =>
+    window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' })
 
   useGSAP(
     (_ctx, contextSafe) => {
@@ -86,10 +90,11 @@ export default function Hero() {
 
             {/* Wrapper carries the reveal so GSAP's inline transform never lands on the button (it would override the hover scale) */}
             <div data-reveal className="mt-9">
-              <a
+              <button
                 ref={btnRef}
-                href="mailto:amitka111@gmail.com"
-                className="group relative overflow-hidden inline-flex items-center gap-2 rounded-full bg-foreground text-background px-8 py-4 text-body font-medium font-sans"
+                type="button"
+                onClick={scrollToContact}
+                className="group relative overflow-hidden inline-flex items-center gap-2 rounded-full bg-foreground text-background px-8 py-4 text-body font-medium font-sans cursor-pointer"
               >
                 Contact me
                 <span ref={arrowRef} aria-hidden="true">→</span>
@@ -98,7 +103,7 @@ export default function Hero() {
                   aria-hidden="true"
                   className="btn-sweep pointer-events-none absolute inset-y-0 left-0 w-1/2 -skew-x-[45deg] bg-white/80 -translate-x-[250%]"
                 />
-              </a>
+              </button>
             </div>
           </div>
 
