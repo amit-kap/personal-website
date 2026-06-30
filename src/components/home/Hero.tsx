@@ -54,7 +54,7 @@ export default function Hero() {
               {/* Light sweep — skewed white band glides across on hover */}
               <span
                 aria-hidden="true"
-                className="pointer-events-none absolute inset-y-0 left-0 w-1/4 skew-x-[45deg] bg-white/60 -translate-x-[250%] transition-transform duration-700 ease-out group-hover:translate-x-[500%]"
+                className="pointer-events-none absolute inset-y-0 left-0 w-1/3 -skew-x-[45deg] bg-white/60 -translate-x-[250%] transition-transform duration-700 ease-out group-hover:translate-x-[500%]"
               />
             </a>
           </div>
