@@ -59,7 +59,7 @@ export default function RecentWork() {
   const works = getAllWorks()
 
   return (
-    <section className="w-full bg-background py-12 sm:py-16">
+    <section className="w-full bg-background pt-12 sm:pt-16">
       <div className="mx-auto max-w-[1440px] px-5 sm:px-8">
         <h2
           data-reveal
