@@ -30,7 +30,7 @@ Embarking on the ultimate challenge: initiating from a blank slate. Leveraging d
 
 As a key member of the founding team, my mandate was to establish an in-house design team, pivotal for supporting our fast-paced development process. This involved transitioning from an outsourced model, where I took over the existing design framework, to setting up robust in-house concepts and processes. My focus was on leading and nurturing the UX team to align with our evolving project goals and company vision.
 
-### [Check Point Software Security](/experience/checkpoint)
+### [Check Point Software](/experience/checkpoint)
 
 **UX Expert** · 03/2014 – 08/2020
 

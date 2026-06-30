@@ -2,9 +2,9 @@
 @import '@fontsource/geist-sans/500.css';
 @import '@fontsource/geist-sans/600.css';
 @import '@fontsource/geist-sans/800.css';
-@import '@fontsource/ibm-plex-sans/400-italic.css';
 @import '@fontsource/plus-jakarta-sans/300.css';
 @import '@fontsource/plus-jakarta-sans/400.css';
+@import '@fontsource/plus-jakarta-sans/400-italic.css';
 @import '@fontsource/plus-jakarta-sans/500.css';
 @import '@fontsource/plus-jakarta-sans/700.css';
 @import "tailwindcss";
@@ -13,7 +13,6 @@
 @theme {
   --font-sans: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
   --font-heading: 'Geist', ui-sans-serif, system-ui, sans-serif;
-  --font-tagline: 'IBM Plex Sans', Georgia, serif;
   --font-mono: ui-monospace, 'SFMono-Regular', Menlo, monospace;
 
   /* ---- Type scale (anchored on the 13px UI/label tier = Contact button) ---- */

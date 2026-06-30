@@ -83,7 +83,7 @@ export default function Hero() {
 
             <p
               data-reveal
-              className="mt-6 font-tagline italic text-lead text-foreground/90 max-w-xl"
+              className="mt-6 italic text-lead text-foreground/90 max-w-xl"
             >
               Over a decade of turning raw ideas into slick user experiences
             </p>
