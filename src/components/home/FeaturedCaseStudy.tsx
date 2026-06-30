@@ -20,27 +20,58 @@ function storyFramesFor(slug: string): string[] {
     .map(([, mod]) => mod.default)
 }
 
+const BLINDS = 16 // number of vertical slats
+const HOLD = 3 // seconds a frame is held
+const TRANS = 2 // seconds for the blinds to open
+const SEG = HOLD + TRANS
+const DOLLY_FROM = 1.05
+const DOLLY_TO = 1.16
+
 export default function FeaturedCaseStudy() {
   const featured = getFeaturedCaseStudy()
   const scope = useRef<HTMLElement>(null)
   const frames = featured ? storyFramesFor(featured.slug) : []
 
-  // Cinematic loop: hold each frame 3s, then 2s crossfade to the next, forever.
+  // Cinematic loop: each frame dollies in while held, then the next frame's
+  // venetian blinds open over it. Plain timeline (no ScrollTrigger).
   useGSAP(
     () => {
       if (frames.length < 2) return
-      const imgs = gsap.utils.toArray<HTMLElement>('.featured-frame')
-      gsap.set(imgs, { autoAlpha: 0 })
-      gsap.set(imgs[0], { autoAlpha: 1 })
-      const tl = gsap.timeline({ repeat: -1 })
+      const q = gsap.utils.selector(scope)
+      const imgs = q<HTMLImageElement>('.featured-frame')
+      const n = imgs.length
+      const rectsOf = (i: number) => q<SVGRectElement>(`#fc-clip-${i} rect`)
+
+      // Initial state: frame 0 open & on top, the rest closed underneath.
       imgs.forEach((img, i) => {
-        const next = imgs[(i + 1) % imgs.length]
-        tl.to(img, { autoAlpha: 0, duration: 2, ease: 'power1.inOut' }, '+=3').to(
-          next,
-          { autoAlpha: 1, duration: 2, ease: 'power1.inOut' },
-          '<',
-        )
+        gsap.set(img, { zIndex: i === 0 ? 1 : 0, scale: DOLLY_FROM })
+        gsap.set(rectsOf(i), { scaleX: i === 0 ? 1 : 0, transformOrigin: 'center right' })
       })
+
+      const tl = gsap.timeline({ repeat: -1 })
+      for (let i = 0; i < n; i++) {
+        const next = (i + 1) % n
+        const start = i * SEG
+        // Slow dolly-in across this frame's whole turn.
+        tl.fromTo(
+          imgs[i],
+          { scale: DOLLY_FROM },
+          { scale: DOLLY_TO, ease: 'none', duration: SEG },
+          start,
+        )
+        // After the hold, raise the next frame and open its blinds over this one.
+        tl.set(imgs[next], { zIndex: 2 }, start + HOLD)
+        tl.set(rectsOf(next), { scaleX: 0 }, start + HOLD)
+        tl.to(
+          rectsOf(next),
+          { scaleX: 1, ease: 'power1.inOut', duration: 0.6, stagger: { amount: TRANS - 0.6 } },
+          start + HOLD,
+        )
+        // Once fully open: reset the outgoing frame and promote the new one.
+        tl.set(imgs[i], { zIndex: 0 }, start + SEG)
+        tl.set(rectsOf(i), { scaleX: 0 }, start + SEG)
+        tl.set(imgs[next], { zIndex: 1 }, start + SEG)
+      }
     },
     { scope },
   )
@@ -53,32 +84,48 @@ export default function FeaturedCaseStudy() {
         to={`/case-studies/${featured.slug}`}
         className="group block relative w-full h-[78svh] min-h-[520px] overflow-hidden bg-foreground"
       >
-        {frames.length > 0
-          ? frames.map((src, i) => (
+        {frames.length > 0 ? (
+          <>
+            {/* Per-frame blinds clip paths (one clipPath of vertical slats each) */}
+            <svg width="0" height="0" aria-hidden className="absolute">
+              <defs>
+                {frames.map((_, fi) => (
+                  <clipPath key={fi} id={`fc-clip-${fi}`} clipPathUnits="objectBoundingBox">
+                    {Array.from({ length: BLINDS }).map((__, i) => (
+                      <rect key={i} x={i / BLINDS} y="0" width={1 / BLINDS} height="1" />
+                    ))}
+                  </clipPath>
+                ))}
+              </defs>
+            </svg>
+
+            {frames.map((src, i) => (
               <img
                 key={src}
                 src={src}
                 alt={i === 0 ? featured.title : ''}
                 aria-hidden={i > 0}
-                data-parallax="0.2"
-                style={{ opacity: i === 0 ? 1 : 0 }}
-                className="featured-frame absolute inset-0 w-full h-full object-cover scale-[1.6]"
+                style={{ clipPath: `url(#fc-clip-${i})` }}
+                className="featured-frame absolute inset-0 w-full h-full object-cover"
               />
-            ))
-          : featured.coverImage && (
-              <img
-                src={featured.coverImage.src}
-                alt={featured.title}
-                width={featured.coverImage.width}
-                height={featured.coverImage.height}
-                data-parallax="0.2"
-                className="absolute inset-0 w-full h-full object-cover scale-[1.6]"
-              />
-            )}
+            ))}
+          </>
+        ) : (
+          featured.coverImage && (
+            <img
+              src={featured.coverImage.src}
+              alt={featured.title}
+              width={featured.coverImage.width}
+              height={featured.coverImage.height}
+              data-parallax="0.2"
+              className="absolute inset-0 w-full h-full object-cover scale-[1.6]"
+            />
+          )
+        )}
 
-        {/* Bottom legibility gradient */}
+        {/* Bottom legibility gradient (above the frames) */}
         <div
-          className="absolute inset-0 pointer-events-none"
+          className="absolute inset-0 z-10 pointer-events-none"
           style={{
             background:
               'linear-gradient(to top, rgba(0,0,0,0.78) 0%, rgba(0,0,0,0.35) 32%, rgba(0,0,0,0) 62%)',
@@ -86,7 +133,7 @@ export default function FeaturedCaseStudy() {
         />
 
         {/* Overlay text — full-bleed image, content capped to the centered 1440 column */}
-        <div className="absolute inset-x-0 bottom-0 pb-14 sm:pb-20">
+        <div className="absolute inset-x-0 bottom-0 z-10 pb-14 sm:pb-20">
           <div className="mx-auto max-w-[1440px] px-5 sm:px-8">
             <p
               data-reveal
