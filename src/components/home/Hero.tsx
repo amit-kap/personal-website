@@ -47,10 +47,15 @@ export default function Hero() {
             <a
               data-reveal
               href="mailto:amitka111@gmail.com"
-              className="mt-9 inline-flex items-center gap-2 rounded-full bg-foreground text-background px-8 py-4 text-body font-medium font-sans hover:opacity-85 transition-opacity"
+              className="group relative overflow-hidden mt-9 inline-flex items-center gap-2 rounded-full bg-foreground text-background px-8 py-4 text-body font-medium font-sans"
             >
               Contact me
               <span aria-hidden="true">→</span>
+              {/* Light sweep — skewed white band glides across on hover */}
+              <span
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-y-0 left-0 w-1/4 skew-x-[45deg] bg-white/60 -translate-x-[250%] transition-transform duration-700 ease-out group-hover:translate-x-[500%]"
+              />
             </a>
           </div>
 
