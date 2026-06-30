@@ -11,7 +11,7 @@ export default function CaseStudies() {
       <div className="mx-auto max-w-[1440px] px-5 sm:px-8">
         <h2
           data-reveal
-          className="font-mono uppercase tracking-[0.25em] text-muted-foreground text-[12px] sm:text-[13px]"
+          className="font-mono uppercase tracking-[0.25em] text-muted-foreground text-caption"
         >
           Case Studies
         </h2>
@@ -38,15 +38,15 @@ export default function CaseStudies() {
                 )}
               </div>
 
-              <h3 className="mt-5 font-heading font-normal text-foreground leading-[1.12] tracking-[-0.01em] text-[22px] sm:text-[28px]">
+              <h3 className="mt-5 font-heading font-normal text-foreground leading-[1.12] tracking-[-0.01em] text-title-sm">
                 {study.title}
               </h3>
               {study.excerpt && (
-                <p className="mt-3 text-muted-foreground leading-[1.5] text-[15px] sm:text-[16px] max-w-xl">
+                <p className="mt-3 text-muted-foreground leading-[1.5] text-body max-w-xl">
                   {study.excerpt}
                 </p>
               )}
-              <span className="inline-flex items-baseline gap-2 mt-4 text-[13px] font-medium text-foreground">
+              <span className="inline-flex items-baseline gap-2 mt-4 text-caption font-medium text-foreground">
                 Read
                 <span className="inline-block transition-transform duration-300 ease-out group-hover:translate-x-1.5">→</span>
               </span>

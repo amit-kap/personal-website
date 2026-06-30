@@ -44,36 +44,36 @@ export default function Footer() {
             <div className="flex flex-col gap-2">
               <a
                 href="mailto:amitka111@gmail.com"
-                className="text-[14px] text-white hover:text-white/60 transition-colors inline-flex items-baseline gap-1.5 self-start"
+                className="text-meta text-white hover:text-white/60 transition-colors inline-flex items-baseline gap-1.5 self-start"
               >
                 amitka111@gmail.com
-                <span className="text-white/35 text-[11px]">↗</span>
+                <span className="text-white/35 text-caption">↗</span>
               </a>
               <a
                 href="https://wa.me/972544878882"
-                className="text-[14px] text-white hover:text-white/60 transition-colors inline-flex items-baseline gap-1.5 self-start"
+                className="text-meta text-white hover:text-white/60 transition-colors inline-flex items-baseline gap-1.5 self-start"
               >
                 +972-54-487-8882
-                <span className="text-white/35 text-[11px]">↗</span>
+                <span className="text-white/35 text-caption">↗</span>
               </a>
               <a
                 href="https://www.linkedin.com/in/amitka/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-[14px] text-white hover:text-white/60 transition-colors inline-flex items-baseline gap-1.5 self-start"
+                className="text-meta text-white hover:text-white/60 transition-colors inline-flex items-baseline gap-1.5 self-start"
               >
                 linkedin.com/in/amitka
-                <span className="text-white/35 text-[11px]">↗</span>
+                <span className="text-white/35 text-caption">↗</span>
               </a>
             </div>
           </div>
 
           {/* Right: experience + Download CV */}
           <div className="flex flex-col gap-5">
-            <p className="font-mono uppercase tracking-[0.25em] text-white/35 text-[12px] sm:text-[13px]">
+            <p className="font-mono uppercase tracking-[0.25em] text-white/35 text-caption">
               Experience
             </p>
-            <ul className="grid grid-cols-[1.4fr_1fr_auto] md:grid-cols-[auto_auto_auto] md:whitespace-nowrap items-baseline gap-x-4 sm:gap-x-6 gap-y-3 text-[14px]">
+            <ul className="grid grid-cols-[1.4fr_1fr_auto] md:grid-cols-[auto_auto_auto] md:whitespace-nowrap items-baseline gap-x-4 sm:gap-x-6 gap-y-3 text-meta">
               {experience.map(({ slug, company, role, period }) => (
                 <li key={slug} className="contents">
                   <span className="font-medium text-white">{role}</span>
@@ -85,10 +85,10 @@ export default function Footer() {
             <div className="pt-3">
               <Link
                 to="/cv"
-                className="inline-flex items-center gap-2 px-4 py-2 border border-background/25 rounded-full text-[12px] text-white hover:bg-background hover:text-foreground transition-colors"
+                className="inline-flex items-center gap-2 px-4 py-2 border border-background/25 rounded-full text-caption text-white hover:bg-background hover:text-foreground transition-colors"
               >
                 Download CV
-                <span className="text-[11px]">→</span>
+                <span className="text-caption">→</span>
               </Link>
             </div>
           </div>
@@ -96,10 +96,10 @@ export default function Footer() {
 
         {/* Bottom row */}
         <div className="flex items-center justify-between pt-5">
-          <span className="font-mono uppercase tracking-[0.25em] text-white/35 text-[12px] sm:text-[13px]">
+          <span className="font-mono uppercase tracking-[0.25em] text-white/35 text-caption">
             © Amit Kaplinsky
           </span>
-          <span className="font-mono uppercase tracking-[0.25em] text-white/35 text-[12px] sm:text-[13px]">
+          <span className="font-mono uppercase tracking-[0.25em] text-white/35 text-caption">
             Tel Aviv · 2026
           </span>
         </div>

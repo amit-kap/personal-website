@@ -168,21 +168,20 @@ export default function FeaturedCaseStudy() {
           <div className="mx-auto max-w-[1440px] px-5 sm:px-8">
             <p
               data-reveal
-              className="font-mono uppercase tracking-[0.25em] text-white/75 text-[12px] sm:text-[13px] mb-4"
+              className="font-mono uppercase tracking-[0.25em] text-white/75 text-caption mb-4"
             >
               Featured
             </p>
             <h2
               ref={titleRef}
-              className="font-heading font-normal text-white leading-[1.04] tracking-[-0.01em] whitespace-nowrap"
-              style={{ fontSize: 'clamp(30px, 5.5vw, 68px)' }}
+              className="font-heading font-normal text-white leading-[1.04] tracking-[-0.01em] whitespace-nowrap text-title"
             >
               {featured.title}
             </h2>
             {featured.excerpt && (
               <p
                 data-reveal
-                className="mt-5 text-white/85 leading-[1.5] max-w-2xl text-[clamp(16px,1.6vw,22px)]"
+                className="mt-5 text-white/85 leading-[1.5] max-w-2xl text-lead"
               >
                 {featured.excerpt}
               </p>

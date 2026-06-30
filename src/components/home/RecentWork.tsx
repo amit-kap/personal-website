@@ -11,8 +11,7 @@ function WorkSection({ work, index }: { work: Work; index: number }) {
         <div className={`flex flex-col gap-10 py-14 sm:py-20 ${index > 0 ? 'border-t border-border' : ''}`}>
           <h3
             data-reveal
-            className="font-heading font-normal leading-[1.06] tracking-[-0.02em] text-foreground max-w-4xl"
-            style={{ fontSize: 'clamp(30px, 5.5vw, 68px)' }}
+            className="text-title font-heading font-normal leading-[1.06] tracking-[-0.02em] text-foreground max-w-4xl"
           >
             {work.productTitle}
           </h3>
@@ -20,7 +19,7 @@ function WorkSection({ work, index }: { work: Work; index: number }) {
           {/* Meta: icon + company · role + period */}
           <div
             data-reveal
-            className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[clamp(16px,1.6vw,22px)]"
+            className="flex flex-wrap items-center gap-x-3 gap-y-1 text-lead"
           >
             {work.icon && (
               <img src={work.icon} alt="" aria-hidden="true" className="h-8 w-8 object-contain" />
@@ -75,7 +74,7 @@ export default function RecentWork() {
       <div className="mx-auto max-w-[1440px] px-5 sm:px-8">
         <h2
           data-reveal
-          className="font-mono uppercase tracking-[0.25em] text-muted-foreground text-[12px] sm:text-[13px]"
+          className="font-mono uppercase tracking-[0.25em] text-muted-foreground text-caption"
         >
           Recent Work
         </h2>

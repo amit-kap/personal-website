@@ -9,7 +9,7 @@ import {
 
 const bodyComponents = {
   p: ({ children }: { children?: React.ReactNode }) => (
-    <p className="text-[16px] leading-8 mb-5 text-black/75">{children}</p>
+    <p className="text-body leading-8 mb-5 text-black/75">{children}</p>
   ),
   strong: ({ children }: { children?: React.ReactNode }) => (
     <strong className="font-medium text-black">{children}</strong>
@@ -80,7 +80,7 @@ export default function WorkItem() {
     return (
       <div className="relative z-10 min-h-screen bg-background">
         <div className="max-w-xl mx-auto px-5 sm:px-8 pt-24 pb-24">
-          <p className="text-[14px] text-black/40">Work not found.</p>
+          <p className="text-meta text-black/40">Work not found.</p>
         </div>
       </div>
     )
@@ -154,19 +154,18 @@ export default function WorkItem() {
               )}
 
               {images.length > 0 && (
-                <p className="text-[12px] font-mono text-black/35 mb-10 sm:mb-12">
+                <p className="text-caption font-mono text-black/35 mb-10 sm:mb-12">
                   {isStrip ? 'swipe to scroll · click to enlarge' : 'click to enlarge'}
                 </p>
               )}
 
               {/* Title — unified with the home work titles */}
               <h1
-                className="font-heading font-normal leading-[1.06] tracking-[-0.02em] text-foreground mb-10"
-                style={{ fontSize: 'clamp(30px, 5.5vw, 68px)' }}
+                className="font-heading font-normal leading-[1.06] tracking-[-0.02em] text-foreground mb-10 text-title"
               >
                 {work.productTitle}
               </h1>
-              <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[clamp(16px,1.6vw,22px)] mb-10">
+              <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-lead mb-10">
                 {work.icon && (
                   <img src={work.icon} alt="" aria-hidden="true" className="h-8 w-8 object-contain" />
                 )}
@@ -191,10 +190,10 @@ export default function WorkItem() {
                       to={`/work/${prev.slug}`}
                       className="group inline-flex flex-col items-start gap-1.5"
                     >
-                      <span className="text-[11px] font-mono uppercase tracking-[0.2em] text-black/35">
+                      <span className="text-caption font-mono uppercase tracking-[0.2em] text-black/35">
                         ← Previous
                       </span>
-                      <span className="text-[15px] font-medium text-black/70 group-hover:text-black transition-colors leading-snug">
+                      <span className="text-meta font-medium text-black/70 group-hover:text-black transition-colors leading-snug">
                         {prev.company}
                       </span>
                     </Link>
@@ -202,7 +201,7 @@ export default function WorkItem() {
                 </div>
                 <Link
                   to="/"
-                  className="shrink-0 inline-flex items-center px-4 py-2 border border-black/15 rounded-full text-[11px] font-mono uppercase tracking-[0.2em] text-black/55 hover:bg-black/[0.04] hover:text-black transition-colors"
+                  className="shrink-0 inline-flex items-center px-4 py-2 border border-black/15 rounded-full text-caption font-mono uppercase tracking-[0.2em] text-black/55 hover:bg-black/[0.04] hover:text-black transition-colors"
                 >
                   Home
                 </Link>
@@ -212,10 +211,10 @@ export default function WorkItem() {
                       to={`/work/${next.slug}`}
                       className="group inline-flex flex-col items-end gap-1.5 text-right"
                     >
-                      <span className="text-[11px] font-mono uppercase tracking-[0.2em] text-black/35">
+                      <span className="text-caption font-mono uppercase tracking-[0.2em] text-black/35">
                         Next →
                       </span>
-                      <span className="text-[15px] font-medium text-black/70 group-hover:text-black transition-colors leading-snug">
+                      <span className="text-meta font-medium text-black/70 group-hover:text-black transition-colors leading-snug">
                         {next.company}
                       </span>
                     </Link>
