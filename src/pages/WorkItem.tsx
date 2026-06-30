@@ -159,14 +159,6 @@ export default function WorkItem() {
                 </p>
               )}
 
-              {/* Back */}
-              <Link
-                to="/"
-                className="inline-flex items-center gap-2 text-[13px] font-mono uppercase tracking-[0.2em] text-muted-foreground hover:text-foreground transition-colors mb-8"
-              >
-                <span aria-hidden="true">←</span> Back
-              </Link>
-
               {/* Title — unified with the home work titles */}
               <h1
                 className="font-heading font-normal leading-[1.06] tracking-[-0.02em] text-foreground mb-5"
@@ -191,41 +183,45 @@ export default function WorkItem() {
                 </ReactMarkdown>
               )}
 
-              {/* Prev / Next work */}
-              {(prev || next) && (
-                <nav className="mt-20 pt-10 border-t border-black/10 flex justify-between items-start gap-6">
-                  <div className="flex-1 min-w-0">
-                    {prev && (
-                      <Link
-                        to={`/work/${prev.slug}`}
-                        className="group inline-flex flex-col items-start gap-1.5"
-                      >
-                        <span className="text-[11px] font-mono uppercase tracking-[0.2em] text-black/35">
-                          ← Previous
-                        </span>
-                        <span className="text-[15px] font-medium text-black/70 group-hover:text-black transition-colors leading-snug">
-                          {prev.company}
-                        </span>
-                      </Link>
-                    )}
-                  </div>
-                  <div className="flex-1 min-w-0 flex justify-end">
-                    {next && (
-                      <Link
-                        to={`/work/${next.slug}`}
-                        className="group inline-flex flex-col items-end gap-1.5 text-right"
-                      >
-                        <span className="text-[11px] font-mono uppercase tracking-[0.2em] text-black/35">
-                          Next →
-                        </span>
-                        <span className="text-[15px] font-medium text-black/70 group-hover:text-black transition-colors leading-snug">
-                          {next.company}
-                        </span>
-                      </Link>
-                    )}
-                  </div>
-                </nav>
-              )}
+              {/* Prev / Home / Next */}
+              <nav className="mt-20 pt-10 border-t border-black/10 flex justify-between items-center gap-6">
+                <div className="flex-1 min-w-0">
+                  {prev && (
+                    <Link
+                      to={`/work/${prev.slug}`}
+                      className="group inline-flex flex-col items-start gap-1.5"
+                    >
+                      <span className="text-[11px] font-mono uppercase tracking-[0.2em] text-black/35">
+                        ← Previous
+                      </span>
+                      <span className="text-[15px] font-medium text-black/70 group-hover:text-black transition-colors leading-snug">
+                        {prev.company}
+                      </span>
+                    </Link>
+                  )}
+                </div>
+                <Link
+                  to="/"
+                  className="shrink-0 inline-flex items-center px-4 py-2 border border-black/15 rounded-full text-[11px] font-mono uppercase tracking-[0.2em] text-black/55 hover:bg-black/[0.04] hover:text-black transition-colors"
+                >
+                  Home
+                </Link>
+                <div className="flex-1 min-w-0 flex justify-end">
+                  {next && (
+                    <Link
+                      to={`/work/${next.slug}`}
+                      className="group inline-flex flex-col items-end gap-1.5 text-right"
+                    >
+                      <span className="text-[11px] font-mono uppercase tracking-[0.2em] text-black/35">
+                        Next →
+                      </span>
+                      <span className="text-[15px] font-medium text-black/70 group-hover:text-black transition-colors leading-snug">
+                        {next.company}
+                      </span>
+                    </Link>
+                  )}
+                </div>
+              </nav>
             </div>
           </article>
         </main>
