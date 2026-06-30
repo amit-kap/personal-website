@@ -75,7 +75,7 @@ export default function Hero() {
               <a
                 ref={btnRef}
                 href="mailto:amitka111@gmail.com"
-                className="group relative overflow-hidden inline-flex items-center gap-2 rounded-full bg-foreground text-background px-8 py-4 text-body font-medium font-sans transition-colors duration-300 hover:bg-white hover:text-foreground"
+                className="group relative overflow-hidden inline-flex items-center gap-2 rounded-full bg-foreground text-background px-8 py-4 text-body font-medium font-sans"
               >
                 Contact me
                 <span aria-hidden="true">→</span>
