@@ -73,6 +73,10 @@
 .group:hover .btn-sweep {
   animation: button-sweep 0.7s ease-out;
 }
+/* Same sweep, played once when the footer avatar is revealed */
+.footer-sweep-on {
+  animation: button-sweep 0.9s ease-out;
+}
 
 @layer utilities {
   .animate-fade-up {

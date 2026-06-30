@@ -1,8 +1,23 @@
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { getCV } from '@/lib/content'
 
 export default function Footer() {
   const { experience } = getCV()
+  const [revealed, setRevealed] = useState(false)
+
+  // Fire the avatar light-sweep once, when the page scrolls down to the footer.
+  useEffect(() => {
+    const onScroll = () => {
+      if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 120) {
+        setRevealed(true)
+        window.removeEventListener('scroll', onScroll)
+      }
+    }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    onScroll()
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
 
   return (
     <footer className="bg-foreground text-background">
@@ -10,11 +25,22 @@ export default function Footer() {
         <div className="grid md:grid-cols-2 gap-10 md:gap-16 pb-10 border-b border-white/10">
           {/* Left: portrait + contact */}
           <div className="flex flex-col gap-6">
-            <img
-              src={`${import.meta.env.BASE_URL}hero.png`}
-              alt="Amit Kaplinsky"
-              className="w-40 h-40 sm:w-48 sm:h-48 rounded-full object-cover object-top ring-1 ring-white/20 ring-offset-2 ring-offset-foreground"
-            />
+            <div className="relative w-40 h-40 sm:w-48 sm:h-48 rounded-full ring-1 ring-white/20 ring-offset-2 ring-offset-foreground">
+              {/* inner clips the sweep band to the circle; ring stays outside */}
+              <div className="absolute inset-0 overflow-hidden rounded-full">
+                <img
+                  src={`${import.meta.env.BASE_URL}hero.png`}
+                  alt="Amit Kaplinsky"
+                  className="w-full h-full object-cover object-top"
+                />
+                <span
+                  aria-hidden="true"
+                  className={`pointer-events-none absolute inset-y-0 left-0 w-1/2 -skew-x-[45deg] bg-white/70 -translate-x-[250%] ${
+                    revealed ? 'footer-sweep-on' : ''
+                  }`}
+                />
+              </div>
+            </div>
             <div className="flex flex-col gap-2">
               <a
                 href="mailto:amitka111@gmail.com"
