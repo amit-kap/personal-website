@@ -47,9 +47,9 @@ export default function Hero() {
             <a
               data-reveal
               href="mailto:amitka111@gmail.com"
-              className="mt-9 inline-flex items-center gap-2 rounded-full bg-foreground text-background px-6 py-3 text-label font-medium font-sans hover:opacity-85 transition-opacity"
+              className="mt-9 inline-flex items-center gap-2 rounded-full bg-foreground text-background px-8 py-4 text-body font-medium font-sans hover:opacity-85 transition-opacity"
             >
-              Contact
+              Contact me
               <span aria-hidden="true">→</span>
             </a>
           </div>
