@@ -42,35 +42,44 @@ export default function FeaturedCaseStudy() {
       const n = imgs.length
       const rectsOf = (i: number) => q<SVGRectElement>(`#fc-clip-${i} rect`)
 
-      // Initial state: frame 0 open & on top, the rest closed underneath.
+      // Initial state: the LAST frame is the open base, so frame 0 can blinds-in
+      // over it at t=0. Every other frame starts closed.
       imgs.forEach((img, i) => {
-        gsap.set(img, { zIndex: i === 0 ? 1 : 0, scale: DOLLY_FROM })
-        gsap.set(rectsOf(i), { scaleX: i === 0 ? 1 : 0, transformOrigin: 'center right' })
+        const isBase = i === n - 1
+        gsap.set(img, { zIndex: isBase ? 1 : 0, scale: isBase ? DOLLY_TO : DOLLY_FROM })
+        gsap.set(rectsOf(i), { scaleX: isBase ? 1 : 0, transformOrigin: 'center right' })
       })
 
       const tl = gsap.timeline({ repeat: -1 })
-      for (let i = 0; i < n; i++) {
-        const next = (i + 1) % n
-        const start = i * SEG
-        // Slow dolly-in across this frame's whole turn.
+      for (let x = 0; x < n; x++) {
+        const prev = (x - 1 + n) % n
+        const start = x * SEG
+        // Blinds sweep frame x open over the previous frame...
+        tl.set(imgs[x], { zIndex: 2 }, start)
         tl.fromTo(
-          imgs[i],
-          { scale: DOLLY_FROM },
-          { scale: DOLLY_TO, ease: 'none', duration: SEG },
+          rectsOf(x),
+          { scaleX: 0 },
+          {
+            scaleX: 1,
+            ease: 'power1.inOut',
+            duration: 0.4,
+            stagger: { amount: TRANS - 0.4 },
+            immediateRender: false,
+          },
           start,
         )
-        // After the hold, raise the next frame and open its blinds over this one.
-        tl.set(imgs[next], { zIndex: 2 }, start + HOLD)
-        tl.set(rectsOf(next), { scaleX: 0 }, start + HOLD)
-        tl.to(
-          rectsOf(next),
-          { scaleX: 1, ease: 'power1.inOut', duration: 0.4, stagger: { amount: TRANS - 0.4 } },
-          start + HOLD,
+        // ...while it is already dollying in — the dolly spans the blinds + the
+        // hold so the camera move is "inside" the transition, never a restart.
+        tl.fromTo(
+          imgs[x],
+          { scale: DOLLY_FROM },
+          { scale: DOLLY_TO, ease: 'none', duration: SEG, immediateRender: false },
+          start,
         )
-        // Once fully open: reset the outgoing frame and promote the new one.
-        tl.set(imgs[i], { zIndex: 0 }, start + SEG)
-        tl.set(rectsOf(i), { scaleX: 0 }, start + SEG)
-        tl.set(imgs[next], { zIndex: 1 }, start + SEG)
+        // Once the blinds finish, frame x is the base; retire the previous frame.
+        tl.set(imgs[x], { zIndex: 1 }, start + TRANS)
+        tl.set(imgs[prev], { zIndex: 0 }, start + TRANS)
+        tl.set(rectsOf(prev), { scaleX: 0 }, start + TRANS)
       }
     },
     { scope },
