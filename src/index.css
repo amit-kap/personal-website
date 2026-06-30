@@ -65,6 +65,15 @@
   to { opacity: 1; transform: translateY(0); }
 }
 
+/* One-pass light sweep for button hover (translate only — skew stays on transform) */
+@keyframes button-sweep {
+  from { translate: -250% 0; }
+  to { translate: 500% 0; }
+}
+.group:hover .btn-sweep {
+  animation: button-sweep 0.7s ease-out;
+}
+
 @layer utilities {
   .animate-fade-up {
     animation: fade-up 0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
