@@ -22,7 +22,7 @@ export default function Footer() {
   return (
     <footer className="bg-foreground text-background">
       <div className="mx-auto max-w-[1440px] px-5 sm:px-8 pt-12 pb-6 sm:pt-16 sm:pb-8">
-        <div className="grid md:grid-cols-2 gap-10 md:gap-16 pb-10 border-b border-white/10">
+        <div className="grid md:grid-cols-[0.78fr_1.22fr] gap-10 md:gap-16 pb-10 border-b border-white/10">
           {/* Left: portrait + contact */}
           <div className="flex flex-col gap-6">
             <div className="relative w-40 h-40 sm:w-48 sm:h-48 rounded-full ring-1 ring-white/20 ring-offset-2 ring-offset-foreground">
@@ -73,7 +73,7 @@ export default function Footer() {
             <p className="font-mono uppercase tracking-[0.25em] text-white/35 text-[12px] sm:text-[13px]">
               Experience
             </p>
-            <ul className="grid grid-cols-[1.4fr_1fr_auto] items-baseline gap-x-4 sm:gap-x-6 gap-y-3 text-[14px]">
+            <ul className="grid grid-cols-[1.4fr_1fr_auto] md:grid-cols-[auto_auto_auto] md:whitespace-nowrap items-baseline gap-x-4 sm:gap-x-6 gap-y-3 text-[14px]">
               {experience.map(({ slug, company, role, period }) => (
                 <li key={slug} className="contents">
                   <span className="font-medium text-white">{role}</span>
