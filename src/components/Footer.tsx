@@ -73,17 +73,12 @@ export default function Footer() {
             <p className="font-mono uppercase tracking-[0.25em] text-white/35 text-[12px] sm:text-[13px]">
               Experience
             </p>
-            <ul className="flex flex-col gap-3">
+            <ul className="grid grid-cols-[1.4fr_1fr_auto] items-baseline gap-x-4 sm:gap-x-6 gap-y-3 text-[14px]">
               {experience.map(({ slug, company, role, period }) => (
-                <li key={slug}>
-                  <div className="flex items-baseline justify-between gap-4">
-                    <p className="text-[14px] text-white">
-                      <span className="font-medium">{role}</span>
-                      <span className="text-white/35 mx-1.5">·</span>
-                      <span className="text-white/75">{company}</span>
-                    </p>
-                    <span className="text-[14px] font-mono text-white/35 shrink-0">{period}</span>
-                  </div>
+                <li key={slug} className="contents">
+                  <span className="font-medium text-white">{role}</span>
+                  <span className="text-white/75">{company}</span>
+                  <span className="font-mono text-white/35">{period}</span>
                 </li>
               ))}
             </ul>
