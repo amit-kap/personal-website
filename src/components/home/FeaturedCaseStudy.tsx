@@ -22,7 +22,7 @@ function storyFramesFor(slug: string): string[] {
 
 const BLINDS = 16 // number of vertical slats
 const HOLD = 3 // seconds a frame is held
-const TRANS = 2 // seconds for the blinds to open
+const TRANS = 1.2 // seconds for the blinds to sweep open
 const SEG = HOLD + TRANS
 const DOLLY_FROM = 1.05
 const DOLLY_TO = 1.16
@@ -64,7 +64,7 @@ export default function FeaturedCaseStudy() {
         tl.set(rectsOf(next), { scaleX: 0 }, start + HOLD)
         tl.to(
           rectsOf(next),
-          { scaleX: 1, ease: 'power1.inOut', duration: 0.6, stagger: { amount: TRANS - 0.6 } },
+          { scaleX: 1, ease: 'power1.inOut', duration: 0.4, stagger: { amount: TRANS - 0.4 } },
           start + HOLD,
         )
         // Once fully open: reset the outgoing frame and promote the new one.
