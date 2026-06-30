@@ -109,7 +109,12 @@ export default function Hero() {
 
           {/* Portrait — native size, defines the section height */}
           <div className="pointer-events-none hidden md:block self-start shrink-0 z-10">
-            <img src={img} alt={header.name} data-parallax="0.12" />
+            <img
+              src={img}
+              alt={header.name}
+              data-parallax="0.12"
+              className="shadow-[20px_20px_36px_0_rgba(0,0,0,0.10)]"
+            />
           </div>
         </div>
 
