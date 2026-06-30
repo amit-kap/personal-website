@@ -74,12 +74,6 @@
   animation: button-sweep 0.7s ease-out;
 }
 
-/* Scale up on hover, back down on leave */
-.btn-pop {
-  transition: transform 0.3s ease-in-out;
-}
-.btn-pop:hover { transform: scale(1.05); }
-
 @layer utilities {
   .animate-fade-up {
     animation: fade-up 0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;

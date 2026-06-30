@@ -1,8 +1,34 @@
+import { useRef } from 'react'
+import { gsap } from 'gsap'
+import { useGSAP } from '@gsap/react'
 import { getCV } from '@/lib/content'
+
+gsap.registerPlugin(useGSAP)
 
 export default function Hero() {
   const { header } = getCV()
   const img = `${import.meta.env.BASE_URL}hero.png`
+  const btnRef = useRef<HTMLAnchorElement>(null)
+
+  useGSAP(
+    (_ctx, contextSafe) => {
+      const btn = btnRef.current
+      if (!btn || !contextSafe) return
+      const enter = contextSafe!(() =>
+        gsap.to(btn, { scale: 1.06, duration: 0.4, ease: 'power3.out', overwrite: 'auto' }),
+      )
+      const leave = contextSafe!(() =>
+        gsap.to(btn, { scale: 1, duration: 0.5, ease: 'power3.out', overwrite: 'auto' }),
+      )
+      btn.addEventListener('mouseenter', enter)
+      btn.addEventListener('mouseleave', leave)
+      return () => {
+        btn.removeEventListener('mouseenter', enter)
+        btn.removeEventListener('mouseleave', leave)
+      }
+    },
+    { scope: btnRef },
+  )
 
   return (
     <section className="relative w-full overflow-hidden bg-background text-foreground">
@@ -47,8 +73,9 @@ export default function Hero() {
             {/* Wrapper carries the reveal so GSAP's inline transform never lands on the button (it would override the hover scale) */}
             <div data-reveal className="mt-9">
               <a
+                ref={btnRef}
                 href="mailto:amitka111@gmail.com"
-                className="group btn-pop relative overflow-hidden inline-flex items-center gap-2 rounded-full bg-foreground text-background px-8 py-4 text-body font-medium font-sans"
+                className="group relative overflow-hidden inline-flex items-center gap-2 rounded-full bg-foreground text-background px-8 py-4 text-body font-medium font-sans"
               >
                 Contact me
                 <span aria-hidden="true">→</span>
