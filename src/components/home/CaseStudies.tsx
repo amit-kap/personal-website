@@ -7,7 +7,7 @@ export default function CaseStudies() {
   if (studies.length === 0) return null
 
   return (
-    <section className="w-full bg-background py-20 sm:py-28">
+    <section className="w-full bg-background pt-12 pb-20 sm:pt-16 sm:pb-28">
       <div className="mx-auto max-w-[1440px] px-5 sm:px-8">
         <h2
           data-reveal
