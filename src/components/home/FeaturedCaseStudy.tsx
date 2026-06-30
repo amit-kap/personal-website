@@ -26,8 +26,10 @@ const BLINDS = 16 // number of vertical slats
 const HOLD = 3 // seconds a frame is held
 const TRANS = 1.2 // seconds for the blinds to sweep open
 const SEG = HOLD + TRANS
-const DOLLY_FROM = 1.05
-const DOLLY_TO = 1.16
+// Base scale is large enough to cover the parallax translate (drift 0.2 needs
+// scale >= 1.4) AND give the dolly room to move.
+const DOLLY_FROM = 1.42
+const DOLLY_TO = 1.56
 
 export default function FeaturedCaseStudy() {
   const featured = getFeaturedCaseStudy()
@@ -53,7 +55,8 @@ export default function FeaturedCaseStudy() {
 
       if (frames.length < 2) return
       const q = gsap.utils.selector(scope)
-      const imgs = q<HTMLImageElement>('.featured-frame')
+      const wraps = q<HTMLDivElement>('.featured-frame-wrap') // parallax + z-index
+      const imgs = q<HTMLImageElement>('.featured-frame') // dolly scale + blinds clip
       const n = imgs.length
       const rectsOf = (i: number) => q<SVGRectElement>(`#fc-clip-${i} rect`)
 
@@ -61,7 +64,8 @@ export default function FeaturedCaseStudy() {
       // over it at t=0. Every other frame starts closed.
       imgs.forEach((img, i) => {
         const isBase = i === n - 1
-        gsap.set(img, { zIndex: isBase ? 1 : 0, scale: isBase ? DOLLY_TO : DOLLY_FROM })
+        gsap.set(wraps[i], { zIndex: isBase ? 1 : 0 })
+        gsap.set(img, { scale: isBase ? DOLLY_TO : DOLLY_FROM })
         gsap.set(rectsOf(i), { scaleX: isBase ? 1 : 0, transformOrigin: 'center right' })
       })
 
@@ -70,7 +74,7 @@ export default function FeaturedCaseStudy() {
         const prev = (x - 1 + n) % n
         const start = x * SEG
         // Blinds sweep frame x open over the previous frame...
-        tl.set(imgs[x], { zIndex: 2 }, start)
+        tl.set(wraps[x], { zIndex: 2 }, start)
         tl.fromTo(
           rectsOf(x),
           { scaleX: 0 },
@@ -92,8 +96,8 @@ export default function FeaturedCaseStudy() {
           start,
         )
         // Once the blinds finish, frame x is the base; retire the previous frame.
-        tl.set(imgs[x], { zIndex: 1 }, start + TRANS)
-        tl.set(imgs[prev], { zIndex: 0 }, start + TRANS)
+        tl.set(wraps[x], { zIndex: 1 }, start + TRANS)
+        tl.set(wraps[prev], { zIndex: 0 }, start + TRANS)
         tl.set(rectsOf(prev), { scaleX: 0 }, start + TRANS)
       }
     },
@@ -124,14 +128,17 @@ export default function FeaturedCaseStudy() {
             </svg>
 
             {frames.map((src, i) => (
-              <img
-                key={src}
-                src={src}
-                alt={i === 0 ? featured.title : ''}
-                aria-hidden={i > 0}
-                style={{ clipPath: `url(#fc-clip-${i})` }}
-                className="featured-frame absolute inset-0 w-full h-full object-cover"
-              />
+              // Wrapper carries the scroll parallax (translate); the img carries
+              // the dolly (scale) + blinds (clip) so the transforms don't collide.
+              <div key={src} className="featured-frame-wrap absolute inset-0" data-parallax="0.2">
+                <img
+                  src={src}
+                  alt={i === 0 ? featured.title : ''}
+                  aria-hidden={i > 0}
+                  style={{ clipPath: `url(#fc-clip-${i})` }}
+                  className="featured-frame w-full h-full object-cover"
+                />
+              </div>
             ))}
           </>
         ) : (
