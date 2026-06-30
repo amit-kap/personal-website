@@ -121,8 +121,8 @@ export default function CaseStudyPage() {
 
   return (
     <div className="relative z-10 min-h-screen bg-background">
-      <main className="flex-1 pt-14 w-full">
-        <article className="2xl:mx-auto 2xl:max-w-[1440px] px-5 sm:px-8 pt-14 sm:pt-20 pb-20 animate-fade-up">
+      <main className="flex-1 w-full">
+        <article className="2xl:mx-auto 2xl:max-w-[1440px] px-5 sm:px-8 pt-10 sm:pt-14 pb-20 animate-fade-up">
           <div className="max-w-3xl mx-auto">
             {/* Hero image, contained */}
             {caseStudy.coverImage && (
@@ -139,8 +139,19 @@ export default function CaseStudyPage() {
               </div>
             )}
 
-            {/* Title */}
-            <h1 className="text-[30px] sm:text-[38px] md:text-[46px] leading-[1.05] tracking-[-0.02em] font-medium text-black mb-4">
+            {/* Back */}
+            <Link
+              to="/"
+              className="inline-flex items-center gap-2 text-[13px] font-mono uppercase tracking-[0.2em] text-muted-foreground hover:text-foreground transition-colors mb-8"
+            >
+              <span aria-hidden="true">←</span> Back
+            </Link>
+
+            {/* Title — unified with the home titles */}
+            <h1
+              className="font-heading font-normal leading-[1.06] tracking-[-0.02em] text-foreground mb-5"
+              style={{ fontSize: 'clamp(30px, 5.5vw, 68px)' }}
+            >
               {caseStudy.title}
             </h1>
 

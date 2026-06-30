@@ -98,12 +98,12 @@ export default function WorkItem() {
   return (
     <>
       <div className="relative z-10 min-h-screen bg-background">
-        <main className="flex-1 pt-14 w-full">
+        <main className="flex-1 w-full">
           {/* Full-bleed auto-scrolling image strip — click to open lightbox */}
           {isStrip && (
             <div
               ref={scrollerRef}
-              className="mt-6 sm:mt-8 flex gap-3 sm:gap-4 overflow-x-auto h-[58vh] min-h-[340px] max-h-[560px] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden animate-fade-up"
+              className="flex gap-3 sm:gap-4 overflow-x-auto h-[58vh] min-h-[340px] max-h-[560px] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden animate-fade-up"
               onMouseEnter={pause}
               onMouseLeave={resume}
               onTouchStart={pause}
@@ -159,21 +159,30 @@ export default function WorkItem() {
                 </p>
               )}
 
-              {/* Title */}
-              <h1 className="text-[30px] sm:text-[38px] md:text-[46px] leading-[1.05] tracking-[-0.02em] font-medium text-black mb-2">
+              {/* Back */}
+              <Link
+                to="/"
+                className="inline-flex items-center gap-2 text-[13px] font-mono uppercase tracking-[0.2em] text-muted-foreground hover:text-foreground transition-colors mb-8"
+              >
+                <span aria-hidden="true">←</span> Back
+              </Link>
+
+              {/* Title — unified with the home work titles */}
+              <h1
+                className="font-heading font-normal leading-[1.06] tracking-[-0.02em] text-foreground mb-5"
+                style={{ fontSize: 'clamp(30px, 5.5vw, 68px)' }}
+              >
                 {work.productTitle}
               </h1>
-              <div className="flex items-center gap-2 mb-1">
+              <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[clamp(16px,1.6vw,22px)] mb-10 sm:mb-12">
                 {work.icon && (
-                  <img src={work.icon} alt="" aria-hidden="true" className="h-5 w-5 flex-none" />
+                  <img src={work.icon} alt="" aria-hidden="true" className="h-8 w-8 object-contain" />
                 )}
-                <p className="text-[14px] font-medium text-black/55">{work.company}</p>
+                <span className="font-medium text-foreground">
+                  {work.company} · {work.role}
+                </span>
+                <span className="text-muted-foreground">{work.period}</span>
               </div>
-              <p className="text-[12px] text-black/40 font-mono mb-10 sm:mb-12">
-                {work.role}
-                <span className="text-black/25 mx-2">·</span>
-                {work.period}
-              </p>
 
               {/* Work overview body */}
               {work.body && (
