@@ -1,22 +1,20 @@
 import { useEffect, useRef, useState } from 'react'
-import { useParams, Link } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
-import {
-  getWorkBySlug,
-  getAdjacentWorks,
-} from '@/lib/content'
+import { getWorkBySlug, getAdjacentWorks } from '@/lib/content'
+import PrevNextNav from '@/components/PrevNextNav'
 
 const bodyComponents = {
   p: ({ children }: { children?: React.ReactNode }) => (
-    <p className="text-[16px] leading-8 mb-5 text-black/75">{children}</p>
+    <p className="text-body leading-8 mb-5 text-foreground/75">{children}</p>
   ),
   strong: ({ children }: { children?: React.ReactNode }) => (
-    <strong className="font-medium text-black">{children}</strong>
+    <strong className="font-medium text-foreground">{children}</strong>
   ),
   em: ({ children }: { children?: React.ReactNode }) => <em className="italic">{children}</em>,
   a: ({ children, href }: { children?: React.ReactNode; href?: string }) => (
-    <a href={href} target="_blank" rel="noopener noreferrer" className="text-black underline underline-offset-2 decoration-black/30 hover:decoration-black">
+    <a href={href} target="_blank" rel="noopener noreferrer" className="text-foreground underline underline-offset-2 decoration-foreground/30 hover:decoration-foreground">
       {children}
     </a>
   ),
@@ -78,9 +76,9 @@ export default function WorkItem() {
 
   if (!work) {
     return (
-      <div className="relative z-10 min-h-screen bg-white">
+      <div className="relative z-10 min-h-screen bg-background">
         <div className="max-w-xl mx-auto px-5 sm:px-8 pt-24 pb-24">
-          <p className="text-[14px] text-black/40">Work not found.</p>
+          <p className="text-meta text-foreground/40">Work not found.</p>
         </div>
       </div>
     )
@@ -97,13 +95,13 @@ export default function WorkItem() {
 
   return (
     <>
-      <div className="relative z-10 min-h-screen bg-white">
-        <main className="flex-1 pt-14 w-full">
+      <div className="relative z-10 min-h-screen bg-background">
+        <main className="flex-1 w-full">
           {/* Full-bleed auto-scrolling image strip — click to open lightbox */}
           {isStrip && (
             <div
               ref={scrollerRef}
-              className="mt-6 sm:mt-8 flex gap-3 sm:gap-4 overflow-x-auto h-[58vh] min-h-[340px] max-h-[560px] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden animate-fade-up"
+              className="flex gap-3 sm:gap-4 overflow-x-auto h-[58vh] min-h-[340px] max-h-[560px] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden animate-fade-up"
               onMouseEnter={pause}
               onMouseLeave={resume}
               onTouchStart={pause}
@@ -115,7 +113,7 @@ export default function WorkItem() {
                   type="button"
                   onClick={() => setLightboxIndex(i % images.length)}
                   aria-label={`${work.company} — open image ${(i % images.length) + 1}`}
-                  className="group relative h-full flex-none cursor-pointer overflow-hidden bg-black/[0.04] first:ml-0"
+                  className="group relative h-full flex-none cursor-pointer overflow-hidden bg-foreground/[0.04] first:ml-0"
                 >
                   <img
                     src={img.src}
@@ -140,7 +138,7 @@ export default function WorkItem() {
                   type="button"
                   onClick={() => setLightboxIndex(0)}
                   aria-label={`${work.company} — open image`}
-                  className="group block w-full cursor-pointer overflow-hidden rounded-[6px] border border-black/[0.05] mb-3 sm:mb-4"
+                  className="group block w-full cursor-pointer overflow-hidden rounded-[6px] border border-foreground/[0.05] mb-3 sm:mb-4"
                 >
                   <img
                     src={images[0].src}
@@ -154,26 +152,26 @@ export default function WorkItem() {
               )}
 
               {images.length > 0 && (
-                <p className="text-[12px] font-mono text-black/35 mb-10 sm:mb-12">
+                <p className="text-caption font-mono text-foreground/35 mb-10 sm:mb-12">
                   {isStrip ? 'swipe to scroll · click to enlarge' : 'click to enlarge'}
                 </p>
               )}
 
-              {/* Title */}
-              <h1 className="text-[30px] sm:text-[38px] md:text-[46px] leading-[1.05] tracking-[-0.02em] font-medium text-black mb-2">
+              {/* Title — unified with the home work titles */}
+              <h1
+                className="font-heading font-normal leading-[1.06] tracking-[-0.02em] text-foreground mb-10 text-title"
+              >
                 {work.productTitle}
               </h1>
-              <div className="flex items-center gap-2 mb-1">
+              <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-lead mb-10">
                 {work.icon && (
-                  <img src={work.icon} alt="" aria-hidden="true" className="h-5 w-5 flex-none" />
+                  <img src={work.icon} alt="" aria-hidden="true" className="h-8 w-8 object-contain" />
                 )}
-                <p className="text-[14px] font-medium text-black/55">{work.company}</p>
+                <span className="font-medium text-foreground">
+                  {work.company} · {work.role}
+                </span>
+                <span className="text-muted-foreground ml-auto">{work.period}</span>
               </div>
-              <p className="text-[12px] text-black/40 font-mono mb-10 sm:mb-12">
-                {work.role}
-                <span className="text-black/25 mx-2">·</span>
-                {work.period}
-              </p>
 
               {/* Work overview body */}
               {work.body && (
@@ -182,41 +180,11 @@ export default function WorkItem() {
                 </ReactMarkdown>
               )}
 
-              {/* Prev / Next work */}
-              {(prev || next) && (
-                <nav className="mt-20 pt-10 border-t border-black/10 flex justify-between items-start gap-6">
-                  <div className="flex-1 min-w-0">
-                    {prev && (
-                      <Link
-                        to={`/work/${prev.slug}`}
-                        className="group inline-flex flex-col items-start gap-1.5"
-                      >
-                        <span className="text-[11px] font-mono uppercase tracking-[0.2em] text-black/35">
-                          ← Previous
-                        </span>
-                        <span className="text-[15px] font-medium text-black/70 group-hover:text-black transition-colors leading-snug">
-                          {prev.company}
-                        </span>
-                      </Link>
-                    )}
-                  </div>
-                  <div className="flex-1 min-w-0 flex justify-end">
-                    {next && (
-                      <Link
-                        to={`/work/${next.slug}`}
-                        className="group inline-flex flex-col items-end gap-1.5 text-right"
-                      >
-                        <span className="text-[11px] font-mono uppercase tracking-[0.2em] text-black/35">
-                          Next →
-                        </span>
-                        <span className="text-[15px] font-medium text-black/70 group-hover:text-black transition-colors leading-snug">
-                          {next.company}
-                        </span>
-                      </Link>
-                    )}
-                  </div>
-                </nav>
-              )}
+              {/* Prev / Home / Next — labelled by company */}
+              <PrevNextNav
+                prev={prev ? { to: `/work/${prev.slug}`, label: prev.company } : undefined}
+                next={next ? { to: `/work/${next.slug}`, label: next.company } : undefined}
+              />
             </div>
           </article>
         </main>

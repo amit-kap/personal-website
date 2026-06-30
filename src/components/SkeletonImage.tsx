@@ -70,7 +70,7 @@ export default function SkeletonImage({
         }`}
       />
       {currentState === 'error' && (
-        <div className="absolute inset-0 flex items-center justify-center bg-neutral-100 px-4 text-center text-[10px] font-mono uppercase tracking-[0.18em] text-black/30">
+        <div className="absolute inset-0 flex items-center justify-center bg-neutral-100 px-4 text-center text-caption font-mono uppercase tracking-[0.18em] text-foreground/30">
           Image unavailable
         </div>
       )}

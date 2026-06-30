@@ -256,14 +256,6 @@ export function getCV(): CV {
   return cv;
 }
 
-export function getExperienceBySlug(slug: string): CVExperience | undefined {
-  return cv.experience.find(e => e.slug === slug);
-}
-
-export function getCoverImage(slug: string, index = 0): string | undefined {
-  return getImagesForSlug(slug)[index]?.src;
-}
-
 // ---- Writing folder loaders (used by case-study loader below) ----
 
 const writingContentModules = import.meta.glob<string>(
@@ -497,8 +489,4 @@ export function getAdjacentWorks(slug: string): { prev?: Work; next?: Work } {
 
 export function getFeaturedCaseStudy(): CaseStudy | undefined {
   return caseStudies.find(cs => cs.featured);
-}
-
-export function getCaseStudyForWork(workSlug: string): CaseStudy | undefined {
-  return caseStudies.find(cs => cs.workSlug === workSlug);
 }

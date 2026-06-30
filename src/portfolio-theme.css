@@ -1,0 +1,206 @@
+/* ============================================================================
+   PORTFOLIO — THEME & DESIGN SYSTEM
+   Single source of truth for the site's visual language: fonts, type scale,
+   color palette, radius, motion, and shared component utilities.
+
+   Layout (the centered 1440 column, section rhythm, grids) is composed with
+   Tailwind utilities in the components — this file owns the *system* those
+   utilities draw from. Framework imports (tailwindcss / shadcn) live in
+   index.css, which imports this file.
+   ============================================================================ */
+
+/* ----------------------------------------------------------------------------
+   1 · FONTS  — loaded faces (2 webfont families + a system mono stack)
+   Geist → headings/display · Plus Jakarta Sans → body/UI + italic tagline
+---------------------------------------------------------------------------- */
+@import '@fontsource/geist-sans/400.css';
+@import '@fontsource/geist-sans/500.css';
+@import '@fontsource/geist-sans/600.css';
+@import '@fontsource/geist-sans/800.css';
+@import '@fontsource/plus-jakarta-sans/300.css';
+@import '@fontsource/plus-jakarta-sans/400.css';
+@import '@fontsource/plus-jakarta-sans/400-italic.css';
+@import '@fontsource/plus-jakarta-sans/500.css';
+@import '@fontsource/plus-jakarta-sans/700.css';
+
+/* ----------------------------------------------------------------------------
+   2 · TYPE  — families + scale (generates --font-* and text-* utilities)
+   Three tight UI steps (12 / 14 / 16), then a gap up to lead + headings.
+---------------------------------------------------------------------------- */
+@theme {
+  /* Families */
+  --font-sans: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
+  --font-heading: 'Geist', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: ui-monospace, 'SFMono-Regular', Menlo, monospace;
+
+  /* Scale (size + paired line-height) */
+  --text-caption: 0.75rem;                            /* 12px — eyebrows, labels, fine print */
+  --text-caption--line-height: 1.4;
+  --text-meta: 0.875rem;                              /* 14px — meta, secondary UI text */
+  --text-meta--line-height: 1.45;
+  --text-body: 1rem;                                  /* 16px — body copy, buttons */
+  --text-body--line-height: 1.55;
+  --text-lead: clamp(1.25rem, 2vw, 1.625rem);         /* 20→26px — tagline, excerpt, lead */
+  --text-lead--line-height: 1.3;
+  --text-title-sm: clamp(1.5rem, 2.4vw, 1.875rem);    /* 24→30px — card / h3 titles */
+  --text-title-sm--line-height: 1.15;
+  --text-title: clamp(1.875rem, 5.5vw, 4.25rem);      /* 30→68px — section / page titles */
+  --text-title--line-height: 1.06;
+  --text-display: clamp(3.25rem, 8.5vw, 8rem);        /* 52→128px — hero name */
+  --text-display--line-height: 0.92;
+}
+
+/* ----------------------------------------------------------------------------
+   3 · COLOR  — warm monochrome palette (no separate accent hue; hierarchy
+   comes from weight, the #a9a9a9 grey, and scale). Neutrals carry a slight
+   warm bias (oklch hue ~75) so they read as chosen, not default grey.
+---------------------------------------------------------------------------- */
+:root {
+  --background: #f1f0ed;                 /* warm light grey (greige) — the ground */
+  --foreground: #21262b;                 /* dark blue-grey ink (also the footer bg) */
+  --card: #f1f0ed;
+  --card-foreground: #21262b;
+  --popover: oklch(0.97 0.003 75);
+  --popover-foreground: #21262b;
+  --primary: #21262b;
+  --primary-foreground: oklch(0.97 0.003 75);
+  --secondary: oklch(0.9 0.003 75);
+  --secondary-foreground: #21262b;
+  --muted: oklch(0.9 0.003 75);
+  --muted-foreground: #6b7177;           /* secondary text — meta, captions, dates */
+  --accent: oklch(0.9 0.003 75);
+  --accent-foreground: #21262b;
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: #d8d6d0;                     /* hairlines, dividers */
+  --input: #d8d6d0;
+  --ring: #21262b;                       /* keyboard focus */
+  --radius: 0.75rem;
+}
+
+/* Map the palette + radius onto Tailwind's color/radius utilities */
+@theme inline {
+  --font-heading: 'Geist', ui-sans-serif, system-ui, sans-serif;
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+}
+
+/* ----------------------------------------------------------------------------
+   4 · MOTION  — keyframes + animate-* utilities
+---------------------------------------------------------------------------- */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes fade-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+@keyframes zoom-in {
+  from { opacity: 0; transform: scale(0.96); }
+  to { opacity: 1; transform: scale(1); }
+}
+@keyframes zoom-out {
+  from { opacity: 1; transform: scale(1); }
+  to { opacity: 0; transform: scale(0.96); }
+}
+@keyframes slide-down-in {
+  from { opacity: 0; transform: translateY(-100%); }
+  to { opacity: 1; transform: translateY(0); }
+}
+/* One-pass light sweep — translate only; the skew stays on the element's transform */
+@keyframes button-sweep {
+  from { translate: -250% 0; }
+  to { translate: 500% 0; }
+}
+
+@layer utilities {
+  .animate-fade-up {
+    animation: fade-up 0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+  }
+  .animate-fade-in {
+    animation: fade-in 0.25s ease both;
+  }
+  .animate-fade-out {
+    animation: fade-out 0.2s ease both;
+  }
+  .animate-zoom-in {
+    animation: zoom-in 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+  .animate-zoom-out {
+    animation: zoom-out 0.2s cubic-bezier(0.65, 0, 0.35, 1) both;
+  }
+  .animate-slide-down-in {
+    animation: slide-down-in 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+}
+
+/* ----------------------------------------------------------------------------
+   5 · COMPONENT UTILITIES
+---------------------------------------------------------------------------- */
+/* Eyebrow — the small mono label above every section / masthead. Set the color
+   per use (text-muted-foreground on light, white/xx on the dark footer). */
+.eyebrow {
+  @apply font-mono uppercase tracking-[0.25em] text-caption;
+}
+
+/* Light-sweep glint: hover on a .group (hero button) and once on footer reveal */
+.group:hover .btn-sweep {
+  animation: button-sweep 0.7s ease-out;
+}
+.footer-sweep-on {
+  animation: button-sweep 0.9s ease-out;
+}
+
+/* Case-study prose helpers — auto-numbered figure captions + tight image rows */
+.prose-figures {
+  counter-reset: figure;
+}
+.prose-figures .prose-figure {
+  counter-increment: figure;
+}
+.prose-figures .prose-figure figcaption::before {
+  content: 'Fig. ' counter(figure, decimal-leading-zero);
+}
+.case-study-image-row > figure {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+/* ----------------------------------------------------------------------------
+   6 · BASE
+---------------------------------------------------------------------------- */
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  html {
+    @apply font-sans;
+  }
+}

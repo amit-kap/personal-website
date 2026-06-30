@@ -1,8 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
-import Nav from '@/components/Nav'
 import Footer from '@/components/Footer'
-import Work from '@/pages/Work'
+import Home from '@/pages/Home'
 import WorkItem from '@/pages/WorkItem'
 import CaseStudyPage from '@/pages/CaseStudyPage'
 import CV from '@/pages/CV'
@@ -43,10 +42,9 @@ export default function App() {
       <div ref={footerRef} className="fixed bottom-0 left-0 right-0 z-0">
         <Footer />
       </div>
-      <Nav />
       <div className="app-content" style={{ marginBottom: footerH }}>
         <Routes>
-          <Route path="/" element={<Work />} />
+          <Route path="/" element={<Home />} />
           <Route path="/work/:slug" element={<WorkItem />} />
           <Route path="/case-studies/:slug" element={<CaseStudyPage />} />
           <Route path="/cv" element={<CV />} />

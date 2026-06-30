@@ -7,13 +7,16 @@ export default defineConfig(({ command }) => ({
   base: command === 'serve' ? '/' : '/personal-website/',
   plugins: [react(), tailwindcss()],
   server: {
-    port: 5175,
-    strictPort: true,
+    port: process.env.PORT ? Number(process.env.PORT) : 5175,
+  },
+  optimizeDeps: {
+    include: ['react', 'react-dom', '@gsap/react'],
   },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
     },
+    dedupe: ['react', 'react-dom'],
   },
   test: {
     environment: 'jsdom',
