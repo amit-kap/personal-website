@@ -113,7 +113,7 @@ export default function Hero() {
               src={img}
               alt={header.name}
               data-parallax="0.12"
-              style={{ filter: 'drop-shadow(-12px 16px 18px rgba(0, 0, 0, 0.22))' }}
+              style={{ filter: 'drop-shadow(28px 30px 38px rgba(0, 0, 0, 0.22))' }}
             />
           </div>
         </div>
