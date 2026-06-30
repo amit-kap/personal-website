@@ -70,7 +70,7 @@ export default function Footer() {
 
           {/* Right: experience + Download CV */}
           <div className="flex flex-col gap-5">
-            <p className="font-mono uppercase tracking-[0.25em] text-white/35 text-caption">
+            <p className="eyebrow text-white/35">
               Experience
             </p>
             <ul className="grid grid-cols-[1.4fr_1fr_auto] md:grid-cols-[auto_auto_auto] md:whitespace-nowrap items-baseline gap-x-4 sm:gap-x-6 gap-y-3 text-meta">
@@ -96,10 +96,10 @@ export default function Footer() {
 
         {/* Bottom row */}
         <div className="flex items-center justify-between pt-5">
-          <span className="font-mono uppercase tracking-[0.25em] text-white/35 text-caption">
+          <span className="eyebrow text-white/35">
             © Amit Kaplinsky
           </span>
-          <span className="font-mono uppercase tracking-[0.25em] text-white/35 text-caption">
+          <span className="eyebrow text-white/35">
             Tel Aviv · 2026
           </span>
         </div>

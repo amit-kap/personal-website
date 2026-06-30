@@ -53,7 +53,7 @@ function WorkSection({ work, index }: { work: Work; index: number }) {
             </div>
 
             {images.length > 1 && (
-              <div className="mt-4 flex items-center gap-2 text-muted-foreground text-caption font-mono uppercase tracking-[0.25em]">
+              <div className="mt-4 flex items-center gap-2 text-muted-foreground eyebrow">
                 <span aria-hidden="true">←</span>
                 <span>Swipe</span>
                 <span aria-hidden="true">→</span>
@@ -74,7 +74,7 @@ export default function RecentWork() {
       <div className="mx-auto max-w-[1440px] px-5 sm:px-8">
         <h2
           data-reveal
-          className="font-mono uppercase tracking-[0.25em] text-muted-foreground text-caption"
+          className="eyebrow text-muted-foreground"
         >
           Recent Work
         </h2>

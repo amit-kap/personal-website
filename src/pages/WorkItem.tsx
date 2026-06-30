@@ -1,11 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
-import { useParams, Link } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
-import {
-  getWorkBySlug,
-  getAdjacentWorks,
-} from '@/lib/content'
+import { getWorkBySlug, getAdjacentWorks } from '@/lib/content'
+import PrevNextNav from '@/components/PrevNextNav'
 
 const bodyComponents = {
   p: ({ children }: { children?: React.ReactNode }) => (
@@ -182,45 +180,11 @@ export default function WorkItem() {
                 </ReactMarkdown>
               )}
 
-              {/* Prev / Home / Next */}
-              <nav className="mt-20 pt-10 border-t border-black/10 flex justify-between items-end gap-6">
-                <div className="flex-1 min-w-0">
-                  {prev && (
-                    <Link
-                      to={`/work/${prev.slug}`}
-                      className="group inline-flex flex-col items-start gap-1.5"
-                    >
-                      <span className="text-caption font-mono uppercase tracking-[0.2em] text-black/35">
-                        ← Previous
-                      </span>
-                      <span className="text-meta font-medium text-black/70 group-hover:text-black transition-colors leading-snug">
-                        {prev.company}
-                      </span>
-                    </Link>
-                  )}
-                </div>
-                <Link
-                  to="/"
-                  className="shrink-0 inline-flex items-center px-4 py-2 border border-black/15 rounded-full text-caption font-mono uppercase tracking-[0.2em] text-black/55 hover:bg-black/[0.04] hover:text-black transition-colors"
-                >
-                  Home
-                </Link>
-                <div className="flex-1 min-w-0 flex justify-end">
-                  {next && (
-                    <Link
-                      to={`/work/${next.slug}`}
-                      className="group inline-flex flex-col items-end gap-1.5 text-right"
-                    >
-                      <span className="text-caption font-mono uppercase tracking-[0.2em] text-black/35">
-                        Next →
-                      </span>
-                      <span className="text-meta font-medium text-black/70 group-hover:text-black transition-colors leading-snug">
-                        {next.company}
-                      </span>
-                    </Link>
-                  )}
-                </div>
-              </nav>
+              {/* Prev / Home / Next — labelled by company */}
+              <PrevNextNav
+                prev={prev ? { to: `/work/${prev.slug}`, label: prev.company } : undefined}
+                next={next ? { to: `/work/${next.slug}`, label: next.company } : undefined}
+              />
             </div>
           </article>
         </main>

@@ -1,5 +1,6 @@
 import { Children, isValidElement } from 'react'
-import { useParams, Link } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
+import PrevNextNav from '@/components/PrevNextNav'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import {
@@ -158,45 +159,11 @@ export default function CaseStudyPage() {
               {caseStudy.body}
             </ReactMarkdown>
 
-            {/* Prev / Home / Next */}
-            <nav className="mt-20 pt-10 border-t border-black/10 flex justify-between items-end gap-6">
-              <div className="flex-1 min-w-0">
-                {prev && (
-                  <Link
-                    to={`/case-studies/${prev.slug}`}
-                    className="group inline-flex flex-col items-start gap-1.5"
-                  >
-                    <span className="text-caption font-mono uppercase tracking-[0.2em] text-black/35">
-                      ← Previous
-                    </span>
-                    <span className="text-meta font-medium text-black/70 group-hover:text-black transition-colors leading-snug">
-                      {prev.title}
-                    </span>
-                  </Link>
-                )}
-              </div>
-              <Link
-                to="/"
-                className="shrink-0 inline-flex items-center px-4 py-2 border border-black/15 rounded-full text-caption font-mono uppercase tracking-[0.2em] text-black/55 hover:bg-black/[0.04] hover:text-black transition-colors"
-              >
-                Home
-              </Link>
-              <div className="flex-1 min-w-0 flex justify-end">
-                {next && (
-                  <Link
-                    to={`/case-studies/${next.slug}`}
-                    className="group inline-flex flex-col items-end gap-1.5 text-right"
-                  >
-                    <span className="text-caption font-mono uppercase tracking-[0.2em] text-black/35">
-                      Next →
-                    </span>
-                    <span className="text-meta font-medium text-black/70 group-hover:text-black transition-colors leading-snug">
-                      {next.title}
-                    </span>
-                  </Link>
-                )}
-              </div>
-            </nav>
+            {/* Prev / Home / Next — labelled by case-study title */}
+            <PrevNextNav
+              prev={prev ? { to: `/case-studies/${prev.slug}`, label: prev.title } : undefined}
+              next={next ? { to: `/case-studies/${next.slug}`, label: next.title } : undefined}
+            />
           </div>
         </article>
       </main>

@@ -168,7 +168,7 @@ export default function FeaturedCaseStudy() {
           <div className="mx-auto max-w-[1440px] px-5 sm:px-8">
             <p
               data-reveal
-              className="font-mono uppercase tracking-[0.25em] text-white/75 text-caption mb-4"
+              className="eyebrow text-white/75 mb-4"
             >
               Featured
             </p>

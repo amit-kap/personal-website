@@ -161,6 +161,12 @@
 /* ----------------------------------------------------------------------------
    5 · COMPONENT UTILITIES
 ---------------------------------------------------------------------------- */
+/* Eyebrow — the small mono label above every section / masthead. Set the color
+   per use (text-muted-foreground on light, white/xx on the dark footer). */
+.eyebrow {
+  @apply font-mono uppercase tracking-[0.25em] text-caption;
+}
+
 /* Light-sweep glint: hover on a .group (hero button) and once on footer reveal */
 .group:hover .btn-sweep {
   animation: button-sweep 0.7s ease-out;

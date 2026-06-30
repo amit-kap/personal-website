@@ -11,7 +11,7 @@ export default function CaseStudies() {
       <div className="mx-auto max-w-[1440px] px-5 sm:px-8">
         <h2
           data-reveal
-          className="font-mono uppercase tracking-[0.25em] text-muted-foreground text-caption"
+          className="eyebrow text-muted-foreground"
         >
           Case Studies
         </h2>
