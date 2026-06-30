@@ -173,7 +173,7 @@ export default function WorkItem() {
                 <span className="font-medium text-foreground">
                   {work.company} · {work.role}
                 </span>
-                <span className="text-muted-foreground">{work.period}</span>
+                <span className="text-muted-foreground ml-auto">{work.period}</span>
               </div>
 
               {/* Work overview body */}
@@ -184,7 +184,7 @@ export default function WorkItem() {
               )}
 
               {/* Prev / Home / Next */}
-              <nav className="mt-20 pt-10 border-t border-black/10 flex justify-between items-center gap-6">
+              <nav className="mt-20 pt-10 border-t border-black/10 flex justify-between items-end gap-6">
                 <div className="flex-1 min-w-0">
                   {prev && (
                     <Link

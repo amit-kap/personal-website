@@ -160,7 +160,7 @@ export default function CaseStudyPage() {
             </ReactMarkdown>
 
             {/* Prev / Home / Next */}
-            <nav className="mt-20 pt-10 border-t border-black/10 flex justify-between items-center gap-6">
+            <nav className="mt-20 pt-10 border-t border-black/10 flex justify-between items-end gap-6">
               <div className="flex-1 min-w-0">
                 {prev && (
                   <Link
