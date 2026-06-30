@@ -161,12 +161,12 @@ export default function WorkItem() {
 
               {/* Title — unified with the home work titles */}
               <h1
-                className="font-heading font-normal leading-[1.06] tracking-[-0.02em] text-foreground mb-5"
+                className="font-heading font-normal leading-[1.06] tracking-[-0.02em] text-foreground mb-10"
                 style={{ fontSize: 'clamp(30px, 5.5vw, 68px)' }}
               >
                 {work.productTitle}
               </h1>
-              <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[clamp(16px,1.6vw,22px)] mb-10 sm:mb-12">
+              <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[clamp(16px,1.6vw,22px)] mb-10">
                 {work.icon && (
                   <img src={work.icon} alt="" aria-hidden="true" className="h-8 w-8 object-contain" />
                 )}
