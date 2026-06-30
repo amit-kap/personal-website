@@ -9,22 +9,36 @@ export default function Hero() {
   const { header } = getCV()
   const img = `${import.meta.env.BASE_URL}hero.png`
   const btnRef = useRef<HTMLAnchorElement>(null)
+  const arrowRef = useRef<HTMLSpanElement>(null)
 
   useGSAP(
     (_ctx, contextSafe) => {
       const btn = btnRef.current
       if (!btn || !contextSafe) return
-      const enter = contextSafe!(() =>
-        gsap.to(btn, { scale: 1.06, duration: 0.4, ease: 'power3.out', overwrite: 'auto' }),
-      )
-      const leave = contextSafe!(() =>
-        gsap.to(btn, { scale: 1, duration: 0.5, ease: 'power3.out', overwrite: 'auto' }),
-      )
+      let nudge: gsap.core.Tween | null = null
+      const enter = contextSafe!(() => {
+        gsap.to(btn, { scale: 1.06, duration: 0.4, ease: 'power3.out', overwrite: 'auto' })
+        if (arrowRef.current)
+          nudge = gsap.to(arrowRef.current, {
+            x: 5,
+            duration: 0.45,
+            ease: 'power1.inOut',
+            repeat: -1,
+            yoyo: true,
+          })
+      })
+      const leave = contextSafe!(() => {
+        gsap.to(btn, { scale: 1, duration: 0.5, ease: 'power3.out', overwrite: 'auto' })
+        nudge?.kill()
+        if (arrowRef.current)
+          gsap.to(arrowRef.current, { x: 0, duration: 0.3, ease: 'power2.out', overwrite: 'auto' })
+      })
       btn.addEventListener('mouseenter', enter)
       btn.addEventListener('mouseleave', leave)
       return () => {
         btn.removeEventListener('mouseenter', enter)
         btn.removeEventListener('mouseleave', leave)
+        nudge?.kill()
       }
     },
     { scope: btnRef },
@@ -78,7 +92,7 @@ export default function Hero() {
                 className="group relative overflow-hidden inline-flex items-center gap-2 rounded-full bg-foreground text-background px-8 py-4 text-body font-medium font-sans"
               >
                 Contact me
-                <span aria-hidden="true">→</span>
+                <span ref={arrowRef} aria-hidden="true">→</span>
                 {/* Light sweep — skewed white band glides across on hover */}
                 <span
                   aria-hidden="true"
