@@ -2,9 +2,11 @@ import { useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { gsap } from 'gsap'
 import { useGSAP } from '@gsap/react'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { ScrambleTextPlugin } from 'gsap/ScrambleTextPlugin'
 import { getFeaturedCaseStudy } from '@/lib/content'
 
-gsap.registerPlugin(useGSAP)
+gsap.registerPlugin(useGSAP, ScrollTrigger, ScrambleTextPlugin)
 
 // Story frames live one level deeper (writing/<slug>/story-frames/) than the
 // regular content images, so they need their own glob.
@@ -30,12 +32,25 @@ const DOLLY_TO = 1.16
 export default function FeaturedCaseStudy() {
   const featured = getFeaturedCaseStudy()
   const scope = useRef<HTMLElement>(null)
+  const titleRef = useRef<HTMLHeadingElement>(null)
   const frames = featured ? storyFramesFor(featured.slug) : []
 
   // Cinematic loop: each frame dollies in while held, then the next frame's
   // venetian blinds open over it. Plain timeline (no ScrollTrigger).
   useGSAP(
     () => {
+      // Title "decodes" in (scramble) when the band scrolls into view. Stays
+      // visible by default, so a frozen ScrollTrigger just shows it plainly.
+      const title = titleRef.current
+      if (title && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        gsap.to(title, {
+          scrambleText: { text: title.textContent || '', chars: 'upperCase', speed: 0.5 },
+          duration: 1.4,
+          ease: 'none',
+          scrollTrigger: { trigger: scope.current, start: 'top 60%', once: true },
+        })
+      }
+
       if (frames.length < 2) return
       const q = gsap.utils.selector(scope)
       const imgs = q<HTMLImageElement>('.featured-frame')
@@ -151,8 +166,8 @@ export default function FeaturedCaseStudy() {
               Featured
             </p>
             <h2
-              data-reveal
-              className="font-heading font-normal text-white leading-[1.04] tracking-[-0.01em] max-w-4xl"
+              ref={titleRef}
+              className="font-heading font-normal text-white leading-[1.04] tracking-[-0.01em] whitespace-nowrap"
               style={{ fontSize: 'clamp(30px, 5.5vw, 68px)' }}
             >
               {featured.title}
