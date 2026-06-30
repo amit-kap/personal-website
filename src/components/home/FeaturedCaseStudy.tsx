@@ -44,8 +44,8 @@ export default function FeaturedCaseStudy() {
       const title = titleRef.current
       if (title && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
         gsap.to(title, {
-          scrambleText: { text: title.textContent || '', chars: 'upperCase', speed: 0.5 },
-          duration: 1.4,
+          scrambleText: { text: title.textContent || '', chars: 'upperCase', speed: 1 },
+          duration: 0.7,
           ease: 'none',
           scrollTrigger: { trigger: scope.current, start: 'top 60%', once: true },
         })
