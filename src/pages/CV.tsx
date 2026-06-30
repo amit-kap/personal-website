@@ -41,7 +41,7 @@ export default function CV() {
         }
       `}</style>
 
-      <div className="relative z-10 bg-neutral-100 min-h-screen pt-20 pb-20 print:pt-0 print:pb-0 print:bg-white">
+      <div className="relative z-10 bg-background min-h-screen pt-20 pb-20 print:pt-0 print:pb-0 print:bg-white">
         <div
           className="cv-root mx-auto bg-white text-black"
           style={{ width: '210mm', minHeight: '297mm', padding: '14mm 12mm' }}

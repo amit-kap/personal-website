@@ -111,7 +111,7 @@ export default function CaseStudyPage() {
 
   if (!caseStudy) {
     return (
-      <div className="relative z-10 min-h-screen bg-white">
+      <div className="relative z-10 min-h-screen bg-background">
         <div className="max-w-xl mx-auto px-5 sm:px-8 pt-24 pb-24">
           <p className="text-[14px] text-black/40">Case study not found.</p>
         </div>
@@ -120,7 +120,7 @@ export default function CaseStudyPage() {
   }
 
   return (
-    <div className="relative z-10 min-h-screen bg-white">
+    <div className="relative z-10 min-h-screen bg-background">
       <main className="flex-1 pt-14 w-full">
         <article className="2xl:mx-auto 2xl:max-w-[1440px] px-5 sm:px-8 pt-14 sm:pt-20 pb-20 animate-fade-up">
           <div className="max-w-3xl mx-auto">

@@ -78,7 +78,7 @@ export default function WorkItem() {
 
   if (!work) {
     return (
-      <div className="relative z-10 min-h-screen bg-white">
+      <div className="relative z-10 min-h-screen bg-background">
         <div className="max-w-xl mx-auto px-5 sm:px-8 pt-24 pb-24">
           <p className="text-[14px] text-black/40">Work not found.</p>
         </div>
@@ -97,7 +97,7 @@ export default function WorkItem() {
 
   return (
     <>
-      <div className="relative z-10 min-h-screen bg-white">
+      <div className="relative z-10 min-h-screen bg-background">
         <main className="flex-1 pt-14 w-full">
           {/* Full-bleed auto-scrolling image strip — click to open lightbox */}
           {isStrip && (
