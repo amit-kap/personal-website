@@ -1,10 +1,11 @@
-import { useEffect, useRef, useState } from 'react'
+import { lazy, Suspense, useEffect, useRef, useState } from 'react'
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import Footer from '@/components/Footer'
 import Home from '@/pages/Home'
-import WorkItem from '@/pages/WorkItem'
-import CaseStudyPage from '@/pages/CaseStudyPage'
-import CV from '@/pages/CV'
+
+const WorkItem = lazy(() => import('@/pages/WorkItem'))
+const CaseStudyPage = lazy(() => import('@/pages/CaseStudyPage'))
+const CV = lazy(() => import('@/pages/CV'))
 
 export default function App() {
   const location = useLocation()
@@ -43,13 +44,15 @@ export default function App() {
         <Footer />
       </div>
       <div className="app-content" style={{ marginBottom: footerH }}>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/work/:slug" element={<WorkItem />} />
-          <Route path="/case-studies/:slug" element={<CaseStudyPage />} />
-          <Route path="/cv" element={<CV />} />
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
+        <Suspense fallback={null}>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/work/:slug" element={<WorkItem />} />
+            <Route path="/case-studies/:slug" element={<CaseStudyPage />} />
+            <Route path="/cv" element={<CV />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </Suspense>
       </div>
     </>
   )
