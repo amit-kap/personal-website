@@ -9,12 +9,16 @@ function WorkSection({ work, index }: { work: Work; index: number }) {
       {/* max-w column; divider sits inside the padding so it matches the content block */}
       <div className="mx-auto max-w-[1440px] px-5 sm:px-8">
         <div className={`flex flex-col gap-10 py-14 sm:py-20 ${index > 0 ? 'border-t border-border' : ''}`}>
-          <h3
-            data-reveal
-            className="text-title font-heading font-normal leading-[1.06] tracking-[-0.02em] text-foreground max-w-4xl"
-          >
-            {work.productTitle}
-          </h3>
+          <div data-reveal className="max-w-4xl space-y-4">
+            <h3
+              className="text-title font-heading font-normal leading-[1.06] tracking-[-0.02em] text-foreground"
+            >
+              {work.headline}
+            </h3>
+            <p className="max-w-3xl text-body sm:text-lead text-muted-foreground">
+              {work.productTitle}
+            </p>
+          </div>
 
           {/* Meta: icon + company · role + period */}
           <div
