@@ -157,12 +157,15 @@ export default function WorkItem() {
                 </p>
               )}
 
-              {/* Title — unified with the home work titles */}
+              {/* Editorial title with the technical product description beneath it */}
               <h1
-                className="font-heading font-normal leading-[1.06] tracking-[-0.02em] text-foreground mb-10 text-title"
+                className="font-heading font-normal leading-[1.06] tracking-[-0.02em] text-foreground mb-4 text-title"
               >
-                {work.productTitle}
+                {work.headline}
               </h1>
+              <p className="max-w-2xl text-lead text-muted-foreground mb-10">
+                {work.productTitle}
+              </p>
               <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-lead mb-10">
                 {work.icon && (
                   <img src={work.icon} alt="" aria-hidden="true" className="h-8 w-8 object-contain" />

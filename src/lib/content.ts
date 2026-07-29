@@ -291,6 +291,7 @@ export interface Work {
   role: string;
   period: string;
   cvSummary: string;             // first paragraph from cv.md (fallback for blurb)
+  headline: string;              // editorial, clickable title; falls back to productTitle
   productTitle: string;          // product-value sentence; falls back to company
   blurb: string;                 // tile copy (work.md `blurb`, falls back to cvSummary)
   order: number;                 // ascending sort key
@@ -304,6 +305,7 @@ export interface Work {
 }
 
 interface WorkFrontMatter {
+  headline?: string;
   productTitle?: string;
   blurb?: string;
   order?: number;
@@ -353,13 +355,16 @@ function buildWorks(): Work[] {
       ? allImages.filter(img => img.src !== heroImage.src)
       : allImages;
 
+    const productTitle = fm.productTitle?.trim() || cvEntry.company;
+
     out.push({
       slug,
       company: cvEntry.company,
       role: cvEntry.role,
       period: cvEntry.period,
       cvSummary: cvEntry.summary,
-      productTitle: fm.productTitle?.trim() || cvEntry.company,
+      headline: fm.headline?.trim() || productTitle,
+      productTitle,
       blurb: fm.blurb?.trim() || cvEntry.summary,
       order: typeof fm.order === 'number' ? fm.order : 999,
       icon: getIconForSlug(slug),
