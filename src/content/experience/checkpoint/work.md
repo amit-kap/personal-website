@@ -1,7 +1,7 @@
 ---
-productTitle: Enterprise network security across desktop, web, and mobile
-blurb: UX expert embedded in an R&D group across desktop, web, and mobile — translated technical requirements into user flows and shipped production code alongside the engineers.
+productTitle: One system, not twenty tabs.
+blurb: Enterprise security management at organisational scale.
 order: 5
 ---
 
-As a UX expert on the product design team, attached to an R&D group across desktop, web, and mobile. I translated technical requirements into user flows and interactive wireframes, oversaw the build, and wrote production code alongside the engineers.
+At Check Point I learned cybersecurity and enterprise UX at scale, working with an R&D organisation of hundreds of developers. The redesign began with fragmented management across more than twenty tabs and became a coherent information architecture for products, objects, policies, and daily security tasks.

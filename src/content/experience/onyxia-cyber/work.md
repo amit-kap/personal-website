@@ -1,7 +1,7 @@
 ---
-productTitle: Cybersecurity performance management for the CISO
-blurb: Joined an established team to elevate the UX and UI of an existing product — now landing with customers as a highly enjoyable experience.
+productTitle: The CISO owns the data.
+blurb: Connecting executive intent to operational follow-through through one shared security data model.
 order: 2
 ---
 
-This journey began differently, as I joined an already established team. My role was to elevate the current state of the product and enhance both its UX and UI to the highest possible standard. Drawing from my past experience handling complex challenges, we are now shaping a new experience that, according to customer feedback, is highly enjoyable.
+Onyxia proposed a data-management layer for the CISO: a connected view across security products, BI, Jira, ServiceNow, and operational systems. I joined for a short engagement to help shape the experience from executive benchmarks and SLAs through to the tasks, owners, progress, and delays behind them.

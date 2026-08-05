@@ -4,6 +4,7 @@ import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import { getWorkBySlug, getAdjacentWorks } from '@/lib/content'
 import PrevNextNav from '@/components/PrevNextNav'
+import ShiftWorkPage from '@/components/work/ShiftWorkPage'
 
 const bodyComponents = {
   p: ({ children }: { children?: React.ReactNode }) => (
@@ -82,6 +83,10 @@ export default function WorkItem() {
         </div>
       </div>
     )
+  }
+
+  if (work.slug === 'shift') {
+    return <ShiftWorkPage work={work} next={next} />
   }
 
   const pause = () => { pausedRef.current = true }

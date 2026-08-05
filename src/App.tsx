@@ -1,26 +1,16 @@
-import { lazy, Suspense, useEffect, useRef, useState } from 'react'
+import { lazy, Suspense, useEffect } from 'react'
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import Footer from '@/components/Footer'
+import Header from '@/components/Header'
 import Home from '@/pages/Home'
 
 const WorkItem = lazy(() => import('@/pages/WorkItem'))
 const CaseStudyPage = lazy(() => import('@/pages/CaseStudyPage'))
 const CV = lazy(() => import('@/pages/CV'))
+const Writing = lazy(() => import('@/pages/Writing'))
 
 export default function App() {
   const location = useLocation()
-  const footerRef = useRef<HTMLDivElement | null>(null)
-  const [footerH, setFooterH] = useState(0)
-
-  useEffect(() => {
-    const el = footerRef.current
-    if (!el) return
-    const ro = new ResizeObserver(([entry]) => {
-      setFooterH(entry.contentRect.height)
-    })
-    ro.observe(el)
-    return () => ro.disconnect()
-  }, [])
 
   useEffect(() => {
     const scrollTo = () => {
@@ -39,14 +29,13 @@ export default function App() {
   }, [location.pathname, location.hash])
 
   return (
-    <>
-      <div ref={footerRef} className="fixed bottom-0 left-0 right-0 z-0">
-        <Footer />
-      </div>
-      <div className="app-content" style={{ marginBottom: footerH }}>
+    <div className="min-h-screen bg-background">
+      <Header />
+      <div className="app-content">
         <Suspense fallback={null}>
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/writing" element={<Writing />} />
             <Route path="/work/:slug" element={<WorkItem />} />
             <Route path="/case-studies/:slug" element={<CaseStudyPage />} />
             <Route path="/cv" element={<CV />} />
@@ -54,6 +43,7 @@ export default function App() {
           </Routes>
         </Suspense>
       </div>
-    </>
+      <Footer />
+    </div>
   )
 }
