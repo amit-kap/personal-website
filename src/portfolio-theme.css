@@ -356,20 +356,19 @@
   @apply font-semibold tracking-[0.15em] text-foreground/65;
 }
 .eyebrow-section {
-  @apply flex items-center gap-3 font-semibold tracking-[0.18em] text-muted-foreground;
-}
-.eyebrow-section::after {
-  content: '';
-  width: 2.5rem;
-  height: 1px;
-  background: currentColor;
-  opacity: 0.4;
+  @apply font-semibold tracking-[0.15em] text-muted-foreground;
 }
 .eyebrow-project {
   @apply font-medium tracking-[0.13em] text-muted-foreground;
 }
 .eyebrow-inverse {
   @apply text-white/65;
+}
+
+@media (min-width: 1024px) {
+  .shift-image-bleed-right {
+    margin-right: min(0px, calc((1440px - 100vw) / 2));
+  }
 }
 
 /* Light-sweep glint: hover on a .group (hero button) and once on footer reveal */

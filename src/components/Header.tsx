@@ -31,7 +31,7 @@ export default function Header() {
               ? location.pathname === '/writing' || location.pathname.startsWith('/case-studies/')
               : item.to === '/cv'
                 ? location.pathname === '/cv'
-                : location.pathname === '/'
+                : location.pathname === '/' || location.pathname.startsWith('/work/')
             return (
               <Link
                 key={item.label}

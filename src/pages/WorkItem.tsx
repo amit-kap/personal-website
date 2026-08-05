@@ -86,7 +86,7 @@ export default function WorkItem() {
   }
 
   if (work.slug === 'shift') {
-    return <ShiftWorkPage work={work} next={next} />
+    return <ShiftWorkPage work={work} />
   }
 
   const pause = () => { pausedRef.current = true }
