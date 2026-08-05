@@ -29,9 +29,9 @@ export default function App() {
   }, [location.pathname, location.hash])
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-[#111111]">
       <Header />
-      <div className="app-content">
+      <div className="app-content relative z-10 bg-background">
         <Suspense fallback={null}>
           <Routes>
             <Route path="/" element={<Home />} />

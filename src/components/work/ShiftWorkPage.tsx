@@ -20,7 +20,7 @@ function ProductImage({ image, alt }: { image?: ContentImage; alt: string }) {
 }
 
 function Eyebrow({ children, className = '' }: { children: React.ReactNode; className?: string }) {
-  return <p className={`eyebrow text-muted-foreground ${className}`}>{children}</p>
+  return <p className={`eyebrow eyebrow-section ${className}`}>{children}</p>
 }
 
 export default function ShiftWorkPage({ work, next }: { work: Work; next?: Work }) {
@@ -33,12 +33,12 @@ export default function ShiftWorkPage({ work, next }: { work: Work; next?: Work 
   return (
     <main className="v2-page bg-background">
       <section className="mx-auto max-w-[1440px] px-5 pb-20 pt-12 sm:px-8 sm:pb-28 sm:pt-20">
-        <Link to="/#work" className="eyebrow inline-flex items-center gap-2 text-muted-foreground transition-colors hover:text-foreground">
+        <Link to="/#work" className="eyebrow eyebrow-project inline-flex items-center gap-2 transition-colors hover:text-foreground">
           <span aria-hidden="true">←</span> Work
         </Link>
         <div className="mt-14 grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:items-end">
           <div>
-            <Eyebrow>01 / Shift / Founding Designer / 2024—now</Eyebrow>
+            <p className="eyebrow eyebrow-page">01 / Shift / Founding Designer / 2024—now</p>
             <h1 className="mt-6 max-w-3xl font-heading text-hero font-bold tracking-[-0.078em] text-foreground">
               Third-party risk, continuously defended.
             </h1>

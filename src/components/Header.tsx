@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 
 const navItems = [
@@ -8,11 +9,19 @@ const navItems = [
 
 export default function Header() {
   const location = useLocation()
+  const [scrolled, setScrolled] = useState(false)
+
+  useEffect(() => {
+    const updateScrolledState = () => setScrolled(window.scrollY > 12)
+    updateScrolledState()
+    window.addEventListener('scroll', updateScrolledState, { passive: true })
+    return () => window.removeEventListener('scroll', updateScrolledState)
+  }, [])
 
   return (
-    <header className="relative z-30 border-b border-foreground/10 bg-background">
-      <div className="mx-auto flex h-[68px] max-w-[1440px] items-center justify-between px-5 sm:px-8">
-        <Link to="/" className="text-meta font-bold tracking-[-0.05em] text-foreground">
+    <header className={`site-header sticky top-0 z-50 ${scrolled ? 'site-header-scrolled' : ''}`}>
+        <div className="mx-auto flex h-[68px] max-w-[1440px] items-center justify-between px-5 sm:px-8">
+        <Link to="/" className="text-meta font-bold tracking-[0.02em] text-foreground">
           AMIT KAPLINSKY
         </Link>
 
@@ -27,7 +36,7 @@ export default function Header() {
               <Link
                 key={item.label}
                 to={item.to}
-                className={`text-meta transition-opacity hover:opacity-55 ${active ? 'font-semibold' : 'font-medium'}`}
+                className={`site-nav-link text-meta ${active ? 'site-nav-link-active' : ''}`}
               >
                 {item.label}
               </Link>
@@ -35,9 +44,11 @@ export default function Header() {
           })}
         </nav>
 
-        <p className="hidden text-caption font-semibold uppercase tracking-[0.12em] text-foreground md:block">
-          Product Designer · AI Builder
-        </p>
+        <a href="mailto:amitka111@gmail.com" className="header-contact-cta hidden md:inline-flex">
+          <span>Get in touch</span>
+          <span aria-hidden="true">↗</span>
+        </a>
+
       </div>
     </header>
   )

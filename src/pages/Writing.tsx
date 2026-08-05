@@ -8,34 +8,26 @@ export default function Writing() {
 
   return (
     <main className="v2-page bg-background" id="writing">
-      <section className="mx-auto max-w-[1440px] px-5 pt-20 sm:px-8 sm:pt-28 lg:pt-32">
-        <p className="eyebrow text-muted-foreground">Writing</p>
-        <h1 className="mt-4 max-w-5xl font-heading text-feature font-bold tracking-[-0.065em] text-foreground">
-          Notes from building security products.
-        </h1>
-      </section>
-
       {featured && (
-        <section className="mx-auto max-w-[1440px] px-5 pb-16 pt-24 sm:px-8 sm:pb-24 sm:pt-32">
-          <p className="eyebrow mb-5 text-muted-foreground">Featured essay</p>
+        <section className="mx-auto max-w-[1440px] px-5 pb-16 pt-24 sm:px-8 sm:pb-24 sm:pt-28 lg:pt-32">
           <Link
             to={`/case-studies/${featured.slug}`}
-            className="group grid overflow-hidden rounded-[20px] bg-[#111111] text-white md:grid-cols-2"
+            className="group grid overflow-hidden rounded-[20px] bg-[#111111] text-white lg:grid-cols-[0.9fr_1.1fr]"
           >
-            <div className="flex min-h-[420px] flex-col items-start justify-between p-8 sm:p-12 lg:p-16">
+            <div className="flex min-h-[370px] flex-col p-8 sm:p-12 lg:p-14">
               <div>
-                <p className="eyebrow text-[#a9dcdf]">Shift · 2025</p>
-                <h2 className="mt-8 max-w-md font-heading text-feature font-bold tracking-[-0.065em]">
+                <p className="text-meta font-medium tracking-[-0.02em] text-[#a9dcdf]">Featured article · Shift</p>
+                <h2 className="mt-7 max-w-xl font-heading text-feature font-bold tracking-[-0.07em]">
                   {featured.title}
                 </h2>
-                <p className="mt-7 max-w-md text-lead leading-[1.38] text-white/65">{featured.excerpt}</p>
+                <p className="mt-6 max-w-lg text-lead leading-[1.4] text-white/70">{featured.excerpt}</p>
               </div>
-              <span className="inline-flex items-center gap-3 text-body font-semibold">
-                Read essay <span className="text-[#7ee6ff] transition-transform duration-300 group-hover:translate-x-1">→</span>
+              <span className="mt-auto inline-flex items-center gap-3 pt-10 text-body font-semibold">
+                Read article <span className="text-[#7ee6ff] text-lg leading-none transition-transform duration-300 group-hover:translate-x-1">↗</span>
               </span>
             </div>
             {featured.coverImage && (
-              <div className="min-h-[330px] overflow-hidden md:min-h-full">
+              <div className="min-h-[300px] overflow-hidden lg:min-h-full">
                 <img
                   src={featured.coverImage.src}
                   alt=""
@@ -64,11 +56,11 @@ export default function Writing() {
                   />
                 </div>
               )}
-              <p className="eyebrow mt-6 text-muted-foreground">{study.workSlug === 'checkpoint' ? 'Check Point · 2021' : 'Veriti · 2023'}</p>
-              <h2 className="mt-3 max-w-md font-heading text-title-sm font-bold leading-[0.98] tracking-[-0.045em] text-foreground">{study.title}</h2>
+              <p className="mt-6 text-meta font-medium tracking-[-0.02em] text-muted-foreground">{study.workSlug === 'checkpoint' ? 'Check Point' : 'Veriti'}</p>
+              <h2 className="mt-4 max-w-md font-heading text-title-sm font-bold leading-[0.98] tracking-[-0.05em] text-foreground">{study.title}</h2>
               <p className="mt-4 max-w-xl text-body leading-[1.5] text-muted-foreground">{study.excerpt}</p>
-              <span className="mt-5 inline-flex items-center gap-2 text-body font-semibold text-foreground">
-                Read essay <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
+              <span className="mt-7 inline-flex items-center gap-2 text-body font-semibold text-foreground">
+                Read article <span className="transition-transform duration-300 group-hover:translate-x-1">↗</span>
               </span>
             </Link>
           ))}

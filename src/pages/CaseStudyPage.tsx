@@ -140,9 +140,9 @@ export default function CaseStudyPage() {
               </div>
             )}
 
-            {/* Title — unified with the home titles */}
+            {/* Article masthead */}
             <h1
-              className="text-title font-heading font-normal leading-[1.06] tracking-[-0.02em] text-foreground mb-5"
+              className="font-heading text-feature font-bold leading-[0.94] tracking-[-0.07em] text-foreground mb-6"
             >
               {caseStudy.title}
             </h1>
