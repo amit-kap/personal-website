@@ -4,6 +4,14 @@ import { getAllCaseStudies, getAllWorks } from '@/lib/content'
 export default function Home() {
   const works = getAllWorks()
   const shift = works.find((work) => work.slug === 'shift')
+  const shiftScreens = shift
+    ? [
+        shift.bodyImages['01-shift-dashboard.png'],
+        shift.bodyImages['02-inventory-vendors-page.png'],
+        shift.bodyImages['04-vendor-access-graph.png'],
+        shift.bodyImages['05-threat-center.png'],
+      ].filter((image): image is NonNullable<typeof image> => Boolean(image))
+    : []
   const earlierWork = works.filter((work) => work.slug !== 'shift')
   const essays = getAllCaseStudies()
   const featuredEssay = essays.find((essay) => essay.featured)
@@ -50,15 +58,39 @@ export default function Home() {
                 <span className="text-lg leading-none transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true">↗</span>
               </span>
             </div>
-            {shift.tileImage && (
-              <div className="min-h-[330px] overflow-hidden bg-[#f4f1ff] p-5 sm:p-7 lg:p-8">
-                <img
-                  src={shift.tileImage.src}
-                  alt="Shift vendor risk dashboard"
-                  width={shift.tileImage.width}
-                  height={shift.tileImage.height}
-                  className="h-full w-full rounded-[10px] object-cover object-left-top transition-transform duration-700 ease-out group-hover:scale-[1.018]"
-                />
+            {shift.tileImage && shiftScreens.length > 0 && (
+              <div className="relative min-h-[330px] overflow-hidden bg-[#f4f1ff] p-5 sm:px-7 sm:py-12 lg:px-8 lg:py-14">
+                <div className="relative h-full w-full">
+                  <img
+                    src={shift.tileImage.src}
+                    alt=""
+                    aria-hidden="true"
+                    width={shift.tileImage.width}
+                    height={shift.tileImage.height}
+                    className="h-full w-full rounded-[10px] object-cover object-left-top opacity-0"
+                  />
+                  <div className="absolute inset-0 overflow-hidden rounded-[10px] bg-white">
+                    <div className="product-carousel-track flex h-full w-[1200%]">
+                      {[...shiftScreens].reverse().concat([...shiftScreens].reverse(), [...shiftScreens].reverse()).map((screen, index) => (
+                        <img
+                          key={`${screen.src}-${index}`}
+                          src={screen.src}
+                          alt=""
+                          width={screen.width}
+                          height={screen.height}
+                          loading={index < 8 ? 'eager' : 'lazy'}
+                          className="h-full w-1/12 shrink-0 object-cover object-left-top"
+                        />
+                      ))}
+                    </div>
+                  </div>
+                </div>
+                <div className="product-carousel-dots" aria-hidden="true">
+                  <span className="product-carousel-dot product-carousel-dot--1" />
+                  <span className="product-carousel-dot product-carousel-dot--2" />
+                  <span className="product-carousel-dot product-carousel-dot--3" />
+                  <span className="product-carousel-dot product-carousel-dot--4" />
+                </div>
               </div>
             )}
           </Link>

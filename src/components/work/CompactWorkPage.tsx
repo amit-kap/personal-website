@@ -4,6 +4,8 @@ type CompactStory = {
   lede: string
   heroImage: string
   proofImage?: string
+  responseImages?: string[]
+  carouselTone?: 'plum' | 'violet' | 'olive'
   problemTitle: string
   problem: string
   responseTitle: string
@@ -20,6 +22,8 @@ const stories: Record<string, CompactStory> = {
     lede: 'A data-management layer that lets the CISO connect executive intent to the ownership, progress, and delay behind daily security work.',
     heroImage: '01-SSM-1',
     proofImage: '04-insights',
+    responseImages: ['03-frameworks', '04-insights', '05-p-hub', '06-report-1'],
+    carouselTone: 'plum',
     problemTitle: 'Accountability without ownership is just another report.',
     problem: 'CISOs are accountable for the whole security program, yet often receive information indirectly: summarised by teams, detached from the work, and out of date by the time it reaches them.',
     responseTitle: 'One data model, from decision to task.',
@@ -34,6 +38,8 @@ const stories: Record<string, CompactStory> = {
     lede: 'A security-controls platform that closes the gap between knowing a weakness exists and configuring existing defences to stop it.',
     heroImage: '04',
     proofImage: '02',
+    responseImages: ['02', '03', '05', '06'],
+    carouselTone: 'violet',
     problemTitle: 'Knowing the threat is not the same as fixing the exposure.',
     problem: 'Most organisations already own the right security products, but no team can continuously configure every control across a large multi-vendor stack.',
     responseTitle: 'Make a recommendation safe enough to approve.',
@@ -47,6 +53,7 @@ const stories: Record<string, CompactStory> = {
   semperis: {
     lede: 'The move from an exceptional Active Directory recovery product to a continuously operating identity-security platform.',
     heroImage: '01-semperis',
+    proofImage: '01-semperis',
     problemTitle: 'Recovery is a defined task. Prevention is a changing state.',
     problem: 'Backup and restore had a clear beginning and end. Continuous security introduced vulnerabilities, dangerous configurations, severity, urgency, changing states, and a growing volume of findings.',
     responseTitle: 'A product language for attention and action.',
@@ -61,6 +68,8 @@ const stories: Record<string, CompactStory> = {
     lede: 'A management redesign that turned a fragmented enterprise interface into one coherent system for daily security work.',
     heroImage: '05-dashboard',
     proofImage: '01-details',
+    responseImages: ['01-details', '03-summary', '04-timeline', '06-mainPage'],
+    carouselTone: 'olive',
     problemTitle: 'Twenty tabs made the organisation’s structure the user’s job.',
     problem: 'Years of products and features had accumulated into separate management surfaces. Administrators needed to understand how the company had built the platform before they could operate it.',
     responseTitle: 'One information architecture for security at scale.',
@@ -90,6 +99,38 @@ function ProductImage({ image, alt }: { image?: ContentImage; alt: string }) {
   )
 }
 
+function ProductCarousel({ images, alt }: { images: ContentImage[]; alt: string }) {
+  const frames = [...images].reverse().concat([...images].reverse(), [...images].reverse())
+
+  return (
+    <div className="relative h-full w-full" role="img" aria-label={alt}>
+      <img
+        src={images[0].src}
+        alt=""
+        aria-hidden="true"
+        width={images[0].width}
+        height={images[0].height}
+        className="h-full w-full rounded-[16px] object-cover object-left-top opacity-0"
+      />
+      <div className="absolute inset-0 overflow-hidden rounded-[16px] bg-white">
+        <div className="product-carousel-track flex h-full w-[1200%]">
+          {frames.map((image, index) => (
+            <img
+              key={`${image.src}-${index}`}
+              src={image.src}
+              alt=""
+              width={image.width}
+              height={image.height}
+              loading={index < 8 ? 'eager' : 'lazy'}
+              className="h-full w-1/12 shrink-0 object-cover object-left-top"
+            />
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}
+
 function Eyebrow({ children, inverse = false }: { children: string; inverse?: boolean }) {
   return <p className={`eyebrow eyebrow-section ${inverse ? 'eyebrow-inverse' : ''}`}>{children}</p>
 }
@@ -100,6 +141,9 @@ export default function CompactWorkPage({ work }: { work: Work }) {
 
   const heroImage = imageFor(work, story.heroImage) ?? work.heroImage
   const proofImage = story.proofImage ? imageFor(work, story.proofImage) : undefined
+  const responseImages = story.responseImages
+    ?.map((filename) => imageFor(work, filename))
+    .filter((image): image is ContentImage => Boolean(image)) ?? []
 
   return (
     <main className="v2-page bg-background">
@@ -145,7 +189,17 @@ export default function CompactWorkPage({ work }: { work: Work }) {
           <p className="mt-7 max-w-md text-body leading-[1.55] text-muted-foreground">{story.response}</p>
           <p className="mt-7 max-w-md text-body leading-[1.55] text-foreground/78">{story.contribution}</p>
         </div>
-        {proofImage ? (
+        {responseImages.length > 1 ? (
+          <div className={`compact-carousel-plate carousel-tone-${story.carouselTone} relative overflow-hidden rounded-[40px] p-5 sm:px-7 sm:py-9 lg:px-8 lg:py-10`} style={{ backgroundColor: story.proofPlate }}>
+            <ProductCarousel images={responseImages} alt={`${work.company} product detail`} />
+            <div className="product-carousel-dots" aria-hidden="true">
+              <span className="product-carousel-dot product-carousel-dot--1" />
+              <span className="product-carousel-dot product-carousel-dot--2" />
+              <span className="product-carousel-dot product-carousel-dot--3" />
+              <span className="product-carousel-dot product-carousel-dot--4" />
+            </div>
+          </div>
+        ) : proofImage ? (
           <div className="overflow-hidden rounded-[40px] p-6" style={{ backgroundColor: story.proofPlate }}>
             <ProductImage image={proofImage} alt={`${work.company} product detail`} />
           </div>
