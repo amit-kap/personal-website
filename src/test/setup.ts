@@ -1,12 +1,10 @@
-import '@testing-library/jest-dom';
+import '@testing-library/jest-dom'
 
-// jsdom has no matchMedia; GSAP's ScrollTrigger calls it at plugin registration.
-// Reduced-motion queries report true so components skip entrance animations
-// through their real production gate and stay queryable in tests.
+// jsdom does not provide these browser APIs used by the shared layout.
 if (!window.matchMedia) {
   window.matchMedia = (query: string) =>
     ({
-      matches: query.includes('prefers-reduced-motion'),
+      matches: false,
       media: query,
       onchange: null,
       addListener: () => {},
@@ -16,3 +14,13 @@ if (!window.matchMedia) {
       dispatchEvent: () => false,
     }) as unknown as MediaQueryList;
 }
+
+if (!window.ResizeObserver) {
+  window.ResizeObserver = class ResizeObserver {
+    observe() {}
+    unobserve() {}
+    disconnect() {}
+  }
+}
+
+Object.defineProperty(window, 'scrollTo', { value: () => {}, writable: true })

@@ -12,8 +12,26 @@ type ProductCarouselProps = {
 const slideInterval = 6000
 const slideTransition = 700
 
+function useReducedMotion() {
+  const [reducedMotion, setReducedMotion] = useState(() =>
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches,
+  )
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
+    const update = () => setReducedMotion(mediaQuery.matches)
+    update()
+    mediaQuery.addEventListener('change', update)
+    return () => mediaQuery.removeEventListener('change', update)
+  }, [])
+
+  return reducedMotion
+}
+
 export default function ProductCarousel({ images, alt, plateClassName, cornerClassName, plateStyle }: ProductCarouselProps) {
   const imageCount = images.length
+  const imageKey = images.map((image) => image.src).join('|')
+  const reducedMotion = useReducedMotion()
   const frames = [...images].reverse().concat([...images].reverse(), [...images].reverse())
   const startingFrame = imageCount * 2 - 1
   const [activeIndex, setActiveIndex] = useState(0)
@@ -21,6 +39,8 @@ export default function ProductCarousel({ images, alt, plateClassName, cornerCla
   const [isTransitioning, setIsTransitioning] = useState(true)
 
   useEffect(() => {
+    if (imageCount < 2 || reducedMotion) return
+
     let currentFrame = startingFrame
     let resetTimer: ReturnType<typeof window.setTimeout> | undefined
     let enableTimer: ReturnType<typeof window.setTimeout> | undefined
@@ -46,7 +66,7 @@ export default function ProductCarousel({ images, alt, plateClassName, cornerCla
       if (resetTimer) window.clearTimeout(resetTimer)
       if (enableTimer) window.clearTimeout(enableTimer)
     }
-  }, [imageCount, startingFrame])
+  }, [imageCount, imageKey, reducedMotion, startingFrame])
 
   if (imageCount === 0) return null
 
@@ -67,7 +87,7 @@ export default function ProductCarousel({ images, alt, plateClassName, cornerCla
             style={{
               width: `${frames.length * 100}%`,
               transform: `translateX(-${(frameIndex / frames.length) * 100}%)`,
-              transition: isTransitioning ? `transform ${slideTransition}ms cubic-bezier(0.4, 0, 0.2, 1)` : 'none',
+              transition: isTransitioning && !reducedMotion ? `transform ${slideTransition}ms cubic-bezier(0.4, 0, 0.2, 1)` : 'none',
             }}
           >
             {frames.map((image, index) => (
@@ -88,7 +108,7 @@ export default function ProductCarousel({ images, alt, plateClassName, cornerCla
       {imageCount > 1 ? (
         <div className="product-carousel-dots" aria-hidden="true">
           {images.map((image, index) => (
-            <span key={image.src} className={`product-carousel-dot ${index === activeIndex ? 'is-active' : ''}`} />
+            <span key={image.src} className={`product-carousel-dot ${index === activeIndex ? 'is-active' : ''}`} data-active={index === activeIndex || undefined} />
           ))}
         </div>
       ) : null}

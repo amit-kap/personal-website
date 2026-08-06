@@ -34,8 +34,7 @@ export interface CVExperience {
   company: string;
   role: string;
   period: string;
-  summary: string;   // first paragraph of body, plain text — used by About
-  body: string;      // full body as markdown — used by /experience/<slug>
+  summary: string;   // first paragraph of body, plain text — used by the CV
   hasImages: boolean;
   images: ContentImage[];
 }
@@ -63,7 +62,6 @@ export interface CVHeader {
 }
 
 export interface CV {
-  raw: string;
   header: CVHeader;
   experience: CVExperience[];
   certificates: CVNamedEntry[];
@@ -117,19 +115,6 @@ function getImagesForSlug(slug: string): ContentImage[] {
     .filter(([path]) => path.includes(`/experience/${slug}/`))
     .sort(([a], [b]) => a.localeCompare(b))
     .map(([path, mod]) => imageAssetFromPath(path, mod.default));
-}
-
-// Optional brand icon per work folder: drop an `icon.svg` into the folder.
-const workIconModules = import.meta.glob<{ default: string }>(
-  '../content/experience/*/icon.svg',
-  { eager: true }
-);
-
-function getIconForSlug(slug: string): string | undefined {
-  const entry = Object.entries(workIconModules).find(([path]) =>
-    path.includes(`/experience/${slug}/`),
-  );
-  return entry?.[1].default;
 }
 
 function splitByDepth(nodes: RootContent[], depth: 2 | 3): Array<{ heading: Heading; body: RootContent[] }> {
@@ -207,7 +192,6 @@ function parseCV(): CV {
     }
 
     const bodyNodes = entry.body.slice(1);
-    const body = nodesToMarkdown(bodyNodes);
     const firstPara = bodyNodes.find(n => n.type === 'paragraph');
     const summary = firstPara ? mdastToString(firstPara) : '';
     const images = getImagesForSlug(slug);
@@ -218,7 +202,6 @@ function parseCV(): CV {
       role,
       period,
       summary,
-      body,
       images,
       hasImages: images.length > 0,
     });
@@ -241,7 +224,6 @@ function parseCV(): CV {
   }
 
   return {
-    raw: cvRaw,
     header: { name, tagline, contacts },
     experience,
     certificates: parseNamedEntries('certificates'),
@@ -290,17 +272,12 @@ export interface Work {
   company: string;
   role: string;
   period: string;
-  cvSummary: string;             // first paragraph from cv.md (fallback for blurb)
   productTitle: string;          // product-value sentence; falls back to company
-  blurb: string;                 // tile copy (work.md `blurb`, falls back to cvSummary)
+  blurb: string;                 // tile copy (work.md `blurb`, falls back to CV summary)
   order: number;                 // ascending sort key
-  icon?: string;                 // optional brand icon (icon.svg in the folder)
   heroImage?: ContentImage;      // top of work page
   tileImage?: ContentImage;      // Recent Work tile (first frame of cycle)
-  body: string;                  // work.md markdown body (overview paragraphs)
   bodyImages: Record<string, ContentImage>; // keyed by filename, for inline image refs
-  allImages: ContentImage[];     // every image in the folder, sorted (Recent Work cycles through these)
-  galleryImages: ContentImage[]; // everything in folder excluding heroImage
 }
 
 interface WorkFrontMatter {
@@ -326,7 +303,7 @@ function buildWorks(): Work[] {
   for (const [path, raw] of Object.entries(workContentModules)) {
     const slug = workSlugFromPath(path);
     if (!slug) continue;
-    const { frontMatter, body } = stripFrontMatter(raw);
+    const { frontMatter } = stripFrontMatter(raw);
     const fm = (frontMatter ?? {}) as WorkFrontMatter;
 
     const cvEntry = cv.experience.find(e => e.slug === slug);
@@ -349,26 +326,17 @@ function buildWorks(): Work[] {
     const heroImage = heroByName ?? allImages[0];
     const tileImage = tileByName ?? heroImage;
 
-    const galleryImages = heroImage
-      ? allImages.filter(img => img.src !== heroImage.src)
-      : allImages;
-
     out.push({
       slug,
       company: cvEntry.company,
       role: cvEntry.role,
       period: cvEntry.period,
-      cvSummary: cvEntry.summary,
       productTitle: fm.productTitle?.trim() || cvEntry.company,
       blurb: fm.blurb?.trim() || cvEntry.summary,
       order: typeof fm.order === 'number' ? fm.order : 999,
-      icon: getIconForSlug(slug),
       heroImage,
       tileImage,
-      body: body.trim(),
       bodyImages: imageMap,
-      allImages,
-      galleryImages,
     });
   }
   return out.sort((a, b) => a.order - b.order);
@@ -444,8 +412,7 @@ function buildCaseStudies(): CaseStudy[] {
       bodyImages: images,
     });
   }
-  // Order case studies by their parent work's order, so the prev/next
-  // navigation on case-study pages follows the same rhythm as Recent Work.
+  // Keep related stories alongside the product work they expand on.
   return out.sort((a, b) => {
     const orderA = works.find(w => w.slug === a.workSlug)?.order ?? 999;
     const orderB = works.find(w => w.slug === b.workSlug)?.order ?? 999;
@@ -461,32 +428,4 @@ export function getAllCaseStudies(): CaseStudy[] {
 
 export function getCaseStudyBySlug(slug: string): CaseStudy | undefined {
   return caseStudies.find(cs => cs.slug === slug);
-}
-
-// Wrap-around adjacency so every page has both a prev and a next —
-// the last item's "next" loops back to the first, and vice versa.
-export function getAdjacentCaseStudies(slug: string): { prev?: CaseStudy; next?: CaseStudy } {
-  const n = caseStudies.length;
-  if (n <= 1) return {};
-  const i = caseStudies.findIndex(cs => cs.slug === slug);
-  if (i === -1) return {};
-  return {
-    prev: caseStudies[(i - 1 + n) % n],
-    next: caseStudies[(i + 1) % n],
-  };
-}
-
-export function getAdjacentWorks(slug: string): { prev?: Work; next?: Work } {
-  const n = works.length;
-  if (n <= 1) return {};
-  const i = works.findIndex(w => w.slug === slug);
-  if (i === -1) return {};
-  return {
-    prev: works[(i - 1 + n) % n],
-    next: works[(i + 1) % n],
-  };
-}
-
-export function getFeaturedCaseStudy(): CaseStudy | undefined {
-  return caseStudies.find(cs => cs.featured);
 }
