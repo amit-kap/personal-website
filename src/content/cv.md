@@ -1,6 +1,6 @@
 # Amit Kaplinsky
 
-Product Designer. AI Builder.
+Product Designer
 
 Tel Aviv · [amitka111@gmail.com](mailto:amitka111@gmail.com) · [+972 54-4878882](https://wa.me/972544878882) · [LinkedIn](https://www.linkedin.com/in/amitka/) · [Portfolio](https://amit-kap.github.io/personal-website)
 
