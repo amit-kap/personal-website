@@ -37,7 +37,7 @@ export default function ShiftWorkPage({ work }: { work: Work }) {
         <div className="mt-10 max-w-3xl">
           <div className="text-meta leading-5 tracking-[-0.02em] text-muted-foreground">
             <p className="font-medium">Shift · Founding Designer</p>
-            <p className="mt-1 text-muted-foreground/75">2024—now</p>
+            <p className="mt-1 text-muted-foreground/75">{work.period}</p>
           </div>
           <p className="mt-7 text-lead leading-[1.43] tracking-[-0.035em] text-foreground/70">
             A vendor-security system that turns periodic assessment files into a living operating record for evidence, access, exposure, and human decision-making.

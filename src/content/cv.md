@@ -8,33 +8,33 @@ Tel Aviv · [amitka111@gmail.com](mailto:amitka111@gmail.com) · [+972 54-487888
 
 ### [Shift](/experience/shift)
 
-**Founding Designer** · 10/2024 – Now
+**Founding Designer** · 10/2024 to now
 
-AI-powered vendor security platform. I came in to design the product from zero — defining the design system, shaping onboarding, and owning every surface end to end. Most of the work lives behind the curtain for now. More once we're public.
+Founding design for an AI-assisted vendor security platform. I established the design system, onboarding, and core product surfaces for evidence, access, exposure, and human decision-making. Most of the product remains private.
 
 ### [Onyxia](/experience/onyxia-cyber)
 
-**Product Design Team Lead** · 04/2024 – 10/2024
+**Product Design Team Lead** · 04/2024 to 10/2024
 
-This journey began differently, as I joined an already established team. My role was to elevate the current state of the product and enhance both its UX and UI to the highest possible standard. Drawing from my past experience handling complex challenges, we are now shaping a new experience that, according to customer feedback, is highly enjoyable.
+Short product design lead engagement on a CISO data-management concept. I helped shape the experience that connects executive intent to owners, tasks, progress, and delays.
 
 ### [Veriti](/experience/veriti)
 
-**Founding Designer** · 11/2021 – 04/2024
+**Founding Designer** · 11/2021 to 04/2024
 
-Embarking on the ultimate challenge: initiating from a blank slate. Leveraging deep research and extensive experience, our goal is to breathe life into innovative products. As a product designer, this is the pinnacle of creative fulfillment. Collaborating with industry-leading talents, we've transformed a mere concept into a vibrant, mature product. It's more than just a tool; it's a solution where users discover real value and utility.
+Founding design for a security-controls platform. I shaped how teams connect threats to configuration gaps and approve controlled remediation across existing security products.
 
 ### [Semperis](/experience/semperis)
 
-**UX Team Lead** · 08/2020 – 11/2021
+**UX Team Lead** · 08/2020 to 11/2021
 
-As a key member of the founding team, my mandate was to establish an in-house design team, pivotal for supporting our fast-paced development process. This involved transitioning from an outsourced model, where I took over the existing design framework, to setting up robust in-house concepts and processes. My focus was on leading and nurturing the UX team to align with our evolving project goals and company vision.
+Led the UX and visual-language transition from Active Directory recovery to continuous identity security. I also built and led the in-house UX team.
 
 ### [Check Point Software](/experience/checkpoint)
 
-**UX Expert** · 03/2014 – 08/2020
+**UX Expert** · 03/2014 to 08/2020
 
-As a UX expert on the product design team, attached to an R&D group across desktop, web, and mobile. I translated technical requirements into user flows and interactive wireframes, oversaw the build, and wrote production code alongside the engineers.
+UX Expert on enterprise security management. I worked with R&D to turn complex product, policy, and workflow requirements into coherent cross-platform experiences.
 
 ## Certificates
 
@@ -44,17 +44,17 @@ Coursera · August 2023
 
 ### Certified, Programming the .NET Framework
 
-John Bryce · 2010–2011
+John Bryce · 2010 to 2011
 
 ## Education
 
 ### Diploma of Education, Digital Communications and Media
 
-Camera Obscura School of Arts · 1996–2000
+Camera Obscura School of Arts · 1996 to 2000
 
 ### Bachelor of Arts (B.A), Economics
 
-Tel Aviv University · 1994–1996
+Tel Aviv University · 1994 to 1996
 
 ## Skills
 

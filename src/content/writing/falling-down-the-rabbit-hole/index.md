@@ -1,6 +1,6 @@
 ---
 work: checkpoint
-excerpt: Handling a B2C project inside a B2B corporate — a Check Point SMB mobile app story.
+excerpt: Handling a B2C project inside a B2B corporate: a Check Point SMB mobile app story.
 cover: cover-image.webp
 ---
 
@@ -54,11 +54,11 @@ This feature will considerably enhance the app, as it will revolutionize how use
 
 Other important features that emerged from the user stories include:
 
-- **Network snapshot** — identifying connected devices to spot potential threats
-- **Quick actions** — device blocking, Wi-Fi sharing, quick configuration, and more
-- **Connectivity status** — determining current connectivity, such as Internet or VPN
-- **Events history** — reviewing incidents from the past 24 hours, day, or week
-- **Large scale** — managing multiple appliances
+- **Network snapshot:** identifying connected devices to spot potential threats
+- **Quick actions:** device blocking, Wi-Fi sharing, quick configuration, and more
+- **Connectivity status:** determining current connectivity, such as Internet or VPN
+- **Events history:** reviewing incidents from the past 24 hours, day, or week
+- **Large scale:** managing multiple appliances
 
 ### UI patterns
 

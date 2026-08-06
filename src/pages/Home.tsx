@@ -25,7 +25,7 @@ export default function Home() {
             Making complex security products clear enough to act on.
           </h1>
           <p className="mt-9 max-w-2xl text-[clamp(1.2rem,2vw,1.7rem)] leading-[1.45] tracking-[-0.035em] text-foreground/70">
-            I design the systems behind security decisions—from continuous third-party defence to identity protection and enterprise-scale management.
+            I design the systems behind security decisions, from continuous third-party defence to identity protection and enterprise-scale management.
           </p>
           <a href="#work" className="mt-7 inline-flex items-center gap-2 text-body font-semibold text-foreground transition-opacity hover:opacity-60">
             Explore five products <span aria-hidden="true">↓</span>

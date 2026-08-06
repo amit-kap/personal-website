@@ -78,7 +78,7 @@ After a comprehensive review by our team and some design partners, we concluded 
 
 To meet the new requirements, we kept the picker container structure and replaced the inner controls with a loosely designed table structure. Each row in this table is structured from dropdown controls, enabling us to build a more grammar-like filter.
 
-The {Key – Operator – Value} structure suited the need for a more grammatically structured format. The "Key" dropdown contains all possible filter options. The "Operator" allows for complex filtering, such as "is not" options. The "Value" includes all potential matches for the selected filter.
+The {Key, Operator, Value} structure suited the need for a more grammatically structured format. The "Key" dropdown contains all possible filter options. The "Operator" allows for complex filtering, such as "is not" options. The "Value" includes all potential matches for the selected filter.
 
 The "Action" column allows the user to add or remove filters as needed. Initially, we limited the number of filters to five to prevent complexity.
 
