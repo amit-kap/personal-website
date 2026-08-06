@@ -1,6 +1,6 @@
 ---
 work: checkpoint
-excerpt: Handling a B2C project inside a B2B corporate: a Check Point SMB mobile app story.
+excerpt: "Handling a B2C project inside a B2B corporate: a Check Point SMB mobile app story."
 cover: cover-image.webp
 ---
 
