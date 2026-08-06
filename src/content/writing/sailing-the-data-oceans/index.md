@@ -1,7 +1,7 @@
 ---
 work: veriti
 excerpt: How we helped Veriti users wade through their data with a filtering pattern that scales.
-cover: cover-image.webp
+cover: cover-v2.png
 ---
 
 # Sailing the Data Oceans

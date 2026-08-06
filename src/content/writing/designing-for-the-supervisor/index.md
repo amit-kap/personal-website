@@ -2,7 +2,7 @@
 work: shift
 excerpt: How we reframed third-party risk software around the person supervising an AI agent, from market scan to product direction.
 featured: true
-cover: cover-image.webp
+cover: cover-v2.png
 ---
 
 # Designing for the Supervisor

@@ -49,7 +49,7 @@
   --text-section--line-height: 0.94;
   --text-feature: clamp(2.6rem, 4.4vw, 4.5rem);       /* 42→72px — feature titles */
   --text-feature--line-height: 0.92;
-  --text-hero: clamp(3.25rem, 6.4vw, 6.5rem);          /* 52→104px — page hero only */
+  --text-hero: clamp(3rem, 5.5vw, 5.75rem);            /* 48→92px — page hero only */
   --text-hero--line-height: 0.88;
 }
 
@@ -365,23 +365,6 @@
   @apply text-white/65;
 }
 
-@keyframes product-carousel-right {
-  0%, 23% { transform: translateX(-58.333333%); }
-  25%, 48% { transform: translateX(-50%); }
-  50%, 73% { transform: translateX(-41.666667%); }
-  75%, 98% { transform: translateX(-33.333333%); }
-  100% { transform: translateX(-25%); }
-}
-
-.product-carousel-track {
-  animation: product-carousel-right 24s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-  will-change: transform;
-}
-
-.product-carousel-track:hover {
-  animation-play-state: paused;
-}
-
 .product-carousel-dots {
   position: absolute;
   bottom: 5px;
@@ -407,9 +390,12 @@
   height: 6px;
   border-radius: 999px;
   background: var(--product-carousel-muted, rgb(119 85 244 / 35%));
-  animation-duration: 24s;
-  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
-  animation-iteration-count: infinite;
+  transition: width 500ms cubic-bezier(0.22, 1, 0.36, 1), background-color 350ms ease;
+}
+
+.product-carousel-dot.is-active {
+  width: 18px;
+  background: var(--product-carousel-active, #7755f4);
 }
 
 .carousel-tone-plum {
@@ -435,84 +421,9 @@
   .compact-carousel-plate .product-carousel-dots { bottom: 16px; }
 }
 
-.product-carousel-dot--1 { animation-name: product-carousel-dot-1; }
-.product-carousel-dot--2 { animation-name: product-carousel-dot-2; }
-.product-carousel-dot--3 { animation-name: product-carousel-dot-3; }
-.product-carousel-dot--4 { animation-name: product-carousel-dot-4; }
-
-@keyframes product-carousel-dot-1 {
-  0%, 22% {
-    width: 18px;
-    background: var(--product-carousel-active, #7755f4);
-  }
-  25%, 96% {
-    width: 6px;
-    background: var(--product-carousel-muted, rgb(119 85 244 / 35%));
-  }
-  100% {
-    width: 18px;
-    background: var(--product-carousel-active, #7755f4);
-  }
-}
-
-@keyframes product-carousel-dot-2 {
-  0%, 22% {
-    width: 6px;
-    background: var(--product-carousel-muted, rgb(119 85 244 / 35%));
-  }
-  25%, 47% {
-    width: 18px;
-    background: var(--product-carousel-active, #7755f4);
-  }
-  50%, 100% {
-    width: 6px;
-    background: var(--product-carousel-muted, rgb(119 85 244 / 35%));
-  }
-}
-
-@keyframes product-carousel-dot-3 {
-  0%, 47% {
-    width: 6px;
-    background: var(--product-carousel-muted, rgb(119 85 244 / 35%));
-  }
-  50%, 72% {
-    width: 18px;
-    background: var(--product-carousel-active, #7755f4);
-  }
-  75%, 100% {
-    width: 6px;
-    background: var(--product-carousel-muted, rgb(119 85 244 / 35%));
-  }
-}
-
-@keyframes product-carousel-dot-4 {
-  0%, 72% {
-    width: 6px;
-    background: var(--product-carousel-muted, rgb(119 85 244 / 35%));
-  }
-  75%, 97% {
-    width: 18px;
-    background: var(--product-carousel-active, #7755f4);
-  }
-  100% {
-    width: 6px;
-    background: var(--product-carousel-muted, rgb(119 85 244 / 35%));
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .product-carousel-track {
-    animation: none;
-    transform: translateX(-58.333333%);
-  }
-
   .product-carousel-dot {
-    animation: none;
-  }
-
-  .product-carousel-dot--1 {
-    width: 18px;
-    background: var(--product-carousel-active, #7755f4);
+    transition: none;
   }
 }
 

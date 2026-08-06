@@ -1,4 +1,5 @@
 import type { ContentImage, Work } from '@/lib/content'
+import ProductCarousel from '@/components/ProductCarousel'
 
 type CompactStory = {
   lede: string
@@ -99,38 +100,6 @@ function ProductImage({ image, alt }: { image?: ContentImage; alt: string }) {
   )
 }
 
-function ProductCarousel({ images, alt }: { images: ContentImage[]; alt: string }) {
-  const frames = [...images].reverse().concat([...images].reverse(), [...images].reverse())
-
-  return (
-    <div className="relative h-full w-full" role="img" aria-label={alt}>
-      <img
-        src={images[0].src}
-        alt=""
-        aria-hidden="true"
-        width={images[0].width}
-        height={images[0].height}
-        className="h-full w-full rounded-[16px] object-cover object-left-top opacity-0"
-      />
-      <div className="absolute inset-0 overflow-hidden rounded-[16px] bg-white">
-        <div className="product-carousel-track flex h-full w-[1200%]">
-          {frames.map((image, index) => (
-            <img
-              key={`${image.src}-${index}`}
-              src={image.src}
-              alt=""
-              width={image.width}
-              height={image.height}
-              loading={index < 8 ? 'eager' : 'lazy'}
-              className="h-full w-1/12 shrink-0 object-cover object-left-top"
-            />
-          ))}
-        </div>
-      </div>
-    </div>
-  )
-}
-
 function Eyebrow({ children, inverse = false }: { children: string; inverse?: boolean }) {
   return <p className={`eyebrow eyebrow-section ${inverse ? 'eyebrow-inverse' : ''}`}>{children}</p>
 }
@@ -190,15 +159,13 @@ export default function CompactWorkPage({ work }: { work: Work }) {
           <p className="mt-7 max-w-md text-body leading-[1.55] text-foreground/78">{story.contribution}</p>
         </div>
         {responseImages.length > 1 ? (
-          <div className={`compact-carousel-plate carousel-tone-${story.carouselTone} relative overflow-hidden rounded-[40px] p-5 sm:px-7 sm:py-9 lg:px-8 lg:py-10`} style={{ backgroundColor: story.proofPlate }}>
-            <ProductCarousel images={responseImages} alt={`${work.company} product detail`} />
-            <div className="product-carousel-dots" aria-hidden="true">
-              <span className="product-carousel-dot product-carousel-dot--1" />
-              <span className="product-carousel-dot product-carousel-dot--2" />
-              <span className="product-carousel-dot product-carousel-dot--3" />
-              <span className="product-carousel-dot product-carousel-dot--4" />
-            </div>
-          </div>
+          <ProductCarousel
+            images={responseImages}
+            alt={`${work.company} product detail`}
+            plateClassName={`compact-carousel-plate carousel-tone-${story.carouselTone} rounded-[40px] p-5 sm:px-7 sm:py-9 lg:px-8 lg:py-10`}
+            cornerClassName="rounded-[16px]"
+            plateStyle={{ backgroundColor: story.proofPlate }}
+          />
         ) : proofImage ? (
           <div className="overflow-hidden rounded-[40px] p-6" style={{ backgroundColor: story.proofPlate }}>
             <ProductImage image={proofImage} alt={`${work.company} product detail`} />

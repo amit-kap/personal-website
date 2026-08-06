@@ -12,7 +12,7 @@ export default function Writing() {
         <section className="mx-auto max-w-[1440px] px-5 pb-16 pt-24 sm:px-8 sm:pb-24 sm:pt-28 lg:pt-32">
           <Link
             to={`/case-studies/${featured.slug}`}
-            className="group grid overflow-hidden rounded-[20px] bg-[#111111] text-white lg:grid-cols-[0.9fr_1.1fr]"
+            className="group grid overflow-hidden rounded-[20px] bg-[#111111] text-white lg:grid-cols-2"
           >
             <div className="flex min-h-[370px] flex-col p-8 sm:p-12 lg:p-14">
               <div>
@@ -33,7 +33,7 @@ export default function Writing() {
                   alt=""
                   width={featured.coverImage.width}
                   height={featured.coverImage.height}
-                  className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+                  className="h-full w-full object-cover lg:object-[calc(50%+100px)_center] transition-transform duration-700 ease-out group-hover:scale-[1.03]"
                 />
               </div>
             )}

@@ -1,11 +1,9 @@
 import { Children, isValidElement } from 'react'
 import { useParams } from 'react-router-dom'
-import PrevNextNav from '@/components/PrevNextNav'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import {
   getCaseStudyBySlug,
-  getAdjacentCaseStudies,
   type ContentImage,
 } from '@/lib/content'
 import SkeletonImage from '@/components/SkeletonImage'
@@ -66,7 +64,9 @@ const markdownComponents = (images: Record<string, ContentImage>) => ({
     <ol className="list-decimal pl-5 mb-5 space-y-1 text-body leading-8 text-foreground/75">{children}</ol>
   ),
   blockquote: ({ children }: { children?: React.ReactNode }) => (
-    <blockquote className="border-l-2 border-foreground/15 pl-5 my-6 text-foreground/55 italic">{children}</blockquote>
+    <blockquote className="my-8 rounded-r-[10px] border-l-[3px] border-[#8aa9a1] bg-[#8aa9a1]/[0.08] py-5 pl-5 pr-6 text-foreground/80 italic [&>p]:mb-0">
+      {children}
+    </blockquote>
   ),
   strong: ({ children }: { children?: React.ReactNode }) => (
     <strong className="font-medium text-foreground">{children}</strong>
@@ -108,7 +108,6 @@ const markdownComponents = (images: Record<string, ContentImage>) => ({
 export default function CaseStudyPage() {
   const { slug } = useParams<{ slug: string }>()
   const caseStudy = slug ? getCaseStudyBySlug(slug) : undefined
-  const { prev, next } = slug ? getAdjacentCaseStudies(slug) : {}
 
   if (!caseStudy) {
     return (
@@ -159,11 +158,6 @@ export default function CaseStudyPage() {
               {caseStudy.body}
             </ReactMarkdown>
 
-            {/* Prev / Home / Next — labelled by case-study title */}
-            <PrevNextNav
-              prev={prev ? { to: `/case-studies/${prev.slug}`, label: prev.title } : undefined}
-              next={next ? { to: `/case-studies/${next.slug}`, label: next.title } : undefined}
-            />
           </div>
         </article>
       </main>

@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { getAllCaseStudies, getAllWorks } from '@/lib/content'
+import ProductCarousel from '@/components/ProductCarousel'
 
 export default function Home() {
   const works = getAllWorks()
@@ -22,7 +23,7 @@ export default function Home() {
       <section className="mx-auto grid min-h-[min(760px,calc(100svh-68px))] max-w-[1440px] grid-cols-1 items-center px-5 py-20 sm:px-8 lg:grid-cols-[1.15fr_0.85fr] lg:py-28">
         <div className="max-w-4xl">
           <h1 className="font-heading text-hero font-bold tracking-[-0.075em] text-foreground">
-            Making complex security products clear enough to act on.
+            Making <span className="text-[#7755f4]">complex</span> security products <span className="text-[#5c673c]">clear</span> enough to act on.
           </h1>
           <p className="mt-9 max-w-2xl text-[clamp(1.2rem,2vw,1.7rem)] leading-[1.45] tracking-[-0.035em] text-foreground/70">
             I design the systems behind security decisions, from continuous third-party defence to identity protection and enterprise-scale management.
@@ -58,40 +59,13 @@ export default function Home() {
                 <span className="text-lg leading-none transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true">↗</span>
               </span>
             </div>
-            {shift.tileImage && shiftScreens.length > 0 && (
-              <div className="relative min-h-[330px] overflow-hidden bg-[#f4f1ff] p-5 sm:px-7 sm:py-12 lg:px-8 lg:py-14">
-                <div className="relative h-full w-full">
-                  <img
-                    src={shift.tileImage.src}
-                    alt=""
-                    aria-hidden="true"
-                    width={shift.tileImage.width}
-                    height={shift.tileImage.height}
-                    className="h-full w-full rounded-[10px] object-cover object-left-top opacity-0"
-                  />
-                  <div className="absolute inset-0 overflow-hidden rounded-[10px] bg-white">
-                    <div className="product-carousel-track flex h-full w-[1200%]">
-                      {[...shiftScreens].reverse().concat([...shiftScreens].reverse(), [...shiftScreens].reverse()).map((screen, index) => (
-                        <img
-                          key={`${screen.src}-${index}`}
-                          src={screen.src}
-                          alt=""
-                          width={screen.width}
-                          height={screen.height}
-                          loading={index < 8 ? 'eager' : 'lazy'}
-                          className="h-full w-1/12 shrink-0 object-cover object-left-top"
-                        />
-                      ))}
-                    </div>
-                  </div>
-                </div>
-                <div className="product-carousel-dots" aria-hidden="true">
-                  <span className="product-carousel-dot product-carousel-dot--1" />
-                  <span className="product-carousel-dot product-carousel-dot--2" />
-                  <span className="product-carousel-dot product-carousel-dot--3" />
-                  <span className="product-carousel-dot product-carousel-dot--4" />
-                </div>
-              </div>
+            {shiftScreens.length > 0 && (
+              <ProductCarousel
+                images={shiftScreens}
+                alt="Shift product surfaces"
+                plateClassName="min-h-[330px] bg-[#f4f1ff] p-5 sm:px-7 sm:py-12 lg:px-8 lg:py-14"
+                cornerClassName="rounded-[10px]"
+              />
             )}
           </Link>
         )}
@@ -134,7 +108,7 @@ export default function Home() {
           {featuredEssay && (
             <Link
               to={`/case-studies/${featuredEssay.slug}`}
-              className="group mt-10 grid overflow-hidden rounded-[20px] bg-[#111111] text-white lg:grid-cols-[0.9fr_1.1fr]"
+              className="group mt-10 grid overflow-hidden rounded-[20px] bg-[#111111] text-white lg:grid-cols-2"
             >
               <div className="flex min-h-[370px] flex-col p-8 sm:p-12 lg:p-14">
                 <div>
@@ -154,7 +128,7 @@ export default function Home() {
                     width={featuredEssay.coverImage.width}
                     height={featuredEssay.coverImage.height}
                     loading="lazy"
-                    className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.025]"
+                    className="h-full w-full object-cover lg:object-[calc(50%+100px)_center] transition-transform duration-700 ease-out group-hover:scale-[1.025]"
                   />
                 </div>
               )}

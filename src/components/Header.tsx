@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 
 const navItems = [
-  { label: 'Work', to: '/#work' },
+  { label: 'Work', to: '/' },
   { label: 'Writing', to: '/writing' },
   { label: 'CV', to: '/cv' },
 ]
