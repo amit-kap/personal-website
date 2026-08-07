@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { getAllCaseStudies, getAllWorks } from '@/lib/content'
 import ProductCarousel from '@/components/ProductCarousel'
+import heroDecisionMap from '@/assets/hero-decision-map-v2.png'
 
 export default function Home() {
   const works = getAllWorks()
@@ -20,10 +21,18 @@ export default function Home() {
 
   return (
     <main className="v2-page bg-background">
-      <section className="mx-auto grid min-h-[min(760px,calc(100svh-68px))] max-w-[1440px] grid-cols-1 items-center px-5 py-20 sm:px-8 lg:grid-cols-[1.15fr_0.85fr] lg:py-28">
-        <div className="max-w-4xl">
-          <h1 className="font-heading text-hero font-bold tracking-[-0.075em] text-foreground">
-            Making <span className="text-[#7755f4]">complex</span> security products <span className="text-[#5c673c]">clear</span> enough to act on.
+      <section className="relative isolate min-h-[min(760px,calc(100svh-68px))] overflow-hidden bg-[#f9eddf]">
+        <div aria-hidden="true" className="pointer-events-none absolute inset-0 hidden lg:block">
+          <img
+            src={heroDecisionMap}
+            alt=""
+            className="absolute inset-0 h-full w-full object-cover object-center"
+          />
+        </div>
+        <div className="relative mx-auto grid min-h-[min(760px,calc(100svh-68px))] max-w-[1440px] grid-cols-1 items-center px-5 py-20 sm:px-8 lg:grid-cols-[1.15fr_0.85fr] lg:py-28">
+          <div className="max-w-4xl">
+          <h1 className="font-heading text-hero font-bold tracking-[-0.075em] text-foreground lg:max-w-[min(50vw,720px)]">
+            Making complex security products clear enough to act on.
           </h1>
           <p className="mt-9 max-w-2xl text-[clamp(1.2rem,2vw,1.7rem)] leading-[1.45] tracking-[-0.035em] text-foreground/70">
             I design the systems behind security decisions, from continuous third-party defence to identity protection and enterprise-scale management.
@@ -31,10 +40,11 @@ export default function Home() {
           <a href="#work" className="mt-7 inline-flex items-center gap-2 text-body font-semibold text-foreground transition-opacity hover:opacity-60">
             Explore five products <span aria-hidden="true">↓</span>
           </a>
+          </div>
         </div>
       </section>
 
-      <section id="work" className="mx-auto max-w-[1440px] scroll-mt-8 px-5 pb-16 sm:px-8">
+      <section id="work" className="mx-auto max-w-[1440px] scroll-mt-8 px-5 py-24 sm:px-8 sm:py-32">
         <h2 className="max-w-6xl font-heading text-feature font-bold tracking-[-0.07em] text-foreground">
           Five security products. Five different forms of clarity.
         </h2>
