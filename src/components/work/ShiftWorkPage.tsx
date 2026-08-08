@@ -32,7 +32,7 @@ export default function ShiftWorkPage({ work }: { work: Work }) {
     <main className="v2-page bg-background">
       <section className="mx-auto max-w-[1440px] px-5 pb-20 pt-20 sm:px-8 sm:pb-28 sm:pt-28 lg:pt-32">
         <h1 className="max-w-5xl font-heading text-hero font-bold tracking-[-0.078em] text-foreground">
-          Third-party risk,<br /> <span className="text-[#7755f4]">continuously</span> defended.
+          Third-party risk,<br /> continuously defended.
         </h1>
         <div className="mt-10 max-w-3xl">
           <div className="text-meta leading-5 tracking-[-0.02em] text-muted-foreground">

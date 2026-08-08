@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { getAllCaseStudies, getAllWorks } from '@/lib/content'
+import { getAllCaseStudies, getAllWorks, getWorkBySlug } from '@/lib/content'
 import ProductCarousel from '@/components/ProductCarousel'
 import heroDecisionMap from '@/assets/hero-decision-map-v2.png'
 
@@ -154,7 +154,7 @@ export default function Home() {
                   className="group rounded-[16px] bg-white/55 p-7 transition-colors hover:bg-white sm:p-8"
                 >
                   <p className="text-meta font-medium tracking-[-0.02em] text-muted-foreground">
-                    {essay.workSlug === 'checkpoint' ? 'Check Point' : 'Veriti'}
+                    {getWorkBySlug(essay.workSlug)?.company ?? 'Security'}
                   </p>
                   <h3 className="mt-4 max-w-md font-heading text-title-sm font-bold leading-[0.98] tracking-[-0.05em] text-foreground">{essay.title}</h3>
                   <p className="mt-4 max-w-xl text-body leading-[1.5] text-muted-foreground">{essay.excerpt}</p>

@@ -26,10 +26,10 @@ describe('ProductCarousel', () => {
     expect(activeDot()).toHaveAttribute('data-active', 'true')
     expect(container.querySelectorAll('.product-carousel-dot')[0]).toBe(activeDot())
 
-    act(() => vi.advanceTimersByTime(6000))
+    act(() => vi.advanceTimersByTime(3000))
     expect(container.querySelectorAll('.product-carousel-dot')[1]).toBe(activeDot())
 
-    act(() => vi.advanceTimersByTime(6000))
+    act(() => vi.advanceTimersByTime(3000))
     expect(container.querySelectorAll('.product-carousel-dot')[2]).toBe(activeDot())
   })
 })

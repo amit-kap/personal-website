@@ -9,7 +9,7 @@ type ProductCarouselProps = {
   plateStyle?: CSSProperties
 }
 
-const slideInterval = 6000
+const slideInterval = 3000
 const slideTransition = 700
 
 function useReducedMotion() {

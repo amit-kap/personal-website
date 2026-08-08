@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { getAllCaseStudies } from '@/lib/content'
+import { getAllCaseStudies, getWorkBySlug } from '@/lib/content'
 
 export default function Writing() {
   const studies = getAllCaseStudies()
@@ -56,7 +56,7 @@ export default function Writing() {
                   />
                 </div>
               )}
-              <p className="mt-6 text-meta font-medium tracking-[-0.02em] text-muted-foreground">{study.workSlug === 'checkpoint' ? 'Check Point' : 'Veriti'}</p>
+              <p className="mt-6 text-meta font-medium tracking-[-0.02em] text-muted-foreground">{getWorkBySlug(study.workSlug)?.company ?? 'Security'}</p>
               <h2 className="mt-4 max-w-md font-heading text-title-sm font-bold leading-[0.98] tracking-[-0.05em] text-foreground">{study.title}</h2>
               <p className="mt-4 max-w-xl text-body leading-[1.5] text-muted-foreground">{study.excerpt}</p>
               <span className="mt-7 inline-flex items-center gap-2 text-body font-semibold text-foreground">
