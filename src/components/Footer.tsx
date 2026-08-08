@@ -1,6 +1,5 @@
 import { useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
-import heroDecisionMap from '@/assets/hero-decision-map-v2.png'
 
 function GmailIcon() {
   return (
@@ -43,15 +42,8 @@ export default function Footer() {
   }, [])
 
   return (
-    <footer ref={footerRef} className="footer-reveal fixed inset-x-0 bottom-0 z-0 overflow-hidden bg-[#111111] text-white">
-      <img
-        src={heroDecisionMap}
-        alt=""
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-y-0 right-0 hidden h-full w-[62%] max-w-[980px] object-cover object-right opacity-20 mix-blend-screen lg:block"
-      />
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[linear-gradient(90deg,#111111_0%,rgba(17,17,17,0.92)_36%,rgba(17,17,17,0.42)_100%)]" />
-      <div className="relative mx-auto max-w-[1440px] px-5 py-20 sm:px-8">
+    <footer ref={footerRef} className="footer-reveal fixed inset-x-0 bottom-0 z-0 bg-[#111111] text-white">
+      <div className="mx-auto max-w-[1440px] px-5 py-20 sm:px-8">
         <div className="grid gap-12 lg:grid-cols-[minmax(0,1.2fr)_minmax(18rem,0.55fr)] lg:items-end lg:gap-20">
           <h2 className="max-w-3xl font-heading text-feature font-bold tracking-[-0.07em]">Designing the systems behind decisions.</h2>
           <div className="flex flex-col items-start lg:justify-self-end lg:pb-1">
