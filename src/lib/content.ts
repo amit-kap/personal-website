@@ -342,12 +342,18 @@ function buildWorks(): Work[] {
     const cvEntry = cv.experience.find(e => e.slug === slug);
     if (!cvEntry) continue;
 
-    const allImages = getImagesForSlug(slug);
+    // Keep the source filename as the key. Vite fingerprints `img.src` in
+    // production, so deriving a key from the output URL would make story
+    // lookups such as `01-shift-dashboard.webp` fail after a build.
+    const imageEntries = Object.entries(expImageModules)
+      .filter(([imagePath]) => imagePath.includes(`/experience/${slug}/`))
+      .sort(([a], [b]) => a.localeCompare(b));
     const imageMap: Record<string, ContentImage> = {};
-    for (const img of allImages) {
-      const filename = img.src.split('/').pop();
-      if (filename) imageMap[filename] = img;
+    for (const [imagePath, mod] of imageEntries) {
+      const filename = imagePath.split('/').pop();
+      if (filename) imageMap[filename] = imageAssetFromPath(imagePath, mod.default);
     }
+    const allImages = Object.values(imageMap);
 
     const heroByName = fm.hero
       ? Object.entries(imageMap).find(([k]) => k.startsWith(fm.hero!))?.[1]
