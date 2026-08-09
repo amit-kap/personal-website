@@ -7,10 +7,10 @@ export default function Home() {
   const shift = works.find((work) => work.slug === 'shift')
   const shiftScreens = shift
     ? [
-        shift.bodyImages['01-shift-dashboard.png'],
-        shift.bodyImages['02-inventory-vendors-page.png'],
-        shift.bodyImages['04-vendor-access-graph.png'],
-        shift.bodyImages['05-threat-center.png'],
+        shift.bodyImages['01-shift-dashboard.webp'],
+        shift.bodyImages['02-inventory-vendors-page.webp'],
+        shift.bodyImages['04-vendor-access-graph.webp'],
+        shift.bodyImages['05-threat-center.webp'],
       ].filter((image): image is NonNullable<typeof image> => Boolean(image))
     : []
   const earlierWork = works.filter((work) => work.slug !== 'shift')

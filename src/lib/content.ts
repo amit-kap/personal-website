@@ -69,39 +69,52 @@ export interface CV {
   skills: CVSkillGroup[];
 }
 
-const expImageModules = import.meta.glob<{ default: string }>(
-  '../content/experience/*/*.{jpg,jpeg,png,webp,gif}',
-  { eager: true }
-);
+const expImageModules = import.meta.glob<{ default: string }>([
+  '../content/experience/onyxia-cyber/01-SSM-1.webp',
+  '../content/experience/onyxia-cyber/03-frameworks.webp',
+  '../content/experience/onyxia-cyber/04-insights.webp',
+  '../content/experience/onyxia-cyber/05-p-hub.webp',
+  '../content/experience/onyxia-cyber/06-report-1.webp',
+  '../content/experience/veriti/02.webp',
+  '../content/experience/veriti/03.webp',
+  '../content/experience/veriti/04.webp',
+  '../content/experience/veriti/05.webp',
+  '../content/experience/veriti/06.webp',
+  '../content/experience/semperis/01-semperis.webp',
+  '../content/experience/checkpoint/01-details.webp',
+  '../content/experience/checkpoint/03-summary.webp',
+  '../content/experience/checkpoint/04-timeline.webp',
+  '../content/experience/checkpoint/05-dashboard.webp',
+  '../content/experience/checkpoint/06-mainPage.webp',
+  '../content/experience/shift/01-shift-dashboard.webp',
+  '../content/experience/shift/02-inventory-vendors-page.webp',
+  '../content/experience/shift/04-vendor-access-graph.webp',
+  '../content/experience/shift/05-threat-center.webp',
+  '../content/experience/shift/07-assessment-flow-1.webp',
+], { eager: true });
 
 const defaultImageDimensions = { width: 1920, height: 1080 };
 
 const imageDimensionsByPath: Record<string, { width: number; height: number }> = {
-  '../content/experience/onyxia-cyber/03-frameworks.jpg': { width: 1920, height: 930 },
-  '../content/experience/onyxia-cyber/04-insights.jpg': { width: 1920, height: 930 },
-  '../content/experience/onyxia-cyber/05-p-hub.jpg': { width: 1920, height: 930 },
-  '../content/experience/checkpoint/EndPoint_Ani_Ref.gif': { width: 1600, height: 1000 },
-  '../content/experience/checkpoint/MonitorWire.gif': { width: 2000, height: 1144 },
-  '../content/experience/checkpoint/MTP_Ani_Ref.gif': { width: 1366, height: 768 },
-  '../content/experience/checkpoint/ZA_Ani_Ref.gif': { width: 1366, height: 768 },
-  '../content/experience/shift/00-login.jpg': { width: 3840, height: 1920 },
-  '../content/experience/shift/01-shift-dashboard.png': { width: 5120, height: 2582 },
-  '../content/experience/shift/02-inventory-vendors-page.png': { width: 5150, height: 2580 },
-  '../content/experience/shift/03-inventory-vendors-card.png': { width: 5122, height: 2578 },
-  '../content/experience/shift/04-vendor-access-graph.png': { width: 5120, height: 2580 },
-  '../content/experience/shift/05-threat-center.png': { width: 5124, height: 2582 },
-  '../content/experience/shift/06-integrations-grid.jpg': { width: 3840, height: 1920 },
-  '../content/writing/designing-for-the-supervisor/channel-per-assessment.jpg': { width: 1920, height: 960 },
-  '../content/writing/designing-for-the-supervisor/concept-001.jpg': { width: 1920, height: 960 },
-  '../content/writing/designing-for-the-supervisor/concept-002.jpg': { width: 1944, height: 966 },
-  '../content/writing/designing-for-the-supervisor/cover-image.webp': { width: 1672, height: 941 },
-  '../content/writing/designing-for-the-supervisor/drata.jpg': { width: 640, height: 481 },
-  '../content/writing/designing-for-the-supervisor/dropzone AI.jpg': { width: 1280, height: 702 },
-  '../content/writing/designing-for-the-supervisor/fleet-dashboard.jpg': { width: 1920, height: 960 },
-  '../content/writing/designing-for-the-supervisor/safe.jpg': { width: 755, height: 480 },
-  '../content/writing/designing-for-the-supervisor/vanta.jpg': { width: 806, height: 480 },
-  '../content/writing/falling-down-the-rabbit-hole/cover-image.webp': { width: 1320, height: 720 },
-  '../content/writing/sailing-the-data-oceans/cover-image.webp': { width: 1792, height: 1024 },
+  '../content/experience/onyxia-cyber/03-frameworks.webp': { width: 1920, height: 930 },
+  '../content/experience/onyxia-cyber/04-insights.webp': { width: 1920, height: 930 },
+  '../content/experience/onyxia-cyber/05-p-hub.webp': { width: 1920, height: 930 },
+  '../content/experience/shift/01-shift-dashboard.webp': { width: 2880, height: 1453 },
+  '../content/experience/shift/02-inventory-vendors-page.webp': { width: 2880, height: 1443 },
+  '../content/experience/shift/04-vendor-access-graph.webp': { width: 2880, height: 1452 },
+  '../content/experience/shift/05-threat-center.webp': { width: 2880, height: 1452 },
+  '../content/experience/shift/07-assessment-flow-1.webp': { width: 2880, height: 1452 },
+  '../content/writing/designing-for-the-supervisor/channel-per-assessment.webp': { width: 1920, height: 960 },
+  '../content/writing/designing-for-the-supervisor/concept-001.webp': { width: 1920, height: 960 },
+  '../content/writing/designing-for-the-supervisor/concept-002.webp': { width: 1944, height: 966 },
+  '../content/writing/designing-for-the-supervisor/drata.webp': { width: 640, height: 481 },
+  '../content/writing/designing-for-the-supervisor/dropzone AI.webp': { width: 1280, height: 702 },
+  '../content/writing/designing-for-the-supervisor/fleet-dashboard.webp': { width: 1920, height: 960 },
+  '../content/writing/designing-for-the-supervisor/safe.webp': { width: 755, height: 480 },
+  '../content/writing/designing-for-the-supervisor/vanta.webp': { width: 806, height: 480 },
+  '../content/writing/designing-for-the-supervisor/cover-v2.webp': { width: 1672, height: 941 },
+  '../content/writing/falling-down-the-rabbit-hole/cover-v3.webp': { width: 1672, height: 941 },
+  '../content/writing/sailing-the-data-oceans/cover-v2.webp': { width: 1672, height: 941 },
   '../content/writing/sailing-the-data-oceans/search-results-picker.webp': { width: 1920, height: 640 },
 };
 
@@ -245,10 +258,30 @@ const writingContentModules = import.meta.glob<string>(
   { query: '?raw', import: 'default', eager: true }
 );
 
-const writingImageModules = import.meta.glob<{ default: string }>(
-  '../content/writing/*/*.{jpg,jpeg,png,webp,gif,svg}',
-  { eager: true }
-);
+const writingImageModules = import.meta.glob<{ default: string }>([
+  '../content/writing/designing-for-the-supervisor/cover-v2.webp',
+  '../content/writing/designing-for-the-supervisor/vanta.webp',
+  '../content/writing/designing-for-the-supervisor/drata.webp',
+  '../content/writing/designing-for-the-supervisor/safe.webp',
+  '../content/writing/designing-for-the-supervisor/dropzone AI.webp',
+  '../content/writing/designing-for-the-supervisor/concept-001.webp',
+  '../content/writing/designing-for-the-supervisor/concept-002.webp',
+  '../content/writing/designing-for-the-supervisor/fleet-dashboard.webp',
+  '../content/writing/designing-for-the-supervisor/channel-per-assessment.webp',
+  '../content/writing/sailing-the-data-oceans/cover-v2.webp',
+  '../content/writing/sailing-the-data-oceans/outlook-layout.webp',
+  '../content/writing/sailing-the-data-oceans/dropdown-row.webp',
+  '../content/writing/sailing-the-data-oceans/picker-container.webp',
+  '../content/writing/sailing-the-data-oceans/picker-2.webp',
+  '../content/writing/sailing-the-data-oceans/search-results-picker.webp',
+  '../content/writing/falling-down-the-rabbit-hole/cover-v3.webp',
+  '../content/writing/falling-down-the-rabbit-hole/OtherVendors.webp',
+  '../content/writing/falling-down-the-rabbit-hole/InitialConcept.webp',
+  '../content/writing/falling-down-the-rabbit-hole/HomeTabConcepts.webp',
+  '../content/writing/falling-down-the-rabbit-hole/ItemPage.webp',
+  '../content/writing/falling-down-the-rabbit-hole/OnBoarding.webp',
+  '../content/writing/falling-down-the-rabbit-hole/packShot.webp',
+], { eager: true });
 
 function writingSlugFromPath(path: string): string {
   const m = path.match(/writing\/([^/]+)\//);

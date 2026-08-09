@@ -22,11 +22,11 @@ function Eyebrow({ children, className = '' }: { children: React.ReactNode; clas
 }
 
 export default function ShiftWorkPage({ work }: { work: Work }) {
-  const dashboard = imageFor(work, '01-shift-dashboard.png')
-  const inventory = imageFor(work, '02-inventory-vendors-page.png')
-  const accessGraph = imageFor(work, '04-vendor-access-graph.png')
-  const threatCenter = imageFor(work, '05-threat-center.png')
-  const assessment = imageFor(work, '07-assessment-flow-1.jpg')
+  const dashboard = imageFor(work, '01-shift-dashboard.webp')
+  const inventory = imageFor(work, '02-inventory-vendors-page.webp')
+  const accessGraph = imageFor(work, '04-vendor-access-graph.webp')
+  const threatCenter = imageFor(work, '05-threat-center.webp')
+  const assessment = imageFor(work, '07-assessment-flow-1.webp')
 
   return (
     <main className="v2-page bg-background">

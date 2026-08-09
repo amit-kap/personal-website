@@ -9,9 +9,6 @@ export default defineConfig(({ command }) => ({
   server: {
     port: process.env.PORT ? Number(process.env.PORT) : 5175,
   },
-  optimizeDeps: {
-    include: ['react', 'react-dom', '@gsap/react'],
-  },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),

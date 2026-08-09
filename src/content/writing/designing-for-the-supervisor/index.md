@@ -2,7 +2,7 @@
 work: shift
 excerpt: How we reframed third-party risk software around the person supervising an AI agent, from market scan to product direction.
 featured: true
-cover: cover-v2.png
+cover: cover-v2.webp
 ---
 
 # Designing for the Supervisor
@@ -39,7 +39,7 @@ Before sketching anything new, I wanted to see what the rest of the market was d
 
 **Direct peers.** [Vanta](https://www.vanta.com/) and [Drata](https://drata.com/) had begun adding AI features inside their existing workflow products. [Whistic](https://www.whistic.com/) was promoting AI agents for assessments. [Lema](https://www.lema.ai/), an AI-native startup, was positioning explicitly around risk engineering. [SAFE](https://safe.security/) was claiming end-to-end autonomy. The signal was clear: the category was moving, and AI was the frame everyone reached for.
 
-![Vanta](vanta.jpg) ![Drata](drata.jpg) ![SAFE](safe.jpg)
+![Vanta](vanta.webp) ![Drata](drata.webp) ![SAFE](safe.webp)
 
 What none of them seemed to have settled was the *operating model*: what the workspace looks like when the agent does the work and a person supervises. Most still framed AI as a feature inside an analyst-shaped product.
 
@@ -49,7 +49,7 @@ Of these, Dropzone AI was the closest analog. Their agent investigates a securit
 
 That's the moment the shape of the new product clicked.
 
-![Dropzone AI](<dropzone AI.jpg>)
+![Dropzone AI](<dropzone AI.webp>)
 
 ### The reframe
 
@@ -69,11 +69,11 @@ After a few rounds of internal discussion across design, product, engineering, a
 
 The first sketches asked a simple question: if the human is supervising rather than doing, what does their day look like?
 
-![Early analyst-workspace concept](concept-001.jpg)
+![Early analyst-workspace concept](concept-001.webp)
 
 Some of the early work still carried the familiar analyst-workspace shape: a stepper, a control matrix, and an assistant panel beside the work. It was useful because it showed what we were moving away from. If the agent was doing the repetitive assessment work, the product needed to make supervision feel primary, not secondary.
 
-![Control review and followup detail](concept-002.jpg)
+![Control review and followup detail](concept-002.webp)
 
 A few directions came up:
 
@@ -91,7 +91,7 @@ After several iterations, we landed on three surfaces.
 
 **The fleet view.** The daily home. An operations console over the in-flight assessments, grouped by status, urgency, and whether anything needs the supervisor's attention. Closer in feel to an MSSP console than to a traditional GRC product. You scan, you take cross-cutting action, you drop back in.
 
-![Fleet supervision dashboard](fleet-dashboard.jpg)
+![Fleet supervision dashboard](fleet-dashboard.webp)
 
 **The channel per assessment.** When you click into one assessment, you enter its channel: a conversation with the agent about this vendor. Cards over bubbles, structured evidence, pinned decisions, accountability moments visible. Past, present, and future in one scroll.
 
@@ -103,7 +103,7 @@ The agent answers in context, with the evidence it already has, plus new pulls i
 
 This surface also absorbed six things we used to draw separately: workspace, activity timeline, vendor conversation, followup center, approval modal, audit trail. Once we saw them as messages in a channel, the separate modals stopped making sense.
 
-![Assessment channel prototype](channel-per-assessment.jpg)
+![Assessment channel prototype](channel-per-assessment.webp)
 
 **The command bar.** A global input, available from anywhere. *Start onboarding for [6sense.com](https://6sense.com/). Show me all assessments awaiting decision. Why is the Trimbox assessment blocked?* Cmd+K, Spotlight, [Linear](https://linear.app/)'s command bar: the pattern is settled, and it fits the daily-driver persona who lives in the product.
 
