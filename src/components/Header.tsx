@@ -38,7 +38,7 @@ export default function Header() {
         <div className="mx-auto flex h-[68px] max-w-[1440px] items-center justify-between px-5 sm:px-8">
         <Link to="/" className="profile-identity inline-flex items-center gap-2.5 text-body font-bold text-foreground">
           <img
-            src="/profile.jpg"
+            src={`${import.meta.env.BASE_URL}profile.jpg`}
             alt=""
             className="h-9 w-9 shrink-0 rounded-full object-cover object-center"
           />
