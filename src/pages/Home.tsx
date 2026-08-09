@@ -20,8 +20,8 @@ export default function Home() {
 
   return (
     <main className="v2-page bg-background">
-      <section className="relative min-h-[calc(100svh-68px)] overflow-hidden">
-        <div className="mx-auto grid min-h-[calc(100svh-68px)] max-w-[1440px] grid-cols-1 items-center px-5 py-20 sm:px-8 lg:py-24">
+      <section className="relative min-h-[660px] overflow-hidden sm:min-h-[700px] lg:min-h-[760px]">
+        <div className="mx-auto grid min-h-[660px] max-w-[1440px] grid-cols-1 items-center px-5 py-20 sm:min-h-[700px] sm:px-8 lg:min-h-[760px] lg:py-24">
           <div className="max-w-4xl">
           <h1 className="font-heading text-hero font-bold tracking-[-0.075em] text-foreground lg:max-w-[min(58vw,800px)]">
             Making complex security products clear enough to act&nbsp;on.

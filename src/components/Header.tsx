@@ -36,9 +36,13 @@ export default function Header() {
   return (
     <header className={`site-header sticky top-0 z-50 ${scrolled ? 'site-header-scrolled' : ''}`}>
         <div className="mx-auto flex h-[68px] max-w-[1440px] items-center justify-between px-5 sm:px-8">
-        <Link to="/" className="text-body font-bold tracking-[0.02em] text-foreground transition-[letter-spacing] duration-300 ease-out hover:tracking-[0.12em]"
-          style={{ transitionTimingFunction: 'cubic-bezier(0.34, 1.56, 0.64, 1)' }}>
-          AMIT KAPLINSKY
+        <Link to="/" className="profile-identity inline-flex items-center gap-2.5 text-body font-bold text-foreground">
+          <img
+            src="/profile.jpg"
+            alt=""
+            className="h-9 w-9 shrink-0 rounded-full object-cover object-center"
+          />
+          <span className="profile-identity-name">AMIT KAPLINSKY</span>
         </Link>
 
         <nav aria-label="Primary navigation" className="absolute left-1/2 flex -translate-x-1/2 items-center gap-6 sm:gap-8">
