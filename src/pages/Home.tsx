@@ -21,25 +21,25 @@ export default function Home() {
   return (
     <main className="v2-page bg-background">
       <section className="relative min-h-[660px] overflow-hidden sm:min-h-[700px] lg:min-h-[760px]">
-        <div className="mx-auto grid min-h-[660px] max-w-[1440px] grid-cols-1 items-center px-5 py-20 sm:min-h-[700px] sm:px-8 lg:min-h-[760px] lg:py-24">
-          <div className="max-w-4xl">
-          <h1 className="font-heading text-hero font-bold tracking-[-0.075em] text-foreground lg:max-w-[min(58vw,800px)]">
-            Making complex security products clear enough to act&nbsp;on.
-          </h1>
-          <p className="mt-9 max-w-2xl text-[clamp(1.2rem,2vw,1.7rem)] leading-[1.45] tracking-[-0.035em] text-foreground/70">
-            I design the systems behind security decisions, from continuous third-party defence to identity protection and enterprise-scale management.
-          </p>
-          <a href="#work" className="mt-7 inline-flex items-center gap-2 text-body font-semibold text-foreground transition-opacity hover:opacity-60">
-            Explore five products <span aria-hidden="true">↓</span>
-          </a>
+        <div className="mx-auto flex min-h-[660px] max-w-[1440px] flex-col items-center justify-center px-5 py-20 text-center sm:min-h-[700px] sm:px-8 lg:min-h-[760px] lg:py-24">
+          <div className="flex max-w-5xl flex-col items-center">
+            <h1 className="max-w-5xl font-heading text-[clamp(3.25rem,6.25vw,6.5rem)] font-bold leading-[0.88] tracking-[-0.075em] text-foreground">
+              Making complex security products <span className="hero-outline">clear enough</span> to act&nbsp;on.
+            </h1>
+            <p className="mt-9 max-w-2xl text-[clamp(1.2rem,2vw,1.7rem)] leading-[1.45] tracking-[-0.035em] text-foreground/70">
+              I design the systems behind security decisions, from continuous third-party defence to identity protection and enterprise-scale management.
+            </p>
+            <a href="#work" className="mt-7 inline-flex items-center gap-2 text-body font-semibold text-foreground transition-opacity hover:opacity-60">
+              Explore five products <span aria-hidden="true">↓</span>
+            </a>
           </div>
         </div>
       </section>
 
       <section id="work" className="scroll-mt-8 bg-[#e8edf3]">
         <div className="mx-auto max-w-[1440px] px-5 py-20 sm:px-8 sm:py-28">
-        <h2 className="max-w-6xl font-heading text-feature font-bold tracking-[-0.07em] text-foreground">
-          Five security products. Five different forms of clarity.
+        <h2 className="text-meta font-semibold tracking-[-0.02em] text-foreground/65">
+          Featured work
         </h2>
 
         {shift && (

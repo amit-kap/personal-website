@@ -125,6 +125,11 @@
   .animate-fade-in {
     animation: fade-in 0.25s cubic-bezier(0.2, 0, 0, 1) both;
   }
+
+  .hero-outline {
+    -webkit-text-fill-color: transparent;
+    -webkit-text-stroke: 1.5px var(--foreground);
+  }
 }
 
 /* Persistent navigation: it acquires a soft glass layer only after the page
