@@ -22,8 +22,8 @@ export default function Writing() {
                 </h2>
                 <p className="mt-6 max-w-lg text-lead leading-[1.4] text-white/70">{featured.excerpt}</p>
               </div>
-              <span className="mt-auto inline-flex items-center gap-3 pt-10 text-body font-semibold">
-                Read article <span className="text-white/80 text-lg leading-none transition-transform duration-300 group-hover:translate-x-1">↗</span>
+              <span className="read-cta mt-auto inline-flex items-center pt-10 text-body font-semibold">
+                Read article
               </span>
             </div>
             {featured.coverImage && (
@@ -59,8 +59,8 @@ export default function Writing() {
               <p className="mt-6 text-meta font-medium tracking-[-0.02em] text-muted-foreground">{getWorkBySlug(study.workSlug)?.company ?? 'Security'}</p>
               <h2 className="mt-4 max-w-md font-heading text-title-sm font-bold leading-[0.98] tracking-[-0.05em] text-foreground">{study.title}</h2>
               <p className="mt-4 max-w-xl text-body leading-[1.5] text-muted-foreground">{study.excerpt}</p>
-              <span className="mt-7 inline-flex items-center gap-2 text-body font-semibold text-foreground">
-                Read article <span className="transition-transform duration-300 group-hover:translate-x-1">↗</span>
+              <span className="read-cta mt-7 inline-flex items-center text-body font-semibold text-foreground">
+                Read article
               </span>
             </Link>
           ))}

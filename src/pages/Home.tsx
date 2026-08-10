@@ -29,8 +29,14 @@ export default function Home() {
             <p className="mt-9 max-w-2xl text-[clamp(1.2rem,2vw,1.7rem)] leading-[1.45] tracking-[-0.035em] text-foreground/70">
               I design the systems behind security decisions, from continuous third-party defence to identity protection and enterprise-scale management.
             </p>
-            <a href="#work" className="mt-7 inline-flex items-center gap-2 text-body font-semibold text-foreground transition-opacity hover:opacity-60">
-              Explore five products <span aria-hidden="true">↓</span>
+            <a
+              href="#work"
+              aria-label="Explore five products"
+              className="header-contact-cta explore-scroll-cta mt-7 inline-flex"
+            >
+              <svg viewBox="0 0 16 16" aria-hidden="true" className="h-5 w-5">
+                <path d="M8 2v10m0 0 4-4m-4 4L4 8" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" />
+              </svg>
             </a>
           </div>
         </div>
@@ -57,9 +63,8 @@ export default function Home() {
                   A vendor-security system that connects evidence, risk, access, and human judgment in one operating flow.
                 </p>
               </div>
-              <span className="mt-auto inline-flex w-fit items-center gap-3 pt-12 text-body font-semibold text-white">
-                Read the Shift story
-                <span className="text-lg leading-none transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true">↗</span>
+              <span className="read-cta mt-auto inline-flex w-fit items-center pt-12 text-body font-semibold text-white">
+                View case study
               </span>
             </div>
             {shiftScreens.length > 0 && (
@@ -120,8 +125,8 @@ export default function Home() {
                   <h3 className="mt-7 max-w-xl font-heading text-feature font-bold tracking-[-0.07em]">{featuredEssay.title}</h3>
                   <p className="mt-6 max-w-lg text-lead leading-[1.4] text-white/70">{featuredEssay.excerpt}</p>
                 </div>
-                <span className="mt-auto inline-flex items-center gap-3 pt-10 text-body font-semibold">
-                  Read article <span className="text-white/80 text-lg leading-none transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true">↗</span>
+                <span className="read-cta mt-auto inline-flex items-center pt-10 text-body font-semibold">
+                  Read article
                 </span>
               </div>
               {featuredEssay.coverImage && (
@@ -152,8 +157,8 @@ export default function Home() {
                   </p>
                   <h3 className="mt-4 max-w-md font-heading text-title-sm font-bold leading-[0.98] tracking-[-0.05em] text-foreground">{essay.title}</h3>
                   <p className="mt-4 max-w-xl text-body leading-[1.5] text-muted-foreground">{essay.excerpt}</p>
-                  <span className="mt-7 inline-flex items-center gap-2 text-body font-semibold text-foreground">
-                    Read article <span className="transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true">↗</span>
+                  <span className="read-cta mt-7 inline-flex items-center text-body font-semibold text-foreground">
+                    Read article
                   </span>
                 </Link>
               ))}

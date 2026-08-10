@@ -1,4 +1,7 @@
+import { useState } from 'react'
 import type { ContentImage, Work } from '@/lib/content'
+
+const PRODUCT_VIDEO_PLAYBACK_RATE = 1.5
 
 function imageFor(work: Work, filename: string): ContentImage | undefined {
   return work.bodyImages[filename]
@@ -14,6 +17,62 @@ function ProductImage({ image, alt, className = 'rounded-[16px]' }: { image?: Co
       height={image.height}
       className={`h-full w-full object-cover ${className}`}
     />
+  )
+}
+
+function ProductVideo({
+  src,
+  poster,
+  alt,
+  className = 'rounded-[16px]',
+}: {
+  src: string
+  poster?: string
+  alt: string
+  className?: string
+}) {
+  const [isReady, setIsReady] = useState(false)
+  const [isBuffering, setIsBuffering] = useState(true)
+  const [hasError, setHasError] = useState(false)
+
+  return (
+    <div className={`product-video relative h-full w-full overflow-hidden ${className}`} aria-busy={!isReady && !hasError}>
+      <video
+        autoPlay
+        loop
+        muted
+        playsInline
+        preload="metadata"
+        poster={poster}
+        aria-label={alt}
+        onLoadedMetadata={(event) => {
+          event.currentTarget.playbackRate = PRODUCT_VIDEO_PLAYBACK_RATE
+        }}
+        onPlay={(event) => {
+          event.currentTarget.playbackRate = PRODUCT_VIDEO_PLAYBACK_RATE
+        }}
+        onCanPlay={() => {
+          setIsReady(true)
+          setIsBuffering(false)
+        }}
+        onPlaying={() => {
+          setIsReady(true)
+          setIsBuffering(false)
+        }}
+        onWaiting={() => setIsBuffering(true)}
+        onStalled={() => setIsBuffering(true)}
+        onError={() => setHasError(true)}
+        className="h-full w-full object-cover"
+      >
+        <source src={src} type="video/mp4" />
+      </video>
+      {!hasError && (!isReady || isBuffering) && (
+        <div className="product-video-loader" role="status" aria-label="Loading video">
+          <span aria-hidden="true" />
+        </div>
+      )}
+      {hasError && poster && <img src={poster} alt={alt} className="absolute inset-0 h-full w-full object-cover" />}
+    </div>
   )
 }
 
@@ -46,7 +105,11 @@ export default function ShiftWorkPage({ work }: { work: Work }) {
 
         <div className="mt-16 overflow-hidden rounded-[40px] bg-surface-muted p-6 sm:mt-20">
           <div className="aspect-[2/1] overflow-hidden rounded-[16px] bg-white">
-            <ProductImage image={dashboard} alt="Shift dashboard showing vendor, access, finding, and threat context" />
+            <ProductVideo
+              src={`${import.meta.env.BASE_URL}shift-walk.mp4`}
+              poster={dashboard?.src}
+              alt="Shift product walkthrough showing vendor, access, finding, and threat context"
+            />
           </div>
         </div>
       </section>

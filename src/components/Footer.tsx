@@ -64,9 +64,8 @@ export default function Footer() {
               >
                 <LinkedInIcon />
               </a>
-              <Link to="/cv" className="footer-cv-cta inline-flex h-11 items-center gap-2 rounded-full border border-white/20 px-5 text-meta font-semibold text-white">
+              <Link to="/cv" className="footer-cv-cta inline-flex h-11 items-center rounded-full border border-white/20 px-5 text-meta font-semibold text-white">
                 <span>Download CV</span>
-                <span aria-hidden="true">↓</span>
               </Link>
             </div>
           </div>

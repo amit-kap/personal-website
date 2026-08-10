@@ -87,7 +87,6 @@ export default function Header() {
 
         <a href="mailto:amitka111@gmail.com" className="header-contact-cta hidden md:inline-flex">
           <span>Get in touch</span>
-          <span aria-hidden="true">↗</span>
         </a>
 
       </div>

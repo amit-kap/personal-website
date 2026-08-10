@@ -130,6 +130,9 @@
     transform: translateX(600%) rotate(30deg);
   }
 }
+@keyframes product-video-spin {
+  to { transform: rotate(360deg); }
+}
 @layer utilities {
   .animate-fade-up {
     animation: fade-up 0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
@@ -237,12 +240,19 @@
   opacity: 1;
   transform: scaleX(1);
 }
+.read-cta {
+  opacity: 0.6;
+  transition: opacity 160ms cubic-bezier(0.2, 0, 0, 1);
+}
+.group:hover .read-cta,
+.group:focus-visible .read-cta {
+  opacity: 1;
+}
 .header-contact-cta {
   position: relative;
   isolation: isolate;
   overflow: hidden;
   align-items: center;
-  gap: 0.45rem;
   height: 36px;
   padding: 0 0.9rem;
   border: 1px solid color-mix(in srgb, var(--foreground) 22%, transparent);
@@ -282,6 +292,12 @@
 }
 .header-contact-cta:active {
   transform: scale(0.97);
+}
+.explore-scroll-cta {
+  width: 36px;
+  padding: 0;
+  border-radius: 9999px;
+  justify-content: center;
 }
 .footer-cv-cta {
   position: relative;
@@ -330,6 +346,9 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
   .site-header,
   .profile-identity-name,
   .profile-avatar,
@@ -339,6 +358,7 @@
   .header-contact-cta::before,
   .footer-cv-cta,
   .footer-cv-cta::before,
+  .read-cta,
   .site-nav-link::after {
     transition: none;
   }
@@ -372,6 +392,23 @@
   gap: 5px;
   height: 8px;
   transform: translateX(-50%);
+}
+
+.product-video-loader {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: color-mix(in srgb, var(--popover) 28%, transparent);
+}
+.product-video-loader span {
+  display: block;
+  width: 14px;
+  height: 14px;
+  border: 1px solid color-mix(in srgb, var(--foreground) 25%, transparent);
+  border-top-color: var(--foreground);
+  border-radius: 50%;
+  animation: product-video-spin 800ms linear infinite;
 }
 
 @media (min-width: 640px) {
@@ -420,6 +457,9 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .product-video-loader span {
+    animation: none;
+  }
   .product-carousel-dot {
     transition: none;
   }
@@ -448,5 +488,6 @@
   }
   html {
     @apply font-sans;
+    scroll-behavior: smooth;
   }
 }
