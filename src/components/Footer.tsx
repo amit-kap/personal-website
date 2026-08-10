@@ -42,7 +42,7 @@ export default function Footer() {
   }, [])
 
   return (
-    <footer ref={footerRef} className="footer-reveal fixed inset-x-0 bottom-0 z-0 bg-[#111111] text-white">
+    <footer ref={footerRef} className="footer-reveal fixed inset-x-0 bottom-0 z-0 bg-foreground text-white">
       <div className="mx-auto max-w-[1440px] px-5 py-20 sm:px-8">
         <div className="grid gap-12 lg:grid-cols-[minmax(0,1.2fr)_minmax(18rem,0.55fr)] lg:items-end lg:gap-20">
           <h2 className="max-w-3xl font-heading text-feature font-bold tracking-[-0.07em]">Designing the systems behind decisions.</h2>
@@ -51,12 +51,12 @@ export default function Footer() {
               <a
                 href="mailto:amitka111@gmail.com"
                 aria-label="Email Amit Kaplinsky"
-                className="group inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/20 text-white transition-colors hover:border-white hover:bg-white hover:text-[#111111]"
+                className="group inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/20 text-white transition-colors hover:border-white hover:bg-white hover:text-foreground"
               >
                 <GmailIcon />
               </a>
               <a
-                href="https://www.linkedin.com/in/amitka/"
+                href="https://www.linkedin.com/in/amitkaplinsky/"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Amit Kaplinsky on LinkedIn"

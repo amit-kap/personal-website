@@ -44,14 +44,14 @@ export default function ShiftWorkPage({ work }: { work: Work }) {
           </p>
         </div>
 
-        <div className="mt-16 overflow-hidden rounded-[40px] bg-[#f4f1ff] p-6 sm:mt-20">
+        <div className="mt-16 overflow-hidden rounded-[40px] bg-surface-muted p-6 sm:mt-20">
           <div className="aspect-[2/1] overflow-hidden rounded-[16px] bg-white">
             <ProductImage image={dashboard} alt="Shift dashboard showing vendor, access, finding, and threat context" />
           </div>
         </div>
       </section>
 
-      <section className="bg-[#252738] text-white">
+      <section className="bg-foreground text-white">
         <div className="mx-auto grid max-w-[1440px] gap-14 px-5 py-20 sm:px-8 sm:py-28 lg:grid-cols-[0.72fr_1.28fr] lg:gap-24">
           <Eyebrow className="text-white/55">Before Shift</Eyebrow>
           <div>
@@ -76,12 +76,12 @@ export default function ShiftWorkPage({ work }: { work: Work }) {
             The inventory moves beyond a procurement list. It brings identity sources, detected access, governance state, data sensitivity, AI exposure, and risk into one record that can keep changing with the relationship.
           </p>
         </div>
-        <div className="overflow-hidden rounded-[40px] bg-[#e2e6fb] p-6">
+        <div className="overflow-hidden rounded-[40px] bg-surface-muted p-6">
           <ProductImage image={inventory} alt="Shift vendor inventory with access, governance, and risk context" />
         </div>
       </section>
 
-      <section className="bg-[#eae8e2]">
+      <section className="bg-surface-muted">
         <div className="mx-auto max-w-[1440px] px-5 py-24 sm:px-8 sm:py-32">
           <Eyebrow>Relationship context</Eyebrow>
           <div className="mt-5 grid gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:items-start">
@@ -94,14 +94,14 @@ export default function ShiftWorkPage({ work }: { work: Work }) {
               A vendor event only matters in relation to the organisation. The access graph connects the vendor to identities, permissions, resources, and the data those relationships can reach.
             </p>
           </div>
-          <div className="mt-14 overflow-hidden rounded-[40px] bg-[#efe6bd] p-6 sm:mt-20">
+          <div className="mt-14 overflow-hidden rounded-[40px] bg-surface-muted p-6 sm:mt-20">
             <ProductImage image={accessGraph} alt="Shift access graph connecting a vendor to identities, permissions, and resources" />
           </div>
         </div>
       </section>
 
       <section className="mx-auto grid max-w-[1440px] gap-12 px-5 py-24 sm:px-8 sm:py-32 lg:grid-cols-[1.2fr_0.8fr] lg:items-start">
-        <div className="order-2 overflow-hidden rounded-[40px] bg-[#e7e3dc] p-6 lg:order-1">
+        <div className="order-2 overflow-hidden rounded-[40px] bg-surface-muted p-6 lg:order-1">
           <ProductImage image={threatCenter} alt="Shift Threat Center connecting a vendor security event to the organisation's exposure" />
         </div>
         <div className="order-1 lg:order-2">
@@ -115,11 +115,11 @@ export default function ShiftWorkPage({ work }: { work: Work }) {
         </div>
       </section>
 
-      <section className="bg-[#7755f4] text-white">
+      <section className="bg-shift-violet text-white">
         <div className="mx-auto grid max-w-[1440px] lg:grid-cols-[0.4fr_0.6fr] lg:items-stretch">
           <div className="px-5 py-24 sm:px-8 sm:py-32 lg:pr-16">
             <Eyebrow className="eyebrow-inverse">Human responsibility</Eyebrow>
-            <h2 className="mt-5 max-w-xl font-heading text-section font-bold tracking-[-0.07em] text-[#ddf76b]">
+            <h2 className="mt-5 max-w-xl font-heading text-section font-bold tracking-[-0.07em] text-white">
                 The agent does the work. People make the decisions.
             </h2>
             <p className="mt-7 max-w-md text-body leading-[1.55] text-white/82">

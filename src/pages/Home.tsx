@@ -36,14 +36,14 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="work" className="scroll-mt-8 bg-[#e8edf3]">
+      <section id="work" className="scroll-mt-8 bg-surface-muted">
         <div className="mx-auto max-w-[1440px] px-5 py-20 sm:px-8 sm:py-28">
         <h2 className="text-meta font-semibold tracking-[-0.02em] text-foreground/65">
           Featured work
         </h2>
 
         {shift && (
-          <Link to={`/work/${shift.slug}`} className="group mt-12 grid overflow-hidden rounded-[20px] bg-[#7755f4] text-white lg:grid-cols-[0.88fr_1.12fr]">
+          <Link to={`/work/${shift.slug}`} className="group mt-12 grid overflow-hidden rounded-[20px] bg-shift-violet text-white lg:grid-cols-[0.88fr_1.12fr]">
             <div className="flex min-h-[440px] flex-col p-8 sm:p-12 lg:p-14">
               <div>
                 <h3 className="max-w-lg font-heading text-feature font-bold tracking-[-0.07em]">
@@ -66,7 +66,7 @@ export default function Home() {
               <ProductCarousel
                 images={shiftScreens}
                 alt="Shift product surfaces"
-                plateClassName="min-h-[330px] bg-[#f4f1ff] p-5 sm:px-7 sm:py-12 lg:px-8 lg:py-14"
+                plateClassName="min-h-[330px] bg-white p-5 sm:px-7 sm:py-12 lg:px-8 lg:py-14"
                 cornerClassName="rounded-[10px]"
               />
             )}
@@ -105,23 +105,23 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="writing" className="bg-[#e2e6fb]">
+      <section id="writing" className="bg-background">
         <div className="mx-auto max-w-[1440px] px-5 py-20 sm:px-8 sm:py-28">
           <p className="text-meta font-semibold tracking-[-0.02em] text-foreground/65">Writing from the work</p>
 
           {featuredEssay && (
             <Link
               to={`/case-studies/${featuredEssay.slug}`}
-              className="group mt-10 grid overflow-hidden rounded-[20px] bg-[#111111] text-white lg:grid-cols-2"
+              className="group mt-10 grid overflow-hidden rounded-[20px] bg-foreground text-white lg:grid-cols-2"
             >
               <div className="flex min-h-[370px] flex-col p-8 sm:p-12 lg:p-14">
                 <div>
-                  <p className="text-meta font-medium tracking-[-0.02em] text-[#a9dcdf]">Featured article · Shift</p>
+                  <p className="text-meta font-medium tracking-[-0.02em] text-white/65">Featured article · Shift</p>
                   <h3 className="mt-7 max-w-xl font-heading text-feature font-bold tracking-[-0.07em]">{featuredEssay.title}</h3>
                   <p className="mt-6 max-w-lg text-lead leading-[1.4] text-white/70">{featuredEssay.excerpt}</p>
                 </div>
                 <span className="mt-auto inline-flex items-center gap-3 pt-10 text-body font-semibold">
-                  Read article <span className="text-[#7ee6ff] text-lg leading-none transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true">↗</span>
+                  Read article <span className="text-white/80 text-lg leading-none transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true">↗</span>
                 </span>
               </div>
               {featuredEssay.coverImage && (

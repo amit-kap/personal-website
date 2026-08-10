@@ -37,11 +37,13 @@ export default function Header() {
     <header className={`site-header sticky top-0 z-50 ${scrolled ? 'site-header-scrolled' : ''}`}>
         <div className="mx-auto flex h-[68px] max-w-[1440px] items-center justify-between px-5 sm:px-8">
         <Link to="/" className="profile-identity inline-flex items-center gap-2.5 text-body font-bold text-foreground">
-          <img
-            src={`${import.meta.env.BASE_URL}profile.jpg`}
-            alt=""
-            className="h-9 w-9 shrink-0 rounded-full object-cover object-center"
-          />
+          <span className="profile-avatar">
+            <img
+              src={`${import.meta.env.BASE_URL}profile.jpg`}
+              alt=""
+              className="h-9 w-9 shrink-0 rounded-full object-cover object-center"
+            />
+          </span>
           <span className="profile-identity-name">AMIT KAPLINSKY</span>
         </Link>
 

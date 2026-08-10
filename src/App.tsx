@@ -29,7 +29,7 @@ export default function App() {
   }, [location.pathname, location.hash])
 
   return (
-    <div className="min-h-screen bg-[#111111]">
+    <div className="min-h-screen bg-foreground">
       <Header />
       <div className="app-content relative z-10 bg-background">
         <Suspense fallback={null}>

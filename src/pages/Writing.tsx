@@ -12,18 +12,18 @@ export default function Writing() {
         <section className="mx-auto max-w-[1440px] px-5 pb-16 pt-24 sm:px-8 sm:pb-24 sm:pt-28 lg:pt-32">
           <Link
             to={`/case-studies/${featured.slug}`}
-            className="group grid overflow-hidden rounded-[20px] bg-[#111111] text-white lg:grid-cols-2"
+            className="group grid overflow-hidden rounded-[20px] bg-foreground text-white lg:grid-cols-2"
           >
             <div className="flex min-h-[370px] flex-col p-8 sm:p-12 lg:p-14">
               <div>
-                <p className="text-meta font-medium tracking-[-0.02em] text-[#a9dcdf]">Featured article · Shift</p>
+                <p className="text-meta font-medium tracking-[-0.02em] text-white/65">Featured article · Shift</p>
                 <h2 className="mt-7 max-w-xl font-heading text-feature font-bold tracking-[-0.07em]">
                   {featured.title}
                 </h2>
                 <p className="mt-6 max-w-lg text-lead leading-[1.4] text-white/70">{featured.excerpt}</p>
               </div>
               <span className="mt-auto inline-flex items-center gap-3 pt-10 text-body font-semibold">
-                Read article <span className="text-[#7ee6ff] text-lg leading-none transition-transform duration-300 group-hover:translate-x-1">↗</span>
+                Read article <span className="text-white/80 text-lg leading-none transition-transform duration-300 group-hover:translate-x-1">↗</span>
               </span>
             </div>
             {featured.coverImage && (

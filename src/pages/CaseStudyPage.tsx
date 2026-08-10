@@ -64,7 +64,7 @@ const markdownComponents = (images: Record<string, ContentImage>) => ({
     <ol className="list-decimal pl-5 mb-5 space-y-1 text-body leading-8 text-foreground/75">{children}</ol>
   ),
   blockquote: ({ children }: { children?: React.ReactNode }) => (
-    <blockquote className="my-8 rounded-r-[10px] border-l-[3px] border-[#8aa9a1] bg-[#8aa9a1]/[0.08] py-5 pl-5 pr-6 text-foreground/80 italic [&>p]:mb-0">
+    <blockquote className="my-8 rounded-r-[10px] border-l-[3px] border-foreground/30 bg-foreground/[0.04] py-5 pl-5 pr-6 text-foreground/80 italic [&>p]:mb-0">
       {children}
     </blockquote>
   ),

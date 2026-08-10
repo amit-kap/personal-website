@@ -54,29 +54,31 @@
 }
 
 /* ----------------------------------------------------------------------------
-   3 · COLOR  — warm monochrome palette (no separate accent hue; hierarchy
-   comes from weight, the #a9a9a9 grey, and scale). Neutrals carry a slight
-   warm bias (oklch hue ~75) so they read as chosen, not default grey.
+   3 · COLOR  — a restrained paper / ink system with one product accent.
 ---------------------------------------------------------------------------- */
 :root {
-  --background: #f1f0ed;                 /* warm light grey (greige) — the ground */
-  --foreground: #21262b;                 /* dark blue-grey ink (also the footer bg) */
-  --card: #f1f0ed;
-  --card-foreground: #21262b;
-  --popover: oklch(0.97 0.003 75);
-  --popover-foreground: #21262b;
-  --primary: #21262b;
-  --primary-foreground: oklch(0.97 0.003 75);
-  --secondary: oklch(0.9 0.003 75);
-  --secondary-foreground: #21262b;
-  --muted: oklch(0.9 0.003 75);
-  --muted-foreground: #6b7177;           /* secondary text — meta, captions, dates */
-  --accent: oklch(0.9 0.003 75);
-  --accent-foreground: #21262b;
+  --background: #f6f6f3;                 /* paper — the ground */
+  --foreground: #111111;                 /* ink */
+  --card: #f6f6f3;
+  --card-foreground: #111111;
+  --popover: #ffffff;
+  --popover-foreground: #111111;
+  --primary: #111111;
+  --primary-foreground: #ffffff;
+  --secondary: #ededeb;
+  --secondary-foreground: #111111;
+  --muted: #ededeb;
+  --muted-foreground: #70706d;           /* secondary text — meta, captions, dates */
+  --accent: #ededeb;
+  --accent-foreground: #111111;
   --destructive: oklch(0.577 0.245 27.325);
-  --border: #d8d6d0;                     /* hairlines, dividers */
-  --input: #d8d6d0;
-  --ring: #21262b;                       /* keyboard focus */
+  --border: #d9d9d5;                     /* hairlines, dividers */
+  --input: #d9d9d5;
+  --ring: #111111;                       /* keyboard focus */
+
+  /* One light surface and one product signal */
+  --surface-muted: #ededeb;
+  --shift-violet: #6546dc;
   --radius: 0.75rem;
 }
 
@@ -101,6 +103,8 @@
   --color-card: var(--card);
   --color-foreground: var(--foreground);
   --color-background: var(--background);
+  --color-surface-muted: var(--surface-muted);
+  --color-shift-violet: var(--shift-violet);
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);
@@ -117,6 +121,14 @@
 @keyframes fade-in {
   from { opacity: 0; transform: translateX(-6px); }
   to { opacity: 1; transform: translateX(0); }
+}
+@keyframes avatar-light-sweep {
+  0% {
+    transform: translateX(-180%) rotate(30deg);
+  }
+  100% {
+    transform: translateX(600%) rotate(30deg);
+  }
 }
 @layer utilities {
   .animate-fade-up {
@@ -154,6 +166,33 @@
   display: inline-block;
   letter-spacing: 0.02em;
   transition: letter-spacing 300ms cubic-bezier(0.2, 0, 0, 1);
+}
+.profile-avatar {
+  position: relative;
+  display: inline-flex;
+  flex-shrink: 0;
+  overflow: hidden;
+  border-radius: 9999px;
+  transition: transform 220ms cubic-bezier(0.2, 0, 0, 1);
+}
+.profile-avatar::after {
+  position: absolute;
+  top: -70%;
+  left: -18%;
+  width: 14px;
+  height: 240%;
+  content: '';
+  background: #ffffff;
+  pointer-events: none;
+  transform: translateX(-180%) rotate(30deg);
+}
+.profile-identity:hover .profile-avatar::after,
+.profile-identity:focus-visible .profile-avatar::after {
+  animation: avatar-light-sweep 550ms linear 1 forwards;
+}
+.profile-identity:hover .profile-avatar,
+.profile-identity:focus-visible .profile-avatar {
+  transform: scale(1.1);
 }
 .profile-identity:hover .profile-identity-name,
 .profile-identity:focus-visible .profile-identity-name {
@@ -220,9 +259,9 @@
 }
 .header-contact-cta:hover,
 .header-contact-cta:focus-visible {
-  border-color: #111111;
+  border-color: var(--foreground);
   color: #ffffff;
-  background: #111111;
+  background: var(--foreground);
 }
 .header-contact-cta:active {
   transform: scale(0.97);
@@ -240,7 +279,7 @@
 .footer-cv-cta:hover,
 .footer-cv-cta:focus-visible {
   border-color: white;
-  color: #111111;
+  color: var(--foreground);
   background: #ffffff;
 }
 .footer-cv-cta:active {
@@ -259,6 +298,8 @@
 @media (prefers-reduced-motion: reduce) {
   .site-header,
   .profile-identity-name,
+  .profile-avatar,
+  .profile-avatar::after,
   .site-nav-link,
   .header-contact-cta,
   .footer-cv-cta,
@@ -267,6 +308,10 @@
   }
   .footer-cv-cta:hover::before,
   .footer-cv-cta:focus-visible::before {
+    animation: none;
+  }
+  .profile-identity:hover .profile-avatar::after,
+  .profile-identity:focus-visible .profile-avatar::after {
     animation: none;
   }
 }
@@ -310,28 +355,28 @@
   width: 6px;
   height: 6px;
   border-radius: 999px;
-  background: var(--product-carousel-muted, rgb(119 85 244 / 35%));
+  background: var(--product-carousel-muted, color-mix(in srgb, var(--shift-violet) 35%, transparent));
   transition: width 500ms cubic-bezier(0.22, 1, 0.36, 1), background-color 350ms ease;
 }
 
 .product-carousel-dot.is-active {
   width: 18px;
-  background: var(--product-carousel-active, #7755f4);
+  background: var(--product-carousel-active, var(--shift-violet));
 }
 
 .carousel-tone-plum {
-  --product-carousel-active: #80578c;
-  --product-carousel-muted: rgb(128 87 140 / 35%);
+  --product-carousel-active: var(--shift-violet);
+  --product-carousel-muted: color-mix(in srgb, var(--shift-violet) 35%, transparent);
 }
 
 .carousel-tone-violet {
-  --product-carousel-active: #6d4bc5;
-  --product-carousel-muted: rgb(109 75 197 / 35%);
+  --product-carousel-active: var(--shift-violet);
+  --product-carousel-muted: color-mix(in srgb, var(--shift-violet) 35%, transparent);
 }
 
 .carousel-tone-olive {
-  --product-carousel-active: #5c673c;
-  --product-carousel-muted: rgb(92 103 60 / 35%);
+  --product-carousel-active: var(--shift-violet);
+  --product-carousel-muted: color-mix(in srgb, var(--shift-violet) 35%, transparent);
 }
 
 @media (min-width: 640px) {
