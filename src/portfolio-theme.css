@@ -253,15 +253,32 @@
   letter-spacing: 0.02em;
   transition:
     color 180ms cubic-bezier(0.2, 0, 0, 1),
-    background-color 180ms cubic-bezier(0.2, 0, 0, 1),
     border-color 180ms cubic-bezier(0.2, 0, 0, 1),
     transform 180ms cubic-bezier(0.2, 0, 0, 1);
+}
+.header-contact-cta::before {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  content: '';
+  border-radius: inherit;
+  background: var(--foreground);
+  transform: scale(0);
+  transform-origin: center;
+  transition: transform 200ms cubic-bezier(0.2, 0, 0, 1);
+}
+.header-contact-cta > * {
+  position: relative;
+  z-index: 1;
 }
 .header-contact-cta:hover,
 .header-contact-cta:focus-visible {
   border-color: var(--foreground);
   color: #ffffff;
-  background: var(--foreground);
+}
+.header-contact-cta:hover::before,
+.header-contact-cta:focus-visible::before {
+  transform: scale(1);
 }
 .header-contact-cta:active {
   transform: scale(0.97);
@@ -272,15 +289,32 @@
   overflow: hidden;
   transition:
     color 180ms cubic-bezier(0.2, 0, 0, 1),
-    background-color 180ms cubic-bezier(0.2, 0, 0, 1),
     border-color 180ms cubic-bezier(0.2, 0, 0, 1),
     transform 180ms cubic-bezier(0.2, 0, 0, 1);
+}
+.footer-cv-cta::before {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  content: '';
+  border-radius: inherit;
+  background: #ffffff;
+  transform: scale(0);
+  transform-origin: center;
+  transition: transform 200ms cubic-bezier(0.2, 0, 0, 1);
+}
+.footer-cv-cta > * {
+  position: relative;
+  z-index: 1;
 }
 .footer-cv-cta:hover,
 .footer-cv-cta:focus-visible {
   border-color: white;
   color: var(--foreground);
-  background: #ffffff;
+}
+.footer-cv-cta:hover::before,
+.footer-cv-cta:focus-visible::before {
+  transform: scale(1);
 }
 .footer-cv-cta:active {
   transform: scale(0.97);
@@ -302,13 +336,11 @@
   .profile-avatar::after,
   .site-nav-link,
   .header-contact-cta,
+  .header-contact-cta::before,
   .footer-cv-cta,
+  .footer-cv-cta::before,
   .site-nav-link::after {
     transition: none;
-  }
-  .footer-cv-cta:hover::before,
-  .footer-cv-cta:focus-visible::before {
-    animation: none;
   }
   .profile-identity:hover .profile-avatar::after,
   .profile-identity:focus-visible .profile-avatar::after {
