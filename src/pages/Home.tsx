@@ -33,6 +33,14 @@ export default function Home() {
               href="#work"
               aria-label="Explore five products"
               className="header-contact-cta explore-scroll-cta mt-7 inline-flex"
+              onClick={(event) => {
+                if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return
+                event.preventDefault()
+                document.getElementById('work')?.scrollIntoView({
+                  behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+                  block: 'start',
+                })
+              }}
             >
               <svg viewBox="0 0 16 16" aria-hidden="true" className="h-5 w-5">
                 <path d="M8 2v10m0 0 4-4m-4 4L4 8" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" />

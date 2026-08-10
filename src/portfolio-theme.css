@@ -346,9 +346,6 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
   .site-header,
   .profile-identity-name,
   .profile-avatar,
@@ -488,6 +485,5 @@
   }
   html {
     @apply font-sans;
-    scroll-behavior: smooth;
   }
 }
