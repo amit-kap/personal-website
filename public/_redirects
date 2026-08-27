@@ -1,0 +1,4 @@
+# SPA fallback. The router is a BrowserRouter, so deep links like /work/shift
+# or /cv have no file behind them — Cloudflare serves index.html and React
+# Router takes it from there. Status 200, not 302, so the URL is preserved.
+/*  /index.html  200

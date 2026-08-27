@@ -26,4 +26,6 @@ npm run build
 
 ## Deployment
 
-Pushing to `main` triggers the GitHub Pages workflow in `.github/workflows/deploy.yml`. The Vite base path is configured for the repository Pages site at `/personal-website/`, and the workflow copies the production `index.html` to `404.html` so deep links resolve correctly.
+The site is on Cloudflare Pages at [amitkap.com](https://amitkap.com), built with `npm run build` and served from `dist`. Pushing to `main` deploys automatically; the build is configured in the Cloudflare dashboard rather than in a workflow file.
+
+The site serves from the domain root, so the Vite base path is `/`. Deep links resolve through `public/_redirects`, which serves `index.html` for any path the build did not emit a file for.

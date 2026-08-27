@@ -5,7 +5,7 @@ import { join, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
-const SITE = 'https://amit-kap.github.io/personal-website'
+const SITE = 'https://amitkap.com'
 
 const dirs = (path) =>
   readdirSync(join(root, path), { withFileTypes: true })

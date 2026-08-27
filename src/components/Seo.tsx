@@ -2,7 +2,7 @@
    anywhere in the tree into <head>, so this needs no helmet library.
    Absolute URLs throughout — crawlers resolve og:image against nothing. */
 
-export const SITE_URL = 'https://amit-kap.github.io/personal-website'
+export const SITE_URL = 'https://amitkap.com'
 const OG_IMAGE = `${SITE_URL}/og.png`
 
 export default function Seo({

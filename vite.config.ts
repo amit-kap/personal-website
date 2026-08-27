@@ -48,8 +48,9 @@ function contentPlugin(): Plugin {
   }
 }
 
-export default defineConfig(({ command }) => ({
-  base: command === 'serve' ? '/' : '/personal-website/',
+export default defineConfig({
+  // Cloudflare Pages serves from the domain root, so dev and build agree.
+  base: '/',
   plugins: [react(), tailwindcss(), contentPlugin()],
   server: {
     port: process.env.PORT ? Number(process.env.PORT) : 5175,
@@ -65,4 +66,4 @@ export default defineConfig(({ command }) => ({
     setupFiles: ['./src/test/setup.ts'],
     globals: true,
   },
-}))
+})
