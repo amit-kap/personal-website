@@ -84,13 +84,13 @@ export default function About() {
               >
                 LinkedIn
               </a>
-              <a
-                href={`${import.meta.env.BASE_URL}Amit-Kaplinsky-CV.pdf`}
+              <Link
+                to="/cv"
                 className="inline-flex items-center gap-[7px] text-accent transition-colors hover:text-foreground"
               >
                 Download CV
                 <DownloadIcon />
-              </a>
+              </Link>
             </div>
           </Reveal>
         </div>

@@ -17,7 +17,7 @@ export default function Header() {
   const { pathname } = useLocation()
 
   return (
-    <header className="pointer-events-none fixed inset-x-0 top-0 z-50 flex justify-center pt-6">
+    <header data-print-hide className="pointer-events-none fixed inset-x-0 top-0 z-50 flex justify-center pt-6">
       <div className="nav-pill nav-drop pointer-events-auto">
         <Link to="/" aria-label="Amit Kaplinsky, home">
           <img

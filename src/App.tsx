@@ -9,6 +9,7 @@ const WorkItem = lazy(() => import('@/pages/WorkItem'))
 const CaseStudyPage = lazy(() => import('@/pages/CaseStudyPage'))
 const About = lazy(() => import('@/pages/About'))
 const Blog = lazy(() => import('@/pages/Blog'))
+const CV = lazy(() => import('@/pages/CV'))
 
 export default function App() {
   const location = useLocation()
@@ -36,7 +37,7 @@ export default function App() {
     <div className="grid-lines relative min-h-screen bg-background">
       <Header />
       {/* The fixed pill nav floats above; pages start below its band. */}
-      <div className="pt-[81px]">
+      <div className="pt-[81px] print:pt-0">
         <Suspense fallback={null}>
           <Routes>
             <Route path="/" element={<Home />} />
@@ -45,7 +46,7 @@ export default function App() {
             <Route path="/work/:slug" element={<WorkItem />} />
             <Route path="/case-studies/:slug" element={<CaseStudyPage />} />
             <Route path="/about" element={<About />} />
-            <Route path="/cv" element={<Navigate to="/about" replace />} />
+            <Route path="/cv" element={<CV />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </Suspense>

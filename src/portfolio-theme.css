@@ -324,6 +324,66 @@
   }
 }
 
+/* The CV sheet is a print document, so it stays ink-on-white in both themes
+   and is the only thing the print stylesheet leaves standing. */
+.cv-stage {
+  display: flex;
+  justify-content: center;
+  padding: 0 16px 76px;
+}
+.cv-sheet {
+  width: 210mm;
+  max-width: 100%;
+  min-height: 297mm;
+  padding: 14mm 12mm;
+  background: #fff;
+  color: #111;
+  border: 1px solid #ececec;
+  border-radius: 4px;
+  box-shadow:
+    0 1px 2px rgba(17, 17, 17, 0.04),
+    0 10px 40px rgba(17, 17, 17, 0.08);
+}
+.cv-head {
+  font-size: var(--text-caption);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #8a8a85;
+}
+
+@page {
+  size: A4;
+  margin: 0;
+}
+@media print {
+  html,
+  body {
+    background: #fff !important;
+  }
+  /* Marked explicitly rather than by tag: the CV sheet has a <header> of its
+     own, and a blanket rule would strip the name off the document. */
+  [data-print-hide] {
+    display: none !important;
+  }
+  .grid-lines::before,
+  .grid-lines::after {
+    display: none !important;
+  }
+  .cv-stage {
+    padding: 0 !important;
+  }
+  .cv-sheet {
+    width: 100%;
+    min-height: 0;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+  .cv-entry {
+    break-inside: avoid;
+  }
+}
+
 /* Browser-window chrome for product UI screenshots. */
 .window {
   border-radius: var(--radius);
