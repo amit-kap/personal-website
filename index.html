@@ -4,8 +4,13 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/jpeg" href="/profile.jpg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Fallback only. Every route renders its own title/description/OG through
+         src/components/Seo.tsx, which React hoists into <head> and which wins
+         over anything here. Kept so crawlers that do not run JS see something. -->
     <title>Amit Kaplinsky — Product Designer</title>
-    <meta name="description" content="Product designer specializing in security — making complex products clear enough to act on. Third-party risk, identity security, and enterprise management." />
+    <meta name="description" content="Twelve years designing security products and design systems, from enterprise management at Check Point to founding design at Shift." />
+
     <meta name="author" content="Amit Kaplinsky" />
     <meta name="theme-color" content="#ffffff" />
     <script>
@@ -13,11 +18,22 @@
         if (localStorage.getItem('theme') === 'dark') document.documentElement.dataset.theme = 'dark'
       } catch (e) {}
     </script>
-    <meta property="og:type" content="website" />
-    <meta property="og:title" content="Amit Kaplinsky — Product Designer" />
-    <meta property="og:description" content="Product designer specializing in security — making complex products clear enough to act on. Third-party risk, identity security, and enterprise management." />
-    <meta property="og:image" content="/personal-website/profile.jpg" />
-    <meta name="twitter:card" content="summary" />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Amit Kaplinsky",
+        "jobTitle": "Product Designer",
+        "url": "https://amit-kap.github.io/personal-website/",
+        "address": { "@type": "PostalAddress", "addressLocality": "Tel Aviv", "addressCountry": "IL" },
+        "sameAs": ["https://www.linkedin.com/in/amitka/"],
+        "knowsAbout": ["Product Design", "Design Systems", "Security UX", "Third-Party Risk"]
+      }
+    </script>
+
+    <!-- Analytics: drop the provider's script tag here. Nothing else needs to
+         change — GitHub Pages serves this file for every route. -->
   </head>
   <body>
     <div id="root"></div>

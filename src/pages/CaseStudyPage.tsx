@@ -9,6 +9,7 @@ import {
 } from '@/lib/content'
 import Reveal from '@/components/Reveal'
 import RollingText from '@/components/RollingText'
+import Seo from '@/components/Seo'
 import SkeletonImage from '@/components/SkeletonImage'
 import { ZoomableWindow } from '@/components/work/casePrimitives'
 
@@ -158,6 +159,12 @@ export default function CaseStudyPage() {
 
   return (
     <main>
+      <Seo
+        title={caseStudy.title}
+        description={caseStudy.excerpt}
+        path={`/case-studies/${caseStudy.slug}`}
+        type="article"
+      />
       {/* Title block */}
       <section className="relative">
         <div className="inner-col flex flex-col items-center gap-[18px] pb-12 pt-16 text-center">

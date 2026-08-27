@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import { getAllCaseStudies, getWorkBySlug, type CaseStudy } from '@/lib/content'
 import Reveal from '@/components/Reveal'
 import RollingText from '@/components/RollingText'
+import Seo from '@/components/Seo'
 
 function ArrowIcon() {
   return (
@@ -24,6 +25,11 @@ export default function Blog() {
 
   return (
     <main>
+      <Seo
+        title="Blog"
+        description="Notes from the work: designing for a supervisor, making tens of thousands of security indicators workable, and shipping a consumer app inside an enterprise."
+        path="/blog"
+      />
       {/* Title block */}
       <section className="relative">
         <div className="inner-col flex flex-col items-center gap-4 pb-14 pt-16 text-center">

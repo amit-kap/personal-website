@@ -4,6 +4,7 @@ import { getCV } from '@/lib/content'
 import { ClaudeMark, CodexMark, CursorMark, FigmaMark } from '@/components/BrandLogos'
 import Parallax from '@/components/Parallax'
 import Reveal from '@/components/Reveal'
+import Seo from '@/components/Seo'
 
 /* The software group shows tool marks instead of its cv.md list. Matched on the
    heading so renaming "Softwares" to "Software" in cv.md doesn't break it.
@@ -56,6 +57,11 @@ export default function About() {
 
   return (
     <main>
+      <Seo
+        title="About"
+        description="From UX expert at Check Point to founding designer at Shift. Twelve years designing security products, based in Tel Aviv."
+        path="/about"
+      />
       {/* Portrait hero — the photo dissolves into the page through a mask fade */}
       <section className="relative overflow-hidden">
         {/* Centered with auto margins, not a transform, so the drift owns it. */}

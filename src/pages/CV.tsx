@@ -3,6 +3,7 @@ import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import { getCV } from '@/lib/content'
 import Reveal from '@/components/Reveal'
+import Seo from '@/components/Seo'
 import RollingText from '@/components/RollingText'
 import { BackToHome } from '@/components/work/casePrimitives'
 
@@ -38,6 +39,11 @@ export default function CV() {
 
   return (
     <main>
+      <Seo
+        title="CV"
+        description="Amit Kaplinsky's curriculum vitae: founding design at Shift and Veriti, UX lead at Semperis, UX expert at Check Point."
+        path="/cv"
+      />
       <div data-print-hide className="relative">
         <div className="inner-col flex flex-col items-center gap-[18px] pb-10 pt-14 text-center">
           <Reveal as="p" className="eyebrow" delay={0.05}>Curriculum Vitae</Reveal>

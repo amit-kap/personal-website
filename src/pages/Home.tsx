@@ -3,6 +3,7 @@ import { getAllCaseStudies, getAllWorks, getWorkBySlug } from '@/lib/content'
 import { imageFor } from '@/lib/workImages'
 import Parallax from '@/components/Parallax'
 import Reveal from '@/components/Reveal'
+import Seo from '@/components/Seo'
 import RollingText from '@/components/RollingText'
 
 /* Per-project presentation: plain-caps meta line, outcome title, and the
@@ -62,6 +63,11 @@ export default function Home() {
 
   return (
     <main>
+      <Seo
+        title="Amit Kaplinsky — Product Designer"
+        description="Twelve years designing security products and design systems, from enterprise management at Check Point to founding design at Shift."
+        path="/"
+      />
       {/* Hero — drifts at 0.3× scroll so the projects section slides over it */}
       <section className="relative overflow-hidden">
         <Parallax ratio={0.4} className="inner-col flex flex-col items-center gap-[22px] pb-32 pt-28 text-center">

@@ -1,5 +1,6 @@
 import { useParams } from 'react-router-dom'
 import { getWorkBySlug } from '@/lib/content'
+import Seo from '@/components/Seo'
 import CompactWorkPage from '@/components/work/CompactWorkPage'
 import ShiftWorkPage from '@/components/work/ShiftWorkPage'
 
@@ -17,6 +18,15 @@ export default function WorkItem() {
     )
   }
 
-  if (work.slug === 'shift') return <ShiftWorkPage work={work} />
-  return <CompactWorkPage work={work} />
+  return (
+    <>
+      <Seo
+        title={`${work.company} — ${work.role}`}
+        description={work.blurb}
+        path={`/work/${work.slug}`}
+        type="article"
+      />
+      {work.slug === 'shift' ? <ShiftWorkPage work={work} /> : <CompactWorkPage work={work} />}
+    </>
+  )
 }
