@@ -63,7 +63,7 @@ Tel Aviv University · 1994 to 1996
 - Figma
 - Adobe Creative Suite
 - Visual Studio Code / Cursor
-- Claude / Claude Desktop
+- Claude Code
 - Codex
 
 ### Languages

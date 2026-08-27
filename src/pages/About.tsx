@@ -1,8 +1,23 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { getCV } from '@/lib/content'
+import { ClaudeMark, CodexMark, CursorMark, FigmaMark } from '@/components/BrandLogos'
 import Parallax from '@/components/Parallax'
 import Reveal from '@/components/Reveal'
+
+/* The software group shows tool marks instead of its cv.md list. Matched on the
+   heading so renaming "Softwares" to "Software" in cv.md doesn't break it.
+   Rows are 32px to match the leading of the Languages column beside it. */
+function isSoftware(category: string) {
+  return category.trim().toLowerCase().startsWith('software')
+}
+
+const tools = [
+  { Mark: FigmaMark, name: 'Figma' },
+  { Mark: ClaudeMark, name: 'Claude Code' },
+  { Mark: CodexMark, name: 'Codex' },
+  { Mark: CursorMark, name: 'Cursor' },
+]
 
 /* cv.md writes periods as "10/2024 to now" — the page renders "10/2024–Now". */
 function formatPeriod(period: string): string {
@@ -155,11 +170,23 @@ export default function About() {
             {cv.skills.map((group, i) => (
               <div key={group.category} className={`flex flex-col gap-3 ${i > 0 ? 'sm:border-l sm:border-border sm:pl-10' : 'sm:pr-10'}`}>
                 <h2 className="font-heading text-body font-medium tracking-[-0.01em]">{group.category}</h2>
-                <p className="text-[14.5px] leading-8 text-copy">
-                  {group.items.map((item) => (
-                    <span key={item} className="block">{item}</span>
-                  ))}
-                </p>
+                {isSoftware(group.category) ? (
+                  <div className="flex flex-col text-[14.5px] text-copy">
+                    {tools.map(({ Mark, name }) => (
+                      <span key={name} className="flex h-8 items-center gap-2.5">
+                        <Mark size={20} />
+                        {name}
+                      </span>
+                    ))}
+                    <span className="flex h-8 items-center text-muted-foreground">More tools…</span>
+                  </div>
+                ) : (
+                  <p className="text-[14.5px] leading-8 text-copy">
+                    {group.items.map((item) => (
+                      <span key={item} className="block">{item}</span>
+                    ))}
+                  </p>
+                )}
               </div>
             ))}
           </div>
