@@ -3,6 +3,7 @@ import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import Footer from '@/components/Footer'
 import Header from '@/components/Header'
 import Home from '@/pages/Home'
+import { useSmoothScroll } from '@/lib/useSmoothScroll'
 
 const WorkItem = lazy(() => import('@/pages/WorkItem'))
 const CaseStudyPage = lazy(() => import('@/pages/CaseStudyPage'))
@@ -11,22 +12,25 @@ const Blog = lazy(() => import('@/pages/Blog'))
 
 export default function App() {
   const location = useLocation()
+  const lenis = useSmoothScroll()
 
   useEffect(() => {
     const scrollTo = () => {
       if (location.hash) {
         const el = document.getElementById(location.hash.slice(1))
         if (el) {
-          el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+          if (lenis.current) lenis.current.scrollTo(el)
+          else el.scrollIntoView({ behavior: 'smooth', block: 'start' })
           return
         }
       }
-      window.scrollTo(0, 0)
+      if (lenis.current) lenis.current.scrollTo(0, { immediate: true })
+      else window.scrollTo(0, 0)
     }
     // Defer one frame so the new route's DOM is in place
     const raf = requestAnimationFrame(scrollTo)
     return () => cancelAnimationFrame(raf)
-  }, [location.pathname, location.hash])
+  }, [location.pathname, location.hash, lenis])
 
   return (
     <div className="grid-lines relative min-h-screen bg-background">
