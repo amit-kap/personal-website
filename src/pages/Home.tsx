@@ -83,8 +83,11 @@ export default function Home() {
         </Parallax>
       </section>
 
+      {/* Everything below the hero rides over it, so it needs its own opaque
+          ground — and its own grid lines, which draw above that ground. */}
+      <div className="grid-lines relative z-10 bg-background">
       {/* Projects header */}
-      <section className="relative border-t border-border bg-background">
+      <section className="relative border-t border-border">
         <div className="inner-col flex flex-col items-center gap-2 pb-2 pt-14 text-center">
           <Reveal as="p" className="eyebrow">Projects</Reveal>
           <Reveal as="h2" className="font-heading text-section font-medium tracking-[-0.015em]" delay={0.08}>
@@ -213,6 +216,7 @@ export default function Home() {
           </Reveal>
         </div>
       </section>
+      </div>
     </main>
   )
 }

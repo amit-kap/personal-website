@@ -142,8 +142,11 @@
   background: var(--border);
   pointer-events: none;
 }
-.grid-lines::before { left: clamp(16px, 4.93vw, 71px); }
-.grid-lines::after { right: clamp(16px, 4.93vw, 71px); }
+/* The lines track the 1030px column (134px outside it, the spacing the design
+   was drawn at) instead of the viewport edge, so they stay close to the
+   content on wide screens. At 1440 this resolves to the original 71px. */
+.grid-lines::before { left: max(clamp(16px, 4.93vw, 71px), calc(50% - 649px)); }
+.grid-lines::after { right: max(clamp(16px, 4.93vw, 71px), calc(50% - 649px)); }
 @media (max-width: 640px) {
   .grid-lines::before,
   .grid-lines::after { display: none; }
