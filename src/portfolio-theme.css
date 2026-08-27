@@ -235,6 +235,7 @@
     linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
     linear-gradient(205deg, var(--g1) 0%, var(--g2) 55%, var(--g3) 100%);
 }
+/* Also used as a wrapper around a stack of cross-fading frames, so it clips. */
 .backdrop-media {
   width: 85%;
   aspect-ratio: 16 / 9;
@@ -242,6 +243,7 @@
   object-position: left top;
   border-radius: 8px 8px 0 0;
   box-shadow: 0 -10px 60px rgba(0, 0, 0, 0.35);
+  overflow: hidden;
   display: block;
 }
 

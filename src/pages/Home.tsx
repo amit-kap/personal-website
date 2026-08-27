@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { getAllCaseStudies, getAllWorks, getWorkBySlug } from '@/lib/content'
-import { imageFor } from '@/lib/workImages'
+import { galleryFor } from '@/lib/workImages'
+import ProjectGallery from '@/components/ProjectGallery'
 import Reveal from '@/components/Reveal'
 import RollingText from '@/components/RollingText'
 
@@ -96,7 +97,7 @@ export default function Home() {
       {works.map((work, index) => {
         const card = projectCards[work.slug]
         if (!card) return null
-        const image = imageFor(work, card.image)
+        const gallery = galleryFor(work, card.image)
         return (
           <section key={work.slug} className={`relative ${index > 0 ? 'border-t border-border' : ''}`}>
             <div className="inner-col flex flex-col gap-[18px] pb-14 pt-10">
@@ -106,16 +107,11 @@ export default function Home() {
                     className="backdrop h-[clamp(240px,40vw,580px)]"
                     style={{ '--g1': card.g[0], '--g2': card.g[1], '--g3': card.g[2] } as React.CSSProperties}
                   >
-                    {image && (
-                      <img
-                        src={image.src}
-                        alt={`${work.company} product interface`}
-                        width={image.width}
-                        height={image.height}
-                        loading={index === 0 ? 'eager' : 'lazy'}
-                        className="backdrop-media"
-                      />
-                    )}
+                    <ProjectGallery
+                      images={gallery}
+                      alt={`${work.company} product interface`}
+                      eager={index === 0}
+                    />
                   </div>
                 </Link>
               </Reveal>
