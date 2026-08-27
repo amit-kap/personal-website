@@ -64,7 +64,7 @@ export default function Home() {
     <main>
       {/* Hero — drifts at 0.3× scroll so the projects section slides over it */}
       <section className="relative overflow-hidden">
-        <Parallax className="inner-col flex min-h-[78vh] flex-col items-center justify-center gap-[22px] pb-40 pt-32 text-center">
+        <Parallax className="inner-col flex flex-col items-center gap-[22px] pb-32 pt-28 text-center">
           <Reveal as="p" className="eyebrow" delay={0.1}>
             Amit Kaplinsky · Product Designer
           </Reveal>
