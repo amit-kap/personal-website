@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import type { ContentImage } from '@/lib/content'
 import Reveal from '@/components/Reveal'
 import RollingText from '@/components/RollingText'
+import ProductVideo from '@/components/work/ProductVideo'
 
 export function ArrowIcon() {
   return (
@@ -34,13 +35,16 @@ export function TitleBlock({ meta, title, intro }: { meta: string; title: string
   )
 }
 
-/* Full-width gradient backdrop with the bottom-anchored product image. */
+/* Full-width gradient backdrop with the bottom-anchored product media.
+   Pass `video` for a looping walkthrough; `image` then serves as its poster. */
 export function HeroBackdrop({
   image,
+  video,
   alt,
   gradient,
 }: {
   image?: ContentImage
+  video?: string
   alt: string
   gradient: [string, string, string]
 }) {
@@ -52,8 +56,12 @@ export function HeroBackdrop({
             className="backdrop h-[clamp(240px,40vw,580px)]"
             style={{ '--g1': gradient[0], '--g2': gradient[1], '--g3': gradient[2] } as React.CSSProperties}
           >
-            {image && (
-              <img src={image.src} alt={alt} width={image.width} height={image.height} className="backdrop-media" />
+            {video ? (
+              <ProductVideo src={video} poster={image?.src} label={alt} />
+            ) : (
+              image && (
+                <img src={image.src} alt={alt} width={image.width} height={image.height} className="backdrop-media" />
+              )
             )}
           </div>
         </Reveal>

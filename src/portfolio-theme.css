@@ -256,6 +256,73 @@
 .backdrop:hover .backdrop-media {
   transform: scale(1.02);
 }
+/* Media shown whole at its own ratio, 90% wide so 5% of the backdrop
+   stays visible either side, and centred rather than seated on the floor. */
+.backdrop-media--fit {
+  height: auto;
+  aspect-ratio: auto;
+  object-fit: contain;
+  align-self: center;
+  border-radius: 8px;
+  transform-origin: center;
+}
+
+/* Video controls: hairline progress on the bottom edge, play/pause on hover. */
+.vid {
+  position: relative;
+}
+.vid-track {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding-top: 14px;
+  cursor: pointer;
+}
+.vid-line {
+  height: 2px;
+  background: rgba(17, 17, 17, 0.16);
+  overflow: hidden;
+}
+.vid-fill {
+  height: 100%;
+  background: var(--accent);
+  transform-origin: left center;
+  transition: transform 250ms linear;
+}
+.vid-btn {
+  position: absolute;
+  left: 14px;
+  bottom: 14px;
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  background: rgba(17, 17, 17, 0.55);
+  backdrop-filter: blur(6px);
+  opacity: 0;
+  transition:
+    opacity 200ms ease,
+    background-color 200ms ease;
+}
+.vid:hover .vid-btn,
+.vid-btn:focus-visible {
+  opacity: 1;
+}
+.vid-btn:hover {
+  background: var(--accent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vid-btn {
+    opacity: 1;
+  }
+  .vid-fill {
+    transition: none;
+  }
+}
 
 /* Browser-window chrome for product UI screenshots. */
 .window {

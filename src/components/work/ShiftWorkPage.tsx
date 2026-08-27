@@ -16,14 +16,14 @@ const features = [
   {
     eyebrow: 'The Daily Home',
     title: 'The home reads like a console, not a report',
-    copy: 'The first question a supervisor has is "what needs me today?" — so the home leads with attention: counts, urgency, and in-flight work first, drill-down second. Status carries the hierarchy; decoration carries nothing.',
+    copy: 'The first question a supervisor has is "what needs me today?", so the home leads with attention: counts, urgency, and in-flight work first, drill-down second. Status carries the hierarchy; decoration carries nothing.',
     image: '01-shift-dashboard',
     alt: 'Shift home dashboard',
   },
   {
     eyebrow: 'The Living Record',
     title: 'A vendor is a record, not a point-in-time review',
-    copy: "The inventory treats every vendor as a continuously maintained record — evidence, access, exposure, and decisions in one place — so any assessment starts from what's already known instead of a blank questionnaire.",
+    copy: "The inventory treats every vendor as a continuously maintained record of evidence, access, exposure, and decisions in one place, so any assessment starts from what's already known instead of a blank questionnaire.",
     image: '02-inventory-vendors-page',
     alt: 'Shift vendor inventory',
   },
@@ -37,7 +37,7 @@ const features = [
   {
     eyebrow: 'Where Judgment Lands',
     title: 'The assessment keeps the decisions visibly human',
-    copy: "The agent's work arrives structured — evidence mapped, verdicts proposed, followups drafted — and the interface reserves its strongest moments for the calls only a person should make.",
+    copy: "The agent's work arrives structured: evidence mapped, verdicts proposed, followups drafted. The interface reserves its strongest moments for the calls only a person should make.",
     image: '07-assessment-flow-1',
     alt: 'Shift assessment flow',
   },
@@ -47,18 +47,23 @@ export default function ShiftWorkPage({ work }: { work: Work }) {
   return (
     <main>
       <TitleBlock
-        meta="Third-Party Risk  ·  Founding Designer  ·  2024 — Now  ·  TLV"
-        title="Founding design at Shift — a vendor-security platform, built from zero."
-        intro="I joined Shift as the first designer: no design system, no onboarding, and core product surfaces still to be invented. This page is about what got built — the system and the surfaces that connect vendor evidence, access, exposure, and assessment decisions. The product is now out of stealth."
+        meta="Third-Party Risk  ·  Founding Designer  ·  2024–Now  ·  TLV"
+        title="Founding design at Shift: a vendor-security platform, built from zero."
+        intro="I joined Shift as the first designer: no design system, no onboarding, and core product surfaces still to be invented. This page is about what got built: the system and the surfaces that connect vendor evidence, access, exposure, and assessment decisions. The product is now out of stealth."
       />
-      <HeroBackdrop image={imageFor(work, '01-shift-dashboard')} alt="Shift vendor security dashboard" gradient={GRADIENT} />
+      <HeroBackdrop
+        image={imageFor(work, '01-shift-dashboard')}
+        video={`${import.meta.env.BASE_URL}shift-walk.mp4`}
+        alt="Shift product walkthrough: vendor evidence, access, exposure, and assessment decisions"
+        gradient={GRADIENT}
+      />
 
       <SplitSection eyebrow="The Starting Point" stmt="Everything at once: a system to found and surfaces to ship">
         <p className="body-copy">
-          Founding design means the foundations and the product ship together. The design system couldn't wait for the surfaces, and the surfaces couldn't wait for the system — every screen built the language it was written in.
+          Founding design means the foundations and the product ship together. The design system couldn't wait for the surfaces, and the surfaces couldn't wait for the system; every screen built the language it was written in.
         </p>
         <p className="body-copy">
-          One thing shaped everything: the product is built around an agent that does the assessment work while a person supervises it. How the team arrived at that operating model — the market scan and the reframe — is its own story, told in{' '}
+          One thing shaped everything: the product is built around an agent that does the assessment work while a person supervises it. The market scan and the reframe behind that operating model are their own story, told in{' '}
           <Link to="/case-studies/designing-for-the-supervisor" className="border-b border-border text-foreground transition-colors hover:text-accent">
             Designing for the Supervisor
           </Link>
@@ -70,11 +75,11 @@ export default function ShiftWorkPage({ work }: { work: Work }) {
         <div className="flex flex-col gap-6">
           <div className="flex flex-col gap-1.5">
             <h3 className="font-heading text-[17px] font-medium">A design system from zero</h3>
-            <p className="body-copy">Tokens, components, and density rules for a data-heavy security product — one language across dashboards, records, graphs, and conversations.</p>
+            <p className="body-copy">Tokens, components, and density rules for a data-heavy security product: one language across dashboards, records, graphs, and conversations.</p>
           </div>
           <div className="flex flex-col gap-1.5">
             <h3 className="font-heading text-[17px] font-medium">Onboarding</h3>
-            <p className="body-copy">A security product is only alive once it's connected — onboarding takes a new customer from login to integrated data sources to a populated vendor inventory.</p>
+            <p className="body-copy">A security product is only alive once it's connected, so onboarding takes a new customer from login to integrated data sources to a populated vendor inventory.</p>
           </div>
           <div className="flex flex-col gap-1.5">
             <h3 className="font-heading text-[17px] font-medium">The core surfaces</h3>
@@ -117,9 +122,9 @@ export default function ShiftWorkPage({ work }: { work: Work }) {
 
       <SplitSection eyebrow="The Strategy Story" stmt="How this product came to be shaped around a supervisor">
         <p className="body-copy">
-          The thinking behind the operating model — the market scan, the wrong turns, and the reframe that changed what the screens are for — is written up as its own piece, not repeated here.
+          The thinking behind the operating model, from the market scan through the wrong turns to the reframe that changed what the screens are for, is written up as its own piece, not repeated here.
         </p>
-        <ReadLink to="/case-studies/designing-for-the-supervisor" label="Read — Designing for the Supervisor" />
+        <ReadLink to="/case-studies/designing-for-the-supervisor" label="Read: Designing for the Supervisor" />
       </SplitSection>
 
       <BackToHome />
