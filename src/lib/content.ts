@@ -71,6 +71,7 @@ export interface CV {
 
 const expImageModules = import.meta.glob<{ default: string }>([
   '../content/experience/onyxia-cyber/01-SSM-1.webp',
+  '../content/experience/onyxia-cyber/02-SSM-2.jpg',
   '../content/experience/onyxia-cyber/03-frameworks.webp',
   '../content/experience/onyxia-cyber/04-insights.webp',
   '../content/experience/onyxia-cyber/05-p-hub.webp',
@@ -82,6 +83,7 @@ const expImageModules = import.meta.glob<{ default: string }>([
   '../content/experience/veriti/06.webp',
   '../content/experience/semperis/01-semperis.webp',
   '../content/experience/checkpoint/01-details.webp',
+  '../content/experience/checkpoint/02-mobile.jpg',
   '../content/experience/checkpoint/03-summary.webp',
   '../content/experience/checkpoint/04-timeline.webp',
   '../content/experience/checkpoint/05-dashboard.webp',

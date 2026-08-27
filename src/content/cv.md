@@ -10,13 +10,13 @@ Tel Aviv · [amitka111@gmail.com](mailto:amitka111@gmail.com) · [+972 54-487888
 
 **Founding Designer** · 10/2024 to now
 
-Founding design for an AI-assisted vendor security platform. I established the design system, onboarding, and core product surfaces for evidence, access, exposure, and human decision-making. Most of the product remains private.
+Founding design for an AI-assisted vendor security platform. I established the design system, onboarding, and core product surfaces for evidence, access, exposure, and human decision-making.
 
 ### [Onyxia](/experience/onyxia-cyber)
 
 **Product Design Team Lead** · 04/2024 to 10/2024
 
-Short product design lead engagement on a CISO data-management concept. I helped shape the experience that connects executive intent to owners, tasks, progress, and delays.
+Product design lead on a CISO data-management concept. I helped shape the experience that connects executive intent to owners, tasks, progress, and delays.
 
 ### [Veriti](/experience/veriti)
 
