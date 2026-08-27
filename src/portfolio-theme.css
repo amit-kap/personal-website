@@ -235,9 +235,8 @@
     linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
     linear-gradient(205deg, var(--g1) 0%, var(--g2) 55%, var(--g3) 100%);
 }
-/* Also used as a wrapper around a stack of cross-fading frames, so it clips. */
 .backdrop-media {
-  width: 85%;
+  width: 90%;
   aspect-ratio: 16 / 9;
   object-fit: cover;
   object-position: left top;
@@ -245,6 +244,14 @@
   box-shadow: 0 -10px 60px rgba(0, 0, 0, 0.35);
   overflow: hidden;
   display: block;
+  /* Grows from its bottom edge so it stays seated on the backdrop floor.
+     Curve matches the source site's hover motion: most of the travel in the
+     first third, then a long soft settle. */
+  transform-origin: bottom center;
+  transition: transform 450ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.backdrop:hover .backdrop-media {
+  transform: scale(1.02);
 }
 
 /* Browser-window chrome for product UI screenshots. */
@@ -353,6 +360,8 @@
   .roll-ch { transition: none; }
   .roll-host:hover .roll-ch { transform: none; }
   .reveal, .reveal-scale { opacity: 1; transform: none; transition: none; }
+  .backdrop-media { transition: none; }
+  .backdrop:hover .backdrop-media { transform: none; }
   .nav-drop { animation: none; }
   .pill-cta, .text-link, .nav-pill-link { transition: none; }
 }
