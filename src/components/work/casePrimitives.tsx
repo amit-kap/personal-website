@@ -1,7 +1,9 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import type { ContentImage } from '@/lib/content'
 import Reveal from '@/components/Reveal'
 import RollingText from '@/components/RollingText'
+import Lightbox from '@/components/work/Lightbox'
 import ProductVideo from '@/components/work/ProductVideo'
 
 export function ArrowIcon() {
@@ -113,16 +115,34 @@ export function JobGrid({ jobs }: { jobs: Array<{ title: string; copy: string }>
   )
 }
 
-/* A product screenshot in browser-window chrome. */
+/* Browser-window chrome around a product screenshot. The UI in these is too
+   small to read in place, so the whole thing lifts on hover and opens
+   full-frame on click. Everything inside must be phrasing content — it lives
+   in a <button>. */
+export function ZoomableWindow({ src, alt, children }: { src: string; alt: string; children: React.ReactNode }) {
+  const [open, setOpen] = useState(false)
+  return (
+    <>
+      <button type="button" className="window-btn" onClick={() => setOpen(true)} aria-label={`Enlarge: ${alt}`}>
+        <span className="window">
+          <span className="winbar">
+            <span className="windot windot-r" />
+            <span className="windot windot-y" />
+            <span className="windot windot-g" />
+          </span>
+          {children}
+        </span>
+      </button>
+      {open && <Lightbox src={src} alt={alt} onClose={() => setOpen(false)} />}
+    </>
+  )
+}
+
+/* A product screenshot in browser-window chrome, as used by the case pages. */
 export function WindowCard({ image, alt }: { image?: ContentImage; alt: string }) {
   if (!image) return null
   return (
-    <div className="window">
-      <div className="winbar">
-        <span className="windot windot-r" />
-        <span className="windot windot-y" />
-        <span className="windot windot-g" />
-      </div>
+    <ZoomableWindow src={image.src} alt={alt}>
       <img
         src={image.src}
         alt={alt}
@@ -131,7 +151,7 @@ export function WindowCard({ image, alt }: { image?: ContentImage; alt: string }
         loading="lazy"
         className="block aspect-video w-full object-cover object-left-top"
       />
-    </div>
+    </ZoomableWindow>
   )
 }
 

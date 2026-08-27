@@ -44,8 +44,10 @@ export default function SkeletonImage({
     if (img.complete) updateLoadState(img.naturalWidth > 0 ? 'loaded' : 'error')
   }, [src, updateLoadState])
 
+  // Spans, not divs: these render inside a <button> when the image is
+  // click-to-enlarge, and a button may only contain phrasing content.
   return (
-    <div className={`relative overflow-hidden ${wrapperClassName}`}>
+    <span className={`relative block overflow-hidden ${wrapperClassName}`}>
       <img
         ref={setImageRef}
         src={src}
@@ -63,17 +65,17 @@ export default function SkeletonImage({
         }`}
         {...rest}
       />
-      <div
+      <span
         aria-hidden="true"
         className={`absolute inset-0 bg-neutral-100 pointer-events-none transition-opacity duration-500 ${
           currentState === 'loading' ? 'opacity-100 animate-pulse' : 'opacity-0'
         }`}
       />
       {currentState === 'error' && (
-        <div className="absolute inset-0 flex items-center justify-center bg-neutral-100 px-4 text-center text-caption font-mono uppercase tracking-[0.18em] text-foreground/30">
+        <span className="absolute inset-0 flex items-center justify-center bg-neutral-100 px-4 text-center text-caption font-mono uppercase tracking-[0.18em] text-foreground/30">
           Image unavailable
-        </div>
+        </span>
       )}
-    </div>
+    </span>
   )
 }

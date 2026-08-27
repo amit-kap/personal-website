@@ -10,6 +10,7 @@ import {
 import Reveal from '@/components/Reveal'
 import RollingText from '@/components/RollingText'
 import SkeletonImage from '@/components/SkeletonImage'
+import { ZoomableWindow } from '@/components/work/casePrimitives'
 
 function meaningfulChildren(children: React.ReactNode) {
   return Children
@@ -100,12 +101,7 @@ const markdownComponents = (images: Record<string, ContentImage>) => ({
     if (isProductUI) {
       return (
         <figure className="my-3.5 lg:-mx-[90px]">
-          <div className="window">
-            <div className="winbar">
-              <span className="windot windot-r" />
-              <span className="windot windot-y" />
-              <span className="windot windot-g" />
-            </div>
+          <ZoomableWindow src={resolved?.src ?? ''} alt={alt ?? ''}>
             <SkeletonImage
               src={resolved?.src ?? ''}
               alt={alt ?? ''}
@@ -115,7 +111,7 @@ const markdownComponents = (images: Record<string, ContentImage>) => ({
               wrapperClassName="w-full min-h-[180px]"
               className="block w-full"
             />
-          </div>
+          </ZoomableWindow>
           {alt ? <figcaption className="mt-2.5 text-center text-[13px] text-muted-foreground">{alt}</figcaption> : null}
         </figure>
       )
