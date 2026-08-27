@@ -1,12 +1,17 @@
 import { Children, isValidElement } from 'react'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import {
   getCaseStudyBySlug,
+  getWorkBySlug,
   type ContentImage,
 } from '@/lib/content'
+import Reveal from '@/components/Reveal'
+import RollingText from '@/components/RollingText'
+import Seo from '@/components/Seo'
 import SkeletonImage from '@/components/SkeletonImage'
+import { ZoomableWindow } from '@/components/work/casePrimitives'
 
 function meaningfulChildren(children: React.ReactNode) {
   return Children
@@ -20,13 +25,11 @@ function isMarkdownImage(child: React.ReactNode) {
 
 function isImageOnlyParagraph(children: React.ReactNode) {
   const childArray = meaningfulChildren(children)
-
   return childArray.length === 1 && isMarkdownImage(childArray[0])
 }
 
 function isImageRowParagraph(children: React.ReactNode) {
   const childArray = meaningfulChildren(children)
-
   return childArray.length > 1 && childArray.every(isMarkdownImage)
 }
 
@@ -39,41 +42,49 @@ function imageLookupKey(src: string) {
 }
 
 const markdownComponents = (images: Record<string, ContentImage>) => ({
-  // H1 is the case-study title, rendered above the markdown body; suppressed here.
+  // H1 is the article title, rendered in the title block above; suppressed here.
   h1: () => null,
-  h2: ({ children }: { children?: React.ReactNode }) => (
-    <h2 className="text-title-sm font-medium mt-16 mb-3 leading-tight">{children}</h2>
-  ),
+  // The md pattern is `### Heading` followed by `---`: the h3 is the section
+  // head, the hr below it draws the hairline.
   h3: ({ children }: { children?: React.ReactNode }) => (
-    <h3 className="text-lead font-medium mt-14 mb-3 leading-tight">{children}</h3>
+    <h2 className="mt-9 font-heading text-[24px] font-medium leading-tight tracking-[-0.015em] text-foreground">{children}</h2>
+  ),
+  h2: ({ children }: { children?: React.ReactNode }) => (
+    <h2 className="mt-9 font-heading text-[24px] font-medium leading-tight tracking-[-0.015em] text-foreground">{children}</h2>
   ),
   h4: ({ children }: { children?: React.ReactNode }) => (
-    <h4 className="text-body font-medium mt-10 mb-2">{children}</h4>
+    <h3 className="mt-6 font-heading text-[18px] font-medium text-foreground">{children}</h3>
   ),
+  hr: () => <hr className="border-border" />,
   p: ({ children }: { children?: React.ReactNode }) => (
     isImageOnlyParagraph(children)
       ? <>{children}</>
       : isImageRowParagraph(children)
-        ? <div className="case-study-image-row my-8 grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 items-start">{children}</div>
-      : <p className="text-body leading-8 mb-5 text-foreground/75">{children}</p>
+        ? <div className="my-2 grid grid-cols-1 items-start gap-3 sm:grid-cols-3 sm:gap-4">{children}</div>
+        : <p>{children}</p>
   ),
   ul: ({ children }: { children?: React.ReactNode }) => (
-    <ul className="list-disc pl-5 mb-5 space-y-1 text-body leading-8 text-foreground/75">{children}</ul>
+    <ul className="flex flex-col gap-2.5">{children}</ul>
   ),
   ol: ({ children }: { children?: React.ReactNode }) => (
-    <ol className="list-decimal pl-5 mb-5 space-y-1 text-body leading-8 text-foreground/75">{children}</ol>
+    <ol className="flex flex-col gap-2.5">{children}</ol>
+  ),
+  li: ({ children }: { children?: React.ReactNode }) => (
+    <li className="grid grid-cols-[18px_minmax(0,1fr)] text-[17px] leading-[1.7] text-copy before:content-['–'] before:text-muted-foreground">
+      <span className="col-start-2">{children}</span>
+    </li>
   ),
   blockquote: ({ children }: { children?: React.ReactNode }) => (
-    <blockquote className="my-8 rounded-r-[10px] border-l-[3px] border-foreground/30 bg-foreground/[0.04] py-5 pl-5 pr-6 text-foreground/80 italic [&>p]:mb-0">
+    <blockquote className="prose-quote my-2.5 [&>p]:m-0 [&>p]:font-heading [&>p]:text-[20px] [&>p]:leading-[1.5] [&>p]:text-foreground">
       {children}
     </blockquote>
   ),
   strong: ({ children }: { children?: React.ReactNode }) => (
-    <strong className="font-medium text-foreground">{children}</strong>
+    <strong className="font-semibold text-foreground">{children}</strong>
   ),
   em: ({ children }: { children?: React.ReactNode }) => <em className="italic">{children}</em>,
   a: ({ children, href }: { children?: React.ReactNode; href?: string }) => (
-    <a href={href} target="_blank" rel="noopener noreferrer" className="font-medium text-foreground underline decoration-[1.5px] underline-offset-4 decoration-foreground/55 transition-colors hover:bg-foreground/[0.04] hover:decoration-foreground">
+    <a href={href} target="_blank" rel="noopener noreferrer" className="font-medium text-accent hover:underline hover:underline-offset-[3px]">
       {children}
     </a>
   ),
@@ -83,27 +94,53 @@ const markdownComponents = (images: Record<string, ContentImage>) => ({
       : src
         ? { src, width: undefined, height: undefined }
         : undefined
+    const width = 'width' in (resolved ?? {}) ? resolved?.width : undefined
+    const height = 'height' in (resolved ?? {}) ? resolved?.height : undefined
+    // Product-UI screenshots get browser-window chrome and break out wider
+    // than the text column; small assets (logos, crops) stay plain.
+    const isProductUI = typeof width === 'number' && width >= 1200
+    if (isProductUI) {
+      return (
+        <figure className="my-3.5 lg:-mx-[90px]">
+          <ZoomableWindow src={resolved?.src ?? ''} alt={alt ?? ''}>
+            <SkeletonImage
+              src={resolved?.src ?? ''}
+              alt={alt ?? ''}
+              width={width}
+              height={height}
+              loading="lazy"
+              wrapperClassName="w-full min-h-[180px]"
+              className="block w-full"
+            />
+          </ZoomableWindow>
+          {alt ? <figcaption className="mt-2.5 text-center text-[13px] text-muted-foreground">{alt}</figcaption> : null}
+        </figure>
+      )
+    }
     return (
-      <figure className="my-8">
+      <figure className="my-2">
         <SkeletonImage
           src={resolved?.src ?? ''}
           alt={alt ?? ''}
-          width={'width' in (resolved ?? {}) ? resolved?.width : undefined}
-          height={'height' in (resolved ?? {}) ? resolved?.height : undefined}
+          width={width}
+          height={height}
           loading="lazy"
-          wrapperClassName="w-full rounded-[6px] border border-foreground/[0.05] min-h-[180px]"
-          className="w-full block"
+          wrapperClassName="w-full overflow-hidden rounded-lg border border-border min-h-[120px]"
+          className="block w-full"
         />
-        {alt ? (
-          <figcaption className="text-caption font-mono uppercase tracking-[0.15em] text-foreground/40 mt-3 text-center">
-            {alt}
-          </figcaption>
-        ) : null}
+        {alt ? <figcaption className="mt-2.5 text-center text-[13px] text-muted-foreground">{alt}</figcaption> : null}
       </figure>
     )
   },
-  hr: () => <hr className="mt-1 mb-8 border-foreground/10" />,
 })
+
+function ArrowBackIcon() {
+  return (
+    <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
+      <path d="M12 4 L4 12 M10.5 12 H4 V5.5" />
+    </svg>
+  )
+}
 
 export default function CaseStudyPage() {
   const { slug } = useParams<{ slug: string }>()
@@ -111,56 +148,79 @@ export default function CaseStudyPage() {
 
   if (!caseStudy) {
     return (
-      <div className="relative z-10 min-h-screen bg-background">
-        <div className="max-w-xl mx-auto px-5 sm:px-8 pt-24 pb-24">
-          <p className="text-meta text-foreground/40">Case study not found.</p>
-        </div>
-      </div>
+      <main className="inner-col py-24">
+        <p className="text-meta text-muted-foreground">Article not found.</p>
+      </main>
     )
   }
 
+  const company = getWorkBySlug(caseStudy.workSlug)?.company ?? 'Security'
+  const meta = caseStudy.featured ? `${company}  ·  Featured` : company
+
   return (
-    <div className="relative z-10 min-h-screen bg-background">
-      <main className="flex-1 w-full">
-        <article className="2xl:mx-auto 2xl:max-w-[1440px] px-5 sm:px-8 pt-10 sm:pt-14 pb-20 animate-fade-up">
-          <div className="max-w-3xl mx-auto">
-            {/* Hero image, contained */}
-            {caseStudy.coverImage && (
-              <div className="rounded-[6px] overflow-hidden border border-foreground/[0.05] mb-10 sm:mb-12">
+    <main>
+      <Seo
+        title={caseStudy.title}
+        description={caseStudy.excerpt}
+        path={`/case-studies/${caseStudy.slug}`}
+        type="article"
+      />
+      {/* Title block */}
+      <section className="relative">
+        <div className="inner-col flex flex-col items-center gap-[18px] pb-12 pt-16 text-center">
+          <Reveal as="p" className="meta-line" delay={0.08}>{meta}</Reveal>
+          <Reveal as="h1" className="max-w-[820px] font-heading text-feature font-medium tracking-[-0.02em]" delay={0.16}>
+            {caseStudy.title}
+          </Reveal>
+          {caseStudy.excerpt && (
+            <Reveal as="p" className="max-w-[640px] text-[19px] font-light leading-normal text-muted-foreground" delay={0.24}>
+              {caseStudy.excerpt}
+            </Reveal>
+          )}
+        </div>
+      </section>
+
+      {/* Cover */}
+      {caseStudy.coverImage && (
+        <section className="relative">
+          <div className="inner-col pb-14">
+            <Reveal>
+              <div className="overflow-hidden rounded-lg border border-border">
                 <SkeletonImage
                   src={caseStudy.coverImage.src}
-                  alt={caseStudy.title}
+                  alt={`${caseStudy.title} cover`}
                   width={caseStudy.coverImage.width}
                   height={caseStudy.coverImage.height}
                   loading="eager"
-                  wrapperClassName="aspect-[16/9] w-full"
-                  className="w-full h-full object-cover"
+                  wrapperClassName="aspect-video w-full"
+                  className="h-full w-full object-cover"
                 />
               </div>
-            )}
+            </Reveal>
+          </div>
+        </section>
+      )}
 
-            {/* Article masthead */}
-            <h1
-              className="font-heading text-feature font-bold leading-[0.94] tracking-[-0.07em] text-foreground mb-6"
-            >
-              {caseStudy.title}
-            </h1>
-
-            {/* Excerpt */}
-            {caseStudy.excerpt && (
-              <p className="text-lead leading-[1.5] text-foreground/55 mb-12">
-                {caseStudy.excerpt}
-              </p>
-            )}
-
-            {/* Body */}
+      {/* Body */}
+      <section className="relative border-t border-border">
+        <div className="inner-col pb-16 pt-14">
+          <article className="prose-col flex flex-col gap-[22px]">
             <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents(caseStudy.bodyImages)}>
               {caseStudy.body}
             </ReactMarkdown>
+          </article>
+        </div>
+      </section>
 
-          </div>
-        </article>
-      </main>
-    </div>
+      {/* Back to Blog */}
+      <section className="relative border-t border-border">
+        <div className="inner-col flex justify-center pb-16 pt-14">
+          <Link to="/blog" className="pill-cta roll-host px-[30px] py-3.5 text-[15px]">
+            <RollingText text="Back to Blog" />
+            <ArrowBackIcon />
+          </Link>
+        </div>
+      </section>
+    </main>
   )
 }

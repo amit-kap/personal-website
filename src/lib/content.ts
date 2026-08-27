@@ -1,31 +1,11 @@
-import { unified } from 'unified';
-import remarkParse from 'remark-parse';
-import remarkGfm from 'remark-gfm';
-import { toString as mdastToString } from 'mdast-util-to-string';
-import { toMarkdown } from 'mdast-util-to-markdown';
-import { gfmToMarkdown } from 'mdast-util-gfm';
-import type { Root, RootContent, Heading, Link, Paragraph, List } from 'mdast';
-import { parse as parseYaml } from 'yaml';
-import cvRaw from '../content/cv.md?raw';
+// Every markdown source is parsed at build time by the `virtual:content`
+// plugin in vite.config.ts, so remark, mdast and yaml never reach the browser.
+// This module's only job is attaching image assets, whose fingerprinted URLs
+// exist solely inside Vite.
+import content from 'virtual:content';
+import type { CVHeader, CVNamedEntry, CVSkillGroup } from './parseContent';
 
-// ---- Front-matter helper ----
-
-function stripFrontMatter(raw: string): {
-  frontMatter: Record<string, unknown> | null;
-  body: string;
-} {
-  const match = raw.match(/^---\s*\n([\s\S]*?)\n---\s*\n([\s\S]*)$/);
-  if (!match) return { frontMatter: null, body: raw };
-  const [, fmText, body] = match;
-  try {
-    return {
-      frontMatter: parseYaml(fmText) as Record<string, unknown>,
-      body,
-    };
-  } catch {
-    return { frontMatter: null, body: raw };
-  }
-}
+export type { CVHeader, CVNamedEntry, CVSkillGroup };
 
 // ---- CV (single source of truth, parsed from cv.md) ----
 
@@ -45,22 +25,6 @@ export interface ContentImage {
   height: number;
 }
 
-export interface CVNamedEntry {
-  title: string;
-  meta: string;
-}
-
-export interface CVSkillGroup {
-  category: string;
-  items: string[];
-}
-
-export interface CVHeader {
-  name: string;
-  tagline: string;
-  contacts: string; // raw paragraph text (markdown), rendered by the page
-}
-
 export interface CV {
   header: CVHeader;
   experience: CVExperience[];
@@ -71,6 +35,7 @@ export interface CV {
 
 const expImageModules = import.meta.glob<{ default: string }>([
   '../content/experience/onyxia-cyber/01-SSM-1.webp',
+  '../content/experience/onyxia-cyber/02-SSM-2.jpg',
   '../content/experience/onyxia-cyber/03-frameworks.webp',
   '../content/experience/onyxia-cyber/04-insights.webp',
   '../content/experience/onyxia-cyber/05-p-hub.webp',
@@ -82,6 +47,7 @@ const expImageModules = import.meta.glob<{ default: string }>([
   '../content/experience/veriti/06.webp',
   '../content/experience/semperis/01-semperis.webp',
   '../content/experience/checkpoint/01-details.webp',
+  '../content/experience/checkpoint/02-mobile.jpg',
   '../content/experience/checkpoint/03-summary.webp',
   '../content/experience/checkpoint/04-timeline.webp',
   '../content/experience/checkpoint/05-dashboard.webp',
@@ -130,133 +96,21 @@ function getImagesForSlug(slug: string): ContentImage[] {
     .map(([path, mod]) => imageAssetFromPath(path, mod.default));
 }
 
-function splitByDepth(nodes: RootContent[], depth: 2 | 3): Array<{ heading: Heading; body: RootContent[] }> {
-  const entries: Array<{ heading: Heading; body: RootContent[] }> = [];
-  let current: { heading: Heading; body: RootContent[] } | null = null;
-  for (const node of nodes) {
-    if (node.type === 'heading' && node.depth === depth) {
-      if (current) entries.push(current);
-      current = { heading: node, body: [] };
-    } else if (current) {
-      current.body.push(node);
-    }
-  }
-  if (current) entries.push(current);
-  return entries;
-}
-
-function nodesToMarkdown(nodes: RootContent[]): string {
-  if (nodes.length === 0) return '';
-  const root: Root = { type: 'root', children: nodes };
-  return toMarkdown(root, { extensions: [gfmToMarkdown()] }).trim();
-}
-
-function parseCV(): CV {
-  const tree = unified().use(remarkParse).use(remarkGfm).parse(cvRaw) as Root;
-  const children = tree.children;
-
-  // Header: h1 + preamble paragraphs (until the first h2)
-  let name = '';
-  let tagline = '';
-  let contacts = '';
-  let i = 0;
-  for (; i < children.length; i++) {
-    const node = children[i];
-    if (node.type === 'heading' && node.depth === 2) break;
-    if (node.type === 'heading' && node.depth === 1) {
-      name = mdastToString(node);
-    } else if (node.type === 'paragraph') {
-      if (!tagline) tagline = nodesToMarkdown([node]);
-      else if (!contacts) contacts = nodesToMarkdown([node]);
-    }
-  }
-
-  // Group remaining content by h2 sections, keyed by lowercased title.
-  const sections = new Map<string, RootContent[]>();
-  let currentKey = '';
-  for (; i < children.length; i++) {
-    const node = children[i];
-    if (node.type === 'heading' && node.depth === 2) {
-      currentKey = mdastToString(node).toLowerCase();
-      sections.set(currentKey, []);
-    } else if (currentKey) {
-      sections.get(currentKey)!.push(node);
-    }
-  }
-
-  // Experience entries
-  const experience: CVExperience[] = [];
-  for (const entry of splitByDepth(sections.get('experience') ?? [], 3)) {
-    const link = entry.heading.children.find((c): c is Link => c.type === 'link');
-    if (!link) continue;
-    const slug = link.url.replace(/^\/experience\//, '').replace(/\/$/, '');
-    const company = mdastToString(link);
-
-    // First paragraph in the body = meta line: **Role** · Period
-    let role = '';
-    let period = '';
-    const firstBody = entry.body[0];
-    if (firstBody && firstBody.type === 'paragraph') {
-      const meta = firstBody as Paragraph;
-      const strong = meta.children.find(c => c.type === 'strong');
-      role = strong ? mdastToString(strong) : '';
-      const full = mdastToString(meta);
-      period = full.slice(role.length).replace(/^[\s·]+/, '').trim();
-    }
-
-    const bodyNodes = entry.body.slice(1);
-    const firstPara = bodyNodes.find(n => n.type === 'paragraph');
-    const summary = firstPara ? mdastToString(firstPara) : '';
-    const images = getImagesForSlug(slug);
-
-    experience.push({
-      slug,
-      company,
-      role,
-      period,
-      summary,
-      images,
-      hasImages: images.length > 0,
-    });
-  }
-
-  // Cert / Education: h3 title + free-form body, flattened to plain meta
-  function parseNamedEntries(key: string): CVNamedEntry[] {
-    return splitByDepth(sections.get(key) ?? [], 3).map(entry => ({
-      title: mdastToString(entry.heading),
-      meta: entry.body.map(n => mdastToString(n)).join(' ').trim(),
-    }));
-  }
-
-  // Skills: h3 category + list items
-  const skills: CVSkillGroup[] = [];
-  for (const entry of splitByDepth(sections.get('skills') ?? [], 3)) {
-    const list = entry.body.find((n): n is List => n.type === 'list');
-    const items = list ? list.children.map(li => mdastToString(li)) : [];
-    skills.push({ category: mdastToString(entry.heading), items });
-  }
-
-  return {
-    header: { name, tagline, contacts },
-    experience,
-    certificates: parseNamedEntries('certificates'),
-    education: parseNamedEntries('education'),
-    skills,
-  };
-}
-
-const cv = parseCV();
+/* The heavy lifting happened at build time. All that is left is attaching
+   image assets, whose URLs only Vite knows. */
+const cv: CV = {
+  ...content.cv,
+  experience: content.cv.experience.map(entry => {
+    const images = getImagesForSlug(entry.slug);
+    return { ...entry, images, hasImages: images.length > 0 };
+  }),
+};
 
 export function getCV(): CV {
   return cv;
 }
 
 // ---- Writing folder loaders (used by case-study loader below) ----
-
-const writingContentModules = import.meta.glob<string>(
-  '../content/writing/*/index.md',
-  { query: '?raw', import: 'default', eager: true }
-);
 
 const writingImageModules = import.meta.glob<{ default: string }>([
   '../content/writing/designing-for-the-supervisor/cover-v2.webp',
@@ -283,11 +137,6 @@ const writingImageModules = import.meta.glob<{ default: string }>([
   '../content/writing/falling-down-the-rabbit-hole/packShot.webp',
 ], { eager: true });
 
-function writingSlugFromPath(path: string): string {
-  const m = path.match(/writing\/([^/]+)\//);
-  return m ? m[1] : '';
-}
-
 function writingImagesMap(slug: string): Record<string, ContentImage> {
   const map: Record<string, ContentImage> = {};
   for (const [path, mod] of Object.entries(writingImageModules)) {
@@ -313,32 +162,10 @@ export interface Work {
   bodyImages: Record<string, ContentImage>; // keyed by filename, for inline image refs
 }
 
-interface WorkFrontMatter {
-  productTitle?: string;
-  blurb?: string;
-  order?: number;
-  hero?: string;
-  tileImage?: string;
-}
-
-const workContentModules = import.meta.glob<string>(
-  '../content/experience/*/work.md',
-  { query: '?raw', import: 'default', eager: true }
-);
-
-function workSlugFromPath(path: string): string {
-  const m = path.match(/experience\/([^/]+)\//);
-  return m ? m[1] : '';
-}
-
 function buildWorks(): Work[] {
   const out: Work[] = [];
-  for (const [path, raw] of Object.entries(workContentModules)) {
-    const slug = workSlugFromPath(path);
-    if (!slug) continue;
-    const { frontMatter } = stripFrontMatter(raw);
-    const fm = (frontMatter ?? {}) as WorkFrontMatter;
-
+  for (const fm of content.works) {
+    const { slug } = fm;
     const cvEntry = cv.experience.find(e => e.slug === slug);
     if (!cvEntry) continue;
 
@@ -404,34 +231,14 @@ export interface CaseStudy {
   bodyImages: Record<string, ContentImage>;
 }
 
-function extractH1(body: string): string {
-  const m = body.match(/^#\s+(.+?)\s*$/m);
-  return m ? m[1].trim() : '';
-}
-
-interface CaseStudyFrontMatter {
-  work?: string;
-  excerpt?: string;
-  featured?: boolean;
-  cover?: string;
-}
-
 function buildCaseStudies(): CaseStudy[] {
   const out: CaseStudy[] = [];
-  for (const [path, raw] of Object.entries(writingContentModules)) {
-    const slug = writingSlugFromPath(path);
-    if (!slug) continue;
-    const { frontMatter, body } = stripFrontMatter(raw);
-    const fm = (frontMatter ?? {}) as CaseStudyFrontMatter;
-
-    // Skip files that haven't been migrated yet (no `work` field)
-    if (!fm.work) continue;
-
-    const images = writingImagesMap(slug);
+  for (const parsed of content.caseStudies) {
+    const images = writingImagesMap(parsed.slug);
 
     let coverImage: ContentImage | undefined;
-    if (fm.cover) {
-      const key = Object.keys(images).find(k => k.startsWith(fm.cover!));
+    if (parsed.cover) {
+      const key = Object.keys(images).find(k => k.startsWith(parsed.cover!));
       if (key) coverImage = images[key];
     }
     if (!coverImage) {
@@ -439,17 +246,7 @@ function buildCaseStudies(): CaseStudy[] {
       if (key) coverImage = images[key];
     }
 
-    const trimmedBody = body.trim();
-    out.push({
-      slug,
-      workSlug: fm.work,
-      title: extractH1(trimmedBody),
-      excerpt: fm.excerpt ?? '',
-      featured: fm.featured === true,
-      coverImage,
-      body: trimmedBody,
-      bodyImages: images,
-    });
+    out.push({ ...parsed, coverImage, bodyImages: images });
   }
   // Keep related stories alongside the product work they expand on.
   return out.sort((a, b) => {

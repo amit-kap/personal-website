@@ -1,14 +1,14 @@
 import { render, screen } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 import { getAllCaseStudies } from '@/lib/content'
-import Writing from './Writing'
+import Blog from './Blog'
 
-describe('Writing', () => {
+describe('Blog', () => {
   it('renders the featured and supporting articles with their live routes', () => {
-    render(<Writing />, { wrapper: MemoryRouter })
+    render(<Blog />, { wrapper: MemoryRouter })
 
     for (const study of getAllCaseStudies()) {
-      expect(screen.getByRole('link', { name: new RegExp(study.title, 'i') }))
+      expect(screen.getByRole('link', { name: new RegExp(`${study.title} cover`, 'i') }))
         .toHaveAttribute('href', `/case-studies/${study.slug}`)
     }
   })

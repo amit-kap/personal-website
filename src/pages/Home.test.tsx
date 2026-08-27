@@ -18,7 +18,7 @@ describe('Home', () => {
     render(<Home />, { wrapper: MemoryRouter })
 
     for (const work of getAllWorks()) {
-      expect(screen.getByRole('link', { name: new RegExp(work.productTitle, 'i') }))
+      expect(screen.getByRole('link', { name: new RegExp(`${work.company} case study`, 'i') }))
         .toHaveAttribute('href', `/work/${work.slug}`)
     }
 

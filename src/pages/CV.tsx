@@ -2,119 +2,110 @@ import { Link } from 'react-router-dom'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import { getCV } from '@/lib/content'
+import Reveal from '@/components/Reveal'
+import Seo from '@/components/Seo'
+import RollingText from '@/components/RollingText'
+import { BackToHome } from '@/components/work/casePrimitives'
 
-const cv = getCV()
-
-function ContactLine({ markdown }: { markdown: string }) {
+function DownloadIcon() {
   return (
-    <div className="text-[11px] text-black/60 leading-6">
-      <ReactMarkdown
-        remarkPlugins={[remarkGfm]}
-        components={{
-          p: ({ children }) => <p>{children}</p>,
-          a: ({ href, children }) => (
-            <a href={href} className="underline underline-offset-2 hover:text-black">
-              {children}
-            </a>
-          ),
-        }}
-      >
-        {markdown}
-      </ReactMarkdown>
-    </div>
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
+      <path d="M8 2v8m0 0 3-3m-3 3-3-3M2.5 12.5h11" />
+    </svg>
+  )
+}
+
+/* The contacts line is markdown in cv.md so it can carry links. */
+function Contacts({ markdown }: { markdown: string }) {
+  return (
+    <ReactMarkdown
+      remarkPlugins={[remarkGfm]}
+      components={{
+        p: ({ children }) => <p className="text-[11px] leading-6 text-[#5c5c58]">{children}</p>,
+        a: ({ href, children }) => (
+          <a href={href} className="underline decoration-[#c9c9c4] underline-offset-2 hover:decoration-[#111]">
+            {children}
+          </a>
+        ),
+      }}
+    >
+      {markdown}
+    </ReactMarkdown>
   )
 }
 
 export default function CV() {
-  return (
-    <>
-      <style>{`
-        @page { size: A4; margin: 0; }
-        @media print {
-          html, body { background: #fff !important; margin: 0 !important; }
-          nav, footer, [data-print-hide] { display: none !important; }
-          .app-content { margin-bottom: 0 !important; }
-          .cv-experience { break-inside: avoid; }
-        }
-        @media screen {
-          .cv-root { box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.06); }
-        }
-      `}</style>
+  const cv = getCV()
 
-      <div className="relative z-10 bg-background min-h-screen pt-20 pb-20 print:pt-0 print:pb-0 print:bg-white">
-        <div
-          className="cv-root mx-auto bg-white text-black"
-          style={{ width: '210mm', minHeight: '297mm', padding: '14mm 12mm' }}
-        >
-          {/* Header */}
-          <header className="mb-7">
-            <div className="flex items-start justify-between gap-6">
-              <div>
-                <h1 className="text-[26px] font-bold tracking-tight leading-tight">
-                  {cv.header.name}
-                </h1>
-                <p className="text-[13px] text-black/70 mt-1">{cv.header.tagline}</p>
-              </div>
-              <button
-                data-print-hide
-                onClick={() => window.print()}
-                className="shrink-0 text-[11px] font-mono uppercase tracking-[0.18em] text-black/60 hover:text-black border border-black/15 hover:border-black/40 rounded-full px-3.5 py-1.5 transition-colors"
-              >
-                Download PDF
-              </button>
-            </div>
-            <div className="mt-3">
-              <ContactLine markdown={cv.header.contacts} />
+  return (
+    <main>
+      <Seo
+        title="CV"
+        description="Amit Kaplinsky's curriculum vitae: founding design at Shift and Veriti, UX lead at Semperis, UX expert at Check Point."
+        path="/cv"
+      />
+      <div data-print-hide className="relative">
+        <div className="inner-col flex flex-col items-center gap-[18px] pb-10 pt-14 text-center">
+          <Reveal as="p" className="eyebrow" delay={0.05}>Curriculum Vitae</Reveal>
+          <Reveal as="h1" className="font-heading text-section font-medium tracking-[-0.015em]" delay={0.1}>
+            {cv.header.name}
+          </Reveal>
+          <Reveal as="p" className="body-copy max-w-[560px]" delay={0.16}>{cv.header.tagline}</Reveal>
+          <Reveal delay={0.22} className="flex flex-col items-center gap-2.5">
+            <button type="button" onClick={() => window.print()} className="pill-cta roll-host px-[26px] py-3 text-[15px]">
+              <RollingText text="Download PDF" />
+              <DownloadIcon />
+            </button>
+            <p className="text-[13px] text-muted-foreground">
+              Opens the print dialog — choose “Save as PDF”.
+            </p>
+          </Reveal>
+        </div>
+      </div>
+
+      <div className="cv-stage">
+        <article className="cv-sheet">
+          <header className="border-b border-[#e6e6e6] pb-4">
+            <h2 className="font-heading text-[26px] font-medium leading-tight tracking-[-0.02em]">{cv.header.name}</h2>
+            <p className="mt-1 text-[13px] text-[#454542]">{cv.header.tagline}</p>
+            <div className="mt-2.5">
+              <Contacts markdown={cv.header.contacts} />
             </div>
           </header>
 
-          {/* 2-column body */}
-          <div className="grid grid-cols-12 gap-x-8 gap-y-6">
-            {/* Left: Experience */}
-            <section className="col-span-8">
-              <h2 className="text-[10px] font-medium uppercase tracking-[0.28em] text-black/40 mb-5">
-                Experience
-              </h2>
-              <div className="space-y-6">
-                {cv.experience.map(({ slug, company, role, period, summary, hasImages }) => {
-                  const CompanyName = (
-                    <span className="font-semibold underline underline-offset-[3px] decoration-black/50">
-                      {company}
-                    </span>
-                  )
-                  return (
-                    <article key={slug} className="cv-experience">
-                      <h3 className="text-[13px] leading-snug">
-                        {hasImages ? (
-                          <Link to={`/work/${slug}`} className="hover:opacity-60 transition-opacity">
-                            {CompanyName}
-                          </Link>
-                        ) : (
-                          CompanyName
-                        )}
-                        <span className="text-black/40 mx-2 font-normal">|</span>
-                        <span className="text-black/80">{role}</span>
-                      </h3>
-                      <p className="text-[10.5px] font-mono text-black/45 mt-0.5">{period}</p>
-                      <p className="text-[11.5px] leading-[1.55] text-black/70 mt-2">{summary}</p>
-                    </article>
-                  )
-                })}
+          <div className="mt-7 grid grid-cols-12 gap-x-9 gap-y-7">
+            <section className="col-span-12 sm:col-span-8">
+              <h3 className="cv-head">Experience</h3>
+              <div className="mt-4 flex flex-col gap-[18px]">
+                {cv.experience.map(({ slug, company, role, period, summary, hasImages }) => (
+                  <article key={slug} className="cv-entry">
+                    <h4 className="font-heading text-[13.5px] font-medium leading-snug">
+                      {hasImages ? (
+                        <Link to={`/work/${slug}`} className="underline decoration-[#c9c9c4] underline-offset-[3px] hover:decoration-[#111]">
+                          {company}
+                        </Link>
+                      ) : (
+                        company
+                      )}
+                      <span className="mx-2 font-normal text-[#c2c2bd]">|</span>
+                      <span className="font-normal text-[#333330]">{role}</span>
+                    </h4>
+                    <p className="mt-0.5 text-[10.5px] uppercase tracking-[0.12em] text-[#8a8a85]">{period}</p>
+                    <p className="mt-1.5 text-[11.5px] leading-[1.55] text-[#5c5c58]">{summary}</p>
+                  </article>
+                ))}
               </div>
             </section>
 
-            {/* Right: Certificates / Education / Skills */}
-            <aside className="col-span-4 space-y-6">
+            <aside className="col-span-12 flex flex-col gap-7 sm:col-span-4">
               {cv.certificates.length > 0 && (
                 <section>
-                  <h2 className="text-[10px] font-medium uppercase tracking-[0.28em] text-black/40 mb-5">
-                    Certificates
-                  </h2>
-                  <div className="space-y-4">
+                  <h3 className="cv-head">Certificates</h3>
+                  <div className="mt-4 flex flex-col gap-3">
                     {cv.certificates.map(({ title, meta }) => (
-                      <div key={title}>
-                        <p className="text-[12px] font-semibold leading-snug">{title}</p>
-                        {meta && <p className="text-[10.5px] text-black/55 mt-0.5">{meta}</p>}
+                      <div key={title} className="cv-entry">
+                        <p className="font-heading text-[12px] font-medium leading-snug">{title}</p>
+                        {meta && <p className="mt-0.5 text-[10.5px] text-[#7b7b76]">{meta}</p>}
                       </div>
                     ))}
                   </div>
@@ -123,14 +114,12 @@ export default function CV() {
 
               {cv.education.length > 0 && (
                 <section>
-                  <h2 className="text-[10px] font-medium uppercase tracking-[0.28em] text-black/40 mb-5">
-                    Education
-                  </h2>
-                  <div className="space-y-4">
+                  <h3 className="cv-head">Education</h3>
+                  <div className="mt-4 flex flex-col gap-3">
                     {cv.education.map(({ title, meta }) => (
-                      <div key={title}>
-                        <p className="text-[12px] font-semibold leading-snug">{title}</p>
-                        {meta && <p className="text-[10.5px] text-black/55 mt-0.5">{meta}</p>}
+                      <div key={title} className="cv-entry">
+                        <p className="font-heading text-[12px] font-medium leading-snug">{title}</p>
+                        {meta && <p className="mt-0.5 text-[10.5px] text-[#7b7b76]">{meta}</p>}
                       </div>
                     ))}
                   </div>
@@ -139,16 +128,12 @@ export default function CV() {
 
               {cv.skills.length > 0 && (
                 <section>
-                  <h2 className="text-[10px] font-medium uppercase tracking-[0.28em] text-black/40 mb-5">
-                    Skills
-                  </h2>
-                  <div className="space-y-4">
+                  <h3 className="cv-head">Skills</h3>
+                  <div className="mt-4 flex flex-col gap-3">
                     {cv.skills.map(({ category, items }) => (
-                      <div key={category}>
-                        <p className="text-[12px] font-semibold leading-snug mb-1">{category}</p>
-                        <ul className="text-[11px] text-black/65 space-y-0.5 list-disc pl-4 marker:text-black/30">
-                          {items.map(item => <li key={item}>{item}</li>)}
-                        </ul>
+                      <div key={category} className="cv-entry">
+                        <p className="font-heading text-[12px] font-medium leading-snug">{category}</p>
+                        <p className="mt-0.5 text-[11px] leading-[1.5] text-[#5c5c58]">{items.join(', ')}</p>
                       </div>
                     ))}
                   </div>
@@ -156,8 +141,12 @@ export default function CV() {
               )}
             </aside>
           </div>
-        </div>
+        </article>
       </div>
-    </>
+
+      <div data-print-hide>
+        <BackToHome />
+      </div>
+    </main>
   )
 }

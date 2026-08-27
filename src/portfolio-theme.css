@@ -1,90 +1,109 @@
 /* ============================================================================
-   PORTFOLIO — THEME & DESIGN SYSTEM
+   PORTFOLIO — THEME & DESIGN SYSTEM ("Story Cards")
    Single source of truth for the site's visual language: fonts, type scale,
    color palette, radius, motion, and shared component utilities.
 
-   Layout (the centered 1440 column, section rhythm, grids) is composed with
-   Tailwind utilities in the components — this file owns the *system* those
-   utilities draw from. Framework imports (tailwindcss / shadcn) live in
+   The system: pure white paper, hairline #ececec structure (full-height grid
+   lines framing a 1030px column), Geist 500 headings + Plus Jakarta body,
+   ink #111 for content, one orange accent #f04a00 for every action, and
+   per-project dark→luminous gradient backdrops for product media.
+
+   Layout is composed with Tailwind utilities in the components — this file
+   owns the *system* those utilities draw from. Framework imports live in
    index.css, which imports this file.
    ============================================================================ */
 
 /* ----------------------------------------------------------------------------
-   1 · FONTS  — loaded faces (2 webfont families + a system mono stack)
-   Geist → headings/display · Plus Jakarta Sans → body/UI + italic tagline
+   1 · FONTS  — Geist → headings/display · Plus Jakarta Sans → body/UI
 ---------------------------------------------------------------------------- */
 @import '@fontsource/geist-sans/400.css';
 @import '@fontsource/geist-sans/500.css';
 @import '@fontsource/geist-sans/600.css';
-@import '@fontsource/geist-sans/800.css';
 @import '@fontsource/plus-jakarta-sans/300.css';
 @import '@fontsource/plus-jakarta-sans/400.css';
 @import '@fontsource/plus-jakarta-sans/400-italic.css';
 @import '@fontsource/plus-jakarta-sans/500.css';
-@import '@fontsource/plus-jakarta-sans/700.css';
 
 /* ----------------------------------------------------------------------------
    2 · TYPE  — families + scale (generates --font-* and text-* utilities)
-   Three tight UI steps (12 / 14 / 16), followed by one restrained editorial
-   ladder. Large type is reserved for the page hero, not every section.
 ---------------------------------------------------------------------------- */
 @theme {
-  /* Families */
   --font-sans: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
   --font-heading: 'Geist', ui-sans-serif, system-ui, sans-serif;
   --font-mono: ui-monospace, 'SFMono-Regular', Menlo, monospace;
 
-  /* Scale (size + paired line-height) */
-  --text-caption: 0.75rem;                            /* 12px — eyebrows, labels, fine print */
+  --text-caption: 0.75rem;                             /* 12px — eyebrows, meta lines */
   --text-caption--line-height: 1.4;
-  --text-meta: 0.875rem;                              /* 14px — meta, secondary UI text */
+  --text-meta: 0.875rem;                               /* 14px — nav, secondary UI */
   --text-meta--line-height: 1.45;
-  --text-body: 1rem;                                  /* 16px — body copy, buttons */
-  --text-body--line-height: 1.55;
-  --text-lead: clamp(1.125rem, 1.6vw, 1.5rem);        /* 18→24px — lead copy */
-  --text-lead--line-height: 1.4;
-  --text-title-sm: clamp(1.5rem, 2vw, 2rem);          /* 24→32px — card titles */
-  --text-title-sm--line-height: 1.05;
-  --text-section: clamp(2.25rem, 3.6vw, 3.75rem);     /* 36→60px — section headings */
-  --text-section--line-height: 0.94;
-  --text-feature: clamp(2.6rem, 4.4vw, 4.5rem);       /* 42→72px — feature titles */
-  --text-feature--line-height: 0.92;
-  --text-hero: clamp(3rem, 5.5vw, 5.75rem);            /* 48→92px — page hero only */
-  --text-hero--line-height: 0.88;
+  --text-body: 1rem;                                   /* 16px — body copy */
+  --text-body--line-height: 1.65;
+  --text-lead: clamp(1.0625rem, 1.35vw, 1.1875rem);    /* 17→19px — deks, article prose */
+  --text-lead--line-height: 1.6;
+  --text-stmt: clamp(1.25rem, 1.55vw, 1.375rem);       /* 20→22px — section statements */
+  --text-stmt--line-height: 1.25;
+  --text-title-sm: clamp(1.375rem, 1.85vw, 1.625rem);  /* 22→26px — card titles */
+  --text-title-sm--line-height: 1.2;
+  --text-section: clamp(1.75rem, 2.4vw, 2.125rem);     /* 28→34px — centered section heads */
+  --text-section--line-height: 1.1;
+  --text-feature: clamp(2rem, 3.2vw, 2.875rem);        /* 32→46px — page titles */
+  --text-feature--line-height: 1.12;
+  --text-hero: clamp(2.5rem, 4vw, 3.625rem);           /* 40→58px — home hero only */
+  --text-hero--line-height: 1.05;
 }
 
 /* ----------------------------------------------------------------------------
-   3 · COLOR  — a restrained paper / ink system with one product accent.
+   3 · COLOR — white paper, ink, hairlines, one orange accent for actions.
 ---------------------------------------------------------------------------- */
 :root {
-  --background: #f6f6f3;                 /* paper — the ground */
+  --background: #ffffff;                 /* paper */
   --foreground: #111111;                 /* ink */
-  --card: #f6f6f3;
+  --card: #ffffff;
   --card-foreground: #111111;
   --popover: #ffffff;
   --popover-foreground: #111111;
   --primary: #111111;
   --primary-foreground: #ffffff;
-  --secondary: #ededeb;
+  --secondary: #f4f4f2;
   --secondary-foreground: #111111;
-  --muted: #ededeb;
-  --muted-foreground: #70706d;           /* secondary text — meta, captions, dates */
-  --accent: #ededeb;
-  --accent-foreground: #111111;
+  --muted: #f4f4f2;
+  --muted-foreground: #70706d;           /* meta, captions, dates */
+  --accent: #f04a00;                     /* THE accent — every action is orange */
+  --accent-foreground: #ffffff;
   --destructive: oklch(0.577 0.245 27.325);
-  --border: #d9d9d5;                     /* hairlines, dividers */
-  --input: #d9d9d5;
-  --ring: #111111;                       /* keyboard focus */
+  --border: #ececec;                     /* hairlines, dividers, grid lines */
+  --input: #ececec;
+  --ring: #111111;
 
-  /* One light surface and one product signal */
-  --surface-muted: #ededeb;
-  --shift-violet: #6546dc;
-  --radius: 0.75rem;
+  --copy: #454542;                       /* long-form body ink */
+  --winbar: #fbfbfa;                     /* window-chrome title bar */
+  --nav-pill-bg: rgba(255, 255, 255, 0.88);
+  --radius: 0.625rem;                    /* 10px — cards, windows, backdrops */
 }
 
-/* Map the palette + radius onto Tailwind's color/radius utilities */
+[data-theme='dark'] {
+  --background: #0f0f0e;
+  --foreground: #f2f2ef;
+  --card: #0f0f0e;
+  --card-foreground: #f2f2ef;
+  --popover: #161615;
+  --popover-foreground: #f2f2ef;
+  --primary: #f2f2ef;
+  --primary-foreground: #111111;
+  --secondary: #1d1d1b;
+  --secondary-foreground: #f2f2ef;
+  --muted: #1d1d1b;
+  --muted-foreground: #8f8f8a;
+  --border: #262624;
+  --input: #262624;
+  --ring: #f2f2ef;
+
+  --copy: #b8b8b2;
+  --winbar: #191917;
+  --nav-pill-bg: rgba(17, 17, 16, 0.82);
+}
+
 @theme inline {
-  --font-heading: 'Geist', ui-sans-serif, system-ui, sans-serif;
   --color-ring: var(--ring);
   --color-input: var(--input);
   --color-border: var(--border);
@@ -103,378 +122,470 @@
   --color-card: var(--card);
   --color-foreground: var(--foreground);
   --color-background: var(--background);
-  --color-surface-muted: var(--surface-muted);
-  --color-shift-violet: var(--shift-violet);
-  --radius-sm: calc(var(--radius) * 0.6);
-  --radius-md: calc(var(--radius) * 0.8);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) * 1.4);
+  --color-copy: var(--copy);
+  --radius-sm: calc(var(--radius) * 0.8);
+  --radius-md: var(--radius);
+  --radius-lg: calc(var(--radius) * 1.2);
 }
 
 /* ----------------------------------------------------------------------------
-   4 · MOTION  — keyframes + animate-* utilities
+   4 · STRUCTURE — grid lines and the 1030px column
 ---------------------------------------------------------------------------- */
-@keyframes fade-up {
-  from { opacity: 0; transform: translateY(16px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-@keyframes fade-in {
-  from { opacity: 0; transform: translateX(-6px); }
-  to { opacity: 1; transform: translateX(0); }
-}
-@keyframes avatar-light-sweep {
-  0% {
-    transform: translateX(-180%) rotate(30deg);
-  }
-  100% {
-    transform: translateX(600%) rotate(30deg);
-  }
-}
-@keyframes product-video-spin {
-  to { transform: rotate(360deg); }
-}
-@layer utilities {
-  .animate-fade-up {
-    animation: fade-up 0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
-  }
-  .animate-fade-in {
-    animation: fade-in 0.25s cubic-bezier(0.2, 0, 0, 1) both;
-  }
-
-  .hero-outline {
-    -webkit-text-fill-color: transparent;
-    -webkit-text-stroke: 1.5px var(--foreground);
-  }
-}
-
-/* Persistent navigation: it acquires a soft glass layer only after the page
-   moves, so the first viewport keeps its quiet editorial edge. */
-.site-header {
-  height: 68px;
-  border-bottom: 1px solid transparent;
-  background: var(--background);
-  transition:
-    background-color 260ms cubic-bezier(0.2, 0, 0, 1),
-    border-color 260ms cubic-bezier(0.2, 0, 0, 1),
-    box-shadow 260ms cubic-bezier(0.2, 0, 0, 1),
-    backdrop-filter 260ms cubic-bezier(0.2, 0, 0, 1);
-}
-.site-header-scrolled {
-  border-bottom-color: color-mix(in srgb, var(--foreground) 10%, transparent);
-  background: color-mix(in srgb, var(--background) 88%, transparent);
-  box-shadow: 0 8px 24px rgb(27 31 36 / 0.05);
-  backdrop-filter: blur(16px) saturate(1.05);
-}
-.profile-identity-name {
-  display: inline-block;
-  letter-spacing: 0.02em;
-  transition: letter-spacing 300ms cubic-bezier(0.2, 0, 0, 1);
-}
-.profile-avatar {
-  position: relative;
-  display: inline-flex;
-  flex-shrink: 0;
-  overflow: hidden;
-  border-radius: 9999px;
-  transition: transform 220ms cubic-bezier(0.2, 0, 0, 1);
-}
-.profile-avatar::after {
-  position: absolute;
-  top: -70%;
-  left: -18%;
-  width: 14px;
-  height: 240%;
+/* Full-height 1px lines framing the page, 71px from each edge at 1440. */
+.grid-lines::before,
+.grid-lines::after {
   content: '';
-  background: #ffffff;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: var(--border);
   pointer-events: none;
-  transform: translateX(-180%) rotate(30deg);
 }
-.profile-identity:hover .profile-avatar::after,
-.profile-identity:focus-visible .profile-avatar::after {
-  animation: avatar-light-sweep 550ms linear 1 forwards;
-}
-.profile-identity:hover .profile-avatar,
-.profile-identity:focus-visible .profile-avatar {
-  transform: scale(1.1);
-}
-.profile-identity:hover .profile-identity-name,
-.profile-identity:focus-visible .profile-identity-name {
-  letter-spacing: 0.14em;
-}
-.site-nav-link {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  height: 34px;
-  color: color-mix(in srgb, var(--foreground) 58%, transparent);
-  font-weight: 500;
-  transition:
-    color 180ms cubic-bezier(0.2, 0, 0, 1),
-    transform 180ms cubic-bezier(0.2, 0, 0, 1);
-}
-.site-nav-link::after {
-  position: absolute;
-  right: 0;
-  bottom: -3px;
-  left: 0;
-  height: 2px;
-  content: '';
-  background: var(--foreground);
-  opacity: 0;
-  transform: scaleX(0.45);
-  transform-origin: center;
-  transition: transform 220ms cubic-bezier(0.2, 0, 0, 1), opacity 160ms ease-out;
-}
-.site-nav-link:hover,
-.site-nav-link:focus-visible {
-  color: var(--foreground);
-}
-.site-nav-link:active {
-  transform: scale(0.97);
-}
-.site-nav-link-active {
-  color: var(--foreground);
-  font-weight: 600;
-}
-.site-nav-link-active::after {
-  opacity: 1;
-  transform: scaleX(1);
-}
-.read-cta {
-  opacity: 0.6;
-  transition: opacity 160ms cubic-bezier(0.2, 0, 0, 1);
-}
-.group:hover .read-cta,
-.group:focus-visible .read-cta {
-  opacity: 1;
-}
-.header-contact-cta {
-  position: relative;
-  isolation: isolate;
-  overflow: hidden;
-  align-items: center;
-  height: 36px;
-  padding: 0 0.9rem;
-  border: 1px solid color-mix(in srgb, var(--foreground) 22%, transparent);
-  border-radius: 999px;
-  color: var(--foreground);
-  font-size: var(--text-meta);
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  transition:
-    color 180ms cubic-bezier(0.2, 0, 0, 1),
-    border-color 180ms cubic-bezier(0.2, 0, 0, 1),
-    transform 180ms cubic-bezier(0.2, 0, 0, 1);
-}
-.header-contact-cta::before {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  content: '';
-  border-radius: inherit;
-  background: var(--foreground);
-  transform: scale(0);
-  transform-origin: center;
-  transition: transform 200ms cubic-bezier(0.2, 0, 0, 1);
-}
-.header-contact-cta > * {
-  position: relative;
-  z-index: 1;
-}
-.header-contact-cta:hover,
-.header-contact-cta:focus-visible {
-  border-color: var(--foreground);
-  color: #ffffff;
-}
-.header-contact-cta:hover::before,
-.header-contact-cta:focus-visible::before {
-  transform: scale(1);
-}
-.header-contact-cta:active {
-  transform: scale(0.97);
-}
-.explore-scroll-cta {
-  width: 36px;
-  padding: 0;
-  border-radius: 9999px;
-  justify-content: center;
-}
-.footer-cv-cta {
-  position: relative;
-  isolation: isolate;
-  overflow: hidden;
-  transition:
-    color 180ms cubic-bezier(0.2, 0, 0, 1),
-    border-color 180ms cubic-bezier(0.2, 0, 0, 1),
-    transform 180ms cubic-bezier(0.2, 0, 0, 1);
-}
-.footer-cv-cta::before {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  content: '';
-  border-radius: inherit;
-  background: #ffffff;
-  transform: scale(0);
-  transform-origin: center;
-  transition: transform 200ms cubic-bezier(0.2, 0, 0, 1);
-}
-.footer-cv-cta > * {
-  position: relative;
-  z-index: 1;
-}
-.footer-cv-cta:hover,
-.footer-cv-cta:focus-visible {
-  border-color: white;
-  color: var(--foreground);
-}
-.footer-cv-cta:hover::before,
-.footer-cv-cta:focus-visible::before {
-  transform: scale(1);
-}
-.footer-cv-cta:active {
-  transform: scale(0.97);
+/* The lines track the 1030px column (134px outside it, the spacing the design
+   was drawn at) instead of the viewport edge, so they stay close to the
+   content on wide screens. At 1440 this resolves to the original 71px. */
+.grid-lines::before { left: max(clamp(16px, 4.93vw, 71px), calc(50% - 649px)); }
+.grid-lines::after { right: max(clamp(16px, 4.93vw, 71px), calc(50% - 649px)); }
+@media (max-width: 640px) {
+  .grid-lines::before,
+  .grid-lines::after { display: none; }
 }
 
-/* The footer lives behind the content and is exposed only at the end of the
-   page. Its measured height is written by Footer so this works at every width. */
-.app-content {
-  margin-bottom: var(--footer-reveal-height, 42rem);
+/* The content column. */
+.inner-col {
+  width: 100%;
+  max-width: 1030px;
+  margin-inline: auto;
+  padding-inline: clamp(20px, 4vw, 32px);
 }
-.footer-reveal {
-  min-height: var(--footer-reveal-height, auto);
+@media (min-width: 1160px) {
+  .inner-col { padding-inline: 0; }
+}
+
+/* ----------------------------------------------------------------------------
+   5 · LABELS & COPY
+---------------------------------------------------------------------------- */
+.eyebrow {
+  font-size: var(--text-caption);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+}
+.meta-line {
+  font-size: var(--text-caption);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+}
+.stmt {
+  font-family: var(--font-heading);
+  font-weight: 500;
+  font-size: var(--text-stmt);
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  color: var(--foreground);
+}
+.body-copy {
+  font-size: var(--text-body);
+  line-height: 1.65;
+  color: var(--copy);
+}
+
+/* ----------------------------------------------------------------------------
+   6 · ACTIONS — orange pills and quiet text links
+---------------------------------------------------------------------------- */
+.pill-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--accent);
+  color: var(--accent-foreground);
+  border-radius: 999px;
+  font-weight: 500;
+  white-space: nowrap;
+  transition: background-color 180ms cubic-bezier(0.2, 0, 0, 1), transform 180ms cubic-bezier(0.2, 0, 0, 1);
+}
+.pill-cta:hover,
+.pill-cta:focus-visible { background: #d63e00; }
+.pill-cta:active { transform: scale(0.97); }
+
+.text-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 500;
+  color: var(--foreground);
+  transition: color 160ms ease;
+}
+.text-link:hover,
+.text-link:focus-visible { color: var(--accent); }
+
+/* ----------------------------------------------------------------------------
+   7 · MEDIA SURFACES — gradient backdrops and window chrome
+---------------------------------------------------------------------------- */
+/* Per-project gradient backdrop with a faint white grid overlay. The media
+   sits bottom-anchored inside. Set --g1/--g2/--g3 per project. */
+.backdrop {
+  border-radius: var(--radius);
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  background-size: 150px 150px, 150px 150px, 100% 100%;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(205deg, var(--g1) 0%, var(--g2) 55%, var(--g3) 100%);
+}
+.backdrop-media {
+  width: 90%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  object-position: left top;
+  border-radius: 8px 8px 0 0;
+  box-shadow: 0 -10px 60px rgba(0, 0, 0, 0.35);
+  overflow: hidden;
+  display: block;
+  /* Grows from its bottom edge so it stays seated on the backdrop floor.
+     Curve matches the source site's hover motion: most of the travel in the
+     first third, then a long soft settle. */
+  transform-origin: bottom center;
+  transition: transform 450ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.backdrop:hover .backdrop-media {
+  transform: scale(1.02);
+}
+/* Media shown whole at its own ratio, 90% wide so 5% of the backdrop
+   stays visible either side, and centred rather than seated on the floor. */
+.backdrop-media--fit {
+  height: auto;
+  aspect-ratio: auto;
+  object-fit: contain;
+  align-self: center;
+  border-radius: 8px;
+  transform-origin: center;
+}
+
+/* Video controls: hairline progress on the bottom edge, play/pause on hover. */
+.vid {
+  position: relative;
+}
+.vid-track {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding-top: 14px;
+  cursor: pointer;
+}
+.vid-line {
+  height: 2px;
+  background: rgba(17, 17, 17, 0.16);
+  overflow: hidden;
+}
+.vid-fill {
+  height: 100%;
+  background: var(--accent);
+  transform-origin: left center;
+  transition: transform 250ms linear;
+}
+.vid-btn {
+  position: absolute;
+  left: 14px;
+  bottom: 14px;
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  background: rgba(17, 17, 17, 0.55);
+  backdrop-filter: blur(6px);
+  opacity: 0;
+  transition:
+    opacity 200ms ease,
+    background-color 200ms ease;
+}
+.vid:hover .vid-btn,
+.vid-btn:focus-visible {
+  opacity: 1;
+}
+.vid-btn:hover {
+  background: var(--accent);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .site-header,
-  .profile-identity-name,
-  .profile-avatar,
-  .profile-avatar::after,
-  .site-nav-link,
-  .header-contact-cta,
-  .header-contact-cta::before,
-  .footer-cv-cta,
-  .footer-cv-cta::before,
-  .read-cta,
-  .site-nav-link::after {
+  .vid-btn {
+    opacity: 1;
+  }
+  .vid-fill {
     transition: none;
   }
-  .profile-identity:hover .profile-avatar::after,
-  .profile-identity:focus-visible .profile-avatar::after {
-    animation: none;
+}
+
+/* The CV sheet is a print document, so it stays ink-on-white in both themes
+   and is the only thing the print stylesheet leaves standing. */
+.cv-stage {
+  display: flex;
+  justify-content: center;
+  padding: 0 16px 76px;
+}
+.cv-sheet {
+  width: 210mm;
+  max-width: 100%;
+  min-height: 297mm;
+  padding: 14mm 12mm;
+  background: #fff;
+  color: #111;
+  border: 1px solid #ececec;
+  border-radius: 4px;
+  box-shadow:
+    0 1px 2px rgba(17, 17, 17, 0.04),
+    0 10px 40px rgba(17, 17, 17, 0.08);
+}
+.cv-head {
+  font-size: var(--text-caption);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #8a8a85;
+}
+
+@page {
+  size: A4;
+  margin: 0;
+}
+@media print {
+  html,
+  body {
+    background: #fff !important;
+  }
+  /* Marked explicitly rather than by tag: the CV sheet has a <header> of its
+     own, and a blanket rule would strip the name off the document. */
+  [data-print-hide] {
+    display: none !important;
+  }
+  .grid-lines::before,
+  .grid-lines::after {
+    display: none !important;
+  }
+  .cv-stage {
+    padding: 0 !important;
+  }
+  .cv-sheet {
+    width: 100%;
+    min-height: 0;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+  .cv-entry {
+    break-inside: avoid;
   }
 }
 
-/* ----------------------------------------------------------------------------
-   5 · COMPONENT UTILITIES
----------------------------------------------------------------------------- */
-/* Labels are deliberately tiered: page context, section markers, and dense
-   project metadata. They should orient the reader, not compete with titles. */
-.eyebrow {
-  @apply uppercase text-caption leading-[1.2];
+/* Browser-window chrome for product UI screenshots. */
+.window {
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  box-shadow:
+    0 1px 2px rgba(17, 17, 17, 0.03),
+    0 6px 16px rgba(17, 17, 17, 0.04),
+    0 16px 32px rgba(17, 17, 17, 0.03);
 }
-.eyebrow-section {
-  @apply font-semibold tracking-[0.15em] text-muted-foreground;
+/* The card is a button into the full-frame view. Same lift and curve as the
+   hero backdrop, so every enlargeable surface on the site behaves alike. */
+.window-btn {
+  display: block;
+  width: 100%;
+  cursor: zoom-in;
+  border-radius: var(--radius);
+  transition: transform 450ms cubic-bezier(0.22, 1, 0.36, 1);
 }
-.eyebrow-inverse {
-  @apply text-white/65;
+.window-btn:hover {
+  transform: scale(1.02);
+}
+.window-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 6px;
 }
 
-.product-carousel-dots {
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: grid;
+  place-items: center;
+  padding: clamp(16px, 4vw, 56px);
+  background: rgba(10, 10, 12, 0.86);
+  cursor: zoom-out;
+  animation: lightbox-in 200ms ease both;
+}
+.lightbox img {
+  max-width: 100%;
+  max-height: 100%;
+  border-radius: var(--radius);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.45);
+}
+.lightbox-close {
   position: absolute;
-  bottom: 5px;
-  left: 50%;
+  top: clamp(14px, 2.4vw, 28px);
+  right: clamp(14px, 2.4vw, 28px);
+  width: 38px;
+  height: 38px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.12);
+  transition: background-color 200ms ease;
+}
+.lightbox-close:hover {
+  background: var(--accent);
+}
+@keyframes lightbox-in {
+  from {
+    opacity: 0;
+  }
+}
+
+.winbar {
   display: flex;
   align-items: center;
   gap: 5px;
-  height: 8px;
-  transform: translateX(-50%);
+  height: 18px;
+  padding: 0 9px;
+  background: var(--winbar);
+  border-bottom: 1px solid var(--border);
+  flex: none;
 }
+.windot { width: 6px; height: 6px; border-radius: 999px; display: inline-block; }
+.windot-r { background: #f0685e; }
+.windot-y { background: #f6bf4f; }
+.windot-g { background: #5fc454; }
 
-.product-video-loader {
-  position: absolute;
-  inset: 0;
-  display: grid;
-  place-items: center;
-  background: color-mix(in srgb, var(--popover) 28%, transparent);
-}
-.product-video-loader span {
-  display: block;
-  width: 14px;
-  height: 14px;
-  border: 1px solid color-mix(in srgb, var(--foreground) 25%, transparent);
-  border-top-color: var(--foreground);
-  border-radius: 50%;
-  animation: product-video-spin 800ms linear infinite;
-}
-
-@media (min-width: 640px) {
-  .product-carousel-dots { bottom: 20px; }
-}
-
-@media (min-width: 1024px) {
-  .product-carousel-dots { bottom: 24px; }
-}
-
-.product-carousel-dot {
-  display: block;
-  width: 6px;
-  height: 6px;
+/* ----------------------------------------------------------------------------
+   8 · NAV — the floating pill
+---------------------------------------------------------------------------- */
+.nav-pill {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: min(430px, calc(100vw - 32px));
+  height: 49px;
+  background: var(--nav-pill-bg);
+  border: 1px solid var(--border);
   border-radius: 999px;
-  background: var(--product-carousel-muted, color-mix(in srgb, var(--shift-violet) 35%, transparent));
-  transition: width 500ms cubic-bezier(0.22, 1, 0.36, 1), background-color 350ms ease;
+  padding: 0 8px;
+  box-shadow: 0 8px 24px rgba(17, 17, 17, 0.06);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  font-size: var(--text-meta);
+  box-sizing: border-box;
 }
+.nav-pill-link {
+  color: var(--muted-foreground);
+  padding: 7px 13px;
+  transition: color 160ms ease;
+}
+.nav-pill-link:hover,
+.nav-pill-link:focus-visible { color: var(--accent); }
+.nav-pill-link[aria-current='page'] {
+  color: var(--foreground);
+  text-decoration: underline;
+  text-underline-offset: 7px;
+  text-decoration-thickness: 1.5px;
+}
+@keyframes nav-drop {
+  from { opacity: 0; transform: translateY(-64px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.nav-drop { animation: nav-drop 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.15s both; }
 
-.product-carousel-dot.is-active {
-  width: 18px;
-  background: var(--product-carousel-active, var(--shift-violet));
+/* ----------------------------------------------------------------------------
+   9 · MOTION — rolling-letter hover, entrances, scroll reveals
+---------------------------------------------------------------------------- */
+/* Rolling text: each character is a column of two stacked copies inside an
+   overflow-hidden line; hover on the host rolls the columns up in a stagger. */
+.roll {
+  display: inline-flex;
+  align-items: flex-start; /* columns keep their 2-line height; stretch would halve the roll distance */
+  overflow: hidden;
+  line-height: 1.3;
+  height: 1.3em;
+  vertical-align: bottom;
 }
+.roll-ch {
+  display: inline-block;
+  white-space: pre;
+  transition: transform 0.4s cubic-bezier(0.76, 0, 0.24, 1);
+}
+.roll-host:hover .roll-ch,
+.roll-host:focus-visible .roll-ch { transition-delay: var(--roll-d, 0s); }
+.roll-ch > span { display: block; }
+.roll-host:hover .roll-ch,
+.roll-host:focus-visible .roll-ch { transform: translateY(-50%); }
 
-.carousel-tone-plum {
-  --product-carousel-active: var(--shift-violet);
-  --product-carousel-muted: color-mix(in srgb, var(--shift-violet) 35%, transparent);
+/* Load entrance + scroll reveal share one contract: .reveal starts hidden,
+   .is-in shows it. Stagger with --reveal-delay. */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity 0.6s ease var(--reveal-delay, 0s),
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1) var(--reveal-delay, 0s);
 }
-
-.carousel-tone-violet {
-  --product-carousel-active: var(--shift-violet);
-  --product-carousel-muted: color-mix(in srgb, var(--shift-violet) 35%, transparent);
-}
-
-.carousel-tone-olive {
-  --product-carousel-active: var(--shift-violet);
-  --product-carousel-muted: color-mix(in srgb, var(--shift-violet) 35%, transparent);
-}
-
-@media (min-width: 640px) {
-  .compact-carousel-plate .product-carousel-dots { bottom: 14px; }
-}
-
-@media (min-width: 1024px) {
-  .compact-carousel-plate .product-carousel-dots { bottom: 16px; }
-}
+.reveal.is-in { opacity: 1; transform: translateY(0); }
+.reveal-scale { transform: translateY(50px) scale(1.08); }
+.reveal-scale.is-in { transform: translateY(0) scale(1); }
 
 @media (prefers-reduced-motion: reduce) {
-  .product-video-loader span {
-    animation: none;
-  }
-  .product-carousel-dot {
-    transition: none;
-  }
-}
-
-@media (min-width: 1024px) {
-  .shift-image-bleed-right {
-    margin-right: min(0px, calc((1440px - 100vw) / 2));
-  }
-}
-
-.case-study-image-row > figure {
-  margin-top: 0;
-  margin-bottom: 0;
+  .roll-ch { transition: none; }
+  .roll-host:hover .roll-ch { transform: none; }
+  .reveal, .reveal-scale { opacity: 1; transform: none; transition: none; }
+  .backdrop-media { transition: none; }
+  .backdrop:hover .backdrop-media { transform: none; }
+  .window-btn { transition: none; }
+  .window-btn:hover { transform: none; }
+  .lightbox { animation: none; }
+  .nav-drop { animation: none; }
+  .pill-cta, .text-link, .nav-pill-link { transition: none; }
 }
 
 /* ----------------------------------------------------------------------------
-   6 · BASE
+   10 · ARTICLE PROSE — the blog article template
+---------------------------------------------------------------------------- */
+.prose-col {
+  width: 100%;
+  max-width: 680px;
+  margin-inline: auto;
+}
+.prose-col p {
+  font-size: 17px;
+  line-height: 1.75;
+  color: var(--copy);
+}
+.prose-col p a {
+  color: var(--accent);
+  font-weight: 500;
+}
+.prose-col p a:hover { text-decoration: underline; text-underline-offset: 3px; }
+.prose-quote {
+  border-left: 2px solid var(--accent);
+  padding: 4px 0 4px 24px;
+  font-family: var(--font-heading);
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 1.5;
+  letter-spacing: -0.01em;
+  color: var(--foreground);
+}
+
+/* ----------------------------------------------------------------------------
+   11 · BASE
 ---------------------------------------------------------------------------- */
 @layer base {
   * {

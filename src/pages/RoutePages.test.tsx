@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react'
 import { MemoryRouter, Route, Routes } from 'react-router-dom'
 import type { ReactNode } from 'react'
 import CaseStudyPage from './CaseStudyPage'
-import CV from './CV'
+import About from './About'
 import WorkItem from './WorkItem'
 
 function renderAt(path: string, routePath: string, element: ReactNode) {
@@ -18,20 +18,20 @@ function renderAt(path: string, routePath: string, element: ReactNode) {
 describe('route pages', () => {
   it('renders the Shift story and a compact product story', () => {
     const shift = renderAt('/work/shift', '/work/:slug', <WorkItem />)
-    expect(screen.getByRole('heading', { name: /a vendor was a file someone hoped to revisit/i })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: /founding design at shift/i })).toBeInTheDocument()
     shift.unmount()
 
     renderAt('/work/veriti', '/work/:slug', <WorkItem />)
-    expect(screen.getByRole('heading', { name: /knowing the threat is not the same as fixing the exposure/i })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: /closing the gap between a found weakness and a safe fix/i })).toBeInTheDocument()
   })
 
-  it('renders an article and the CV', () => {
+  it('renders an article and the About page', () => {
     const article = renderAt('/case-studies/sailing-the-data-oceans', '/case-studies/:slug', <CaseStudyPage />)
     expect(screen.getByRole('heading', { name: /sailing the data oceans/i })).toBeInTheDocument()
     article.unmount()
 
-    renderAt('/cv', '/cv', <CV />)
-    expect(screen.getByRole('heading', { name: /amit kaplinsky/i })).toBeInTheDocument()
+    renderAt('/about', '/about', <About />)
+    expect(screen.getByRole('heading', { name: /from ux expert at check point to founding designer at shift/i })).toBeInTheDocument()
   })
 
   it('shows clear not-found states for missing content', () => {
@@ -40,6 +40,6 @@ describe('route pages', () => {
     work.unmount()
 
     renderAt('/case-studies/not-an-article', '/case-studies/:slug', <CaseStudyPage />)
-    expect(screen.getByText('Case study not found.')).toBeInTheDocument()
+    expect(screen.getByText('Article not found.')).toBeInTheDocument()
   })
 })
