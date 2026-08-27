@@ -3,5 +3,4 @@
    lives in portfolio-theme.css, the single source of truth. */
 @import "tailwindcss";
 @import "lenis/dist/lenis.css";
-@import "shadcn/tailwind.css";
 @import "./portfolio-theme.css";
