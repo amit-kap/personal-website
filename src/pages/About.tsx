@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { getCV } from '@/lib/content'
+import Parallax from '@/components/Parallax'
 import Reveal from '@/components/Reveal'
 
 /* cv.md writes periods as "10/2024 to now" — the page renders "10/2024 — Now". */
@@ -42,7 +43,9 @@ export default function About() {
     <main>
       {/* Portrait hero — the photo dissolves into the page through a mask fade */}
       <section className="relative overflow-hidden">
-        <Reveal scale className="pointer-events-none absolute left-1/2 top-0 w-[min(500px,64vw)] -translate-x-1/2">
+        {/* Centered with auto margins, not a transform, so the drift owns it. */}
+        <Parallax ratio={0.4} className="pointer-events-none absolute inset-x-0 top-0 mx-auto w-[min(500px,64vw)]">
+          <Reveal scale>
           <img
             src={`${import.meta.env.BASE_URL}portrait-hero.png`}
             alt="Amit Kaplinsky"
@@ -54,7 +57,8 @@ export default function About() {
               maskImage: 'linear-gradient(180deg, #000 34%, rgba(0,0,0,0.38) 58%, transparent 86%)',
             }}
           />
-        </Reveal>
+          </Reveal>
+        </Parallax>
         <div className="inner-col relative grid items-end gap-10 pb-16 pt-[clamp(260px,29vw,420px)] lg:grid-cols-[minmax(0,640px)_minmax(0,1fr)]">
           <div className="flex flex-col gap-5">
             <Reveal as="p" className="eyebrow" delay={0.15}>About</Reveal>
