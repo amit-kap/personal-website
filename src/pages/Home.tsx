@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { getAllCaseStudies, getAllWorks, getWorkBySlug } from '@/lib/content'
 import { imageFor } from '@/lib/workImages'
+import Parallax from '@/components/Parallax'
 import Reveal from '@/components/Reveal'
 import RollingText from '@/components/RollingText'
 
@@ -61,9 +62,9 @@ export default function Home() {
 
   return (
     <main>
-      {/* Hero */}
-      <section className="relative">
-        <div className="inner-col flex flex-col items-center gap-[22px] pb-24 pt-20 text-center">
+      {/* Hero — drifts at 0.3× scroll so the projects section slides over it */}
+      <section className="relative overflow-hidden">
+        <Parallax className="inner-col flex flex-col items-center gap-[22px] pb-24 pt-20 text-center">
           <Reveal as="p" className="eyebrow" delay={0.1}>
             Amit Kaplinsky · Product Designer
           </Reveal>
@@ -79,11 +80,11 @@ export default function Home() {
               <ArrowIcon />
             </a>
           </Reveal>
-        </div>
+        </Parallax>
       </section>
 
       {/* Projects header */}
-      <section className="relative border-t border-border">
+      <section className="relative border-t border-border bg-background">
         <div className="inner-col flex flex-col items-center gap-2 pb-2 pt-14 text-center">
           <Reveal as="p" className="eyebrow">Projects</Reveal>
           <Reveal as="h2" className="font-heading text-section font-medium tracking-[-0.015em]" delay={0.08}>
