@@ -10,8 +10,8 @@ import RollingText from '@/components/RollingText'
    Story-Cards art direction; facts come from cv.md / work.md. */
 const projectCards: Record<string, { meta: string; title: string; image: string; g: [string, string, string] }> = {
   shift: {
-    meta: 'Third-Party Risk · Founding Designer · 2024 — Now · TLV',
-    title: "Designing Shift's vendor-security platform from zero — now out of stealth",
+    meta: 'Third-Party Risk · Founding Designer · 2024–Now · TLV',
+    title: "Designing Shift's vendor-security platform from zero, now out of stealth",
     image: '01-shift-dashboard',
     g: ['#191040', '#4630b8', '#8a76f0'],
   },
@@ -22,19 +22,19 @@ const projectCards: Record<string, { meta: string; title: string; image: string;
     g: ['#0c1f4a', '#1d4ed8', '#60a5fa'],
   },
   veriti: {
-    meta: 'Security Controls · Founding Designer · 2021 — 2024 · TLV',
+    meta: 'Security Controls · Founding Designer · 2021–2024 · TLV',
     title: 'Closing the gap between a found weakness and a safe fix at Veriti',
     image: '02',
     g: ['#06302b', '#0f766e', '#2dd4bf'],
   },
   semperis: {
-    meta: 'Identity Security · UX Team Lead · 2020 — 2021 · TLV',
-    title: 'Moving Semperis from AD recovery to continuous prevention — while building the UX team',
+    meta: 'Identity Security · UX Team Lead · 2020–2021 · TLV',
+    title: 'Moving Semperis from AD recovery to continuous prevention, while building the UX team',
     image: '01-semperis',
     g: ['#37200a', '#b45309', '#fbbf24'],
   },
   checkpoint: {
-    meta: 'Enterprise Security · UX Expert · 2014 — 2020 · TLV',
+    meta: 'Enterprise Security · UX Expert · 2014–2020 · TLV',
     title: 'Turning twenty management tabs into one coherent system at Check Point',
     image: '05-dashboard',
     g: ['#380a1e', '#be185d', '#f472b6'],
@@ -44,8 +44,8 @@ const projectCards: Record<string, { meta: string; title: string; image: string;
 const skillset = [
   { title: 'Product design', copy: 'The complex flows, dashboards, and decision surfaces security teams actually enjoy using.' },
   { title: 'Design systems', copy: 'Components and style guides, built from zero at Shift and Veriti, that engineers ship with.' },
-  { title: '0 → 1 founding design', copy: 'Blank slate to shipped product, twice — the design function, onboarding, and core surfaces.' },
-  { title: 'AI-native product builds', copy: 'AI as a build collaborator — Claude, Cursor, and Codex — taking design through to working code.' },
+  { title: '0 → 1 founding design', copy: 'Blank slate to shipped product, twice: the design function, onboarding, and core surfaces.' },
+  { title: 'AI-native product builds', copy: 'Claude, Cursor, and Codex as build collaborators, taking design through to working code.' },
 ]
 
 function ArrowIcon() {
@@ -72,7 +72,7 @@ export default function Home() {
             Making complex security products<br className="hidden sm:block" /> clear enough to act on.
           </Reveal>
           <Reveal as="p" className="max-w-[600px] text-[18px] font-light leading-[1.55] text-muted-foreground" delay={0.3}>
-            Twelve years designing security products and design systems — from enterprise management at Check Point to founding design at Shift.
+            Twelve years designing security products and design systems, from enterprise management at Check Point to founding design at Shift.
           </Reveal>
           <Reveal delay={0.4}>
             <a href="mailto:amitka111@gmail.com" className="pill-cta roll-host px-[30px] py-3.5 text-[15px]">

@@ -4,9 +4,9 @@ import { getCV } from '@/lib/content'
 import Parallax from '@/components/Parallax'
 import Reveal from '@/components/Reveal'
 
-/* cv.md writes periods as "10/2024 to now" — the page renders "10/2024 — Now". */
+/* cv.md writes periods as "10/2024 to now" — the page renders "10/2024–Now". */
 function formatPeriod(period: string): string {
-  return period.replace(' to ', ' — ').replace(/now$/i, 'Now')
+  return period.replace(' to ', '–').replace(/now$/i, 'Now')
 }
 
 function telAvivTime(): string {
@@ -125,7 +125,7 @@ export default function About() {
             {cv.certificates.map((entry) => (
               <div key={entry.title} className="flex items-baseline justify-between gap-6">
                 <h2 className="min-w-0 font-heading text-body font-medium tracking-[-0.01em]">{entry.title}</h2>
-                <p className="flex-none text-[13px] text-muted-foreground">{entry.meta.replace(' to ', ' — ')}</p>
+                <p className="flex-none text-[13px] text-muted-foreground">{entry.meta.replace(' to ', '–')}</p>
               </div>
             ))}
           </div>
@@ -140,7 +140,7 @@ export default function About() {
             {cv.education.map((entry) => (
               <div key={entry.title} className="flex items-baseline justify-between gap-6">
                 <h2 className="min-w-0 font-heading text-body font-medium tracking-[-0.01em]">{entry.title}</h2>
-                <p className="flex-none text-[13px] text-muted-foreground">{entry.meta.replace(' to ', ' — ')}</p>
+                <p className="flex-none text-[13px] text-muted-foreground">{entry.meta.replace(' to ', '–')}</p>
               </div>
             ))}
           </div>
