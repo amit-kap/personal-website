@@ -1,4 +1,3 @@
-# SPA fallback. The router is a BrowserRouter, so deep links like /work/shift
-# or /cv have no file behind them — Cloudflare serves index.html and React
-# Router takes it from there. Status 200, not 302, so the URL is preserved.
-/*  /index.html  200
+# Legacy URL. Every public route is emitted as its own static HTML file at
+# build time, so unknown paths can keep Cloudflare's real 404 response.
+/writing  /blog  301
