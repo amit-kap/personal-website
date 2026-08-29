@@ -28,4 +28,4 @@ npm run build
 
 The site is on Cloudflare Pages at [amitkap.com](https://amitkap.com), built with `npm run build` and served from `dist`. Pushing to `main` deploys automatically; the build is configured in the Cloudflare dashboard rather than in a workflow file.
 
-The site serves from the domain root, so the Vite base path is `/`. Deep links resolve through `public/_redirects`, which serves `index.html` for any path the build did not emit a file for.
+The site serves from the domain root, so the Vite base path is `/`. The build emits static HTML and complete metadata for every public route; Cloudflare therefore serves known deep links directly and returns a real 404 for unknown paths. `public/_redirects` only retains the legacy `/writing` redirect.
