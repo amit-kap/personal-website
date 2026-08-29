@@ -1,7 +1,7 @@
 ---
-productTitle: The CISO owns the data.
-blurb: Connecting executive intent to operational follow-through through one shared security data model.
+productTitle: CISO priorities, connected to operational follow-through.
+blurb: Connecting benchmarks and SLAs to the owners, tasks, progress, and delays behind them.
 order: 2
 ---
 
-Onyxia proposed a data-management layer for the CISO: a connected view across security products, BI, Jira, ServiceNow, and operational systems. I joined for a short engagement to help shape the experience from executive benchmarks and SLAs through to the tasks, owners, progress, and delays behind them.
+At the time, Onyxia was developing a data platform for CISOs, connecting security products, BI, Jira, ServiceNow, and operational systems. I led product design during a six-month engagement, translating benchmarks and SLAs into workflows that connected executive priorities with owners, tasks, progress, and delays.

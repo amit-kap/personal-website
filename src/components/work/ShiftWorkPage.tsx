@@ -16,7 +16,7 @@ const features = [
   {
     eyebrow: 'The Daily Home',
     title: 'The home reads like a console, not a report',
-    copy: 'The first question a supervisor has is "what needs me today?", so the home leads with attention: counts, urgency, and in-flight work first, drill-down second. Status carries the hierarchy; decoration carries nothing.',
+    copy: 'The supervisor starts with one question: "What needs me today?" The home prioritizes counts, urgency, and in-flight work before drill-down. Status carries the hierarchy; decoration carries nothing.',
     image: '01-shift-dashboard',
     alt: 'Shift home dashboard',
   },
@@ -37,7 +37,7 @@ const features = [
   {
     eyebrow: 'Where Judgment Lands',
     title: 'The assessment keeps the decisions visibly human',
-    copy: "The agent's work arrives structured: evidence mapped, verdicts proposed, followups drafted. The interface reserves its strongest moments for the calls only a person should make.",
+    copy: "The agent's work arrives in a reviewable structure: mapped evidence, proposed verdicts, and drafted follow-ups. The interface reserves its strongest moments for the calls only a person should make.",
     image: '07-assessment-flow-1',
     alt: 'Shift assessment flow',
   },
@@ -48,8 +48,8 @@ export default function ShiftWorkPage({ work }: { work: Work }) {
     <main>
       <TitleBlock
         meta="Third-Party Risk  ·  Founding Designer  ·  2024–Now  ·  TLV"
-        title="Founding design at Shift: a vendor-security platform, built from zero."
-        intro="I joined Shift as the first designer: no design system, no onboarding, and core product surfaces still to be invented. This page is about what got built: the system and the surfaces that connect vendor evidence, access, exposure, and assessment decisions. The product is now out of stealth."
+        title="Designing Shift's agent-led third-party security platform from product model to shipped system."
+        intro="I joined Shift as its first designer. I helped define the human-agent operating model, then built the design system, onboarding, and core workflows connecting vendor evidence, access, exposure, and risk decisions. Shift is now publicly available."
       />
       <HeroBackdrop
         image={imageFor(work, '01-shift-dashboard')}
@@ -58,16 +58,16 @@ export default function ShiftWorkPage({ work }: { work: Work }) {
         gradient={GRADIENT}
       />
 
-      <SplitSection eyebrow="The Starting Point" stmt="Everything at once: a system to found and surfaces to ship">
+      <SplitSection eyebrow="The Starting Point" stmt="The product model and the interface had to develop together">
         <p className="body-copy">
-          Founding design means the foundations and the product ship together. The design system couldn't wait for the surfaces, and the surfaces couldn't wait for the system; every screen built the language it was written in.
+          The design system could not wait for the product, and the product could not wait for the system: every screen built the language it was written in. Each workflow tested the components, density, and behavior the next one would use.
         </p>
         <p className="body-copy">
-          One thing shaped everything: the product is built around an agent that does the assessment work while a person supervises it. The market scan and the reframe behind that operating model are their own story, told in{' '}
+          The product is built around an agent that performs assessment work while a person supervises it. The market scan, operating-model decision, and product strategy behind that structure are documented in{' '}
           <Link to="/case-studies/designing-for-the-supervisor" className="border-b border-border text-foreground transition-colors hover:text-accent">
             Designing for the Supervisor
           </Link>
-          . This page stays on the design side of that line.
+          . This page focuses on how that direction became a working system.
         </p>
       </SplitSection>
 
@@ -79,11 +79,15 @@ export default function ShiftWorkPage({ work }: { work: Work }) {
           </div>
           <div className="flex flex-col gap-1.5">
             <h3 className="font-heading text-[17px] font-medium">Onboarding</h3>
-            <p className="body-copy">A security product is only alive once it's connected, so onboarding takes a new customer from login to integrated data sources to a populated vendor inventory.</p>
+            <p className="body-copy">Onboarding takes a new customer from login through connected data sources to a vendor inventory populated with usable context.</p>
           </div>
           <div className="flex flex-col gap-1.5">
             <h3 className="font-heading text-[17px] font-medium">The core surfaces</h3>
-            <p className="body-copy">Vendor evidence, access, exposure, and assessment decisions each pull toward their own tool. The design job was making them one product a person can hold in their head.</p>
+            <p className="body-copy">Vendor evidence, access, exposure, and assessment decisions could each become a separate tool. The product needed one model a supervisor could understand and navigate.</p>
+          </div>
+          <div className="flex flex-col gap-1.5">
+            <h3 className="font-heading text-[17px] font-medium">Human-agent supervision</h3>
+            <p className="body-copy">Define where the agent can act, where it must ask, and what evidence a person needs before making the final decision.</p>
           </div>
         </div>
       </SplitSection>
@@ -113,16 +117,16 @@ export default function ShiftWorkPage({ work }: { work: Work }) {
         </section>
       ))}
 
-      <SplitSection eyebrow="Results" stmt="Out of stealth on these foundations">
+      <SplitSection eyebrow="Results" stmt="A public product built on these foundations">
         <p className="body-copy">
-          The design system, onboarding, and core surfaces shipped as the product's foundation, and Shift is now out of stealth. Everything on this page is the shipped product, not concept work.
+          Shift is now publicly available. Its product foundation includes the design system, onboarding, vendor inventory, access graph, operating console, and assessment workflows shown here.
         </p>
         <p className="text-meta text-muted-foreground">Note: adoption and usage details can be shared in a private setting.</p>
       </SplitSection>
 
-      <SplitSection eyebrow="The Strategy Story" stmt="How this product came to be shaped around a supervisor">
+      <SplitSection eyebrow="The Strategy Story" stmt="Why the product is organized around a supervisor">
         <p className="body-copy">
-          The thinking behind the operating model, from the market scan through the wrong turns to the reframe that changed what the screens are for, is written up as its own piece, not repeated here.
+          The market scan, early directions, stakeholder decision, and product-strategy reframe are written up separately.
         </p>
         <ReadLink to="/case-studies/designing-for-the-supervisor" label="Read: Designing for the Supervisor" />
       </SplitSection>

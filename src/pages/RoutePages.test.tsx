@@ -18,11 +18,11 @@ function renderAt(path: string, routePath: string, element: ReactNode) {
 describe('route pages', () => {
   it('renders the Shift story and a compact product story', () => {
     const shift = renderAt('/work/shift', '/work/:slug', <WorkItem />)
-    expect(screen.getByRole('heading', { name: /founding design at shift/i })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: /designing shift's agent-led third-party security platform/i })).toBeInTheDocument()
     shift.unmount()
 
     renderAt('/work/veriti', '/work/:slug', <WorkItem />)
-    expect(screen.getByRole('heading', { name: /closing the gap between a found weakness and a safe fix/i })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: /turning a known exposure into an explained, approved security change/i })).toBeInTheDocument()
   })
 
   it('renders an article and the About page', () => {
@@ -31,7 +31,7 @@ describe('route pages', () => {
     article.unmount()
 
     renderAt('/about', '/about', <About />)
-    expect(screen.getByRole('heading', { name: /from ux expert at check point to founding designer at shift/i })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: /still a designer\. the canvas just got bigger/i })).toBeInTheDocument()
   })
 
   it('shows clear not-found states for missing content', () => {

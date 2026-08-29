@@ -32,7 +32,7 @@ export default function ThemeToggle() {
     try {
       localStorage.setItem('theme', theme)
     } catch {
-      /* storage unavailable — theme still applies for this visit */
+      /* Storage unavailable; theme still applies for this visit. */
     }
   }, [theme])
 

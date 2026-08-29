@@ -6,11 +6,12 @@ import Parallax from '@/components/Parallax'
 import Reveal from '@/components/Reveal'
 import Seo from '@/components/Seo'
 
-/* The software group shows tool marks instead of its cv.md list. Matched on the
-   heading so renaming "Softwares" to "Software" in cv.md doesn't break it.
+/* The tools group shows brand marks instead of its cv.md list. Matched on the
+   heading so small changes to the "Tools" label in cv.md do not break it.
    Rows are 32px to match the leading of the Languages column beside it. */
-function isSoftware(category: string) {
-  return category.trim().toLowerCase().startsWith('software')
+function isTools(category: string) {
+  const label = category.trim().toLowerCase()
+  return label.startsWith('tool') || label.startsWith('software')
 }
 
 const tools = [
@@ -20,7 +21,7 @@ const tools = [
   { Mark: CursorMark, name: 'Cursor' },
 ]
 
-/* cv.md writes periods as "10/2024 to now" — the page renders "10/2024–Now". */
+/* cv.md writes periods as "10/2024 to now"; the page renders "10/2024–Now". */
 function formatPeriod(period: string): string {
   return period.replace(' to ', '–').replace(/now$/i, 'Now')
 }
@@ -38,10 +39,10 @@ function telAvivTime(): string {
   return `${time} · ${offset}`
 }
 
-function DownloadIcon() {
+function ArrowIcon() {
   return (
     <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
-      <path d="M8 2 V11 M4.5 8 L8 11.5 L11.5 8 M3 13.5 H13" />
+      <path d="M4 12 L12 4 M5.5 4 H12 V10.5" />
     </svg>
   )
 }
@@ -59,10 +60,10 @@ export default function About() {
     <main>
       <Seo
         title="About"
-        description="From UX expert at Check Point to founding designer at Shift. Twelve years designing security products, based in Tel Aviv."
+        description="Product designer with twelve years in cybersecurity, working across product direction, design systems, human-agent workflows, and AI-assisted prototyping."
         path="/about"
       />
-      {/* Portrait hero — the photo dissolves into the page through a mask fade */}
+      {/* Portrait hero; the photo dissolves into the page through a mask fade. */}
       <section className="relative overflow-hidden">
         {/* Centered with auto margins, not a transform, so the drift owns it. */}
         <Parallax ratio={0.4} className="pointer-events-none absolute inset-x-0 top-0 mx-auto w-[min(500px,64vw)]">
@@ -84,10 +85,12 @@ export default function About() {
           <div className="flex flex-col gap-5">
             <Reveal as="p" className="eyebrow" delay={0.15}>About</Reveal>
             <Reveal as="h1" className="font-heading text-feature font-medium tracking-[-0.02em]" delay={0.22}>
-              From UX expert at Check Point to founding designer at Shift.
+              Still a designer. The canvas just got bigger.
             </Reveal>
-            <Reveal as="p" className="body-copy max-w-[460px]" delay={0.3}>
-              Twelve years designing security products. Based in Tel Aviv, working in Hebrew and English.
+            <Reveal className="flex max-w-[520px] flex-col gap-3" delay={0.3}>
+              <p className="body-copy">
+                Twelve years designing cybersecurity products, and the craft hasn’t changed: understand the work, give it shape, sweat the details. What has changed is how far design can carry an idea. Today I can take a question about the product all the way to working software.
+              </p>
             </Reveal>
           </div>
           <Reveal className="flex flex-col gap-[18px] pb-1 text-meta lg:items-end" delay={0.35}>
@@ -109,15 +112,15 @@ export default function About() {
                 to="/cv"
                 className="inline-flex items-center gap-[7px] text-accent transition-colors hover:text-foreground"
               >
-                Download CV
-                <DownloadIcon />
+                View CV
+                <ArrowIcon />
               </Link>
             </div>
           </Reveal>
         </div>
       </section>
 
-      {/* Experience — compact hairline grid */}
+      {/* Experience in a compact hairline grid. */}
       <section className="relative border-t border-border">
         <div className="inner-col pb-14 pt-12">
           <Reveal as="p" className="eyebrow pb-2.5">Experience</Reveal>
@@ -176,7 +179,7 @@ export default function About() {
             {cv.skills.map((group, i) => (
               <div key={group.category} className={`flex flex-col gap-3 ${i > 0 ? 'sm:border-l sm:border-border sm:pl-10' : 'sm:pr-10'}`}>
                 <h2 className="font-heading text-body font-medium tracking-[-0.01em]">{group.category}</h2>
-                {isSoftware(group.category) ? (
+                {isTools(group.category) ? (
                   <div className="flex flex-col text-[14.5px] text-copy">
                     {tools.map(({ Mark, name }) => (
                       <span key={name} className="flex h-8 items-center gap-2.5">

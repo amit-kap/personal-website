@@ -1,7 +1,7 @@
 ---
 productTitle: From recovery to prevention.
-blurb: Identity security with a language for evolving risk, attention, and action.
+blurb: A product language for Active Directory recovery, continuous risk, attention, and action.
 order: 4
 ---
 
-I led the transition from an Active Directory recovery product toward continuous prevention. Alongside building the in-house design team, I shaped a UX language for vulnerabilities, dangerous configurations, alerts, insights, severity, urgency, and the actions that need attention.
+I led the UX transition as Semperis expanded from Active Directory recovery into continuous identity security. Alongside building the in-house design team, I defined how vulnerabilities, dangerous configurations, alerts, insights, severity, urgency, and required actions should appear across the product.

@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react'
 
 /* Drifts its content down as the page scrolls, so the section below appears to
    slide over it. `ratio` is the fraction of scroll distance the content lags
-   by — 0.3 means it moves 30% as far as the page. */
+   by; 0.3 means it moves 30% as far as the page. */
 export default function Parallax({
   ratio = 0.3,
   className = '',

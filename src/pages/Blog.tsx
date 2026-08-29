@@ -13,7 +13,7 @@ function ArrowIcon() {
 }
 
 function metaFor(study: CaseStudy): string {
-  // Display name only — "Check Point Software" reads as "Check Point" on cards.
+  // Display name only; "Check Point Software" reads as "Check Point" on cards.
   const company = (getWorkBySlug(study.workSlug)?.company ?? 'Security').replace(/ Software$/, '')
   return study.featured ? `${company}  ·  Featured` : company
 }
@@ -27,7 +27,7 @@ export default function Blog() {
     <main>
       <Seo
         title="Blog"
-        description="Notes from the work: designing for a supervisor, making tens of thousands of security indicators workable, and shipping a consumer app inside an enterprise."
+        description="Product strategy and design notes on AI-agent supervision, high-volume security data, and shipping a mobile app inside enterprise security."
         path="/blog"
       />
       {/* Title block */}
@@ -40,7 +40,7 @@ export default function Blog() {
         </div>
       </section>
 
-      {/* Featured post — dominant, full-column cover */}
+      {/* Featured post, dominant full-column cover. */}
       {featured && (
         <section className="relative border-t border-border">
           <div className="inner-col flex flex-col gap-[18px] pb-14 pt-10">

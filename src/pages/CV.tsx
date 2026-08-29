@@ -41,7 +41,7 @@ export default function CV() {
     <main>
       <Seo
         title="CV"
-        description="Amit Kaplinsky's curriculum vitae: founding design at Shift and Veriti, UX lead at Semperis, UX expert at Check Point."
+        description="Amit Kaplinsky's CV: cybersecurity product direction, founding design, design systems, human-agent workflows, and AI prototyping."
         path="/cv"
       />
       <div data-print-hide className="relative">
@@ -57,7 +57,7 @@ export default function CV() {
               <DownloadIcon />
             </button>
             <p className="text-[13px] text-muted-foreground">
-              Opens the print dialog — choose “Save as PDF”.
+              Opens the print dialog. Choose “Save as PDF”.
             </p>
           </Reveal>
         </div>

@@ -1,6 +1,6 @@
 # Amit Kaplinsky
 
-Product Designer
+Product designer focused on cybersecurity, product direction, design systems, human-agent workflows, and hands-on AI prototyping.
 
 Tel Aviv · [amitka111@gmail.com](mailto:amitka111@gmail.com) · [+972 54-4878882](https://wa.me/972544878882) · [LinkedIn](https://www.linkedin.com/in/amitka/) · [Portfolio](https://amitkap.com)
 
@@ -10,31 +10,31 @@ Tel Aviv · [amitka111@gmail.com](mailto:amitka111@gmail.com) · [+972 54-487888
 
 **Founding Designer** · 10/2024 to now
 
-Founding design for an AI-assisted vendor security platform. I established the design system, onboarding, and core product surfaces for evidence, access, exposure, and human decision-making.
+Founding designer for an AI-native third-party security platform. I helped define the human-agent operating model and built the design system, onboarding, and core workflows for evidence, access, exposure, and risk decisions.
 
 ### [Onyxia](/experience/onyxia-cyber)
 
 **Product Design Team Lead** · 04/2024 to 10/2024
 
-Product design lead on a CISO data-management concept. I helped shape the experience that connects executive intent to owners, tasks, progress, and delays.
+Led product design for a CISO data platform, translating benchmarks and SLAs into workflows connecting executive priorities with owners, tasks, progress, and delays.
 
 ### [Veriti](/experience/veriti)
 
 **Founding Designer** · 11/2021 to 04/2024
 
-Founding design for a security-controls platform. I shaped how teams connect threats to configuration gaps and approve controlled remediation across existing security products.
+Founding designer for a multi-vendor security remediation platform. I helped define how teams move from a threat and configuration gap to an explained, approved, and safely applied control change.
 
 ### [Semperis](/experience/semperis)
 
 **UX Team Lead** · 08/2020 to 11/2021
 
-Led the UX and visual-language transition from Active Directory recovery to continuous identity security. I also built and led the in-house UX team.
+Led the UX transition as Semperis expanded from Active Directory recovery into continuous identity security, while building its in-house UX team.
 
 ### [Check Point Software](/experience/checkpoint)
 
 **UX Expert** · 03/2014 to 08/2020
 
-UX Expert on enterprise security management. I worked with R&D to turn complex product, policy, and workflow requirements into coherent cross-platform experiences.
+Worked with R&D on enterprise security management, turning product and technical requirements into information architecture, workflows, prototypes, and cross-platform experiences.
 
 ## Certificates
 
@@ -58,7 +58,7 @@ Tel Aviv University · 1994 to 1996
 
 ## Skills
 
-### Softwares
+### Tools
 
 - Figma
 - Adobe Creative Suite

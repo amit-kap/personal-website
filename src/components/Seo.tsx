@@ -21,7 +21,7 @@ export default function Seo({
   noIndex?: boolean
 }) {
   const url = `${SITE_URL}${path}`
-  const full = path === '/' ? title : `${title} — Amit Kaplinsky`
+  const full = path === '/' ? title : `${title} | Amit Kaplinsky`
 
   useEffect(() => {
     document.title = full
