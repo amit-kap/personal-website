@@ -2,11 +2,11 @@ import { render, waitFor } from '@testing-library/react'
 import Seo from './Seo'
 
 const fixture = `
-  <title data-seo="title">Amit Kaplinsky — Product Designer</title>
+  <title data-seo="title">Amit Kaplinsky | Product Designer</title>
   <meta data-seo="description" name="description" content="Home description" />
   <link data-seo="canonical" rel="canonical" href="https://amitkap.com/" />
   <meta data-seo="og:type" property="og:type" content="website" />
-  <meta data-seo="og:title" property="og:title" content="Amit Kaplinsky — Product Designer" />
+  <meta data-seo="og:title" property="og:title" content="Amit Kaplinsky | Product Designer" />
   <meta data-seo="og:description" property="og:description" content="Home description" />
   <meta data-seo="og:url" property="og:url" content="https://amitkap.com/" />
   <meta data-seo="og:image" property="og:image" content="https://amitkap.com/og.png" />
@@ -14,7 +14,7 @@ const fixture = `
   <meta data-seo="og:image:height" property="og:image:height" content="630" />
   <meta data-seo="og:site_name" property="og:site_name" content="Amit Kaplinsky" />
   <meta data-seo="twitter:card" name="twitter:card" content="summary_large_image" />
-  <meta data-seo="twitter:title" name="twitter:title" content="Amit Kaplinsky — Product Designer" />
+  <meta data-seo="twitter:title" name="twitter:title" content="Amit Kaplinsky | Product Designer" />
   <meta data-seo="twitter:description" name="twitter:description" content="Home description" />
   <meta data-seo="twitter:image" name="twitter:image" content="https://amitkap.com/og.png" />
 `
@@ -27,7 +27,7 @@ describe('Seo', () => {
   it('updates the prerendered metadata instead of adding duplicates', async () => {
     render(
       <Seo
-        title="Shift — Founding Designer"
+        title="Shift | Founding Designer"
         description="A vendor-security platform designed from zero."
         path="/work/shift"
         type="article"
@@ -35,7 +35,7 @@ describe('Seo', () => {
     )
 
     await waitFor(() => {
-      expect(document.title).toBe('Shift — Founding Designer — Amit Kaplinsky')
+      expect(document.title).toBe('Shift | Founding Designer | Amit Kaplinsky')
     })
 
     expect(document.head.querySelectorAll('meta[name="description"]')).toHaveLength(1)

@@ -117,7 +117,7 @@ export function JobGrid({ jobs }: { jobs: Array<{ title: string; copy: string }>
 
 /* Browser-window chrome around a product screenshot. The UI in these is too
    small to read in place, so the whole thing lifts on hover and opens
-   full-frame on click. Everything inside must be phrasing content — it lives
+   full-frame on click. Everything inside must be phrasing content because it lives
    in a <button>. */
 export function ZoomableWindow({ src, alt, children }: { src: string; alt: string; children: React.ReactNode }) {
   const [open, setOpen] = useState(false)
@@ -164,7 +164,7 @@ export interface SurfaceItem {
 }
 
 /* Staggered 2×2 mosaic of window-chrome cards: left column, then a right
-   column pushed down — each card with eyebrow, title, caption below. */
+   column pushed down. Each card has an eyebrow, title, and caption below. */
 export function SurfacesMosaic({ heading, items }: { heading: string; items: SurfaceItem[] }) {
   const columns = [items.slice(0, 2), items.slice(2, 4)]
   return (

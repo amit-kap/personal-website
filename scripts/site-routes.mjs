@@ -11,29 +11,29 @@ export const OG_IMAGE = `${SITE_URL}/og.png`
 const staticRoutes = [
   {
     path: '/',
-    title: 'Amit Kaplinsky — Product Designer',
-    description: 'Twelve years designing security products and design systems, from enterprise management at Check Point to founding design at Shift.',
+    title: 'Amit Kaplinsky | Product Designer',
+    description: 'Product designer with twelve years in cybersecurity, working across product direction, interaction design, systems, and AI-assisted builds.',
     type: 'website',
     priority: '1.0',
   },
   {
     path: '/about',
     title: 'About',
-    description: 'From UX expert at Check Point to founding designer at Shift. Twelve years designing security products, based in Tel Aviv.',
+    description: 'Product designer with twelve years in cybersecurity, working across product direction, design systems, human-agent workflows, and AI-assisted prototyping.',
     type: 'website',
     priority: '0.8',
   },
   {
     path: '/blog',
     title: 'Blog',
-    description: 'Notes from the work: designing for a supervisor, making tens of thousands of security indicators workable, and shipping a consumer app inside an enterprise.',
+    description: 'Product strategy and design notes on AI-agent supervision, high-volume security data, and shipping a mobile app inside enterprise security.',
     type: 'website',
     priority: '0.8',
   },
   {
     path: '/cv',
     title: 'CV',
-    description: "Amit Kaplinsky's curriculum vitae: founding design at Shift and Veriti, UX lead at Semperis, UX expert at Check Point.",
+    description: "Amit Kaplinsky's CV: cybersecurity product direction, founding design, design systems, human-agent workflows, and AI prototyping.",
     type: 'website',
     priority: '0.6',
   },
@@ -66,7 +66,7 @@ function experienceBySlug() {
 }
 
 function fullTitle(title, path) {
-  return path === '/' ? title : `${title} — Amit Kaplinsky`
+  return path === '/' ? title : `${title} | Amit Kaplinsky`
 }
 
 export function getSiteRoutes() {
@@ -79,7 +79,7 @@ export function getSiteRoutes() {
     if (!description) return []
     return [{
       path: `/work/${slug}`,
-      title: `${entry.company} — ${entry.role}`,
+      title: `${entry.company} | ${entry.role}`,
       description,
       type: 'article',
       priority: '0.9',
@@ -108,7 +108,7 @@ export function getSiteRoutes() {
 }
 
 export const notFoundMetadata = {
-  title: 'Page not found — Amit Kaplinsky',
+  title: 'Page not found | Amit Kaplinsky',
   description: 'This page does not exist.',
   type: 'website',
   noIndex: true,

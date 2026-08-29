@@ -48,7 +48,7 @@
   --text-section--line-height: 1.1;
   --text-feature: clamp(2rem, 3.2vw, 2.875rem);        /* 32→46px — page titles */
   --text-feature--line-height: 1.12;
-  --text-hero: clamp(2.5rem, 4vw, 3.625rem);           /* 40→58px — home hero only */
+  --text-hero: clamp(2.5rem, 4.1vw, 3.875rem);         /* 40→62px — home hero only */
   --text-hero--line-height: 1.05;
 }
 

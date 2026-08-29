@@ -1,131 +1,105 @@
 ---
 work: checkpoint
-excerpt: "Handling a B2C project inside a B2B corporate: a Check Point SMB mobile app story."
+excerpt: How a Check Point team adapted an enterprise product process to ship WatchTower for iOS and Android.
 cover: cover-v3.webp
 ---
 
-# Falling Down The Rabbit Hole
+# Falling down the rabbit hole
 
-### Introduction
-
----
-
-While on the UX team at [Check Point](http://www.checkpoint.com/), I was assigned a unique project.
-
-A major partner of Check Point's SMB department requested assistance in promoting Check Point's SMB security appliances to their customers.
-
-The challenge was to articulate the value of this more expensive security bundle service, as customers were exploring cheaper alternatives. We decided to highlight the appliance's superior security capabilities through a mobile application which would illustrate how it protects users around the clock.
-
-Our main hurdle was adapting our development pipeline, traditionally not designed for B2C products, to meet the requirements of this project.
-
-### Research
+### Shipping a consumer-style mobile app inside an enterprise security company
 
 ---
 
-As we were falling down the rabbit hole, we proceeded with caution. Assisted by experienced sales personnel from our partner, we created personas to represent potential users of our product.
+At Check Point, I usually worked on complex enterprise security management. WatchTower began with a different product problem. A major partner wanted a clearer way to show customers the ongoing value of Check Point's small-business security appliances.
 
-The first persona, "John the Network Admin," works at a medium-sized company, handling IT tasks and some security aspects. Due to his busy schedule, he could benefit from additional assistance.
+The appliance protected the network continuously, but much of that work remained invisible until something went wrong. We proposed a mobile app that would make the service tangible: show network and security status, notify the customer when attention was needed, and provide a small set of actions away from the management console.
 
-The second persona, "Gill the Prosumer," although not a security professional, is a consumer who values network security and understands its significance.
+The design challenge extended beyond the interface. Our development and release process was built for enterprise B2B software. Shipping a focused iOS and Android experience required the team to make different decisions about scope, onboarding, usability, and communication.
 
-The third persona, "Dan the Home User," has a sophisticated router but lacks extensive knowledge of network security. His primary concern is his home Wi-Fi network and the issue of his son's Xbox not connecting to the online store.
+That was the rabbit hole: the security underneath was familiar, but every rule about building and shipping the product was not.
 
-After defining our personas, we investigated the competition, analyzing similar products from Asus, Netgear, Norton, and Google, and noting their significant features. This helped us envision what our product might look like.
+### Defining the audience
+
+---
+
+Salespeople from our partner helped us understand the range of customers using the appliances. Three broad groups appeared:
+
+- IT administrators managing a small or medium business alongside many other responsibilities
+- Security-aware business owners who understood the value of protection but did not operate security tools every day
+- Home and small-office users with practical concerns: Wi-Fi access, connected devices, and why the Xbox suddenly can't reach its online store
+
+The groups had different levels of security knowledge, but they shared a need for a quick answer to two questions: *Is the network okay? Is there anything I need to do?*
+
+We also reviewed consumer network and security products from Asus, Netgear, Norton, and Google. Their products established familiar mobile patterns, while Check Point could contribute deeper security information and mitigation controls.
 
 ![Competitive landscape](OtherVendors.webp)
 
-Taking these new personas and features into account, we aimed to understand how we could differentiate ourselves from our competitors. We sought to provide our new users with the value they need by leveraging our capabilities.
+This led to a clear product direction: expose the value of enterprise-grade security through a mobile experience that did not require enterprise expertise.
 
-The primary conclusion from our research is that, to create an exceptional product, we need to combine enterprise-grade security capabilities from Check Point with the simpler needs of SMB users into a single, superior product.
-
-### High-level design
+### Choosing the first-release value
 
 ---
 
-The initial stage in planning a product's user experience involves crafting simple user stories to illustrate the user's interaction with the product.
+Push notifications became the central capability. An appliance usually sits in the background. A timely notification could show that protection was active, explain what happened, and give the customer an action when one was required.
 
-> Analyzing these user stories enables us to prioritize features for development and to design the user interface.
+The first-release scope also included:
 
-Once we gather a sufficient number of user stories, we pinpoint the features mentioned in each one and rank them according to importance. This helps us decide where to start and what to address later.
+- **Network snapshot:** connected devices and current network status
+- **Quick actions:** block a device, share Wi-Fi access, or open a relevant configuration
+- **Connectivity:** internet and VPN status
+- **Event history:** recent network and security events
+- **Multiple appliances:** switch between gateways from one account
 
-A primary feature that surfaced from the user stories was the ability to receive push notifications regarding security events and appliance health issues.
+The point was not to reproduce the desktop console on a smaller screen. The app needed to present the state, explain the issue, and offer the next useful action.
 
-This feature will considerably enhance the app, as it will revolutionize how users engage with the appliance. By keeping users informed about potential incidents, we can transition them from a passive state (unaware of what's happening) to an active one where they are in control of their security. This underscores the value of the appliance.
-
-Other important features that emerged from the user stories include:
-
-- **Network snapshot:** identifying connected devices to spot potential threats
-- **Quick actions:** device blocking, Wi-Fi sharing, quick configuration, and more
-- **Connectivity status:** determining current connectivity, such as Internet or VPN
-- **Events history:** reviewing incidents from the past 24 hours, day, or week
-- **Large scale:** managing multiple appliances
-
-### UI patterns
+### Building the mobile structure
 
 ---
 
-With the wealth of data available, we began constructing high-level mockups for the application's user interface. We understood the necessity of supporting both iOS and Android platforms and sought to create a flow that felt native to each operating system.
-
-We aimed to ensure that the UI prioritized ease of use and intuitiveness, offering a minimal learning curve.
-
-To prevent complications, we established some basic guidelines:
-
-- Only relevant information should be displayed on the screen. Just because data is available doesn't mean it needs to be shown. Its inclusion should serve a purpose.
-- The UI should help users solve their problems and present a recommended solution (ideally one option), without leaving them at a dead end.
-- Deep drill-downs (more than 2 layers) should be minimized to reduce complexity and prevent user disorientation.
-
-After exploring various navigation patterns, we decided on the bottom tabbed navigation pattern, which best met our needs. Although it might be less popular on the Android platform, its increasing support in the material design library and its prevalence in major apps gave us the confidence to use it.
+We needed one information architecture that could feel familiar on both iOS and Android. After comparing navigation models, we chose four bottom-level destinations: Home, Events, Statistics, and Settings.
 
 ![Initial concept](InitialConcept.webp)
 
-During our design process, we tested different sets of tabbed content for the main app navigation. We ultimately chose a 4-tab navigation in the following order (from left to right): Home, Events, Statistics, and Settings.
-
-The home tab view was given special consideration since it is the user's initial interaction with the app. We aimed to make it easily understandable and engaging, with meaningful data. It should encapsulate the essence of the app and offer relevant points of interest for all user personas.
+The Home tab carried the most product responsibility. It had to serve users with different levels of technical knowledge without turning into a summary of every available data point.
 
 ![Home tab concepts](HomeTabConcepts.webp)
 
-After considering various concepts and engaging in extensive discussions, we chose to proceed with the combined view (option no. 3) as it seemed the most suitable.
-
-The basic structure of the view is a vertical split screen. The upper part displays a simplified network topology map, providing a quick overview of the current network status. All items on the map are interactive, allowing the user to navigate to other relevant app sections by tapping them.
-
-The bottom part focuses on security. We designed a list view structure that displays urgent issues and provides more information with a single tap.
-
-> Throughout the design process, we continuously referred back to our user stories and aligned them with the proposed UI, making necessary adjustments. Feedback from management and other teams greatly assisted us in finding the right solutions.
-
-At this stage, we moved on to the next phase of detailing each layout and page to get a comprehensive view of all possible layouts, screens, and flows within the app.
+We selected a vertically divided layout. The upper section showed a simplified network topology with interactive devices and connections. The lower section prioritized security events that required attention. A user could understand the current state at a glance, then move directly to the relevant detail.
 
 ![Item page detail](ItemPage.webp)
 
-### User onboarding
+This structure also helped the team decide what did not belong in the app. Deep configuration and long diagnostic flows remained in the existing management experience. Mobile focused on awareness, immediate action, and a route to more detail.
+
+### Making onboarding part of the product
 
 ---
 
-As a pure B2B organization, we initially found it challenging to comprehend the significance and necessity of this flow. Notoriously known for lacking such flows, it was difficult to convey its importance to management. However, after reviewing examples and engaging in discussions, everyone became convinced of its necessity.
+The existing enterprise process assumed that deployment and configuration happened elsewhere. A mobile app could not rely on that assumption. A customer needed to connect the app to an appliance before any of its value was visible.
 
-A quick win was discovered during development that significantly reduced the onboarding time. The development team came up with a simple QR scan solution for some connection pages during the deployment of the appliance. This made the lengthy form page, which was challenging to use on a mobile device, obsolete.
+During development, engineering proposed using a QR code for connection steps that previously required a long form. Scanning the code removed manual entry on a small screen and reduced a fragile setup sequence to a direct handoff between the appliance and the app.
 
 ![Onboarding flow](OnBoarding.webp)
 
-### Usability testing
+The QR flow was a useful example of product work crossing disciplines. The best onboarding improvement did not begin as a visual treatment. It came from combining a technical capability with a clear understanding of where users were likely to fail.
+
+### Testing on familiar devices
 
 ---
 
-During the design process, we conducted multiple usability testing sessions in our in-house usability lab.
+We ran usability sessions in Check Point's in-house lab. One practical lesson changed how we prepared the tests: participants performed better on the mobile operating system they used every day.
 
-One valuable lesson we learned was to allow the test participants to choose their "native" phone for the tests. We observed that when using other phones, they often encountered difficulties with the operating system, which distracted them from focusing on the tests.
+When we handed someone an unfamiliar phone, part of the session measured their knowledge of the device rather than the product. Letting participants use a familiar operating system kept the test focused on navigation, terminology, and security decisions.
 
-### Product launch
+### Launch and takeaway
 
-In April 2019, we launched the app on both stores.
+---
+
+WatchTower launched for iOS and Android in April 2019.
 
 ![Pack shot](packShot.webp)
 
-### Conclusion
+The project showed me that the product process itself sometimes needs redesign. The team had to reduce an enterprise security system to its most useful mobile moments, introduce onboarding where the organization had little precedent, and coordinate design and engineering decisions across a new release model.
 
----
+For me, that was the lasting value of the work: product design was not limited to drawing the app. It helped an enterprise team decide what the mobile product should be and adapt how it would be built.
 
-Working on this project was a refreshing change from my usual tasks in the UX team.
-
-My worries about how the development pipeline would manage such a B2C effort were assuaged. The entire team assigned to the project understood the adjustments necessary for its success.
-
-This project undoubtedly reignited my passion for designing engaging products.
+It also reignited my passion for designing engaging products, the kind people open because they want to.

@@ -1,7 +1,7 @@
 ---
 productTitle: Knowing is not enough.
-blurb: Controlled remediation across the security stack, connecting a known weakness to the exact configuration change.
+blurb: Safe, multi-vendor remediation connecting a known exposure to an explained and approved control change.
 order: 3
 ---
 
-As Founding Designer, I helped turn Veriti from a blank slate into a security-controls product. The central design problem was closing the gap between finding a weakness and safely configuring existing security tools to stop it. The product shows what changes, where, why, and what happens before a person approves remediation.
+As Founding Designer, I helped define a product for safe, multi-vendor remediation. Veriti connected a known exposure to the configuration gap that allowed it through, then explained the proposed control change and its expected effect before requesting approval.

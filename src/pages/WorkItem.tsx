@@ -21,7 +21,7 @@ export default function WorkItem() {
   return (
     <>
       <Seo
-        title={`${work.company} — ${work.role}`}
+        title={`${work.company} | ${work.role}`}
         description={work.blurb}
         path={`/work/${work.slug}`}
         type="article"

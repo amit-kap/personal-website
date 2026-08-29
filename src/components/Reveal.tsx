@@ -22,7 +22,7 @@ export default function Reveal({
     const el = ref.current
     if (!el) return
     // Anything already in the viewport reveals on load without waiting for the
-    // observer — the load entrance, and a safety net where IO never fires.
+    // observer: the load entrance, and a safety net where IO never fires.
     const rect = el.getBoundingClientRect()
     if (typeof IntersectionObserver === 'undefined' || (rect.top < window.innerHeight && rect.bottom > 0)) {
       el.classList.add('is-in')

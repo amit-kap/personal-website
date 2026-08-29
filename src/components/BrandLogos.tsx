@@ -1,5 +1,5 @@
-/* Tool marks for the About page's Softwares group. Inlined rather than served
-   from /public so the Codex mark can take `currentColor` — it ships solid
+/* Tool marks for the About page's Tools group. Inlined rather than served
+   from /public so the Codex mark can take `currentColor`; it ships solid
    black, which would disappear against the dark theme. */
 
 export function FigmaMark({ size = 24 }: { size?: number }) {

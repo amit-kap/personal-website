@@ -1,165 +1,153 @@
 ---
 work: shift
-excerpt: How we reframed third-party risk software around the person supervising an AI agent, from market scan to product direction.
+excerpt: How a market scan and product-strategy reframe turned third-party risk from an analyst workspace into a system for supervising AI agents.
 featured: true
 cover: cover-v2.webp
 ---
 
 # Designing for the Supervisor
 
-### Or how we reframed TPRM around the agent doing the work
+### Reframing TPRM around an agent-led workflow
 
 ---
 
-In my current role at Shift, I've been working on the next generation of vendor risk software. The work began as a normal product iteration: better workspace, faster reviews. It gradually turned into something larger, a question about whether the underlying job had changed.
+At Shift, our work on vendor risk software began with a familiar brief: improve the workspace and help reviewers complete assessments faster. As we mapped the operation, a larger product question emerged. If an AI agent could perform more of the repetitive assessment work, what job was left for the person using the product?
 
-For two decades, third-party risk management has lived in spreadsheets, email threads, and Word documents. The first generation of dedicated tools, including [Vanta](https://www.vanta.com/), [Drata](https://drata.com/), and [OneTrust](https://www.onetrust.com/), pulled some of that work into product surfaces, and earned real ground for it. But the underlying motion stayed the same: humans collecting evidence, chasing vendors over email, grading responses by hand.
+Third-party risk workflows long predated today's dedicated platforms. Tools such as [Vanta](https://www.vanta.com/), [Drata](https://drata.com/), and [OneTrust](https://www.onetrust.com/) brought questionnaires, evidence, and review activity into a product. Much of the operation still depended on people collecting documents, chasing vendors over email, and grading responses by hand.
 
-> The real question wasn't how to design a faster analyst workspace. It was whether the analyst was still the right person at the center of the workspace.
+> The real question wasn't how to make the analyst faster. It was whether the analyst was still the right person at the center of the workspace.
 
-### Understanding the space
+### Mapping the operation
 
 ---
 
-To frame the problem properly, I spent time mapping how a real assessment unfolds.
+I started by mapping how a real assessment actually unfolds.
 
-A reviewer picks a framework ([SOC 2](https://www.aicpa-cima.com/resources/landing/system-and-organization-controls-soc-suite-of-services), [ISO 27001](https://www.iso.org/standard/27001), a custom one). They pick a depth. They pull evidence from vendor uploads, threat intel feeds, or by chasing the vendor over email. They reason against each control. They render a verdict. They compose followups when something's missing. They wait. They re-read replies. They re-verdict. Eventually they approve or reject the vendor.
+A reviewer chooses a framework such as [SOC 2](https://www.aicpa-cima.com/resources/landing/system-and-organization-controls-soc-suite-of-services), [ISO 27001](https://www.iso.org/standard/27001), or an internal standard. They set the depth. They gather evidence from vendor uploads and threat-intelligence feeds, map it to controls, and request what's missing. They wait. They re-read replies. They re-verdict. Eventually the team approves or rejects the vendor.
 
 Per assessment, four to twenty hours of analyst time. Per analyst, a portfolio of dozens to hundreds.
 
-A lot of that work is repetitive and pattern-rich: read documents, map evidence to language, ask vendors for missing items. The hard decisions sit at the margins: accepting unusual risk, judging a vague reply, calling something close.
+Much of that work is repetitive and pattern-rich. The consequential decisions sit at the margins: accepting unusual risk, judging an unclear reply, or resolving evidence that points in different directions.
 
-This was the picture we were working from when AI capability started catching up to the job.
+This division between repeatable work and accountable judgment became the basis for the product direction.
 
-### Looking at the landscape
+### Reviewing the market
 
 ---
 
-Before sketching anything new, I wanted to see what the rest of the market was doing.
+Before sketching a new product model, I reviewed how direct competitors and adjacent agent products divided work between AI and people.
 
-**Direct peers.** [Vanta](https://www.vanta.com/) and [Drata](https://drata.com/) had begun adding AI features inside their existing workflow products. [Whistic](https://www.whistic.com/) was promoting AI agents for assessments. [Lema](https://www.lema.ai/), an AI-native startup, was positioning explicitly around risk engineering. [SAFE](https://safe.security/) was claiming end-to-end autonomy. The signal was clear: the category was moving, and AI was the frame everyone reached for.
+**Direct peers.** At the time of the scan, [Vanta](https://www.vanta.com/) and [Drata](https://drata.com/) were adding AI capabilities to established workflow products. [Whistic](https://www.whistic.com/) was presenting agents for assessments. [Lema](https://www.lema.ai/) was positioning around risk engineering, while [SAFE](https://safe.security/) was presenting an autonomous TPRM model. The signal was clear: the category was moving, AI was the frame everyone reached for, and yet the products expressed very different views of what AI should own.
 
 ![Vanta](vanta.webp) ![Drata](drata.webp) ![SAFE](safe.webp)
 
-What none of them seemed to have settled was the *operating model*: what the workspace looks like when the agent does the work and a person supervises. Most still framed AI as a feature inside an analyst-shaped product.
+My main takeaway concerned the *operating model*. Several products added AI to a workspace still organized around an analyst completing the assessment. I wanted to explore the inverse: a workspace organized around a person supervising work performed by an agent.
 
-**Adjacent agent products.** I spent more time here than expected. [Devin](https://devin.ai/), [Cursor](https://cursor.com/), and [Claude Code](https://claude.com/product/claude-code) in software engineering. [Dropzone AI](https://www.dropzone.ai/) and [Crogl](https://www.crogl.com/) in security operations. [Harvey](https://www.harvey.ai/) and [Eve](https://www.eve.legal/) in legal. [Sierra](https://sierra.ai/) and [Decagon](https://decagon.ai/) in customer support. Different domains, but a recognizable pattern: the AI runs, the human supervises, and the workspace is built around that supervision.
+**Adjacent agent products.** I studied [Devin](https://devin.ai/), [Cursor](https://cursor.com/), and [Claude Code](https://claude.com/product/claude-code) in software development; [Dropzone AI](https://www.dropzone.ai/) and [Crogl](https://www.crogl.com/) in security operations; [Harvey](https://www.harvey.ai/) and [Eve](https://www.eve.legal/) in legal; and [Sierra](https://sierra.ai/) and [Decagon](https://decagon.ai/) in customer support.
 
-Of these, Dropzone AI was the closest analog. Their agent investigates a security alert end-to-end, produces a report, asks the human to approve the response. Translate that into TPRM and you get something I recognized: agent assesses a vendor end-to-end, produces a report, asks the human to approve onboarding.
-
-That's the moment the shape of the new product clicked.
+Dropzone AI was the closest analog. Its agent investigates a security alert and produces a decision-ready report with a recommended action. Translated into TPRM, the pattern became recognizable: an agent assesses a vendor, presents its evidence and conclusion, and leaves the consequential decision with a person. That's the moment the shape of the new product clicked.
 
 ![Dropzone AI](<dropzone AI.webp>)
 
-### The reframe
+### The product reframe
 
 ---
 
-I brought this thinking back to the team and the broader leadership group. The argument was simple:
+I brought the market scan and operating-model proposal to the product team and the broader leadership group.
 
-> The work analysts do today is work an agent can handle now, with supervision. The product to build for the next cycle isn't a faster analyst workspace. It's a workspace for the supervisor of the agent.
+> Repetitive assessment work can increasingly move to an agent. The product should be organized around the person who reviews exceptions and remains accountable for the decision.
 
-The mental model shift sounds small written down, but it changes what a lot of the screens are *for*. The human isn't picking framework or depth anymore. The human isn't reading every control's evidence. The human isn't composing the followup email. The human is watching the agent work, intervening where it matters, deciding where the agent shouldn't.
+That shift changes what the screens are for. Instead of requiring the reviewer to perform every step, the product lets them inspect the agent's reasoning, intervene where judgment is needed, and define where the agent should stop.
 
-After a few rounds of internal discussion across design, product, engineering, and security, we agreed this was the right frame to design against. The decision wasn't to ship a fully autonomous product immediately. It was to design as if the agent were doing more, and let trust build over time.
+After discussions across design, product, engineering, and security, we chose this as the direction to test. The plan was not immediate full autonomy. It was to expand the agent's responsibility in controlled steps and use customer behavior to understand where trust held or failed.
 
-### First sketches
+### Testing the workspace model
 
 ---
 
-The first sketches asked a simple question: if the human is supervising rather than doing, what does their day look like?
+The first sketches asked what a reviewer's day would look like if supervision became the primary job.
 
 ![Early analyst-workspace concept](concept-001.webp)
 
-Some of the early work still carried the familiar analyst-workspace shape: a stepper, a control matrix, and an assistant panel beside the work. It was useful because it showed what we were moving away from. If the agent was doing the repetitive assessment work, the product needed to make supervision feel primary, not secondary.
+Early directions kept the familiar analyst workspace: a stepper, control matrix, and assistant panel beside the work. Those concepts made the conflict visible. The person still appeared responsible for the process while the agent remained an optional helper.
 
 ![Control review and followup detail](concept-002.webp)
 
-A few directions came up:
+We explored three directions:
 
-- **A queue of approvals.** Clean, but reductive. It framed the human as a button-presser and lost the texture of supervision.
-- **A timeline per assessment.** Honest about the agent's ongoing activity, but didn't scale to a fleet.
-- **A dashboard of assessments + drill-in.** The most familiar pattern, and the one we kept iterating on.
+- **A queue of approvals.** Clear, but too reductive. It treated the supervisor as a button-presser and removed the context needed for judgment.
+- **A timeline for each assessment.** Honest about ongoing agent activity, but difficult to scan across many vendors.
+- **An assessment fleet with drill-in.** Familiar enough to navigate and able to show both the portfolio and the work inside one assessment.
 
-In parallel, I started sketching what the *inside* of an assessment looks like when the agent is doing the work and the human is asking questions about it. Modals didn't fit. The work isn't a moment; it's an ongoing conversation. A workspace tab felt too static. The shape that kept emerging was a channel: agent posts as it goes, human can read, ask, intervene at any point.
+The fleet became the organizing model. Inside each assessment, a second pattern emerged. The agent's work was not a single modal or a static workspace. It was an ongoing exchange that needed history, evidence, questions, and intervention in one place. A channel fit that behavior.
 
-After several iterations, we landed on three surfaces.
-
-### Three surfaces
+### Three connected surfaces
 
 ---
 
-**The fleet view.** The daily home. An operations console over the in-flight assessments, grouped by status, urgency, and whether anything needs the supervisor's attention. Closer in feel to an MSSP console than to a traditional GRC product. You scan, you take cross-cutting action, you drop back in.
+**The fleet view.** The daily home for in-flight assessments, grouped by status, urgency, and whether the supervisor needs to intervene. It behaves more like an operations console than a traditional GRC dashboard.
 
 ![Fleet supervision dashboard](fleet-dashboard.webp)
 
-**The channel per assessment.** When you click into one assessment, you enter its channel: a conversation with the agent about this vendor. Cards over bubbles, structured evidence, pinned decisions, accountability moments visible. Past, present, and future in one scroll.
+**The assessment channel.** Each assessment has a channel with the agent. Structured evidence, questions, follow-ups, proposed verdicts, and human decisions share one history.
 
-What made the channel feel right wasn't the format. It was that it's *two-way*. The supervisor isn't watching an activity stream. They can ask the agent anything, with full context.
+What made the channel feel right wasn't the format. It was that it's *two-way*: the supervisor isn't watching an activity stream, they're interrogating it.
 
-> *Why did you say Partially Failed on AC-04? What about their AI training data practices? Pull up the contract. Does it have a data-residency clause? How does this vendor compare to the last one we onboarded?*
+> *Why did you mark AC-04 as partially failed? How does the vendor use customer data for AI training? Pull up the relevant contract clause. Compare this answer with our last approved AI vendor.*
 
-The agent answers in context, with the evidence it already has, plus new pulls if needed. The channel becomes the supervisor's interrogation surface, not a log.
-
-This surface also absorbed six things we used to draw separately: workspace, activity timeline, vendor conversation, followup center, approval modal, audit trail. Once we saw them as messages in a channel, the separate modals stopped making sense.
+The channel absorbed six things we used to draw separately: the assessment workspace, activity timeline, vendor conversation, follow-up center, approval modal, and audit trail. Once we saw them as messages in a channel, the separate modals stopped making sense.
 
 ![Assessment channel prototype](channel-per-assessment.webp)
 
-**The command bar.** A global input, available from anywhere. *Start onboarding for [6sense.com](https://6sense.com/). Show me all assessments awaiting decision. Why is the Trimbox assessment blocked?* Cmd+K, Spotlight, [Linear](https://linear.app/)'s command bar: the pattern is settled, and it fits the daily-driver persona who lives in the product.
+**The command bar.** A global input for starting work or querying the portfolio from anywhere. *Start onboarding for [6sense.com](https://6sense.com/). Show assessments awaiting a decision. Why is the Trimbox assessment blocked?* Familiar command-bar patterns made this interaction legible to a daily user.
 
-### Agent guidance as a design primitive
-
----
-
-Among the surfaces, the piece I keep coming back to isn't a screen at all. It's a text artifact the agent reads as input every time it runs: versioned, human-editable, named after the convention software engineers have settled on for agent instructions.
-
-Three levels, all written in natural language:
-
-- **Global policy.** Applies to all assessments. *"Never auto-approve sub-processors handling PII without legal review."*
-- **Class instructions.** Applies to all vendors of a class. *"For AI vendors, always check training data sources and opt-out mechanisms."*
-- **Per-assessment notes.** Applies to one assessment. *"They're mid-acquisition by a larger company; account for transition."*
-
-This is how the supervisor "trains" the agent without writing code. The user writes soft policy in natural language; the agent uses it to shape drafts, requests, and decisions. Inline corrections, *you got this wrong on AC-04, save as a rule*, persist as policy.
-
-It's the closest TPRM has come to programming. And it became the design pattern I'm most curious to push on next.
-
-### Designing what stays human
+### Agent guidance as product policy
 
 ---
 
-Inside all of this, an unexpectedly important design principle emerged: design the surfaces *around* what the agent can't take over.
+One concept was not a screen at all. It was a versioned, human-editable instruction document that the agent could use as policy while working on an assessment.
 
-- Independent judgment under ambiguity: the agent surfaces the ambiguity, the human decides
-- Policy calls and risk acceptance: approving a high-risk vendor is a human accountability moment, made visible
-- Conflict resolution when evidence pulls in two directions
-- Long-horizon planning across many vendors and multi-month cycles
+We explored three levels, all written in natural language:
 
-The important part isn't where the line sits. It's that the line is now *visible*. The product can make those moments feel intentional, with pinned decision cards, evidence inline, and a human signing off on something they can see. Those moments stop being indistinguishable from the rest of the queue.
+- **Global policy.** Applies to every assessment. *"Require legal review before approving a subprocessor that handles personal data."*
+- **Vendor-class instructions.** Applies to a category. *"For AI vendors, check training-data sources and opt-out mechanisms."*
+- **Assessment notes.** Applies to one vendor. *"The company is being acquired; account for the transition in ownership and controls."*
 
-### Reviewing with stakeholders
+This would let a supervisor guide the agent without writing code. Natural-language policy could shape drafts, requests, and proposed decisions. A correction such as *you got this wrong on AC-04; save it as a rule* could become a reviewable policy change instead of disappearing inside one conversation.
 
----
+The concept made agent guidance part of the product model rather than an implementation detail. It's also the closest TPRM has come to programming, and the pattern I'm most curious to push on next.
 
-Before committing further design and engineering, I wrote the thinking up as a strategic proposal and brought it to leadership.
-
-The decision asked of the group was whether to commit to this direction: building toward an agent supervision platform for TPRM, rather than continuing to refine the analyst workspace. The proposal was deliberately structured around what we knew versus what we were betting on. Competitor releases showed the category moving toward agent-led work. The team's own experiments showed the capability was within reach. The piece that needed real evidence was customer trust: whether a CISO would accept agent-drafted outbound communication, and on what terms.
-
-The recommendation was to start with the smallest customer-visible slice: the agent drafting and sending followup emails, with reviewer approval, parsing replies into verdict-change proposals. Contained. Customer-visible. Producing the trust evidence the larger product needs.
-
-That's the wedge we're now designing in detail.
-
-### What I'm taking away
+### Designing human accountability
 
 ---
 
-A few things stood out while working on this.
+The product needed to make the decisions that require human accountability easy to find and properly informed:
+
+- Judgment when the evidence is incomplete or ambiguous
+- Policy exceptions and formal risk acceptance
+- Conflicts between evidence sources
+- Decisions that affect several vendors or a long-running program
+
+The important part isn't where the line sits; the boundary will move as the system earns trust. It's that the line is *visible*: pinned decisions, evidence in context, and a human signing off on something they can actually see. Those moments stop being indistinguishable from the rest of the queue.
+
+### Turning direction into a test
+
+---
+
+Before committing further design and engineering, I wrote the direction as a strategic proposal for leadership. It separated what we knew from what we were betting on. Competitor releases showed a move toward agent-led work, and our internal experiments suggested the capability was viable. The open question was customer trust, particularly around an agent communicating with vendors.
+
+We recommended starting with a contained, customer-visible slice: the agent drafts follow-up emails for reviewer approval, then parses replies into proposed verdict changes. This would test whether customers trusted the agent's external communication without requiring them to accept the entire operating model at once.
+
+That wedge gave the team a practical first test for the broader direction.
+
+### What I am taking forward
+
+---
 
 > The hardest part isn't the AI capability. It's designing the workspace for the person *supervising* the AI, which is a different job from the one we've been designing for.
 
-A few specifics:
+- Channels and structured message types can replace a collection of disconnected forms and modals.
+- Notification discipline matters. Only work requiring a person should interrupt them; everything else should remain inspectable.
+- Evaluation data should become a product surface: what the agent gets right, where it fails, and where people override it. That evidence is part of how a customer decides whether to extend trust.
 
-- Channels and message types, not modals and forms, are the new core design surface. The agent's vocabulary becomes the design language.
-- Notification discipline matters more than ever. Surface only the moments that need a human; let everything else live queryable in the channel.
-- Eval data is a product surface, not just engineering telemetry: what the agent gets right, what it gets wrong, where humans override. Customers will ask how you know it's right. The eval data is the answer.
-
-This work sits between product strategy and design. That's the layer I like: the category is mid-migration, and the supervision operating model is still being written.
+This work sits between product strategy and design: a market shift, an operating-model decision, a sequence for testing trust, and the interaction system that makes the direction usable. That's the layer I like. The category is mid-migration, and the supervision operating model is still being written.
