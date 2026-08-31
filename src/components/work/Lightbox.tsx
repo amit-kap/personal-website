@@ -5,7 +5,17 @@ import { getLenis } from '@/lib/useSmoothScroll'
 /* Full-frame view of a product screenshot. Portalled to the body because the
    reveal wrappers carry a transform, which would otherwise make `fixed`
    resolve against the card instead of the viewport. */
-export default function Lightbox({ src, alt, onClose }: { src: string; alt: string; onClose: () => void }) {
+export default function Lightbox({
+  src,
+  alt,
+  onClose,
+  video = false,
+}: {
+  src: string
+  alt: string
+  onClose: () => void
+  video?: boolean
+}) {
   const close = useRef<HTMLButtonElement>(null)
 
   useEffect(() => {
@@ -32,7 +42,21 @@ export default function Lightbox({ src, alt, onClose }: { src: string; alt: stri
 
   return createPortal(
     <div className="lightbox" onClick={onClose} role="dialog" aria-modal="true" aria-label={alt}>
-      <img src={src} alt={alt} />
+      {video ? (
+        <video
+          src={src}
+          aria-label={alt}
+          controls
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="metadata"
+          onClick={(event) => event.stopPropagation()}
+        />
+      ) : (
+        <img src={src} alt={alt} />
+      )}
       <button ref={close} type="button" className="lightbox-close" onClick={onClose} aria-label="Close">
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
           <path d="M3.5 3.5 12.5 12.5M12.5 3.5 3.5 12.5" />
