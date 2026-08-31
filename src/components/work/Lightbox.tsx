@@ -55,7 +55,7 @@ export default function Lightbox({
           onClick={(event) => event.stopPropagation()}
         />
       ) : (
-        <img src={src} alt={alt} />
+        <img src={src} alt={alt} onClick={(event) => event.stopPropagation()} />
       )}
       <button ref={close} type="button" className="lightbox-close" onClick={onClose} aria-label="Close">
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">

@@ -256,6 +256,21 @@
 .backdrop:hover .backdrop-media {
   transform: scale(1.02);
 }
+.backdrop-image-btn {
+  display: block;
+  width: 90%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: zoom-in;
+}
+.backdrop-image-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 6px;
+}
+.backdrop-image-btn .backdrop-media {
+  width: 100%;
+}
 /* Media shown whole at its own ratio, 90% wide so 5% of the backdrop
    stays visible either side, and centred rather than seated on the floor. */
 .backdrop-media--fit {

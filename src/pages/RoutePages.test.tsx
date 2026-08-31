@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react'
+import { fireEvent, render, screen } from '@testing-library/react'
 import { MemoryRouter, Route, Routes } from 'react-router-dom'
 import type { ReactNode } from 'react'
 import CaseStudyPage from './CaseStudyPage'
@@ -23,6 +23,17 @@ describe('route pages', () => {
 
     renderAt('/work/veriti', '/work/:slug', <WorkItem />)
     expect(screen.getByRole('heading', { name: /turning a known exposure into an explained, approved security change/i })).toBeInTheDocument()
+  })
+
+  it('opens each Shift feature image in the full-frame viewer', () => {
+    renderAt('/work/shift', '/work/:slug', <WorkItem />)
+
+    const imageButtons = screen.getAllByRole('button', { name: /^Enlarge: Shift / })
+    expect(imageButtons).toHaveLength(4)
+
+    fireEvent.click(imageButtons[0])
+    expect(screen.getByRole('dialog', { name: 'Shift home dashboard' })).toBeInTheDocument()
+    expect(screen.getByRole('dialog').querySelector('img')).toHaveAttribute('alt', 'Shift home dashboard')
   })
 
   it('renders an article and the About page', () => {
