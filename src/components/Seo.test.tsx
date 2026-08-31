@@ -9,14 +9,14 @@ const fixture = `
   <meta data-seo="og:title" property="og:title" content="Amit Kaplinsky | Product Designer" />
   <meta data-seo="og:description" property="og:description" content="Home description" />
   <meta data-seo="og:url" property="og:url" content="https://amitkap.com/" />
-  <meta data-seo="og:image" property="og:image" content="https://amitkap.com/og.png" />
+  <meta data-seo="og:image" property="og:image" content="https://amitkap.com/og-v2.png" />
   <meta data-seo="og:image:width" property="og:image:width" content="1200" />
   <meta data-seo="og:image:height" property="og:image:height" content="630" />
   <meta data-seo="og:site_name" property="og:site_name" content="Amit Kaplinsky" />
   <meta data-seo="twitter:card" name="twitter:card" content="summary_large_image" />
   <meta data-seo="twitter:title" name="twitter:title" content="Amit Kaplinsky | Product Designer" />
   <meta data-seo="twitter:description" name="twitter:description" content="Home description" />
-  <meta data-seo="twitter:image" name="twitter:image" content="https://amitkap.com/og.png" />
+  <meta data-seo="twitter:image" name="twitter:image" content="https://amitkap.com/og-v2.png" />
 `
 
 describe('Seo', () => {

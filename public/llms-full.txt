@@ -1,0 +1,580 @@
+# Amit Kaplinsky | Full portfolio context
+
+## Homepage
+
+**Headline**
+
+Making complex security operations clear enough to act on.
+
+**Supporting copy**
+
+Twelve years across enterprise and founding-stage cybersecurity, working from product direction and operating models through interaction design, systems, and AI-assisted builds.
+
+Canonical URL: https://amitkap.com/
+
+## Work
+
+### Shift | Founding Designer
+
+URL: https://amitkap.com/work/shift
+
+**Product thesis**
+
+Agent-led third-party security, with people accountable for the decisions.
+
+**Summary**
+
+A third-party security platform connecting agent-led assessment, vendor access, exposure, and human judgment.
+
+**Case study content**
+
+I joined Shift as its first designer. I helped define the human-agent operating model, then built the design system, onboarding, and core workflows connecting vendor evidence, access, exposure, and risk decisions. Shift is now publicly available.
+
+### Onyxia | Product Design Team Lead
+
+URL: https://amitkap.com/work/onyxia-cyber
+
+**Product thesis**
+
+CISO priorities, connected to operational follow-through.
+
+**Summary**
+
+Connecting benchmarks and SLAs to the owners, tasks, progress, and delays behind them.
+
+**Case study content**
+
+At the time, Onyxia was developing a data platform for CISOs, connecting security products, BI, Jira, ServiceNow, and operational systems. I led product design during a six-month engagement, translating benchmarks and SLAs into workflows that connected executive priorities with owners, tasks, progress, and delays.
+
+### Veriti | Founding Designer
+
+URL: https://amitkap.com/work/veriti
+
+**Product thesis**
+
+Knowing is not enough.
+
+**Summary**
+
+Safe, multi-vendor remediation connecting a known exposure to an explained and approved control change.
+
+**Case study content**
+
+As Founding Designer, I helped define a product for safe, multi-vendor remediation. Veriti connected a known exposure to the configuration gap that allowed it through, then explained the proposed control change and its expected effect before requesting approval.
+
+### Semperis | UX Team Lead
+
+URL: https://amitkap.com/work/semperis
+
+**Product thesis**
+
+From recovery to prevention.
+
+**Summary**
+
+A product language for Active Directory recovery, continuous risk, attention, and action.
+
+**Case study content**
+
+I led the UX transition as Semperis expanded from Active Directory recovery into continuous identity security. Alongside building the in-house design team, I defined how vulnerabilities, dangerous configurations, alerts, insights, severity, urgency, and required actions should appear across the product.
+
+### Check Point Software | UX Expert
+
+URL: https://amitkap.com/work/checkpoint
+
+**Product thesis**
+
+One system, not twenty tabs.
+
+**Summary**
+
+Enterprise security management reorganized around products, objects, policies, and daily security work.
+
+**Case study content**
+
+At Check Point I learned cybersecurity and enterprise product design inside an R&D organization of hundreds of developers. The redesign began with management spread across more than twenty tabs. We reorganized products, objects, policies, and daily security tasks around how administrators worked.
+
+## Writing
+
+### Designing for the Supervisor
+
+URL: https://amitkap.com/case-studies/designing-for-the-supervisor
+
+**Excerpt**
+
+How a market scan and product-strategy reframe turned third-party risk from an analyst workspace into a system for supervising AI agents.
+
+**Article content**
+
+# Designing for the Supervisor
+
+### Reframing TPRM around an agent-led workflow
+
+---
+
+At Shift, our work on vendor risk software began with a familiar brief: improve the workspace and help reviewers complete assessments faster. As we mapped the operation, a larger product question emerged. If an AI agent could perform more of the repetitive assessment work, what job was left for the person using the product?
+
+Third-party risk workflows long predated today's dedicated platforms. Tools such as [Vanta](https://www.vanta.com/), [Drata](https://drata.com/), and [OneTrust](https://www.onetrust.com/) brought questionnaires, evidence, and review activity into a product. Much of the operation still depended on people collecting documents, chasing vendors over email, and grading responses by hand.
+
+> The real question wasn't how to make the analyst faster. It was whether the analyst was still the right person at the center of the workspace.
+
+### Mapping the operation
+
+---
+
+I started by mapping how a real assessment actually unfolds.
+
+A reviewer chooses a framework such as [SOC 2](https://www.aicpa-cima.com/resources/landing/system-and-organization-controls-soc-suite-of-services), [ISO 27001](https://www.iso.org/standard/27001), or an internal standard. They set the depth. They gather evidence from vendor uploads and threat-intelligence feeds, map it to controls, and request what's missing. They wait. They re-read replies. They re-verdict. Eventually the team approves or rejects the vendor.
+
+Per assessment, four to twenty hours of analyst time. Per analyst, a portfolio of dozens to hundreds.
+
+Much of that work is repetitive and pattern-rich. The consequential decisions sit at the margins: accepting unusual risk, judging an unclear reply, or resolving evidence that points in different directions.
+
+This division between repeatable work and accountable judgment became the basis for the product direction.
+
+### Reviewing the market
+
+---
+
+Before sketching a new product model, I reviewed how direct competitors and adjacent agent products divided work between AI and people.
+
+**Direct peers.** At the time of the scan, [Vanta](https://www.vanta.com/) and [Drata](https://drata.com/) were adding AI capabilities to established workflow products. [Whistic](https://www.whistic.com/) was presenting agents for assessments. [Lema](https://www.lema.ai/) was positioning around risk engineering, while [SAFE](https://safe.security/) was presenting an autonomous TPRM model. The signal was clear: the category was moving, AI was the frame everyone reached for, and yet the products expressed very different views of what AI should own.
+
+![Vanta](vanta.webp) ![Drata](drata.webp) ![SAFE](safe.webp)
+
+My main takeaway concerned the *operating model*. Several products added AI to a workspace still organized around an analyst completing the assessment. I wanted to explore the inverse: a workspace organized around a person supervising work performed by an agent.
+
+**Adjacent agent products.** I studied [Devin](https://devin.ai/), [Cursor](https://cursor.com/), and [Claude Code](https://claude.com/product/claude-code) in software development; [Dropzone AI](https://www.dropzone.ai/) and [Crogl](https://www.crogl.com/) in security operations; [Harvey](https://www.harvey.ai/) and [Eve](https://www.eve.legal/) in legal; and [Sierra](https://sierra.ai/) and [Decagon](https://decagon.ai/) in customer support.
+
+Dropzone AI was the closest analog. Its agent investigates a security alert and produces a decision-ready report with a recommended action. Translated into TPRM, the pattern became recognizable: an agent assesses a vendor, presents its evidence and conclusion, and leaves the consequential decision with a person. That's the moment the shape of the new product clicked.
+
+![Dropzone AI](<dropzone AI.webp>)
+
+### The product reframe
+
+---
+
+I brought the market scan and operating-model proposal to the product team and the broader leadership group.
+
+> Repetitive assessment work can increasingly move to an agent. The product should be organized around the person who reviews exceptions and remains accountable for the decision.
+
+That shift changes what the screens are for. Instead of requiring the reviewer to perform every step, the product lets them inspect the agent's reasoning, intervene where judgment is needed, and define where the agent should stop.
+
+After discussions across design, product, engineering, and security, we chose this as the direction to test. The plan was not immediate full autonomy. It was to expand the agent's responsibility in controlled steps and use customer behavior to understand where trust held or failed.
+
+### Testing the workspace model
+
+---
+
+The first sketches asked what a reviewer's day would look like if supervision became the primary job.
+
+![Early analyst-workspace concept](concept-001.webp)
+
+Early directions kept the familiar analyst workspace: a stepper, control matrix, and assistant panel beside the work. Those concepts made the conflict visible. The person still appeared responsible for the process while the agent remained an optional helper.
+
+![Control review and followup detail](concept-002.webp)
+
+We explored three directions:
+
+- **A queue of approvals.** Clear, but too reductive. It treated the supervisor as a button-presser and removed the context needed for judgment.
+- **A timeline for each assessment.** Honest about ongoing agent activity, but difficult to scan across many vendors.
+- **An assessment fleet with drill-in.** Familiar enough to navigate and able to show both the portfolio and the work inside one assessment.
+
+The fleet became the organizing model. Inside each assessment, a second pattern emerged. The agent's work was not a single modal or a static workspace. It was an ongoing exchange that needed history, evidence, questions, and intervention in one place. A channel fit that behavior.
+
+### Three connected surfaces
+
+---
+
+**The fleet view.** The daily home for in-flight assessments, grouped by status, urgency, and whether the supervisor needs to intervene. It behaves more like an operations console than a traditional GRC dashboard.
+
+![Fleet supervision dashboard](fleet-dashboard.webp)
+
+**The assessment channel.** Each assessment has a channel with the agent. Structured evidence, questions, follow-ups, proposed verdicts, and human decisions share one history.
+
+What made the channel feel right wasn't the format. It was that it's *two-way*: the supervisor isn't watching an activity stream, they're interrogating it.
+
+> *Why did you mark AC-04 as partially failed? How does the vendor use customer data for AI training? Pull up the relevant contract clause. Compare this answer with our last approved AI vendor.*
+
+The channel absorbed six things we used to draw separately: the assessment workspace, activity timeline, vendor conversation, follow-up center, approval modal, and audit trail. Once we saw them as messages in a channel, the separate modals stopped making sense.
+
+![Assessment channel prototype](channel-per-assessment.webp)
+
+**The command bar.** A global input for starting work or querying the portfolio from anywhere. *Start onboarding for [6sense.com](https://6sense.com/). Show assessments awaiting a decision. Why is the Trimbox assessment blocked?* Familiar command-bar patterns made this interaction legible to a daily user.
+
+### Agent guidance as product policy
+
+---
+
+One concept was not a screen at all. It was a versioned, human-editable instruction document that the agent could use as policy while working on an assessment.
+
+We explored three levels, all written in natural language:
+
+- **Global policy.** Applies to every assessment. *"Require legal review before approving a subprocessor that handles personal data."*
+- **Vendor-class instructions.** Applies to a category. *"For AI vendors, check training-data sources and opt-out mechanisms."*
+- **Assessment notes.** Applies to one vendor. *"The company is being acquired; account for the transition in ownership and controls."*
+
+This would let a supervisor guide the agent without writing code. Natural-language policy could shape drafts, requests, and proposed decisions. A correction such as *you got this wrong on AC-04; save it as a rule* could become a reviewable policy change instead of disappearing inside one conversation.
+
+The concept made agent guidance part of the product model rather than an implementation detail. It's also the closest TPRM has come to programming, and the pattern I'm most curious to push on next.
+
+### Designing human accountability
+
+---
+
+The product needed to make the decisions that require human accountability easy to find and properly informed:
+
+- Judgment when the evidence is incomplete or ambiguous
+- Policy exceptions and formal risk acceptance
+- Conflicts between evidence sources
+- Decisions that affect several vendors or a long-running program
+
+The important part isn't where the line sits; the boundary will move as the system earns trust. It's that the line is *visible*: pinned decisions, evidence in context, and a human signing off on something they can actually see. Those moments stop being indistinguishable from the rest of the queue.
+
+### Turning direction into a test
+
+---
+
+Before committing further design and engineering, I wrote the direction as a strategic proposal for leadership. It separated what we knew from what we were betting on. Competitor releases showed a move toward agent-led work, and our internal experiments suggested the capability was viable. The open question was customer trust, particularly around an agent communicating with vendors.
+
+We recommended starting with a contained, customer-visible slice: the agent drafts follow-up emails for reviewer approval, then parses replies into proposed verdict changes. This would test whether customers trusted the agent's external communication without requiring them to accept the entire operating model at once.
+
+That wedge gave the team a practical first test for the broader direction.
+
+### What I am taking forward
+
+---
+
+> The hardest part isn't the AI capability. It's designing the workspace for the person *supervising* the AI, which is a different job from the one we've been designing for.
+
+- Channels and structured message types can replace a collection of disconnected forms and modals.
+- Notification discipline matters. Only work requiring a person should interrupt them; everything else should remain inspectable.
+- Evaluation data should become a product surface: what the agent gets right, where it fails, and where people override it. That evidence is part of how a customer decides whether to extend trust.
+
+This work sits between product strategy and design: a market shift, an operating-model decision, a sequence for testing trust, and the interaction system that makes the direction usable. That's the layer I like. The category is mid-migration, and the supervision operating model is still being written.
+
+### Falling down the rabbit hole
+
+URL: https://amitkap.com/case-studies/falling-down-the-rabbit-hole
+
+**Excerpt**
+
+How a Check Point team adapted an enterprise product process to ship WatchTower for iOS and Android.
+
+**Article content**
+
+# Falling down the rabbit hole
+
+### Shipping a consumer-style mobile app inside an enterprise security company
+
+---
+
+At Check Point, I usually worked on complex enterprise security management. WatchTower began with a different product problem. A major partner wanted a clearer way to show customers the ongoing value of Check Point's small-business security appliances.
+
+The appliance protected the network continuously, but much of that work remained invisible until something went wrong. We proposed a mobile app that would make the service tangible: show network and security status, notify the customer when attention was needed, and provide a small set of actions away from the management console.
+
+The design challenge extended beyond the interface. Our development and release process was built for enterprise B2B software. Shipping a focused iOS and Android experience required the team to make different decisions about scope, onboarding, usability, and communication.
+
+That was the rabbit hole: the security underneath was familiar, but every rule about building and shipping the product was not.
+
+### Defining the audience
+
+---
+
+Salespeople from our partner helped us understand the range of customers using the appliances. Three broad groups appeared:
+
+- IT administrators managing a small or medium business alongside many other responsibilities
+- Security-aware business owners who understood the value of protection but did not operate security tools every day
+- Home and small-office users with practical concerns: Wi-Fi access, connected devices, and why the Xbox suddenly can't reach its online store
+
+The groups had different levels of security knowledge, but they shared a need for a quick answer to two questions: *Is the network okay? Is there anything I need to do?*
+
+We also reviewed consumer network and security products from Asus, Netgear, Norton, and Google. Their products established familiar mobile patterns, while Check Point could contribute deeper security information and mitigation controls.
+
+![Competitive landscape](OtherVendors.webp)
+
+This led to a clear product direction: expose the value of enterprise-grade security through a mobile experience that did not require enterprise expertise.
+
+### Choosing the first-release value
+
+---
+
+Push notifications became the central capability. An appliance usually sits in the background. A timely notification could show that protection was active, explain what happened, and give the customer an action when one was required.
+
+The first-release scope also included:
+
+- **Network snapshot:** connected devices and current network status
+- **Quick actions:** block a device, share Wi-Fi access, or open a relevant configuration
+- **Connectivity:** internet and VPN status
+- **Event history:** recent network and security events
+- **Multiple appliances:** switch between gateways from one account
+
+The point was not to reproduce the desktop console on a smaller screen. The app needed to present the state, explain the issue, and offer the next useful action.
+
+### Building the mobile structure
+
+---
+
+We needed one information architecture that could feel familiar on both iOS and Android. After comparing navigation models, we chose four bottom-level destinations: Home, Events, Statistics, and Settings.
+
+![Initial concept](InitialConcept.webp)
+
+The Home tab carried the most product responsibility. It had to serve users with different levels of technical knowledge without turning into a summary of every available data point.
+
+![Home tab concepts](HomeTabConcepts.webp)
+
+We selected a vertically divided layout. The upper section showed a simplified network topology with interactive devices and connections. The lower section prioritized security events that required attention. A user could understand the current state at a glance, then move directly to the relevant detail.
+
+![Item page detail](ItemPage.webp)
+
+This structure also helped the team decide what did not belong in the app. Deep configuration and long diagnostic flows remained in the existing management experience. Mobile focused on awareness, immediate action, and a route to more detail.
+
+### Making onboarding part of the product
+
+---
+
+The existing enterprise process assumed that deployment and configuration happened elsewhere. A mobile app could not rely on that assumption. A customer needed to connect the app to an appliance before any of its value was visible.
+
+During development, engineering proposed using a QR code for connection steps that previously required a long form. Scanning the code removed manual entry on a small screen and reduced a fragile setup sequence to a direct handoff between the appliance and the app.
+
+![Onboarding flow](OnBoarding.webp)
+
+The QR flow was a useful example of product work crossing disciplines. The best onboarding improvement did not begin as a visual treatment. It came from combining a technical capability with a clear understanding of where users were likely to fail.
+
+### Testing on familiar devices
+
+---
+
+We ran usability sessions in Check Point's in-house lab. One practical lesson changed how we prepared the tests: participants performed better on the mobile operating system they used every day.
+
+When we handed someone an unfamiliar phone, part of the session measured their knowledge of the device rather than the product. Letting participants use a familiar operating system kept the test focused on navigation, terminology, and security decisions.
+
+### Launch and takeaway
+
+---
+
+WatchTower launched for iOS and Android in April 2019.
+
+![Pack shot](packShot.webp)
+
+The project showed me that the product process itself sometimes needs redesign. The team had to reduce an enterprise security system to its most useful mobile moments, introduce onboarding where the organization had little precedent, and coordinate design and engineering decisions across a new release model.
+
+For me, that was the lasting value of the work: product design was not limited to drawing the app. It helped an enterprise team decide what the mobile product should be and adapt how it would be built.
+
+It also reignited my passion for designing engaging products, the kind people open because they want to.
+
+### Sailing the Data Oceans
+
+URL: https://amitkap.com/case-studies/sailing-the-data-oceans
+
+**Excerpt**
+
+How we designed a composable filter grammar for high-volume security insights inside an existing product.
+
+**Article content**
+
+# Sailing the Data Oceans
+
+### A filter grammar for high-volume security insights
+
+---
+
+A Veriti environment could produce more security insights than a team could review one by one. Each insight connected an exposure to a proposed change in the customer's existing security stack. The product made an individual item understandable. The ocean of them was the problem: defining and prioritizing a workable set out of everything the platform could see.
+
+The page already existed as a master-detail view, similar to an email application: a list of insights on one side and the selected insight on the other. The filtering model had to fit this structure without forcing a redesign of a pattern used elsewhere in the product.
+
+![Insights page layout](outlook-layout.webp)
+
+The product requirement was broader than adding a few dropdowns. Users needed to express questions with several conditions, understand which conditions were active, and revise part of the query without rebuilding it.
+
+### Establishing the requirements
+
+---
+
+We reviewed filtering patterns in security tools and mature data products. Familiar patterns gave us a starting point, but our data introduced requirements that simple category filters did not cover:
+
+- Support a growing number of filterable properties
+- Allow positive and negative operators such as *is* and *is not*
+- Support several values inside one condition
+- Combine multiple conditions without hiding the current query
+- Fit the existing master-detail page and responsive layouts
+
+These requirements quietly turned filtering into a small query language. The design problem was keeping it from feeling like one: users were trying to find their next work set, not write SQL.
+
+### First iteration: visible dropdowns
+
+---
+
+The first direction placed three dropdown controls above the insight list. Each dropdown represented one filter category.
+
+![Row of dropdown filters](dropdown-row.webp)
+
+**What worked**
+
+- The available filters were visible while scanning the list
+- The interaction was familiar and required little explanation
+
+**What failed**
+
+- Every new category required another control
+- The row did not adapt well to smaller widths
+- The structure could not express operators or several conditions
+
+The direction was easy to understand but could not support the product as the number and complexity of insights grew.
+
+### Second iteration: a scalable container
+
+---
+
+The second direction moved filters into a dedicated picker. A menu listed the filter categories, while a second area displayed the values for the selected category.
+
+![Picker container with list menu](picker-container.webp)
+
+**What worked**
+
+- New categories could be added without extending the page header
+- The container could hold more complex controls
+
+**What failed**
+
+- Active filters were difficult to scan
+- Editing required moving between the category list and its values
+- The model still could not express the conditional grammar users needed
+
+Reviews with the product team and design partners clarified the missing requirement. Users did not only want to select categories. They wanted to express conditions such as *product is not X*, *severity is high or critical*, and *status is unresolved*.
+
+### Third iteration: key, operator, value
+
+---
+
+The third direction kept the scalable container but replaced its inner controls with rows built around three parts:
+
+- **Key:** the property to filter, such as severity, product, or status
+- **Operator:** the relationship, such as *is*, *is not*, or *contains*
+- **Value:** one or more matching values
+
+![Third iteration with Key/Operator/Value rows](picker-2.webp)
+
+This structure matched the way users described the result they wanted. It also gave the product a reusable grammar that could expand as new insight properties became available.
+
+**What worked**
+
+- The same row could represent many types of condition
+- Users could combine conditions and see the complete query
+- New keys and operators did not require a new page layout
+
+**What remained difficult**
+
+- Several rows could make the query visually dense
+- Multiple selected values were hard to summarize inside a compact control
+
+For the first release, we limited the query to five conditions. This kept the initial scope manageable while leaving room to observe how customers built real queries.
+
+### Handling large value sets
+
+---
+
+Some value lists were too large for scrolling alone. Product names, threat indicators, and other properties could produce many potential matches.
+
+We added search inside the value picker so users could narrow the list before selecting an option.
+
+![Search within the value dropdown](search-results-picker.webp)
+
+Multiple selections created a second problem. A user might choose values far apart in a long list, then need to review or remove one. We added a fixed control that switched the picker from all available values to the current selection.
+
+The control solved the editing problem, but it also added another state to understand. That trade-off was acceptable for the first release and worth testing with real data.
+
+### Working with an existing product
+
+---
+
+The implementation had to preserve the behavior of the existing insights page. We worked with engineering on three interaction details:
+
+- Animate row additions and removals so the query's structure remained understandable
+- Keep the filter container usable across page widths
+- Return updated results without breaking the user's editing context
+
+Starting development before every edge case was resolved helped expose issues that static mockups did not. We could test the grammar against real keys, operators, value lengths, and result counts while the interaction was still flexible.
+
+### Outcome
+
+---
+
+The released filter let users isolate a manageable set of insights, see the conditions defining that set, and move from findings into remediation without leaving the existing workflow.
+
+The most important product outcome was not the container itself. It was a filter grammar the platform could extend as its data model grew. The work turned a one-off page control into a reusable way to ask complex questions of security data.
+
+## CV
+
+# Amit Kaplinsky
+
+Product designer focused on cybersecurity, product direction, design systems, human-agent workflows, and hands-on AI prototyping.
+
+Tel Aviv · [amitka111@gmail.com](mailto:amitka111@gmail.com) · [+972 54-4878882](https://wa.me/972544878882) · [LinkedIn](https://www.linkedin.com/in/amitka/) · [Portfolio](https://amitkap.com)
+
+## Experience
+
+### [Shift](/experience/shift)
+
+**Founding Designer** · 10/2024 to now
+
+Founding designer for an AI-native third-party security platform. I helped define the human-agent operating model and built the design system, onboarding, and core workflows for evidence, access, exposure, and risk decisions.
+
+### [Onyxia](/experience/onyxia-cyber)
+
+**Product Design Team Lead** · 04/2024 to 10/2024
+
+Led product design for a CISO data platform, translating benchmarks and SLAs into workflows connecting executive priorities with owners, tasks, progress, and delays.
+
+### [Veriti](/experience/veriti)
+
+**Founding Designer** · 11/2021 to 04/2024
+
+Founding designer for a multi-vendor security remediation platform. I helped define how teams move from a threat and configuration gap to an explained, approved, and safely applied control change.
+
+### [Semperis](/experience/semperis)
+
+**UX Team Lead** · 08/2020 to 11/2021
+
+Led the UX transition as Semperis expanded from Active Directory recovery into continuous identity security, while building its in-house UX team.
+
+### [Check Point Software](/experience/checkpoint)
+
+**UX Expert** · 03/2014 to 08/2020
+
+Worked with R&D on enterprise security management, turning product and technical requirements into information architecture, workflows, prototypes, and cross-platform experiences.
+
+## Certificates
+
+### Meta Front-End Developer Certificate
+
+Coursera · August 2023
+
+### Certified, Programming the .NET Framework
+
+John Bryce · 2010 to 2011
+
+## Education
+
+### Diploma of Education, Digital Communications and Media
+
+Camera Obscura School of Arts · 1996 to 2000
+
+### Bachelor of Arts (B.A), Economics
+
+Tel Aviv University · 1994 to 1996
+
+## Skills
+
+### Tools
+
+- Figma
+- Adobe Creative Suite
+- Visual Studio Code / Cursor
+- Claude Code
+- Codex
+
+### Languages
+
+- Hebrew (Native)
+- English (High Level)
