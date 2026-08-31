@@ -72,6 +72,35 @@ export function HeroBackdrop({
   )
 }
 
+/* A product screenshot that opens in the same full-frame viewer as the hero
+   video. The button keeps the image keyboard and touch accessible while the
+   inner width preserves the backdrop's existing 90% media footprint. */
+export function ZoomableImage({ image, alt }: { image?: ContentImage; alt: string }) {
+  const [open, setOpen] = useState(false)
+  if (!image) return null
+
+  return (
+    <>
+      <button
+        type="button"
+        className="backdrop-image-btn"
+        onClick={() => setOpen(true)}
+        aria-label={`Enlarge: ${alt}`}
+      >
+        <img
+          src={image.src}
+          alt={alt}
+          width={image.width}
+          height={image.height}
+          loading="lazy"
+          className="backdrop-media"
+        />
+      </button>
+      {open && <Lightbox src={image.src} alt={alt} onClose={() => setOpen(false)} />}
+    </>
+  )
+}
+
 /* Eyebrow + statement on the left, body content on the right. */
 export function SplitSection({
   eyebrow,

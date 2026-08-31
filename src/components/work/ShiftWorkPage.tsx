@@ -7,6 +7,7 @@ import {
   ReadLink,
   SplitSection,
   TitleBlock,
+  ZoomableImage,
 } from '@/components/work/casePrimitives'
 import { imageFor } from '@/lib/workImages'
 
@@ -105,12 +106,7 @@ export default function ShiftWorkPage({ work }: { work: Work }) {
                 className="backdrop h-[clamp(240px,39vw,560px)]"
                 style={{ '--g1': GRADIENT[0], '--g2': GRADIENT[1], '--g3': GRADIENT[2] } as React.CSSProperties}
               >
-                {(() => {
-                  const image = imageFor(work, feature.image)
-                  return image ? (
-                    <img src={image.src} alt={feature.alt} width={image.width} height={image.height} loading="lazy" className="backdrop-media" />
-                  ) : null
-                })()}
+                <ZoomableImage image={imageFor(work, feature.image)} alt={feature.alt} />
               </div>
             </Reveal>
           </div>
