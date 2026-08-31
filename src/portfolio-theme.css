@@ -314,6 +314,34 @@
 .vid-btn:hover {
   background: var(--accent);
 }
+.vid-loader {
+  position: absolute;
+  inset: 50% auto auto 50%;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 11px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 999px;
+  color: #fff;
+  background: rgba(17, 17, 17, 0.58);
+  backdrop-filter: blur(6px);
+  transform: translate(-50%, -50%);
+  font-size: var(--text-caption);
+  letter-spacing: 0.04em;
+  pointer-events: none;
+}
+.vid-loader-dot {
+  width: 7px;
+  height: 7px;
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  border-top-color: #fff;
+  border-radius: 999px;
+  animation: vid-spin 700ms linear infinite;
+}
+@keyframes vid-spin {
+  to { transform: rotate(360deg); }
+}
 
 @media (prefers-reduced-motion: reduce) {
   .vid-btn {
@@ -321,6 +349,9 @@
   }
   .vid-fill {
     transition: none;
+  }
+  .vid-loader-dot {
+    animation: none;
   }
 }
 
@@ -425,6 +456,12 @@
   animation: lightbox-in 200ms ease both;
 }
 .lightbox img {
+  max-width: 100%;
+  max-height: 100%;
+  border-radius: var(--radius);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.45);
+}
+.lightbox video {
   max-width: 100%;
   max-height: 100%;
   border-radius: var(--radius);

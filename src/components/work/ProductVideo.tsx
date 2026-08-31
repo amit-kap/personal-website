@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import Lightbox from './Lightbox'
 
 function PlayIcon() {
   return (
@@ -31,6 +32,8 @@ export default function ProductVideo({
   const video = useRef<HTMLVideoElement>(null)
   const [playing, setPlaying] = useState(true)
   const [progress, setProgress] = useState(0)
+  const [open, setOpen] = useState(false)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const el = video.current
@@ -65,28 +68,50 @@ export default function ProductVideo({
     el.currentTime = Math.min(Math.max((event.clientX - left) / width, 0), 1) * el.duration
   }
 
+  const openFull = () => setOpen(true)
+
   return (
-    <div className="backdrop-media backdrop-media--fit vid">
-      <video
-        ref={video}
-        src={src}
-        poster={poster}
-        aria-label={label}
-        className="block h-auto w-full"
-        autoPlay
-        muted
-        loop
-        playsInline
-        preload="metadata"
-      />
-      <button type="button" className="vid-btn" onClick={toggle} aria-label={playing ? 'Pause video' : 'Play video'}>
-        {playing ? <PauseIcon /> : <PlayIcon />}
-      </button>
-      <div className="vid-track" onClick={scrub} role="presentation">
-        <div className="vid-line">
-          <div className="vid-fill" style={{ transform: `scaleX(${progress})` }} />
+    <>
+      <div className="backdrop-media backdrop-media--fit vid" aria-busy={loading}>
+        <video
+          ref={video}
+          src={src}
+          poster={poster}
+          aria-label={label}
+          className="block h-auto w-full cursor-zoom-in"
+          onClick={openFull}
+          onKeyDown={(event) => {
+            if (event.key === 'Enter' || event.key === ' ') {
+              event.preventDefault()
+              openFull()
+            }
+          }}
+          onCanPlay={() => setLoading(false)}
+          onError={() => setLoading(false)}
+          role="button"
+          tabIndex={0}
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="metadata"
+        />
+        {loading && (
+          <div className="vid-loader" role="status" aria-live="polite">
+            <span className="vid-loader-dot" aria-hidden="true" />
+            Loading video
+          </div>
+        )}
+        <button type="button" className="vid-btn" onClick={(event) => { event.stopPropagation(); toggle() }} aria-label={playing ? 'Pause video' : 'Play video'}>
+          {playing ? <PauseIcon /> : <PlayIcon />}
+        </button>
+        <div className="vid-track" onClick={(event) => { event.stopPropagation(); scrub(event) }} role="presentation">
+          <div className="vid-line">
+            <div className="vid-fill" style={{ transform: `scaleX(${progress})` }} />
+          </div>
         </div>
       </div>
-    </div>
+      {open && <Lightbox src={src} alt={label} video onClose={() => setOpen(false)} />}
+    </>
   )
 }
