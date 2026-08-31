@@ -36,6 +36,12 @@ export default function ThemeToggle() {
     }
   }, [theme])
 
+  useEffect(() => {
+    const syncTheme = () => setTheme(currentTheme())
+    window.addEventListener('themechange', syncTheme)
+    return () => window.removeEventListener('themechange', syncTheme)
+  }, [])
+
   const segment = (value: Theme, label: string, icon: React.ReactNode) => (
     <button
       type="button"

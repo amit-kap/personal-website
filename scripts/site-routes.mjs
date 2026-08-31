@@ -6,7 +6,7 @@ import { parse as parseYaml } from 'yaml'
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 
 export const SITE_URL = 'https://amitkap.com'
-export const OG_IMAGE = `${SITE_URL}/og.png`
+export const OG_IMAGE = `${SITE_URL}/og-v2.png`
 
 const staticRoutes = [
   {
@@ -36,6 +36,13 @@ const staticRoutes = [
     description: "Amit Kaplinsky's CV: cybersecurity product direction, founding design, design systems, human-agent workflows, and AI prototyping.",
     type: 'website',
     priority: '0.6',
+  },
+  {
+    path: '/agent',
+    title: 'Agent view',
+    description: "A text-first, machine-readable view of Amit Kaplinsky's portfolio and case studies.",
+    type: 'website',
+    priority: '0.5',
   },
 ]
 

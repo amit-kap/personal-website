@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { getAllCaseStudies, getAllWorks, getWorkBySlug } from '@/lib/content'
+import homeCopy from '@/content/home.json'
 import { imageFor } from '@/lib/workImages'
 import Parallax from '@/components/Parallax'
 import Reveal from '@/components/Reveal'
@@ -75,10 +76,15 @@ export default function Home() {
             Amit Kaplinsky · Product Designer
           </Reveal>
           <Reveal as="h1" className="font-heading text-hero font-medium tracking-[-0.02em]" delay={0.2}>
-            Making complex security operations<br className="hidden sm:block" /> clear enough to act on.
+            {homeCopy.headlineLines.map((line, index) => (
+              <span key={line}>
+                {index > 0 && <br className="hidden sm:block" />}
+                {line}
+              </span>
+            ))}
           </Reveal>
           <Reveal as="p" className="max-w-[600px] text-[18px] font-light leading-[1.55] text-muted-foreground" delay={0.3}>
-            Twelve years across enterprise and founding-stage cybersecurity, working from product direction and operating models through interaction design, systems, and AI-assisted builds.
+            {homeCopy.supportingCopy}
           </Reveal>
           <Reveal delay={0.4}>
             <a href="mailto:amitka111@gmail.com" className="pill-cta roll-host px-[30px] py-3.5 text-[15px]">

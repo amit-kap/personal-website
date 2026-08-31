@@ -5,7 +5,7 @@ import { useEffect } from 'react'
    adding duplicate tags to the document head. */
 
 export const SITE_URL = 'https://amitkap.com'
-const OG_IMAGE = `${SITE_URL}/og.png`
+const OG_IMAGE = `${SITE_URL}/og-v2.png`
 
 export default function Seo({
   title,

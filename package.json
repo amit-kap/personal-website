@@ -5,12 +5,13 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "npm run sitemap && tsc -b && vite build && npm run prerender",
+    "build": "npm run llms && npm run sitemap && tsc -b && vite build && npm run prerender",
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",
     "sitemap": "node scripts/generate-sitemap.mjs",
+    "llms": "node scripts/generate-llms.mjs",
     "prerender": "node scripts/prerender.mjs"
   },
   "dependencies": {

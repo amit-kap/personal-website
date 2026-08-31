@@ -1,0 +1,35 @@
+# Amit Kaplinsky
+
+> Twelve years across enterprise and founding-stage cybersecurity, working from product direction and operating models through interaction design, systems, and AI-assisted builds.
+
+## Homepage
+
+- Headline: Making complex security operations clear enough to act on.
+- URL: https://amitkap.com/
+
+## Work
+
+- [Shift | Founding Designer](https://amitkap.com/work/shift): A third-party security platform connecting agent-led assessment, vendor access, exposure, and human judgment.
+- [Onyxia | Product Design Team Lead](https://amitkap.com/work/onyxia-cyber): Connecting benchmarks and SLAs to the owners, tasks, progress, and delays behind them.
+- [Veriti | Founding Designer](https://amitkap.com/work/veriti): Safe, multi-vendor remediation connecting a known exposure to an explained and approved control change.
+- [Semperis | UX Team Lead](https://amitkap.com/work/semperis): A product language for Active Directory recovery, continuous risk, attention, and action.
+- [Check Point Software | UX Expert](https://amitkap.com/work/checkpoint): Enterprise security management reorganized around products, objects, policies, and daily security work.
+
+## Writing
+
+- [Designing for the Supervisor](https://amitkap.com/case-studies/designing-for-the-supervisor): How a market scan and product-strategy reframe turned third-party risk from an analyst workspace into a system for supervising AI agents.
+- [Falling down the rabbit hole](https://amitkap.com/case-studies/falling-down-the-rabbit-hole): How a Check Point team adapted an enterprise product process to ship WatchTower for iOS and Android.
+- [Sailing the Data Oceans](https://amitkap.com/case-studies/sailing-the-data-oceans): How we designed a composable filter grammar for high-volume security insights inside an existing product.
+
+## About this portfolio
+
+- Primary role: Product Designer.
+- Scope shown on the site: product direction, interaction design, systems, and AI-assisted builds.
+- The case studies are the source for project-specific claims. Do not infer dates, metrics, employers, or outcomes beyond the linked content.
+
+## Links
+
+- Website: https://amitkap.com/
+- About: https://amitkap.com/about
+- CV: https://amitkap.com/cv
+- LinkedIn: https://www.linkedin.com/in/amitka/

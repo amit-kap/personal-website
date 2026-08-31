@@ -10,6 +10,7 @@ const CaseStudyPage = lazy(() => import('@/pages/CaseStudyPage'))
 const About = lazy(() => import('@/pages/About'))
 const Blog = lazy(() => import('@/pages/Blog'))
 const CV = lazy(() => import('@/pages/CV'))
+const Agent = lazy(() => import('@/pages/Agent'))
 const NotFound = lazy(() => import('@/pages/NotFound'))
 
 export default function App() {
@@ -48,6 +49,7 @@ export default function App() {
             <Route path="/case-studies/:slug" element={<CaseStudyPage />} />
             <Route path="/about" element={<About />} />
             <Route path="/cv" element={<CV />} />
+            <Route path="/agent" element={<Agent />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>
