@@ -216,12 +216,12 @@ export default function Home() {
       {/* Closing CTA */}
       <section className="relative border-t border-border">
         <div className="inner-col flex flex-col items-center gap-[18px] py-[88px] text-center">
-          <Reveal as="p" className="eyebrow">Have an idea?</Reveal>
+          <Reveal as="p" className="eyebrow availability-shimmer">Open to fractional roles / select projects</Reveal>
           <Reveal as="h2" className="max-w-[700px] font-heading text-feature font-medium tracking-[-0.015em]" delay={0.08}>
             Building a security product?<br className="hidden sm:block" /> Let's see if it's a fit.
           </Reveal>
           <Reveal delay={0.16}>
-            <a href="mailto:amitka111@gmail.com" className="pill-cta roll-host px-[30px] py-3.5 text-[15px]">
+            <a href="mailto:amitka111@gmail.com?subject=Fractional%20or%20freelance%20project" className="pill-cta availability-cta roll-host px-[30px] py-3.5 text-[15px]">
               <RollingText text="Let's Talk" />
               <ArrowIcon />
             </a>
