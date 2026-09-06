@@ -60,7 +60,7 @@ export default function About() {
     <main>
       <Seo
         title="About"
-        description="Product designer with twelve years in cybersecurity, working across product direction, design systems, human-agent workflows, and AI-assisted prototyping."
+        description="Product designer with twelve years shaping cybersecurity products, from product direction to shipped systems."
         path="/about"
       />
       {/* Portrait hero; the photo dissolves into the page through a mask fade. */}
@@ -85,11 +85,11 @@ export default function About() {
           <div className="flex flex-col gap-5">
             <Reveal as="p" className="eyebrow" delay={0.15}>About</Reveal>
             <Reveal as="h1" className="font-heading text-feature font-medium tracking-[-0.02em]" delay={0.22}>
-              Still a designer. The canvas just got bigger.
+              I like figuring things out and seeing where they can go.
             </Reveal>
             <Reveal className="flex max-w-[520px] flex-col gap-3" delay={0.3}>
               <p className="body-copy">
-                Twelve years designing cybersecurity products, and the craft hasn’t changed: understand the work, give it shape, sweat the details. What has changed is how far design can carry an idea. Today I can take a question about the product all the way to working software.
+                Most of my work has been in cybersecurity, where the products are dense, the stakes are real, and the problems rarely arrive neatly framed. I like getting close to how people work, finding the shape of the problem, and staying with it until the answer becomes something useful.
               </p>
             </Reveal>
           </div>

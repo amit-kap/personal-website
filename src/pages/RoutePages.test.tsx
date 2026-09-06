@@ -42,7 +42,7 @@ describe('route pages', () => {
     article.unmount()
 
     renderAt('/about', '/about', <About />)
-    expect(screen.getByRole('heading', { name: /still a designer\. the canvas just got bigger/i })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: /i like figuring things out and seeing where they can go/i })).toBeInTheDocument()
   })
 
   it('shows clear not-found states for missing content', () => {
