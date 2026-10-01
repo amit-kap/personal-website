@@ -101,7 +101,7 @@ export default function About() {
             <div className="flex gap-6 font-medium">
               <a href="mailto:amitka111@gmail.com" className="text-accent transition-colors hover:text-foreground">Email</a>
               <a
-                href="https://www.linkedin.com/in/amitka/"
+                href="https://www.linkedin.com/in/amitkaplinsky"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-accent transition-colors hover:text-foreground"
