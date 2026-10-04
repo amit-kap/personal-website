@@ -1,0 +1,6 @@
+# Keep Cloudflare's preview hostnames out of search results; amitkap.com is canonical.
+https://:project.pages.dev/*
+  X-Robots-Tag: noindex
+
+https://:version.:project.pages.dev/*
+  X-Robots-Tag: noindex

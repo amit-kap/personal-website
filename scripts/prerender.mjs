@@ -47,8 +47,11 @@ function withMetadata(metadata) {
   return result
 }
 
+/* Write /about as about.html, not about/index.html. Pages serves a .html file at
+   its clean path, but redirects a directory index to a trailing slash, which
+   would contradict the canonical URLs and sitemap. */
 for (const route of getSiteRoutes()) {
-  const output = route.path === '/' ? join(dist, 'index.html') : join(dist, route.path.slice(1), 'index.html')
+  const output = route.path === '/' ? join(dist, 'index.html') : join(dist, `${route.path.slice(1)}.html`)
   mkdirSync(dirname(output), { recursive: true })
   writeFileSync(output, withMetadata(route))
 }
