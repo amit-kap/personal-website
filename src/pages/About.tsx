@@ -99,9 +99,10 @@ export default function About() {
               <span className="font-medium">{localTime}</span>
             </p>
             <div className="flex gap-6 font-medium">
-              <a href="mailto:amitka111@gmail.com" className="text-accent transition-colors hover:text-foreground">Email</a>
+              <a href="mailto:amitka111@gmail.com" data-umami-event="contact-email" data-umami-event-location="about" className="text-accent transition-colors hover:text-foreground">Email</a>
               <a
                 href="https://www.linkedin.com/in/amitkaplinsky"
+                data-umami-event="contact-linkedin"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-accent transition-colors hover:text-foreground"
@@ -110,6 +111,7 @@ export default function About() {
               </a>
               <Link
                 to="/cv"
+                data-umami-event="view-cv"
                 className="inline-flex items-center gap-[7px] text-accent transition-colors hover:text-foreground"
               >
                 View CV

@@ -87,7 +87,7 @@ export default function Home() {
             {homeCopy.supportingCopy}
           </Reveal>
           <Reveal delay={0.4}>
-            <a href="mailto:amitka111@gmail.com" className="pill-cta roll-host px-[30px] py-3.5 text-[15px]">
+            <a href="mailto:amitka111@gmail.com" data-umami-event="contact-email" data-umami-event-location="home-hero" className="pill-cta roll-host px-[30px] py-3.5 text-[15px]">
               <RollingText text="Let's Talk" />
               <ArrowIcon />
             </a>
@@ -221,7 +221,7 @@ export default function Home() {
             Building a security product?<br className="hidden sm:block" /> Let's see if it's a fit.
           </Reveal>
           <Reveal delay={0.16}>
-            <a href="mailto:amitka111@gmail.com?subject=Fractional%20or%20freelance%20project" className="pill-cta availability-cta roll-host px-[30px] py-3.5 text-[15px]">
+            <a href="mailto:amitka111@gmail.com?subject=Fractional%20or%20freelance%20project" data-umami-event="contact-email" data-umami-event-location="home-availability" className="pill-cta availability-cta roll-host px-[30px] py-3.5 text-[15px]">
               <RollingText text="Let's Talk" />
               <ArrowIcon />
             </a>
