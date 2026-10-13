@@ -141,7 +141,7 @@ export default function Home() {
                 <h3 className="max-w-[720px] font-heading text-title-sm font-medium tracking-[-0.015em]">
                   {card.title}
                 </h3>
-                <Link to={`/work/${work.slug}`} className={pillButton('roll-host flex-none px-6 py-3 text-[0.875rem]')}>
+                <Link to={`/work/${work.slug}`} className={pillButton('roll-host flex-none px-6 py-3 text-[0.875rem]/[1.45]')}>
                   <RollingText text="View Case Study" />
                   <ArrowIcon />
                 </Link>

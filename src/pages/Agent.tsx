@@ -45,7 +45,7 @@ export default function Agent() {
             </p>
           </div>
           <div className="flex flex-wrap gap-3 text-meta">
-            <Link to="/" className={pillButton('roll-host px-5 py-2.5')}>
+            <Link to="/" className={pillButton('roll-host px-5 py-2.5 text-[0.875rem]/[1.45]')}>
               <RollingText text="Human view" />
             </Link>
             <a href="/llms-full.txt" download className="text-link self-center">Download Markdown</a>

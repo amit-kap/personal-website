@@ -64,7 +64,7 @@ export default function Blog() {
                 <h2 className="font-heading text-section font-medium tracking-[-0.02em]">{featured.title}</h2>
                 <p className="body-copy max-w-[640px]">{featured.excerpt}</p>
               </div>
-              <Link to={`/case-studies/${featured.slug}`} className={pillButton('roll-host flex-none px-6 py-3 text-[0.875rem]')}>
+              <Link to={`/case-studies/${featured.slug}`} className={pillButton('roll-host flex-none px-6 py-3 text-[0.875rem]/[1.45]')}>
                 <RollingText text="Read Article" />
                 <ArrowIcon />
               </Link>
