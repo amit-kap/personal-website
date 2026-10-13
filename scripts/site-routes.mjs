@@ -6,20 +6,20 @@ import { parse as parseYaml } from 'yaml'
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 
 export const SITE_URL = 'https://amitkap.com'
-export const OG_IMAGE = `${SITE_URL}/og-v2.png`
+export const OG_IMAGE = `${SITE_URL}/og-v3.png`
 
 const staticRoutes = [
   {
     path: '/',
     title: 'Amit Kaplinsky | Product Designer',
-    description: 'Product designer with twelve years in cybersecurity, working across product direction, interaction design, systems, and AI-assisted builds.',
+    description: 'Product designer with more than a decade designing cybersecurity products, from product direction and design systems to AI-assisted builds that ship.',
     type: 'website',
     priority: '1.0',
   },
   {
     path: '/about',
     title: 'About',
-    description: 'Product designer with twelve years in cybersecurity, working across product direction, design systems, human-agent workflows, and AI-assisted prototyping.',
+    description: 'Product designer with more than a decade of cybersecurity products, making complex products clear and trustworthy in any domain.',
     type: 'website',
     priority: '0.8',
   },
@@ -29,13 +29,6 @@ const staticRoutes = [
     description: 'Product strategy and design notes on AI-agent supervision, high-volume security data, and shipping a mobile app inside enterprise security.',
     type: 'website',
     priority: '0.8',
-  },
-  {
-    path: '/cv',
-    title: 'CV',
-    description: "Amit Kaplinsky's CV: cybersecurity product direction, founding design, design systems, human-agent workflows, and AI prototyping.",
-    type: 'website',
-    priority: '0.6',
   },
   {
     path: '/agent',

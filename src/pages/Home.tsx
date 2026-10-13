@@ -66,7 +66,7 @@ export default function Home() {
     <main>
       <Seo
         title="Amit Kaplinsky | Product Designer"
-        description="Product designer with twelve years in cybersecurity, working across product direction, interaction design, systems, and AI-assisted builds."
+        description="Product designer with more than a decade designing cybersecurity products, from product direction and design systems to AI-assisted builds that ship."
         path="/"
       />
       {/* Hero drifts at 0.3× scroll so the projects section slides over it. */}
@@ -103,7 +103,7 @@ export default function Home() {
         <div className="inner-col flex flex-col items-center gap-2 pb-2 pt-14 text-center">
           <Reveal as="p" className="eyebrow">Projects</Reveal>
           <Reveal as="h2" className="font-heading text-section font-medium tracking-[-0.015em]" delay={0.08}>
-            Security products from strategy to shipped systems
+            Products from strategy to shipped systems
           </Reveal>
         </div>
       </section>

@@ -19,6 +19,7 @@ export interface CVHeader {
   name: string
   tagline: string
   contacts: string // raw paragraph text (markdown), rendered by the page
+  intro: string // plain-text summary paragraph under the contacts
 }
 
 export interface CVNamedEntry {
@@ -37,7 +38,9 @@ export interface ParsedExperience {
   company: string
   role: string
   period: string
-  summary: string // first paragraph of body, plain text
+  context: string // what the company builds, from the meta line
+  bullets: string[] // plain-text list items of the body
+  summary: string // first bullet, plain text
 }
 
 export interface ParsedCV {
@@ -77,6 +80,7 @@ export function parseCv(raw: string): ParsedCV {
   let name = ''
   let tagline = ''
   let contacts = ''
+  let intro = ''
   let i = 0
   for (; i < children.length; i++) {
     const node = children[i]
@@ -84,8 +88,9 @@ export function parseCv(raw: string): ParsedCV {
     if (node.type === 'heading' && node.depth === 1) {
       name = mdastToString(node)
     } else if (node.type === 'paragraph') {
-      if (!tagline) tagline = nodesToMarkdown([node])
+      if (!tagline) tagline = mdastToString(node)
       else if (!contacts) contacts = nodesToMarkdown([node])
+      else if (!intro) intro = mdastToString(node)
     }
   }
 
@@ -109,23 +114,25 @@ export function parseCv(raw: string): ParsedCV {
     const slug = link.url.replace(/^\/experience\//, '').replace(/\/$/, '')
     const company = mdastToString(link)
 
-    // First paragraph in the body = meta line: **Role** · Period
+    // First paragraph in the body = meta line: **Role** · Period · Context
     let role = ''
     let period = ''
+    let context = ''
     const firstBody = entry.body[0]
     if (firstBody && firstBody.type === 'paragraph') {
       const meta = firstBody as Paragraph
       const strong = meta.children.find((c) => c.type === 'strong')
       role = strong ? mdastToString(strong) : ''
       const full = mdastToString(meta)
-      period = full.slice(role.length).replace(/^[\s·]+/, '').trim()
+      const [rawPeriod = '', ...rest] = full.slice(role.length).replace(/^[\s·]+/, '').trim().split(' · ')
+      period = rawPeriod.trim()
+      context = rest.join(' · ').trim()
     }
 
-    const bodyNodes = entry.body.slice(1)
-    const firstPara = bodyNodes.find((n) => n.type === 'paragraph')
-    const summary = firstPara ? mdastToString(firstPara) : ''
+    const list = entry.body.find((n): n is List => n.type === 'list')
+    const bullets = list ? list.children.map((li) => mdastToString(li)) : []
 
-    experience.push({ slug, company, role, period, summary })
+    experience.push({ slug, company, role, period, context, bullets, summary: bullets[0] ?? '' })
   }
 
   // Cert / Education: h3 title + free-form body, flattened to plain meta
@@ -144,7 +151,7 @@ export function parseCv(raw: string): ParsedCV {
   }
 
   return {
-    header: { name, tagline, contacts },
+    header: { name, tagline, contacts, intro },
     experience,
     certificates: parseNamedEntries('certificates'),
     education: parseNamedEntries('education'),

@@ -1,10 +1,10 @@
 # Amit Kaplinsky
 
-> Twelve years across enterprise and founding-stage cybersecurity, working from product direction and operating models through interaction design, systems, and AI-assisted builds.
+> More than a decade designing cybersecurity products, from product direction and design systems to AI-assisted builds that ship.
 
 ## Homepage
 
-- Headline: Making complex security operations clear enough to act on.
+- Headline: Making complex products clear enough to act on.
 - URL: https://amitkap.com/
 
 ## Work
@@ -31,5 +31,5 @@
 
 - Website: https://amitkap.com/
 - About: https://amitkap.com/about
-- CV: https://amitkap.com/cv
-- LinkedIn: https://www.linkedin.com/in/amitka/
+- CV (PDF): https://amitkap.com/Amit%20Kaplinsky%20CV%2010-2026.pdf
+- LinkedIn: https://www.linkedin.com/in/amitkaplinsky

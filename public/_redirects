@@ -1,3 +1,6 @@
 # Legacy URL. Every public route is emitted as its own static HTML file at
 # build time, so unknown paths can keep Cloudflare's real 404 response.
 /writing  /blog  301
+# The /cv page was replaced by the downloadable PDF. 302, since the file is
+# renamed with each new version (see src/lib/cvPdf.ts).
+/cv  /Amit%20Kaplinsky%20CV%2010-2026.pdf  302
