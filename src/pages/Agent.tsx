@@ -4,6 +4,7 @@ import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import Seo from '@/components/Seo'
 import RollingText from '@/components/RollingText'
+import { pillButton } from '@/components/pillButton'
 
 export default function Agent() {
   const [markdown, setMarkdown] = useState('')
@@ -44,7 +45,7 @@ export default function Agent() {
             </p>
           </div>
           <div className="flex flex-wrap gap-3 text-meta">
-            <Link to="/" className="pill-cta roll-host px-5 py-2.5">
+            <Link to="/" className={pillButton('roll-host px-5 py-2.5 text-[0.875rem]/[1.45]')}>
               <RollingText text="Human view" />
             </Link>
             <a href="/llms-full.txt" download className="text-link self-center">Download Markdown</a>
@@ -65,7 +66,7 @@ export default function Agent() {
                 a: ({ href, children }) => <a href={href} className="text-link">{children}</a>,
                 ul: ({ children }) => <ul className="list-disc space-y-2 pl-6 text-[16px] leading-[1.65] text-muted-foreground">{children}</ul>,
                 ol: ({ children }) => <ol className="list-decimal space-y-2 pl-6 text-[16px] leading-[1.65] text-muted-foreground">{children}</ol>,
-                blockquote: ({ children }) => <blockquote className="border-l-2 border-accent pl-5 text-[18px] italic leading-[1.55] text-muted-foreground">{children}</blockquote>,
+                blockquote: ({ children }) => <blockquote className="border-l-2 border-primary pl-5 text-[18px] italic leading-[1.55] text-muted-foreground">{children}</blockquote>,
                 hr: () => <hr className="my-5 border-border" />,
                 img: ({ alt }) => <p className="text-meta text-muted-foreground">Image: {alt}</p>,
               }}

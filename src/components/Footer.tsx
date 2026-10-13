@@ -1,24 +1,24 @@
 import { useEffect, useRef } from 'react'
 import { Link, useLocation } from 'react-router-dom'
+import { useTheme } from '@amit-kap/glaze/theme'
 import ThemeToggle from '@/components/ThemeToggle'
 
 export default function Footer() {
   const { pathname } = useLocation()
   const isAgent = pathname === '/agent'
   const wasAgent = useRef(false)
+  const { setMode } = useTheme()
+  // setMode changes identity with every theme update; the route change alone
+  // should drive the effect, so a manual toggle on /agent is not overridden.
+  const setModeRef = useRef(setMode)
+  useEffect(() => {
+    setModeRef.current = setMode
+  }, [setMode])
 
   useEffect(() => {
-    const nextTheme = isAgent ? 'dark' : wasAgent.current ? 'light' : null
+    const nextMode = isAgent ? 'dark' : wasAgent.current ? 'light' : null
     wasAgent.current = isAgent
-    if (!nextTheme) return
-
-    document.documentElement.dataset.theme = nextTheme
-    try {
-      localStorage.setItem('theme', nextTheme)
-    } catch {
-      /* Storage unavailable; the route theme still applies for this visit. */
-    }
-    window.dispatchEvent(new Event('themechange'))
+    if (nextMode) setModeRef.current(nextMode)
   }, [isAgent])
 
   const segment = (to: string, label: string, active: boolean) => (

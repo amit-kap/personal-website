@@ -5,10 +5,11 @@ import Reveal from '@/components/Reveal'
 import RollingText from '@/components/RollingText'
 import Lightbox from '@/components/work/Lightbox'
 import ProductVideo from '@/components/work/ProductVideo'
+import { pillButton } from '@/components/pillButton'
 
 export function ArrowIcon() {
   return (
-    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
+    <svg className="size-[14px]" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
       <path d="M4 12 L12 4 M5.5 4 H12 V10.5" />
     </svg>
   )
@@ -16,7 +17,7 @@ export function ArrowIcon() {
 
 export function BackArrowIcon() {
   return (
-    <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
+    <svg className="size-[15px]" width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
       <path d="M12 4 L4 12 M10.5 12 H4 V5.5" />
     </svg>
   )
@@ -241,7 +242,7 @@ export function BackToHome() {
   return (
     <section className="relative border-t border-border">
       <div className="inner-col flex justify-center pb-[72px] pt-16">
-        <Link to="/" className="pill-cta roll-host px-[30px] py-3.5 text-[15px]">
+        <Link to="/" className={pillButton('roll-host px-[30px] py-3.5 text-[15px]')}>
           <RollingText text="Back to Home" />
           <BackArrowIcon />
         </Link>

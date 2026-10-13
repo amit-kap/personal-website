@@ -6,6 +6,7 @@ import Parallax from '@/components/Parallax'
 import Reveal from '@/components/Reveal'
 import Seo from '@/components/Seo'
 import RollingText from '@/components/RollingText'
+import { pillButton } from '@/components/pillButton'
 
 /* Per-project presentation: plain-caps meta line, outcome title, and the
    dark→luminous gradient behind the product media. Copy is the approved
@@ -52,7 +53,7 @@ const skillset = [
 
 function ArrowIcon() {
   return (
-    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
+    <svg className="size-[14px]" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
       <path d="M4 12 L12 4 M5.5 4 H12 V10.5" />
     </svg>
   )
@@ -87,7 +88,7 @@ export default function Home() {
             {homeCopy.supportingCopy}
           </Reveal>
           <Reveal delay={0.4}>
-            <a href="mailto:amitka111@gmail.com" data-umami-event="contact-email" data-umami-event-location="home-hero" className="pill-cta roll-host px-[30px] py-3.5 text-[15px]">
+            <a href="mailto:amitka111@gmail.com" data-umami-event="contact-email" data-umami-event-location="home-hero" className={pillButton('roll-host px-[30px] py-3.5 text-[15px]')}>
               <RollingText text="Let's Talk" />
               <ArrowIcon />
             </a>
@@ -140,7 +141,7 @@ export default function Home() {
                 <h3 className="max-w-[720px] font-heading text-title-sm font-medium tracking-[-0.015em]">
                   {card.title}
                 </h3>
-                <Link to={`/work/${work.slug}`} className="pill-cta roll-host flex-none px-6 py-3 text-meta">
+                <Link to={`/work/${work.slug}`} className={pillButton('roll-host flex-none px-6 py-3 text-[0.875rem]/[1.45]')}>
                   <RollingText text="View Case Study" />
                   <ArrowIcon />
                 </Link>
@@ -165,7 +166,7 @@ export default function Home() {
                 key={skill.title}
                 className={`group flex flex-col gap-2 px-0 py-1 sm:px-7 ${i > 0 ? 'lg:border-l lg:border-border' : ''} ${i % 2 === 1 ? 'sm:border-l sm:border-border' : ''}`}
               >
-                <h3 className="font-heading text-[16.5px] font-medium transition-colors group-hover:text-accent">{skill.title}</h3>
+                <h3 className="font-heading text-[16.5px] font-medium transition-colors group-hover:text-primary">{skill.title}</h3>
                 <p className="text-meta leading-normal text-muted-foreground">{skill.copy}</p>
               </div>
             ))}
@@ -200,7 +201,7 @@ export default function Home() {
                     </div>
                   )}
                   <div className="flex flex-col gap-1">
-                    <h3 className="font-heading text-[17px] font-medium transition-colors group-hover:text-accent">{essay.title}</h3>
+                    <h3 className="font-heading text-[17px] font-medium transition-colors group-hover:text-primary">{essay.title}</h3>
                     <p className="text-caption uppercase tracking-[0.1em] text-muted-foreground">
                       {company}
                       {essay.featured ? ' · Featured' : ''}
@@ -221,7 +222,7 @@ export default function Home() {
             Building a security product?<br className="hidden sm:block" /> Let's see if it's a fit.
           </Reveal>
           <Reveal delay={0.16}>
-            <a href="mailto:amitka111@gmail.com?subject=Fractional%20or%20freelance%20project" data-umami-event="contact-email" data-umami-event-location="home-availability" className="pill-cta availability-cta roll-host px-[30px] py-3.5 text-[15px]">
+            <a href="mailto:amitka111@gmail.com?subject=Fractional%20or%20freelance%20project" data-umami-event="contact-email" data-umami-event-location="home-availability" className={pillButton('roll-host px-[30px] py-3.5 text-[15px] availability-cta')}>
               <RollingText text="Let's Talk" />
               <ArrowIcon />
             </a>

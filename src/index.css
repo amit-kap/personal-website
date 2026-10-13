@@ -1,6 +1,9 @@
 /* Vite entry — framework imports only.
-   The site's design system (fonts, type scale, palette, motion, utilities)
-   lives in portfolio-theme.css, the single source of truth. */
-@import "tailwindcss";
+   Glaze's globals.css brings Tailwind, the token contract and the base layer;
+   the site's theme is the generated Glaze theme "personal-website".
+   The site's own design system (fonts, type scale, motion, utilities) lives
+   in portfolio-theme.css. */
+@import "@amit-kap/glaze/globals.css";
+@import "./theme/personal-website.css";
 @import "lenis/dist/lenis.css";
 @import "./portfolio-theme.css";

@@ -123,7 +123,7 @@ const stories: Record<string, CompactStory> = {
           copy: (
             <>
               Tens of thousands of indicators made workable: the filtering pattern behind{' '}
-              <Link to="/case-studies/sailing-the-data-oceans" className="border-b border-border text-foreground transition-colors hover:text-accent">
+              <Link to="/case-studies/sailing-the-data-oceans" className="border-b border-border text-foreground transition-colors hover:text-primary">
                 Sailing the Data Oceans
               </Link>
               .
