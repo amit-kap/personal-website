@@ -34,7 +34,7 @@ export default function Footer() {
   )
 
   return (
-    <footer data-print-hide className="relative border-t border-border">
+    <footer className="relative border-t border-border">
       <div className="inner-col flex flex-wrap items-center justify-between gap-4 py-6 text-meta text-muted-foreground">
         <span>© 2026 Amit Kaplinsky · Tel Aviv</span>
         <div className="ml-auto flex items-center gap-4">

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { getCV } from '@/lib/content'
+import { CV_PDF_NAME, CV_PDF_URL } from '@/lib/cvPdf'
 import { ClaudeMark, CodexMark, CursorMark, FigmaMark } from '@/components/BrandLogos'
 import Parallax from '@/components/Parallax'
 import Reveal from '@/components/Reveal'
@@ -26,6 +27,14 @@ function formatPeriod(period: string): string {
   return period.replace(' to ', '–').replace(/now$/i, 'Now')
 }
 
+/* Certificates and education store "Institution · dates" in one meta line;
+   split it so the date sits in the left column like an experience period. */
+function splitMeta(meta: string): { place: string; date: string } {
+  const parts = meta.split(' · ')
+  const date = parts.length > 1 ? parts.pop()! : ''
+  return { place: parts.join(' · '), date: date.replace(' to ', '–') }
+}
+
 function telAvivTime(): string {
   const time = new Intl.DateTimeFormat('en-GB', {
     timeZone: 'Asia/Jerusalem',
@@ -39,10 +48,10 @@ function telAvivTime(): string {
   return `${time} · ${offset}`
 }
 
-function ArrowIcon() {
+function DownArrowIcon() {
   return (
     <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
-      <path d="M4 12 L12 4 M5.5 4 H12 V10.5" />
+      <path d="M8 3 V13 M3.5 8.5 L8 13 L12.5 8.5" />
     </svg>
   )
 }
@@ -60,7 +69,7 @@ export default function About() {
     <main>
       <Seo
         title="About"
-        description="Product designer with twelve years shaping cybersecurity products, from product direction to shipped systems."
+        description="Product designer with more than a decade of cybersecurity products, making complex products clear and trustworthy in any domain."
         path="/about"
       />
       {/* Portrait hero; the photo dissolves into the page through a mask fade. */}
@@ -89,7 +98,7 @@ export default function About() {
             </Reveal>
             <Reveal className="flex max-w-[520px] flex-col gap-3" delay={0.3}>
               <p className="body-copy">
-                Most of my work has been in cybersecurity, where the products are dense, the stakes are real, and the problems rarely arrive neatly framed. I like getting close to how people work, finding the shape of the problem, and staying with it until the answer becomes something useful.
+                {cv.header.intro}
               </p>
             </Reveal>
           </div>
@@ -109,14 +118,15 @@ export default function About() {
               >
                 LinkedIn
               </a>
-              <Link
-                to="/cv"
-                data-umami-event="view-cv"
+              <a
+                href={CV_PDF_URL}
+                download={CV_PDF_NAME}
+                data-umami-event="download-cv"
                 className="inline-flex items-center gap-[7px] text-accent transition-colors hover:text-foreground"
               >
-                View CV
-                <ArrowIcon />
-              </Link>
+                Download CV
+                <DownArrowIcon />
+              </a>
             </div>
           </Reveal>
         </div>
@@ -137,49 +147,63 @@ export default function About() {
                 {' · '}
                 {entry.role}
               </h2>
-              <p className="text-[14.5px] leading-[1.6] text-copy">{entry.summary}</p>
+              <ul className="flex flex-col gap-2 text-[14.5px] leading-[1.6] text-copy">
+                {entry.bullets.map((bullet) => (
+                  <li key={bullet}>{bullet}</li>
+                ))}
+              </ul>
             </Reveal>
           ))}
         </div>
       </section>
 
-      {/* Certificates */}
+      {/* Certificates: same rows as Experience, date left and institution right. */}
       <section className="relative border-t border-border">
-        <Reveal className="inner-col grid gap-6 py-12 lg:grid-cols-[340px_minmax(0,1fr)] lg:gap-14">
-          <p className="eyebrow">Certificates</p>
-          <div className="flex flex-col gap-5">
-            {cv.certificates.map((entry) => (
-              <div key={entry.title} className="flex items-baseline justify-between gap-6">
-                <h2 className="min-w-0 font-heading text-body font-medium tracking-[-0.01em]">{entry.title}</h2>
-                <p className="flex-none text-[13px] text-muted-foreground">{entry.meta.replace(' to ', '–')}</p>
-              </div>
-            ))}
-          </div>
-        </Reveal>
+        <div className="inner-col pb-14 pt-12">
+          <Reveal as="p" className="eyebrow pb-2.5">Certificates</Reveal>
+          {cv.certificates.map((entry, i) => {
+            const { place, date } = splitMeta(entry.meta)
+            return (
+              <Reveal
+                key={entry.title}
+                className={`grid items-baseline gap-x-8 gap-y-2 py-[26px] sm:grid-cols-[170px_330px_minmax(0,1fr)] ${i > 0 ? 'border-t border-border' : ''} ${i === cv.certificates.length - 1 ? 'pb-1' : ''}`}
+              >
+                <p className="text-[13px] text-muted-foreground">{date}</p>
+                <h2 className="font-heading text-[17px] font-medium tracking-[-0.01em]">{entry.title}</h2>
+                <p className="text-[14.5px] leading-[1.6] text-copy">{place}</p>
+              </Reveal>
+            )
+          })}
+        </div>
       </section>
 
-      {/* Education */}
+      {/* Education: same rows as Experience, date left and institution right. */}
       <section className="relative border-t border-border">
-        <Reveal className="inner-col grid gap-6 py-12 lg:grid-cols-[340px_minmax(0,1fr)] lg:gap-14">
-          <p className="eyebrow">Education</p>
-          <div className="flex flex-col gap-5">
-            {cv.education.map((entry) => (
-              <div key={entry.title} className="flex items-baseline justify-between gap-6">
-                <h2 className="min-w-0 font-heading text-body font-medium tracking-[-0.01em]">{entry.title}</h2>
-                <p className="flex-none text-[13px] text-muted-foreground">{entry.meta.replace(' to ', '–')}</p>
-              </div>
-            ))}
-          </div>
-        </Reveal>
+        <div className="inner-col pb-14 pt-12">
+          <Reveal as="p" className="eyebrow pb-2.5">Education</Reveal>
+          {cv.education.map((entry, i) => {
+            const { place, date } = splitMeta(entry.meta)
+            return (
+              <Reveal
+                key={entry.title}
+                className={`grid items-baseline gap-x-8 gap-y-2 py-[26px] sm:grid-cols-[170px_330px_minmax(0,1fr)] ${i > 0 ? 'border-t border-border' : ''} ${i === cv.education.length - 1 ? 'pb-1' : ''}`}
+              >
+                <p className="text-[13px] text-muted-foreground">{date}</p>
+                <h2 className="font-heading text-[17px] font-medium tracking-[-0.01em]">{entry.title}</h2>
+                <p className="text-[14.5px] leading-[1.6] text-copy">{place}</p>
+              </Reveal>
+            )
+          })}
+        </div>
       </section>
 
       {/* Skills */}
       <section className="relative border-t border-border">
         <Reveal className="inner-col grid gap-6 pb-16 pt-12 lg:grid-cols-[340px_minmax(0,1fr)] lg:gap-14">
           <p className="eyebrow">Skills</p>
-          <div className="grid gap-8 sm:grid-cols-2 sm:gap-0">
+          <div className="grid gap-8 sm:grid-cols-3 sm:gap-0">
             {cv.skills.map((group, i) => (
-              <div key={group.category} className={`flex flex-col gap-3 ${i > 0 ? 'sm:border-l sm:border-border sm:pl-10' : 'sm:pr-10'}`}>
+              <div key={group.category} className={`flex flex-col gap-3 ${i > 0 ? 'sm:border-l sm:border-border sm:pl-8' : 'sm:pr-8'}`}>
                 <h2 className="font-heading text-body font-medium tracking-[-0.01em]">{group.category}</h2>
                 {isTools(group.category) ? (
                   <div className="flex flex-col text-[14.5px] text-copy">

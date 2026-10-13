@@ -7,14 +7,16 @@ import type { CVHeader, CVNamedEntry, CVSkillGroup } from './parseContent';
 
 export type { CVHeader, CVNamedEntry, CVSkillGroup };
 
-// ---- CV (single source of truth, parsed from cv.md) ----
+// ---- CV (single source of truth for About and llms.txt, parsed from cv.md; re-export the PDF in public/ when it changes) ----
 
 export interface CVExperience {
   slug: string;
   company: string;
   role: string;
   period: string;
-  summary: string;   // first paragraph of body, plain text — used by the CV
+  context: string;   // what the company builds, from the CV meta line
+  bullets: string[]; // the CV bullets for this role, plain text
+  summary: string;   // first bullet, plain text — fallback for work blurbs
   hasImages: boolean;
   images: ContentImage[];
 }

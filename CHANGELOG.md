@@ -18,7 +18,7 @@ Changes to amitkap.com, including settings made outside the repo (Cloudflare, Um
   |---|---|---|
   | `contact-email` | Header, home hero, home availability CTA, About | `location`: `header`, `home-hero`, `home-availability`, `about` |
   | `contact-linkedin` | About | — |
-  | `view-cv` | About | — |
+  | `download-cv` | About | — |
 
   When you add a new contact link, give it the matching event attribute.
 

@@ -9,7 +9,6 @@ const WorkItem = lazy(() => import('@/pages/WorkItem'))
 const CaseStudyPage = lazy(() => import('@/pages/CaseStudyPage'))
 const About = lazy(() => import('@/pages/About'))
 const Blog = lazy(() => import('@/pages/Blog'))
-const CV = lazy(() => import('@/pages/CV'))
 const Agent = lazy(() => import('@/pages/Agent'))
 const NotFound = lazy(() => import('@/pages/NotFound'))
 
@@ -39,7 +38,7 @@ export default function App() {
     <div className="grid-lines relative min-h-screen bg-background">
       <Header />
       {/* The fixed pill nav floats above; pages start below its band. */}
-      <div className="pt-[81px] print:pt-0">
+      <div className="pt-[81px]">
         <Suspense fallback={null}>
           <Routes>
             <Route path="/" element={<Home />} />
@@ -48,7 +47,6 @@ export default function App() {
             <Route path="/work/:slug" element={<WorkItem />} />
             <Route path="/case-studies/:slug" element={<CaseStudyPage />} />
             <Route path="/about" element={<About />} />
-            <Route path="/cv" element={<CV />} />
             <Route path="/agent" element={<Agent />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
