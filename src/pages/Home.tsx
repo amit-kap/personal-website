@@ -165,7 +165,7 @@ export default function Home() {
                 key={skill.title}
                 className={`group flex flex-col gap-2 px-0 py-1 sm:px-7 ${i > 0 ? 'lg:border-l lg:border-border' : ''} ${i % 2 === 1 ? 'sm:border-l sm:border-border' : ''}`}
               >
-                <h3 className="font-heading text-[16.5px] font-medium transition-colors group-hover:text-accent">{skill.title}</h3>
+                <h3 className="font-heading text-[16.5px] font-medium transition-colors group-hover:text-primary">{skill.title}</h3>
                 <p className="text-meta leading-normal text-muted-foreground">{skill.copy}</p>
               </div>
             ))}
@@ -200,7 +200,7 @@ export default function Home() {
                     </div>
                   )}
                   <div className="flex flex-col gap-1">
-                    <h3 className="font-heading text-[17px] font-medium transition-colors group-hover:text-accent">{essay.title}</h3>
+                    <h3 className="font-heading text-[17px] font-medium transition-colors group-hover:text-primary">{essay.title}</h3>
                     <p className="text-caption uppercase tracking-[0.1em] text-muted-foreground">
                       {company}
                       {essay.featured ? ' · Featured' : ''}

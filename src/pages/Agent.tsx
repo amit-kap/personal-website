@@ -65,7 +65,7 @@ export default function Agent() {
                 a: ({ href, children }) => <a href={href} className="text-link">{children}</a>,
                 ul: ({ children }) => <ul className="list-disc space-y-2 pl-6 text-[16px] leading-[1.65] text-muted-foreground">{children}</ul>,
                 ol: ({ children }) => <ol className="list-decimal space-y-2 pl-6 text-[16px] leading-[1.65] text-muted-foreground">{children}</ol>,
-                blockquote: ({ children }) => <blockquote className="border-l-2 border-accent pl-5 text-[18px] italic leading-[1.55] text-muted-foreground">{children}</blockquote>,
+                blockquote: ({ children }) => <blockquote className="border-l-2 border-primary pl-5 text-[18px] italic leading-[1.55] text-muted-foreground">{children}</blockquote>,
                 hr: () => <hr className="my-5 border-border" />,
                 img: ({ alt }) => <p className="text-meta text-muted-foreground">Image: {alt}</p>,
               }}

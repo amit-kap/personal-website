@@ -1,11 +1,6 @@
-import { useEffect, useState } from 'react'
+import { useTheme } from '@amit-kap/glaze/theme'
 
 type Theme = 'light' | 'dark'
-
-function currentTheme(): Theme {
-  if (typeof document === 'undefined') return 'light'
-  return document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light'
-}
 
 function SunIcon() {
   return (
@@ -25,29 +20,15 @@ function MoonIcon() {
 }
 
 export default function ThemeToggle() {
-  const [theme, setTheme] = useState<Theme>(currentTheme)
-
-  useEffect(() => {
-    document.documentElement.dataset.theme = theme
-    try {
-      localStorage.setItem('theme', theme)
-    } catch {
-      /* Storage unavailable; theme still applies for this visit. */
-    }
-  }, [theme])
-
-  useEffect(() => {
-    const syncTheme = () => setTheme(currentTheme())
-    window.addEventListener('themechange', syncTheme)
-    return () => window.removeEventListener('themechange', syncTheme)
-  }, [])
+  const { resolvedMode, setMode } = useTheme()
+  const theme: Theme = resolvedMode
 
   const segment = (value: Theme, label: string, icon: React.ReactNode) => (
     <button
       type="button"
       aria-label={label}
       aria-pressed={theme === value}
-      onClick={() => setTheme(value)}
+      onClick={() => setMode(value)}
       className={`inline-flex h-[26px] w-[26px] items-center justify-center rounded-full transition-colors ${
         theme === value ? 'bg-secondary text-foreground' : 'text-muted-foreground hover:text-foreground'
       }`}

@@ -65,7 +65,7 @@ export default function ShiftWorkPage({ work }: { work: Work }) {
         </p>
         <p className="body-copy">
           The product is built around an agent that performs assessment work while a person supervises it. The market scan, operating-model decision, and product strategy behind that structure are documented in{' '}
-          <Link to="/case-studies/designing-for-the-supervisor" className="border-b border-border text-foreground transition-colors hover:text-accent">
+          <Link to="/case-studies/designing-for-the-supervisor" className="border-b border-border text-foreground transition-colors hover:text-primary">
             Designing for the Supervisor
           </Link>
           . This page focuses on how that direction became a working system.

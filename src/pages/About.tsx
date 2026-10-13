@@ -108,13 +108,13 @@ export default function About() {
               <span className="font-medium">{localTime}</span>
             </p>
             <div className="flex gap-6 font-medium">
-              <a href="mailto:amitka111@gmail.com" data-umami-event="contact-email" data-umami-event-location="about" className="text-accent transition-colors hover:text-foreground">Email</a>
+              <a href="mailto:amitka111@gmail.com" data-umami-event="contact-email" data-umami-event-location="about" className="text-primary transition-colors hover:text-foreground">Email</a>
               <a
                 href="https://www.linkedin.com/in/amitkaplinsky"
                 data-umami-event="contact-linkedin"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-accent transition-colors hover:text-foreground"
+                className="text-primary transition-colors hover:text-foreground"
               >
                 LinkedIn
               </a>
@@ -122,7 +122,7 @@ export default function About() {
                 href={CV_PDF_URL}
                 download={CV_PDF_NAME}
                 data-umami-event="download-cv"
-                className="inline-flex items-center gap-[7px] text-accent transition-colors hover:text-foreground"
+                className="inline-flex items-center gap-[7px] text-primary transition-colors hover:text-foreground"
               >
                 Download CV
                 <DownArrowIcon />
@@ -143,7 +143,7 @@ export default function About() {
             >
               <p className="text-[13px] text-muted-foreground">{formatPeriod(entry.period)}</p>
               <h2 className="font-heading text-[17px] font-medium tracking-[-0.01em]">
-                <Link to={`/work/${entry.slug}`} className="transition-colors hover:text-accent">{entry.company}</Link>
+                <Link to={`/work/${entry.slug}`} className="transition-colors hover:text-primary">{entry.company}</Link>
                 {' · '}
                 {entry.role}
               </h2>

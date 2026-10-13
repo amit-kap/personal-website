@@ -84,7 +84,7 @@ const markdownComponents = (images: Record<string, ContentImage>) => ({
   ),
   em: ({ children }: { children?: React.ReactNode }) => <em className="italic">{children}</em>,
   a: ({ children, href }: { children?: React.ReactNode; href?: string }) => (
-    <a href={href} target="_blank" rel="noopener noreferrer" className="font-medium text-accent hover:underline hover:underline-offset-[3px]">
+    <a href={href} target="_blank" rel="noopener noreferrer" className="font-medium text-primary hover:underline hover:underline-offset-[3px]">
       {children}
     </a>
   ),

@@ -1,5 +1,7 @@
 import { MemoryRouter, useNavigate } from 'react-router-dom'
 import { cleanup, fireEvent, render, screen } from '@testing-library/react'
+import { ThemeProvider } from '@amit-kap/glaze/theme'
+import { THEME_OPTIONS } from '@/theme/options'
 import Footer from './Footer'
 
 function RouteProbe() {
@@ -7,18 +9,29 @@ function RouteProbe() {
   return <button type="button" onClick={() => navigate('/')}>Switch human</button>
 }
 
+function renderAt(path: string, extra?: React.ReactNode) {
+  return render(
+    <ThemeProvider {...THEME_OPTIONS}>
+      <MemoryRouter initialEntries={[path]}>
+        <Footer />
+        {extra}
+      </MemoryRouter>
+    </ThemeProvider>,
+  )
+}
+
+const isDark = () => document.documentElement.classList.contains('dark')
+
 describe('Footer', () => {
   afterEach(() => {
     cleanup()
-    delete document.documentElement.dataset.theme
+    localStorage.clear()
+    document.documentElement.className = ''
+    document.documentElement.removeAttribute('data-theme')
   })
 
   it('exposes the view switch without contact links', () => {
-    render(
-      <MemoryRouter initialEntries={['/']}>
-        <Footer />
-      </MemoryRouter>,
-    )
+    renderAt('/')
 
     expect(screen.getByRole('navigation', { name: 'View mode' })).toBeInTheDocument()
     expect(screen.getByRole('link', { name: 'Human' })).toHaveAttribute('href', '/')
@@ -29,18 +42,13 @@ describe('Footer', () => {
   })
 
   it('forces dark mode in Agent view', () => {
-    render(
-      <MemoryRouter initialEntries={['/agent']}>
-        <Footer />
-        <RouteProbe />
-      </MemoryRouter>,
-    )
+    renderAt('/agent', <RouteProbe />)
 
-    expect(document.documentElement.dataset.theme).toBe('dark')
+    expect(isDark()).toBe(true)
     expect(screen.getByRole('button', { name: 'Switch to dark theme' })).toHaveAttribute('aria-pressed', 'true')
 
     fireEvent.click(screen.getByRole('button', { name: 'Switch human' }))
-    expect(document.documentElement.dataset.theme).toBe('light')
+    expect(isDark()).toBe(false)
     expect(screen.getByRole('button', { name: 'Switch to light theme' })).toHaveAttribute('aria-pressed', 'true')
   })
 })
