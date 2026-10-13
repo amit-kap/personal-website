@@ -3,10 +3,11 @@ import { getAllCaseStudies, getWorkBySlug, type CaseStudy } from '@/lib/content'
 import Reveal from '@/components/Reveal'
 import RollingText from '@/components/RollingText'
 import Seo from '@/components/Seo'
+import { pillButton } from '@/components/pillButton'
 
 function ArrowIcon() {
   return (
-    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
+    <svg className="size-[14px]" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
       <path d="M4 12 L12 4 M5.5 4 H12 V10.5" />
     </svg>
   )
@@ -63,7 +64,7 @@ export default function Blog() {
                 <h2 className="font-heading text-section font-medium tracking-[-0.02em]">{featured.title}</h2>
                 <p className="body-copy max-w-[640px]">{featured.excerpt}</p>
               </div>
-              <Link to={`/case-studies/${featured.slug}`} className="pill-cta roll-host flex-none px-6 py-3 text-meta">
+              <Link to={`/case-studies/${featured.slug}`} className={pillButton('roll-host flex-none px-6 py-3 text-[0.875rem]')}>
                 <RollingText text="Read Article" />
                 <ArrowIcon />
               </Link>

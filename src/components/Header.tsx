@@ -1,5 +1,6 @@
 import { Link, useLocation } from 'react-router-dom'
 import RollingText from '@/components/RollingText'
+import { pillButton } from '@/components/pillButton'
 
 const navItems = [
   { label: 'Home', to: '/' },
@@ -38,7 +39,7 @@ export default function Header() {
             </Link>
           ))}
         </nav>
-        <a href="mailto:amitka111@gmail.com" data-umami-event="contact-email" data-umami-event-location="header" className="pill-cta roll-host px-[18px] py-2 text-[13.5px]">
+        <a href="mailto:amitka111@gmail.com" data-umami-event="contact-email" data-umami-event-location="header" className={pillButton('roll-host px-[18px] py-2 text-[13.5px]')}>
           <RollingText text="Let's Talk" />
         </a>
       </div>

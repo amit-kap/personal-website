@@ -12,6 +12,7 @@ import RollingText from '@/components/RollingText'
 import Seo from '@/components/Seo'
 import SkeletonImage from '@/components/SkeletonImage'
 import { ZoomableWindow } from '@/components/work/casePrimitives'
+import { pillButton } from '@/components/pillButton'
 
 function meaningfulChildren(children: React.ReactNode) {
   return Children
@@ -136,7 +137,7 @@ const markdownComponents = (images: Record<string, ContentImage>) => ({
 
 function ArrowBackIcon() {
   return (
-    <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
+    <svg className="size-[15px]" width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
       <path d="M12 4 L4 12 M10.5 12 H4 V5.5" />
     </svg>
   )
@@ -215,7 +216,7 @@ export default function CaseStudyPage() {
       {/* Back to Blog */}
       <section className="relative border-t border-border">
         <div className="inner-col flex justify-center pb-16 pt-14">
-          <Link to="/blog" className="pill-cta roll-host px-[30px] py-3.5 text-[15px]">
+          <Link to="/blog" className={pillButton('roll-host px-[30px] py-3.5 text-[15px]')}>
             <RollingText text="Back to Blog" />
             <ArrowBackIcon />
           </Link>

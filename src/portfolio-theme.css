@@ -171,23 +171,9 @@
 }
 
 /* ----------------------------------------------------------------------------
-   6 · ACTIONS — orange pills and quiet text links
+   6 · ACTIONS — orange pills (Glaze Button) and quiet text links
 ---------------------------------------------------------------------------- */
-.pill-cta {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  background: var(--primary);
-  color: var(--primary-foreground);
-  border-radius: 999px;
-  font-weight: 500;
-  white-space: nowrap;
-  transition: background-color 180ms cubic-bezier(0.2, 0, 0, 1), transform 180ms cubic-bezier(0.2, 0, 0, 1);
-}
-.pill-cta:hover,
-.pill-cta:focus-visible { background: #d63e00; }
-.pill-cta:active { transform: scale(0.97); }
-
+/* The pill itself is Glaze's Button (components/pillButton.ts). */
 .availability-cta { background: #0077a8; }
 .availability-cta:hover,
 .availability-cta:focus-visible { background: #00658f; }
@@ -381,24 +367,7 @@
   outline-offset: 6px;
 }
 
-.lightbox {
-  position: fixed;
-  inset: 0;
-  z-index: 60;
-  display: grid;
-  place-items: center;
-  padding: clamp(16px, 4vw, 56px);
-  background: rgba(10, 10, 12, 0.86);
-  cursor: zoom-out;
-  animation: lightbox-in 200ms ease both;
-}
-.lightbox img {
-  max-width: 100%;
-  max-height: 100%;
-  border-radius: var(--radius);
-  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.45);
-}
-.lightbox video {
+.lightbox-media {
   max-width: 100%;
   max-height: 100%;
   border-radius: var(--radius);
@@ -419,11 +388,6 @@
 }
 .lightbox-close:hover {
   background: var(--primary);
-}
-@keyframes lightbox-in {
-  from {
-    opacity: 0;
-  }
 }
 
 .winbar {
@@ -524,14 +488,13 @@
   .backdrop:hover .backdrop-media { transform: none; }
   .window-btn { transition: none; }
   .window-btn:hover { transform: none; }
-  .lightbox { animation: none; }
   .nav-drop { animation: none; }
   .availability-shimmer {
     animation: none;
     background: none;
     -webkit-text-fill-color: var(--availability-base);
   }
-  .pill-cta, .text-link, .nav-pill-link { transition: none; }
+  .text-link, .nav-pill-link { transition: none; }
 }
 
 /* ----------------------------------------------------------------------------

@@ -1,4 +1,5 @@
 import { useTheme } from '@amit-kap/glaze/theme'
+import { ToggleGroup, ToggleGroupItem } from '@amit-kap/glaze/components/toggle-group'
 
 type Theme = 'light' | 'dark'
 
@@ -21,26 +22,27 @@ function MoonIcon() {
 
 export default function ThemeToggle() {
   const { resolvedMode, setMode } = useTheme()
-  const theme: Theme = resolvedMode
 
   const segment = (value: Theme, label: string, icon: React.ReactNode) => (
-    <button
-      type="button"
+    <ToggleGroupItem
+      value={value}
       aria-label={label}
-      aria-pressed={theme === value}
-      onClick={() => setMode(value)}
-      className={`inline-flex h-[26px] w-[26px] items-center justify-center rounded-full transition-colors ${
-        theme === value ? 'bg-secondary text-foreground' : 'text-muted-foreground hover:text-foreground'
-      }`}
+      className="h-[26px] min-w-0 w-[26px] rounded-full p-0 text-muted-foreground hover:bg-transparent hover:text-foreground aria-pressed:bg-secondary aria-pressed:text-foreground aria-pressed:hover:bg-secondary data-[state=on]:bg-secondary"
     >
       {icon}
-    </button>
+    </ToggleGroupItem>
   )
 
   return (
-    <div className="flex items-center gap-[3px] rounded-full border border-border p-[3px]">
+    <ToggleGroup
+      value={[resolvedMode]}
+      // A pressed segment can't be switched off: pressing it again is a no-op.
+      onValueChange={(next) => next[0] && setMode(next[0] as Theme)}
+      aria-label="Colour theme"
+      className="gap-[3px] rounded-full border border-border p-[3px]"
+    >
       {segment('light', 'Switch to light theme', <SunIcon />)}
       {segment('dark', 'Switch to dark theme', <MoonIcon />)}
-    </div>
+    </ToggleGroup>
   )
 }
