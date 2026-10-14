@@ -76,7 +76,7 @@ export default function Footer() {
         </div>
         <div className="flex w-full items-start justify-between gap-4 py-4 text-meta">
           <span>Amit Kaplinsky 2026</span>
-          <span suppressHydrationWarning>{clock}</span>
+          <span suppressHydrationWarning className="tabular-nums">{clock}</span>
         </div>
       </div>
     </footer>

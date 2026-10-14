@@ -39,7 +39,7 @@ export default function Header() {
             </span>
           ))}
         </nav>
-        <span className="hidden shrink-0 font-normal text-dim sm:block" suppressHydrationWarning>
+        <span className="hidden shrink-0 font-normal tabular-nums text-dim sm:block" suppressHydrationWarning>
           {clock}
         </span>
       </div>
