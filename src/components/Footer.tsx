@@ -1,4 +1,3 @@
-import DotWaves from '@/components/DotWaves'
 import RollingText from '@/components/RollingText'
 import { CV_PDF_NAME, CV_PDF_URL } from '@/lib/cvPdf'
 import { useTelAvivClock } from '@/lib/useTelAvivClock'
@@ -49,10 +48,8 @@ export default function Footer() {
   const clock = useTelAvivClock()
 
   return (
-    <footer className="relative isolate overflow-hidden bg-primary text-bright">
-      {/* Dark dots on the orange band. */}
-      <DotWaves contained color="var(--background)" />
-      <div className="relative z-10 mx-auto flex w-full max-w-[930px] flex-col items-center gap-10 px-4 sm:px-0">
+    <footer className="bg-primary/90 text-bright">
+      <div className="mx-auto flex w-full max-w-[930px] flex-col items-center gap-10 px-4 sm:px-0">
         <div className="flex flex-col items-center gap-10 pt-20">
           <h2 className="whitespace-pre-line text-center text-feature font-medium text-bright">
             {"Building a new product?\nLet's see if it's a fit."}

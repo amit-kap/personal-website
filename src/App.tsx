@@ -39,7 +39,7 @@ export default function App() {
     <div className="relative min-h-screen bg-background">
       {/* The page field: fixed behind everything. */}
       <div aria-hidden="true" className="pointer-events-none fixed inset-0 z-0">
-        <DotWaves />
+        <DotWaves speed={1.5} gap={16} maxRadius={6} />
       </div>
       <div className="relative z-10 flex min-h-screen flex-col">
         {/* The 960px centre column. Pages render into it. */}
@@ -59,8 +59,8 @@ export default function App() {
               </Routes>
             </Suspense>
           </div>
+          <Footer />
         </div>
-        <Footer />
       </div>
     </div>
   )

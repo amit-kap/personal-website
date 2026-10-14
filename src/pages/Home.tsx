@@ -19,7 +19,7 @@ function logoFor(slug: string): string | undefined {
 /* Every section is a full-width band of the 960px centre column; the 800px
    content column sits inside it (Paper: padding-inline 16px, width 800px). */
 const innerClass = 'flex w-full max-w-[800px] flex-col gap-4'
-const bandClass = 'flex flex-col items-center px-4 bg-panel-90'
+const bandClass = 'flex flex-col items-center px-4'
 const labelClass = 'text-body leading-5 text-muted-foreground'
 
 function ShiftMark() {
@@ -53,7 +53,7 @@ function useAllowMotion() {
 
 function Hero() {
   return (
-    <section className="flex flex-col items-center gap-8 bg-panel-90 px-6 py-20 text-center">
+    <section className="flex flex-col items-center gap-8 px-6 py-20 text-center">
       <Reveal className="flex items-center gap-4 rounded-pill border border-copy-border px-4 py-2">
         <span aria-hidden="true" className="size-2 shrink-0 rounded-pill bg-primary" />
         <span className="text-meta text-muted-foreground">{homeCopy.availability}</span>
@@ -239,7 +239,7 @@ function Solution() {
   const { solution } = homeCopy
   const radius = ['rounded-t-container', '', 'rounded-b-container']
   return (
-    <section className="flex flex-col items-center bg-panel px-4 py-20 md:px-[57px]">
+    <section className="flex flex-col items-center px-4 py-20 md:px-[57px]">
       <div className={innerClass}>
         <Reveal as="h2" className={labelClass}>
           {solution.label}
