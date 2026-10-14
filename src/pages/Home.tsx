@@ -202,6 +202,11 @@ function Hero() {
   )
 }
 
+/* The Shift capture sits whole inside the frame with an even 1% border
+   (percentage padding is relative to width on every side), and the frame
+   takes the capture's own ~2:1 shape instead of cropping it to 16:9. */
+const featuredMedia = 'block h-auto w-full rounded-item'
+
 function Featured() {
   const { featured } = homeCopy
   const allowMotion = useAllowMotion()
@@ -217,7 +222,7 @@ function Featured() {
             aria-label={`Shift, ${featured.tagline}: view case study`}
             className="group flex flex-col gap-4 rounded-container outline-offset-4"
           >
-            <div className="relative aspect-video overflow-hidden rounded-container bg-dim">
+            <div className="overflow-hidden rounded-container bg-dim p-[1%]">
               {allowMotion ? (
                 <video
                   autoPlay
@@ -225,14 +230,16 @@ function Featured() {
                   loop
                   playsInline
                   preload="metadata"
+                  width={2144}
+                  height={1080}
                   poster="/featured-shift.webp"
                   aria-hidden="true"
-                  className="absolute inset-0 size-full object-cover"
+                  className={featuredMedia}
                 >
                   <source src="/shift-walk.mp4" type="video/mp4" />
                 </video>
               ) : (
-                <img src="/featured-shift.webp" alt="" width={2880} height={1453} className="absolute inset-0 size-full object-cover" />
+                <img src="/featured-shift.webp" alt="" width={2880} height={1453} className={featuredMedia} />
               )}
             </div>
             <div className="flex items-center justify-between gap-2 py-4">
