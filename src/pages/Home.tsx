@@ -356,7 +356,7 @@ function Problem() {
         <Reveal as="ol" className="grid grid-cols-1 items-start gap-8 pt-4 md:grid-cols-2">
           {problem.items.map((item, index) => (
             <li key={index} className="flex flex-col items-start gap-4 rounded-container border border-border p-6">
-              <span className={`self-stretch text-meta ${index === 1 ? 'text-primary' : 'text-muted-foreground'}`}>
+              <span className="self-stretch text-meta text-muted-foreground">
                 {String(index + 1).padStart(2, '0')}
               </span>
               <h3 className="self-stretch font-heading text-stmt text-bright">{item.title}</h3>
