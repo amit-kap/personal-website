@@ -1,5 +1,6 @@
 import { lazy, Suspense, useEffect } from 'react'
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
+import DotWaves from '@/components/DotWaves'
 import Footer from '@/components/Footer'
 import Header from '@/components/Header'
 import Home from '@/pages/Home'
@@ -35,24 +36,32 @@ export default function App() {
   }, [location.pathname, location.hash, lenis])
 
   return (
-    <div className="grid-lines relative min-h-screen bg-background">
-      <Header />
-      {/* The fixed pill nav floats above; pages start below its band. */}
-      <div className="pt-[81px]">
-        <Suspense fallback={null}>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/blog" element={<Blog />} />
-            <Route path="/writing" element={<Navigate to="/blog" replace />} />
-            <Route path="/work/:slug" element={<WorkItem />} />
-            <Route path="/case-studies/:slug" element={<CaseStudyPage />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/agent" element={<Agent />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </Suspense>
+    <div className="relative min-h-screen bg-background">
+      {/* The page field: fixed behind everything. */}
+      <div aria-hidden="true" className="pointer-events-none fixed inset-0 z-0">
+        <DotWaves />
       </div>
-      <Footer />
+      <div className="relative z-10 flex min-h-screen flex-col">
+        {/* The 960px centre column. Pages render into it. */}
+        <div className="mx-auto w-full max-w-[960px] flex-1 px-4 sm:px-0">
+          <Header />
+          <div className="bg-panel-90">
+            <Suspense fallback={null}>
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/blog" element={<Blog />} />
+                <Route path="/writing" element={<Navigate to="/blog" replace />} />
+                <Route path="/work/:slug" element={<WorkItem />} />
+                <Route path="/case-studies/:slug" element={<CaseStudyPage />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/agent" element={<Agent />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </Suspense>
+          </div>
+        </div>
+        <Footer />
+      </div>
     </div>
   )
 }

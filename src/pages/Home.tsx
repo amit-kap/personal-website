@@ -1,235 +1,301 @@
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { getAllCaseStudies, getAllWorks, getWorkBySlug } from '@/lib/content'
+import { getAllWorks, type Work } from '@/lib/content'
 import homeCopy from '@/content/home.json'
-import { imageFor } from '@/lib/workImages'
-import Parallax from '@/components/Parallax'
 import Reveal from '@/components/Reveal'
 import Seo from '@/components/Seo'
-import RollingText from '@/components/RollingText'
-import { pillButton } from '@/components/pillButton'
 
-/* Per-project presentation: plain-caps meta line, outcome title, and the
-   dark→luminous gradient behind the product media. Copy is the approved
-   Story-Cards art direction; facts come from cv.md / work.md. */
-const projectCards: Record<string, { meta: string; title: string; image: string; g: [string, string, string] }> = {
-  shift: {
-    meta: 'Third-Party Risk · Founding Designer · 2024–Now · TLV',
-    title: "Designing Shift's agent-led third-party security platform from product model to shipped system",
-    image: '01-shift-dashboard',
-    g: ['#191040', '#4630b8', '#8a76f0'],
-  },
-  'onyxia-cyber': {
-    meta: 'CISO Data · Product Design Team Lead · 2024 · TLV',
-    title: 'Turning CISO goals into owners, tasks, and measurable follow-through at Onyxia',
-    image: '01-SSM-1',
-    g: ['#0c1f4a', '#1d4ed8', '#60a5fa'],
-  },
-  veriti: {
-    meta: 'Security Controls · Founding Designer · 2021–2024 · TLV',
-    title: 'Turning a known exposure into an explained, approved security change at Veriti',
-    image: '02',
-    g: ['#06302b', '#0f766e', '#2dd4bf'],
-  },
-  semperis: {
-    meta: 'Identity Security · UX Team Lead · 2020–2021 · TLV',
-    title: "Building the product language for Semperis's move from recovery to prevention",
-    image: '01-semperis',
-    g: ['#37200a', '#b45309', '#fbbf24'],
-  },
-  checkpoint: {
-    meta: 'Enterprise Security · UX Expert · 2014–2020 · TLV',
-    title: 'Reworking twenty management tabs into one enterprise security system at Check Point',
-    image: '05-dashboard',
-    g: ['#380a1e', '#be185d', '#f472b6'],
-  },
+/* Company marks live next to each work's content as icon.svg. */
+const logoModules = import.meta.glob<string>('../content/experience/*/icon.svg', {
+  eager: true,
+  query: '?url',
+  import: 'default',
+})
+
+function logoFor(slug: string): string | undefined {
+  return logoModules[`../content/experience/${slug}/icon.svg`]
 }
 
-const skillset = [
-  { title: 'Product direction', copy: 'Frame the problem, define the operating model, align the team, and turn product bets into testable slices.' },
-  { title: 'Complex product design', copy: 'Workflows and decision surfaces for teams dealing with risk, uncertainty, and high-volume data.' },
-  { title: 'Systems and delivery', copy: 'Design systems, component behavior, and close engineering collaboration from prototype to shipped product.' },
-  { title: 'AI products and prototyping', copy: 'Design human-agent workflows, then use Claude Code, Cursor, and Codex to test them in working software.' },
+/* Every section is a full-width band of the 960px centre column; the 800px
+   content column sits inside it (Paper: padding-inline 16px, width 800px). */
+const innerClass = 'flex w-full max-w-[800px] flex-col gap-4'
+const bandClass = 'flex flex-col items-center px-4 bg-panel-90'
+const labelClass = 'text-body leading-5 text-muted-foreground'
+
+function ShiftMark() {
+  return (
+    <svg className="size-[30px] shrink-0 text-bright" width="30" height="30" viewBox="0 -38 30 30" fill="currentColor" aria-hidden="true">
+      <path fillRule="evenodd" clipRule="evenodd" d="M13.309-37.917C13.506-38.027 13.749-38.027 13.946-37.917L21.936-33.49C22.24-33.321 22.344-32.949 22.169-32.657 21.992-32.366 21.604-32.267 21.3-32.436L13.627-36.688 6.272-32.611V-24.459L13.946-20.206C14.25-20.037 14.354-19.665 14.178-19.374 14.002-19.082 13.613-18.984 13.309-19.152L5.317-23.58C5.121-23.689 5-23.89 5-24.108V-32.962C5-33.18 5.121-33.381 5.317-33.49L13.309-37.917Z" />
+      <path fillRule="evenodd" clipRule="evenodd" d="M5.085-33.269C5.261-33.56 5.65-33.659 5.955-33.49L13.946-29.064C14.25-28.895 14.354-28.523 14.178-28.231 14.001-27.94 13.613-27.841 13.309-28.009L5.317-32.436C5.014-32.605 4.91-32.977 5.085-33.269Z" />
+      <path d="M13.627-28.535V-19.68L21.617-32.962 13.627-28.535Z" />
+      <path fillRule="evenodd" clipRule="evenodd" d="M22.067-33.394C22.271-33.199 22.313-32.896 22.169-32.657L14.179-19.376C14.035-19.137 13.741-19.02 13.464-19.091 13.185-19.163 12.991-19.404 12.991-19.68V-28.535C12.991-28.752 13.113-28.954 13.309-29.063L21.299-33.49C21.549-33.628 21.864-33.589 22.067-33.394ZM14.264-28.184V-21.956L19.883-31.297 14.264-28.184Z" />
+      <path fillRule="evenodd" clipRule="evenodd" d="M13.627-20.289C13.979-20.289 14.264-20.016 14.264-19.68 14.264-19.556 14.225-19.441 14.16-19.345L10.183-12.734C10.008-12.442 9.617-12.341 9.314-12.51 9.01-12.678 8.905-13.05 9.08-13.341L13.075-19.982C13.105-20.031 13.14-20.075 13.181-20.113 13.295-20.221 13.454-20.289 13.627-20.289Z" />
+      <path fillRule="evenodd" clipRule="evenodd" d="M17.072-26.626C17.249-26.918 17.637-27.016 17.941-26.847L25.932-22.42C26.236-22.251 26.34-21.879 26.164-21.588 25.989-21.296 25.6-21.197 25.295-21.366L17.304-25.794C17-25.962 16.896-26.335 17.072-26.626Z" />
+      <path fillRule="evenodd" clipRule="evenodd" d="M9.08-13.341C9.256-13.633 9.646-13.732 9.95-13.564L17.941-9.136C18.245-8.967 18.349-8.595 18.172-8.304 17.997-8.012 17.608-7.914 17.304-8.082L9.314-12.51C9.01-12.678 8.905-13.05 9.08-13.341Z" />
+      <path d="M17.623-8.61L25.614-13.038V-21.894L17.623-8.61Z" />
+      <path fillRule="evenodd" clipRule="evenodd" d="M25.779-22.481C26.056-22.41 26.25-22.169 26.25-21.894V-13.038C26.25-12.82 26.129-12.62 25.932-12.511L17.941-8.082C17.692-7.945 17.377-7.984 17.174-8.179 16.97-8.374 16.927-8.675 17.071-8.914L25.063-22.198C25.206-22.436 25.5-22.553 25.779-22.481ZM19.359-10.275L24.979-13.389V-19.616L19.359-10.275Z" />
+    </svg>
+  )
+}
+
+function useAllowMotion() {
+  const [allow, setAllow] = useState(true)
+  useEffect(() => {
+    if (typeof window.matchMedia !== 'function') return
+    const query = window.matchMedia('(prefers-reduced-motion: reduce)')
+    const update = () => setAllow(!query.matches)
+    update()
+    query.addEventListener?.('change', update)
+    return () => query.removeEventListener?.('change', update)
+  }, [])
+  return allow
+}
+
+function Hero() {
+  return (
+    <section className="flex flex-col items-center gap-8 bg-panel-90 px-6 py-20 text-center">
+      <Reveal className="flex items-center gap-4 rounded-pill border border-copy-border px-4 py-2">
+        <span aria-hidden="true" className="size-2 shrink-0 rounded-pill bg-primary" />
+        <span className="text-meta text-muted-foreground">{homeCopy.availability}</span>
+      </Reveal>
+      <Reveal as="h1" delay={0.08} className="font-heading text-hero font-medium text-bright">
+        {homeCopy.headlineLines.map((line) => (
+          <span key={line} className="block">
+            {line}
+          </span>
+        ))}
+      </Reveal>
+      <Reveal as="p" delay={0.16} className="w-full max-w-[568px] text-stmt text-muted-foreground">
+        {homeCopy.supportingCopy}
+      </Reveal>
+    </section>
+  )
+}
+
+function Featured() {
+  const { featured } = homeCopy
+  const allowMotion = useAllowMotion()
+  return (
+    <section className={`${bandClass} py-10`}>
+      <div className={innerClass}>
+        <Reveal as="h2" className="text-body leading-5 text-primary">
+          {featured.label}
+        </Reveal>
+        <Reveal>
+          <Link
+            to={`/work/${featured.slug}`}
+            aria-label={`Shift, ${featured.tagline}: view case study`}
+            className="group flex flex-col gap-4 rounded-container outline-offset-4"
+          >
+            <div className="relative aspect-video overflow-hidden rounded-container bg-dim">
+              {allowMotion ? (
+                <video
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  preload="metadata"
+                  poster="/featured-shift.webp"
+                  aria-hidden="true"
+                  className="absolute inset-0 size-full object-cover"
+                >
+                  <source src="/shift-walk.mp4" type="video/mp4" />
+                </video>
+              ) : (
+                <img src="/featured-shift.webp" alt="" width={2880} height={1453} className="absolute inset-0 size-full object-cover" />
+              )}
+            </div>
+            <div className="flex items-center justify-between gap-2 py-4">
+              <div className="flex flex-col gap-2">
+                <div className="flex items-center gap-2">
+                  <ShiftMark />
+                  <span className="text-stmt text-bright">Shift</span>
+                </div>
+                <p className="text-stmt text-copy">{featured.tagline}</p>
+                <p className="flex items-center gap-2 text-body leading-5 text-copy">
+                  <span>{featured.role}</span>
+                  <span aria-hidden="true" className="text-dim">/</span>
+                  <span>{featured.years}</span>
+                </p>
+              </div>
+              <span className="flex shrink-0 items-center rounded-pill bg-primary p-3 text-ink-soft transition-transform duration-200 group-hover:scale-105 motion-reduce:transition-none">
+                <svg className="size-[22px]" viewBox="0 0 33 33" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="M6.875 16.5h19.25" />
+                  <path d="M16.5 6.875l9.625 9.625-9.625 9.625" />
+                </svg>
+              </span>
+            </div>
+          </Link>
+        </Reveal>
+      </div>
+    </section>
+  )
+}
+
+function RecentWork({ works }: { works: Work[] }) {
+  const { recentWork } = homeCopy
+  const outcomes = recentWork.outcomes as Record<string, string>
+  const tiles = works.filter((work) => outcomes[work.slug])
+  return (
+    <section className={`${bandClass} py-20`}>
+      <div className={innerClass}>
+        <Reveal as="h2" className={labelClass}>
+          {recentWork.label}
+        </Reveal>
+        <Reveal className="grid grid-cols-2 gap-4 md:flex md:h-[180px]">
+          {tiles.map((work) => {
+            const company = work.company.replace(/ Software$/, '')
+            const logo = logoFor(work.slug)
+            return (
+              <Link
+                key={work.slug}
+                to={`/work/${work.slug}`}
+                aria-label={`${company} case study: ${outcomes[work.slug]}`}
+                className="group relative flex h-[120px] items-center justify-center rounded-container border border-border bg-background transition-[border-color,transform] duration-200 hover:-translate-y-0.5 hover:border-primary focus-visible:border-primary motion-reduce:transition-none motion-reduce:hover:translate-y-0 md:h-auto md:flex-1"
+              >
+                {logo && <img src={logo} alt="" width={40} height={40} className="size-10" />}
+              </Link>
+            )
+          })}
+        </Reveal>
+      </div>
+    </section>
+  )
+}
+
+function Problem() {
+  const { problem } = homeCopy
+  return (
+    <section className={`${bandClass} py-20`}>
+      <div className={innerClass}>
+        <div className="flex flex-col gap-4">
+          <Reveal as="h2" className={labelClass}>
+            {problem.label}
+          </Reveal>
+          <Reveal as="p" delay={0.08} className="font-heading text-feature text-primary">
+            {problem.headline}
+          </Reveal>
+        </div>
+        <Reveal as="ol" className="grid grid-cols-1 items-start gap-8 pt-4 md:grid-cols-2">
+          {problem.items.map((item, index) => (
+            <li key={index} className="flex flex-col items-start gap-4 rounded-container border border-border p-6">
+              <span className={`self-stretch text-meta ${index === 1 ? 'text-primary' : 'text-muted-foreground'}`}>
+                {String(index + 1).padStart(2, '0')}
+              </span>
+              <h3 className="self-stretch font-heading text-stmt text-bright">{item.title}</h3>
+              <p className="self-stretch text-body leading-5 text-muted-foreground">{item.body}</p>
+            </li>
+          ))}
+        </Reveal>
+      </div>
+    </section>
+  )
+}
+
+/* dot - line - dot. Overlaps the neighbouring card borders by 3px (the dots'
+   radius), exactly as in Paper. */
+function Connector({ className = 'h-10' }: { className?: string }) {
+  return (
+    <div aria-hidden="true" className={`flex shrink-0 flex-col items-center gap-0.5 ${className}`}>
+      <span className="size-1.5 shrink-0 rounded-pill bg-border" />
+      <span className="w-0.5 flex-1 bg-border" />
+      <span className="size-1.5 shrink-0 rounded-pill bg-border" />
+    </div>
+  )
+}
+
+const stepIcons = [
+  // Diagnose
+  <>
+    <path d="M14.666 2.666v2.668" />
+    <path d="M6.666 2.666v2.668" />
+    <path d="M6.666 4H5.334a2.666 2.666 90 0 0-2.668 2.666v5.334a8 8 0 0 0 16 0V6.666a2.666 2.666 90 0 0-2.666-2.666h-1.334" />
+    <path d="M235 27H233.668a2.666 2.666 0 0 0-2.668 2.666v5.334a8 8 0 0 0 16 0V29.666a2.666 2.666 0 0 0-2.666-2.666h-1.334" />
+    <path d="M10.666 20a8 8 0 0 0 16 0v-4" />
+    <circle cx="26.666" cy="13.334" r="1.28" />
+  </>,
+  // Plan
+  <>
+    <path d="M17.333 6.667h10.667" />
+    <path d="M17.333 16h10.667" />
+    <path d="M17.333 25.333h10.667" />
+    <path d="M4 22.667l2.667 2.666 5.333-5.333" />
+    <rect x="4" y="5.333" width="8" height="8" rx="1" />
+  </>,
+  // Build
+  <>
+    <path d="M13.333 24v-9.333" />
+    <path d="M14.825 2.94a2.667 2.667 0 0 1 2.35 0l10.453 5.128A0.667 0.667 0 0 1 27.333 9.333h-22.666a0.667 0.667 0 0 1-0.294-1.265z" />
+    <path d="M18.667 24v-9.333" />
+    <path d="M24 24v-9.333" />
+    <path d="M4 29.333h24" />
+    <path d="M8 24v-9.333" />
+  </>,
 ]
 
-function ArrowIcon() {
+const stepCardClass = 'flex flex-col items-center gap-4 border border-border p-6'
+
+function Solution() {
+  const { solution } = homeCopy
+  const radius = ['rounded-t-container', '', 'rounded-b-container']
   return (
-    <svg className="size-[14px]" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
-      <path d="M4 12 L12 4 M5.5 4 H12 V10.5" />
-    </svg>
+    <section className="flex flex-col items-center bg-panel px-4 py-20 md:px-[57px]">
+      <div className={innerClass}>
+        <Reveal as="h2" className={labelClass}>
+          {solution.label}
+        </Reveal>
+        <Reveal as="ol" className="flex flex-col items-stretch">
+          {solution.steps.map((step, index) => (
+            <li key={step.title} className="contents">
+              {index > 0 && <Connector className="-mt-[3px] h-10" />}
+              <div className={`${stepCardClass} ${radius[index]} ${index > 0 ? '-mt-[3px]' : ''}`}>
+                <svg className="size-8 shrink-0 text-primary" width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  {stepIcons[index]}
+                </svg>
+                <h3 className="font-heading text-stmt font-medium text-foreground">{step.title}</h3>
+                <p className="text-body leading-5 text-muted-foreground">{step.body}</p>
+              </div>
+            </li>
+          ))}
+        </Reveal>
+        <div className="-mt-4 flex flex-col items-center">
+          <Connector className="-mt-[3px] h-20" />
+          <Reveal className="-mt-[3px] flex w-full flex-col items-center gap-10">
+            <div className="flex items-center rounded-pill bg-primary/15 p-6">
+              <div className="flex items-center rounded-pill bg-primary p-6">
+                <svg className="size-8 shrink-0 text-foreground" width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="M22.667 28a6.667 6.667 0 0 0-13.334 0" />
+                  <path d="M29.333 14a4.667 4.667 0 0 0-7.342-3.824" />
+                  <path d="M10.009 10.176A4.667 4.667 0 0 0 2.667 14" />
+                  <circle cx="16" cy="17.333" r="3" />
+                  <circle cx="24.667" cy="6" r="2.5" />
+                  <circle cx="7.333" cy="6" r="2.5" />
+                </svg>
+              </div>
+            </div>
+            <p className="w-full max-w-[586px] text-center font-heading text-title-sm text-foreground">{solution.closing}</p>
+          </Reveal>
+        </div>
+      </div>
+    </section>
   )
 }
 
 export default function Home() {
   const works = getAllWorks()
-  const essays = getAllCaseStudies()
 
   return (
     <main>
       <Seo
-        title="Amit Kaplinsky | Product Designer"
-        description="Product designer with more than a decade designing cybersecurity products, from product direction and design systems to AI-assisted builds that ship."
+        title="Amit Kaplinsky | Senior Product Designer"
+        description="Senior product designer for founders building complex B2B, AI, or dev tools. More than a decade designing cybersecurity products, from product direction and design systems to AI-assisted builds that ship."
         path="/"
       />
-      {/* Hero drifts at 0.3× scroll so the projects section slides over it. */}
-      <section className="relative overflow-hidden">
-        <Parallax ratio={0.4} className="inner-col flex flex-col items-center gap-[22px] pb-32 pt-28 text-center">
-          <Reveal as="p" className="eyebrow" delay={0.1}>
-            Amit Kaplinsky · Product Designer
-          </Reveal>
-          <Reveal as="h1" className="font-heading text-hero font-medium tracking-[-0.02em]" delay={0.2}>
-            {homeCopy.headlineLines.map((line, index) => (
-              <span key={line}>
-                {index > 0 && <br className="hidden sm:block" />}
-                {line}
-              </span>
-            ))}
-          </Reveal>
-          <Reveal as="p" className="max-w-[600px] text-[18px] font-light leading-[1.55] text-muted-foreground" delay={0.3}>
-            {homeCopy.supportingCopy}
-          </Reveal>
-          <Reveal delay={0.4}>
-            <a href="mailto:amitka111@gmail.com" data-umami-event="contact-email" data-umami-event-location="home-hero" className={pillButton('roll-host px-[30px] py-3.5 text-[15px]')}>
-              <RollingText text="Let's Talk" />
-              <ArrowIcon />
-            </a>
-          </Reveal>
-        </Parallax>
-      </section>
-
-      {/* Everything below the hero rides over it, so it needs its own opaque
-          ground and grid lines drawn above that ground. */}
-      <div className="grid-lines relative z-10 bg-background">
-      {/* Projects header */}
-      <section className="relative border-t border-border">
-        <div className="inner-col flex flex-col items-center gap-2 pb-2 pt-14 text-center">
-          <Reveal as="p" className="eyebrow">Projects</Reveal>
-          <Reveal as="h2" className="font-heading text-section font-medium tracking-[-0.015em]" delay={0.08}>
-            Products from strategy to shipped systems
-          </Reveal>
-        </div>
-      </section>
-
-      {/* Project cards in reverse timeline order. */}
-      {works.map((work, index) => {
-        const card = projectCards[work.slug]
-        if (!card) return null
-        const image = imageFor(work, card.image)
-        return (
-          <section key={work.slug} className={`relative ${index > 0 ? 'border-t border-border' : ''}`}>
-            <div className="inner-col flex flex-col gap-[18px] pb-14 pt-10">
-              <Reveal>
-                <Link to={`/work/${work.slug}`} aria-label={`${work.company} case study`} className="block">
-                  <div
-                    className="backdrop h-[clamp(240px,40vw,580px)]"
-                    style={{ '--g1': card.g[0], '--g2': card.g[1], '--g3': card.g[2] } as React.CSSProperties}
-                  >
-                    {image && (
-                      <img
-                        src={image.src}
-                        alt={`${work.company} product interface`}
-                        width={image.width}
-                        height={image.height}
-                        loading={index === 0 ? 'eager' : 'lazy'}
-                        className="backdrop-media"
-                      />
-                    )}
-                  </div>
-                </Link>
-              </Reveal>
-              <Reveal as="p" className="meta-line pt-1.5">{card.meta}</Reveal>
-              <Reveal className="flex flex-wrap items-center justify-between gap-x-10 gap-y-4">
-                <h3 className="max-w-[720px] font-heading text-title-sm font-medium tracking-[-0.015em]">
-                  {card.title}
-                </h3>
-                <Link to={`/work/${work.slug}`} className={pillButton('roll-host flex-none px-6 py-3 text-[0.875rem]/[1.45]')}>
-                  <RollingText text="View Case Study" />
-                  <ArrowIcon />
-                </Link>
-              </Reveal>
-            </div>
-          </section>
-        )
-      })}
-
-      {/* Skillset */}
-      <section className="relative border-t border-border">
-        <div className="inner-col flex flex-col gap-10 py-14">
-          <div className="flex flex-col items-center gap-2 text-center">
-            <Reveal as="p" className="eyebrow">Skillset</Reveal>
-            <Reveal as="h2" className="font-heading text-section font-medium tracking-[-0.015em]" delay={0.08}>
-              Product direction, design, and delivery
-            </Reveal>
-          </div>
-          <Reveal className="grid gap-y-8 sm:grid-cols-2 lg:grid-cols-4 lg:gap-y-0">
-            {skillset.map((skill, i) => (
-              <div
-                key={skill.title}
-                className={`group flex flex-col gap-2 px-0 py-1 sm:px-7 ${i > 0 ? 'lg:border-l lg:border-border' : ''} ${i % 2 === 1 ? 'sm:border-l sm:border-border' : ''}`}
-              >
-                <h3 className="font-heading text-[16.5px] font-medium transition-colors group-hover:text-primary">{skill.title}</h3>
-                <p className="text-meta leading-normal text-muted-foreground">{skill.copy}</p>
-              </div>
-            ))}
-          </Reveal>
-        </div>
-      </section>
-
-      {/* Blog */}
-      <section className="relative border-t border-border">
-        <div className="inner-col flex flex-col gap-8 py-14">
-          <div className="flex flex-col items-center gap-2 text-center">
-            <Reveal as="p" className="eyebrow">Blog</Reveal>
-            <Reveal as="h2" className="font-heading text-section font-medium tracking-[-0.015em]" delay={0.08}>
-              Notes from the work
-            </Reveal>
-          </div>
-          <Reveal className="grid gap-8 sm:grid-cols-3 sm:gap-5">
-            {essays.map((essay) => {
-              const company = (getWorkBySlug(essay.workSlug)?.company ?? 'Security').replace(/ Software$/, '')
-              return (
-                <Link key={essay.slug} to={`/case-studies/${essay.slug}`} className="group flex flex-col gap-3">
-                  {essay.coverImage && (
-                    <div className="overflow-hidden rounded-lg border border-border">
-                      <img
-                        src={essay.coverImage.src}
-                        alt=""
-                        width={essay.coverImage.width}
-                        height={essay.coverImage.height}
-                        loading="lazy"
-                        className="block aspect-video w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
-                      />
-                    </div>
-                  )}
-                  <div className="flex flex-col gap-1">
-                    <h3 className="font-heading text-[17px] font-medium transition-colors group-hover:text-primary">{essay.title}</h3>
-                    <p className="text-caption uppercase tracking-[0.1em] text-muted-foreground">
-                      {company}
-                      {essay.featured ? ' · Featured' : ''}
-                    </p>
-                  </div>
-                </Link>
-              )
-            })}
-          </Reveal>
-        </div>
-      </section>
-
-      {/* Closing CTA */}
-      <section className="relative border-t border-border">
-        <div className="inner-col flex flex-col items-center gap-[18px] py-[88px] text-center">
-          <Reveal as="p" className="eyebrow availability-shimmer">Open to fractional roles / select projects</Reveal>
-          <Reveal as="h2" className="max-w-[700px] font-heading text-feature font-medium tracking-[-0.015em]" delay={0.08}>
-            Building a security product?<br className="hidden sm:block" /> Let's see if it's a fit.
-          </Reveal>
-          <Reveal delay={0.16}>
-            <a href="mailto:amitka111@gmail.com?subject=Fractional%20or%20freelance%20project" data-umami-event="contact-email" data-umami-event-location="home-availability" className={pillButton('roll-host px-[30px] py-3.5 text-[15px] availability-cta')}>
-              <RollingText text="Let's Talk" />
-              <ArrowIcon />
-            </a>
-          </Reveal>
-        </div>
-      </section>
-      </div>
+      <Hero />
+      <Featured />
+      <RecentWork works={works} />
+      <Problem />
+      <Solution />
     </main>
   )
 }

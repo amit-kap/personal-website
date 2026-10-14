@@ -1,7 +1,64 @@
 {
+  "availability": "Available for new projects",
   "headlineLines": [
-    "Making complex products",
-    "clear enough to act on."
+    "Senior",
+    "Product Designer"
   ],
-  "supportingCopy": "More than a decade designing cybersecurity products, from product direction and design systems to AI-assisted builds that ship."
+  "supportingCopy": "More than a decade designing cybersecurity products, from product direction and design systems to AI-assisted builds that ship.",
+  "featured": {
+    "label": "Featured",
+    "slug": "shift",
+    "tagline": "AI-native third-party risk platform",
+    "role": "Founding Designer",
+    "years": "2024 - 2026"
+  },
+  "recentWork": {
+    "label": "Recent Work",
+    "outcomes": {
+      "onyxia-cyber": "CISO goals into owned, tracked tasks",
+      "veriti": "From known exposure to approved change",
+      "semperis": "A product language for prevention",
+      "checkpoint": "Twenty tabs into one security system"
+    }
+  },
+  "problem": {
+    "label": "The Problem",
+    "headline": "Startups don't need more design theatre. They need product clarity.",
+    "items": [
+      {
+        "title": "Your product is hard to explain",
+        "body": "It takes three paragraphs and a diagram before anyone gets it."
+      },
+      {
+        "title": "Your demo needs narration",
+        "body": "The product can't carry the story without a founder talking over it."
+      },
+      {
+        "title": "Your AI feels powerful but unclear",
+        "body": "The capability is real, but the experience doesn't make it obvious or trustworthy."
+      },
+      {
+        "title": "Your product undersells your company. ",
+        "body": "The capability is real, but the experience doesn't make it obvious or trustworthy."
+      }
+    ]
+  },
+  "solution": {
+    "label": "Proposed Solution",
+    "steps": [
+      {
+        "title": "Diagnose",
+        "body": "I'll review the product, demo, and onboarding to find what's unclear and why."
+      },
+      {
+        "title": "Plan",
+        "body": "I'll turn that into prioritized fixes your team can pick up next sprint."
+      },
+      {
+        "title": "Build",
+        "body": "I'll Design and work with engineering until the fixes are live."
+      }
+    ],
+    "closing": "For founders building complex B2B, AI, or dev tools who need senior product judgment without a full-time hire."
+  }
 }

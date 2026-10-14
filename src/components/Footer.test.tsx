@@ -1,54 +1,52 @@
-import { MemoryRouter, useNavigate } from 'react-router-dom'
-import { cleanup, fireEvent, render, screen } from '@testing-library/react'
-import { ThemeProvider } from '@amit-kap/glaze/theme'
-import { THEME_OPTIONS } from '@/theme/options'
+import { MemoryRouter } from 'react-router-dom'
+import { cleanup, render, screen } from '@testing-library/react'
+import { CV_PDF_URL } from '@/lib/cvPdf'
 import Footer from './Footer'
 
-function RouteProbe() {
-  const navigate = useNavigate()
-  return <button type="button" onClick={() => navigate('/')}>Switch human</button>
-}
-
-function renderAt(path: string, extra?: React.ReactNode) {
+function renderFooter() {
   return render(
-    <ThemeProvider {...THEME_OPTIONS}>
-      <MemoryRouter initialEntries={[path]}>
-        <Footer />
-        {extra}
-      </MemoryRouter>
-    </ThemeProvider>,
+    <MemoryRouter>
+      <Footer />
+    </MemoryRouter>,
   )
 }
 
-const isDark = () => document.documentElement.classList.contains('dark')
-
 describe('Footer', () => {
-  afterEach(() => {
-    cleanup()
-    localStorage.clear()
-    document.documentElement.className = ''
-    document.documentElement.removeAttribute('data-theme')
+  afterEach(cleanup)
+
+  it('offers the contact CTA with its analytics attributes', () => {
+    renderFooter()
+
+    expect(screen.getByRole('heading', { name: /Building a new product\?\s*Let's see if it's a fit\./ })).toBeInTheDocument()
+    const talk = screen.getByRole('link', { name: "Let's talk" })
+    expect(talk).toHaveAttribute('href', 'mailto:amitka111@gmail.com')
+    expect(talk).toHaveAttribute('data-umami-event', 'contact-email')
+    expect(talk).toHaveAttribute('data-umami-event-location', 'footer')
   })
 
-  it('exposes the view switch without contact links', () => {
-    renderAt('/')
+  it('offers LinkedIn and CV as icon-only links', () => {
+    renderFooter()
 
-    expect(screen.getByRole('navigation', { name: 'View mode' })).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: 'Human' })).toHaveAttribute('href', '/')
-    expect(screen.getByRole('link', { name: 'Agent' })).toHaveAttribute('href', '/agent')
-    expect(screen.queryByRole('link', { name: 'Email' })).not.toBeInTheDocument()
-    expect(screen.queryByRole('link', { name: 'LinkedIn' })).not.toBeInTheDocument()
-    expect(screen.queryByRole('link', { name: 'About' })).not.toBeInTheDocument()
+    const linkedin = screen.getByRole('link', { name: 'LinkedIn' })
+    expect(linkedin).toHaveAttribute('href', 'https://www.linkedin.com/in/amitkaplinsky')
+    expect(linkedin).toHaveTextContent('')
+    const cv = screen.getByRole('link', { name: 'CV' })
+    expect(cv).toHaveAttribute('href', CV_PDF_URL)
+    expect(cv).toHaveTextContent('')
   })
 
-  it('forces dark mode in Agent view', () => {
-    renderAt('/agent', <RouteProbe />)
+  it('has only the copyright and clock in the bottom bar, with no agent link or switches', () => {
+    renderFooter()
 
-    expect(isDark()).toBe(true)
-    expect(screen.getByRole('button', { name: 'Switch to dark theme' })).toHaveAttribute('aria-pressed', 'true')
+    expect(screen.getByText('Amit Kaplinsky 2026')).toBeInTheDocument()
+    expect(screen.queryByRole('link', { name: 'Agent view' })).not.toBeInTheDocument()
+    expect(screen.queryByRole('navigation', { name: 'View mode' })).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: /theme/i })).not.toBeInTheDocument()
+  })
 
-    fireEvent.click(screen.getByRole('button', { name: 'Switch human' }))
-    expect(isDark()).toBe(false)
-    expect(screen.getByRole('button', { name: 'Switch to light theme' })).toHaveAttribute('aria-pressed', 'true')
+  it('shows the Tel Aviv clock', () => {
+    renderFooter()
+
+    expect(screen.getByText(/^Tel Aviv · \d{2}:\d{2}:\d{2}$/)).toBeInTheDocument()
   })
 })

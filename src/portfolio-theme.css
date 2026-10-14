@@ -3,10 +3,10 @@
    Single source of truth for the site's visual language: fonts, type scale,
    color palette, radius, motion, and shared component utilities.
 
-   The system: pure white paper, hairline #ececec structure (full-height grid
-   lines framing a 1030px column), Geist 500 headings + Plus Jakarta body,
-   ink #111 for content, one orange accent #f04a00 for every action, and
-   per-project dark→luminous gradient backdrops for product media.
+   The system: dark only for now. Panels at 90% on a live DotWaves field,
+   hairline borders, Inter throughout, one orange accent for every action, and
+   per-project dark→luminous gradient backdrops for product media. Every
+   colour is a token so a light theme can override them later.
 
    Layout is composed with Tailwind utilities in the components — this file
    owns the *system* those utilities draw from. Framework imports live in
@@ -19,50 +19,52 @@
    ============================================================================ */
 
 /* ----------------------------------------------------------------------------
-   1 · FONTS  — Geist → headings/display · Plus Jakarta Sans → body/UI
+   1 · FONTS  — Inter (variable) for headings and body alike
 ---------------------------------------------------------------------------- */
-@import '@fontsource/geist-sans/400.css';
-@import '@fontsource/geist-sans/500.css';
-@import '@fontsource/geist-sans/600.css';
-@import '@fontsource/plus-jakarta-sans/300.css';
-@import '@fontsource/plus-jakarta-sans/400.css';
-@import '@fontsource/plus-jakarta-sans/400-italic.css';
-@import '@fontsource/plus-jakarta-sans/500.css';
+@import '@fontsource-variable/inter/opsz.css';
 
 /* ----------------------------------------------------------------------------
    2 · TYPE  — extended scale (generates text-* utilities)
+   Max values are the design's (Paper) sizes; the clamps step down on phones.
 ---------------------------------------------------------------------------- */
 @theme {
   /* Families, caption (12px) and body (16px) are Glaze theme inputs. */
   --text-meta: 0.875rem;                               /* 14px — nav, secondary UI */
-  --text-meta--line-height: 1.45;
-  --text-stmt: clamp(1.25rem, 1.55vw, 1.375rem);       /* 20→22px — section statements */
-  --text-stmt--line-height: 1.25;
-  --text-title-sm: clamp(1.375rem, 1.85vw, 1.625rem);  /* 22→26px — card titles */
-  --text-title-sm--line-height: 1.2;
+  --text-meta--line-height: 1.286;                     /* 18px */
+  --text-stmt: clamp(1.25rem, 1.55vw, 1.375rem);       /* 20→22px / 28 — section statements */
+  --text-stmt--line-height: 1.273;
+  --text-title-sm: clamp(1.375rem, 1.85vw, 1.625rem);  /* 22→26px / 32 — card titles */
+  --text-title-sm--line-height: 1.231;
   --text-section: clamp(1.75rem, 2.4vw, 2.125rem);     /* 28→34px — centered section heads */
   --text-section--line-height: 1.1;
-  --text-feature: clamp(2rem, 3.2vw, 2.875rem);        /* 32→46px — page titles */
-  --text-feature--line-height: 1.12;
-  --text-hero: clamp(2.5rem, 4.1vw, 3.875rem);         /* 40→62px — home hero only */
-  --text-hero--line-height: 1.05;
+  --text-feature: clamp(2rem, 3.2vw, 2.875rem);        /* 32→46px / 56 — page titles, CTA headline */
+  --text-feature--line-height: 1.217;
+  --text-hero: clamp(2.5rem, 4.1vw, 3.6875rem);        /* 40→59px / 72 — home hero only */
+  --text-hero--line-height: 1.22;
 }
 
 /* ----------------------------------------------------------------------------
-   3 · COLOR — white paper, ink, hairlines, one orange accent for actions.
+   3 · COLOR — ink, hairlines, one orange accent for actions.
    The palette lives in the Glaze theme. Orange is Glaze's `primary` (the
    brand); Glaze's `accent` is a neutral hover fill, so actions use primary.
 ---------------------------------------------------------------------------- */
 /* Site-only inks, outside Glaze's token contract. */
 :root {
   --copy: #454542;                       /* long-form body ink */
+  --panel: #ffffff;                      /* content panels over the page field */
+  --panel-90: color-mix(in srgb, var(--panel) 90%, transparent);
   --winbar: #fbfbfa;                     /* window-chrome title bar */
-  --nav-pill-bg: rgba(255, 255, 255, 0.88);
+  /* Paper inks with no Glaze role: white text, soft nav ink, dim meta ink,
+     and the availability pill's outline. Same in both modes for now. */
+  --bright: #ffffff;
+  --ink-soft: #f4f4f2;
+  --dim: #70706d;
+  --copy-border: #454542;
 }
 .dark {
   --copy: #b8b8b2;
+  --panel: #111111;
   --winbar: #191917;
-  --nav-pill-bg: rgba(17, 17, 16, 0.82);
 }
 
 /* Glaze derives these fills from ink; the site's are slightly warmer. */
@@ -77,41 +79,23 @@
 
 @theme inline {
   --color-copy: var(--copy);
+  --color-panel: var(--panel);
+  --color-panel-90: var(--panel-90);
+  --color-bright: var(--bright);
+  --color-ink-soft: var(--ink-soft);
+  --color-dim: var(--dim);
+  --color-copy-border: var(--copy-border);
 }
 
 /* ----------------------------------------------------------------------------
-   4 · STRUCTURE — grid lines and the 1030px column
+   4 · STRUCTURE — the content column
 ---------------------------------------------------------------------------- */
-/* Full-height 1px lines framing the page, 71px from each edge at 1440. */
-.grid-lines::before,
-.grid-lines::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 1px;
-  background: var(--border);
-  pointer-events: none;
-}
-/* The lines track the 1030px column (134px outside it, the spacing the design
-   was drawn at) instead of the viewport edge, so they stay close to the
-   content on wide screens. At 1440 this resolves to the original 71px. */
-.grid-lines::before { left: max(clamp(16px, 4.93vw, 71px), calc(50% - 649px)); }
-.grid-lines::after { right: max(clamp(16px, 4.93vw, 71px), calc(50% - 649px)); }
-@media (max-width: 640px) {
-  .grid-lines::before,
-  .grid-lines::after { display: none; }
-}
-
-/* The content column. */
+/* The content column, inside the 960px page column's panel. */
 .inner-col {
   width: 100%;
   max-width: 1030px;
   margin-inline: auto;
-  padding-inline: clamp(20px, 4vw, 32px);
-}
-@media (min-width: 1160px) {
-  .inner-col { padding-inline: 0; }
+  padding-inline: clamp(16px, 4vw, 32px);
 }
 
 /* ----------------------------------------------------------------------------
@@ -129,36 +113,11 @@
   text-transform: uppercase;
   color: var(--muted-foreground);
 }
-.availability-shimmer {
-  --availability-base: #00658f;
-  --availability-accent: #42b7df;
-  color: var(--availability-base);
-  font-weight: 500;
-  background: linear-gradient(
-    105deg,
-    var(--availability-base) 0%,
-    var(--availability-base) 32%,
-    var(--availability-accent) 50%,
-    var(--availability-base) 68%,
-    var(--availability-base) 100%
-  );
-  background-size: 440px 100%;
-  background-repeat: repeat;
-  background-position: 0 0;
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: availability-shimmer 2.8s linear infinite;
-}
-@keyframes availability-shimmer {
-  from { background-position: -440px 0; }
-  to { background-position: 0 0; }
-}
 .stmt {
   font-family: var(--font-heading);
   font-weight: 500;
   font-size: var(--text-stmt);
-  line-height: 1.25;
+  line-height: var(--text-stmt--line-height);
   letter-spacing: -0.01em;
   color: var(--foreground);
 }
@@ -172,10 +131,6 @@
    6 · ACTIONS — orange pills (Glaze Button) and quiet text links
 ---------------------------------------------------------------------------- */
 /* The pill itself is Glaze's Button (components/pillButton.ts). */
-.availability-cta { background: #0077a8; }
-.availability-cta:hover,
-.availability-cta:focus-visible { background: #00658f; }
-
 .text-link {
   display: inline-flex;
   align-items: center;
@@ -404,45 +359,7 @@
 .windot-g { background: #5fc454; }
 
 /* ----------------------------------------------------------------------------
-   8 · NAV — the floating pill
----------------------------------------------------------------------------- */
-.nav-pill {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: min(430px, calc(100vw - 32px));
-  height: 49px;
-  background: var(--nav-pill-bg);
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  padding: 0 8px;
-  box-shadow: 0 8px 24px rgba(17, 17, 17, 0.06);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  font-size: var(--text-meta);
-  box-sizing: border-box;
-}
-.nav-pill-link {
-  color: var(--muted-foreground);
-  padding: 7px 13px;
-  transition: color 160ms ease;
-}
-.nav-pill-link:hover,
-.nav-pill-link:focus-visible { color: var(--primary); }
-.nav-pill-link[aria-current='page'] {
-  color: var(--foreground);
-  text-decoration: underline;
-  text-underline-offset: 7px;
-  text-decoration-thickness: 1.5px;
-}
-@keyframes nav-drop {
-  from { opacity: 0; transform: translateY(-64px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-.nav-drop { animation: nav-drop 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.15s both; }
-
-/* ----------------------------------------------------------------------------
-   9 · MOTION — rolling-letter hover, entrances, scroll reveals
+   8 · MOTION — rolling-letter hover, entrances, scroll reveals
 ---------------------------------------------------------------------------- */
 /* Rolling text: each character is a column of two stacked copies inside an
    overflow-hidden line; hover on the host rolls the columns up in a stagger. */
@@ -486,17 +403,11 @@
   .backdrop:hover .backdrop-media { transform: none; }
   .window-btn { transition: none; }
   .window-btn:hover { transform: none; }
-  .nav-drop { animation: none; }
-  .availability-shimmer {
-    animation: none;
-    background: none;
-    -webkit-text-fill-color: var(--availability-base);
-  }
-  .text-link, .nav-pill-link { transition: none; }
+  .text-link { transition: none; }
 }
 
 /* ----------------------------------------------------------------------------
-   10 · ARTICLE PROSE — the blog article template
+   9 · ARTICLE PROSE — the blog article template
 ---------------------------------------------------------------------------- */
 .prose-col {
   width: 100%;

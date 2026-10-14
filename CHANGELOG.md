@@ -7,6 +7,27 @@ Changes to amitkap.com, including settings made outside the repo (Cloudflare, Um
 - [ ] **Google Search Console.** Add `amitkap.com` as a Domain property, verify it with the TXT record in Cloudflare DNS (keep the record afterwards), and submit `sitemap.xml`.
 - [ ] **Weekly site-suggestion job.** Once there are a few weeks of Umami and Search Console data, add a scheduled GitHub Actions job that reads both and opens one data-backed suggestion as a GitHub issue.
 
+## 2026-10-14 — Dark founder redesign (Home)
+
+The site now sells senior product design to startup founders instead of reading as a CV. Design source: the Paper file `peronal-website`; the spec is `docs/redesign/home-spec.md`.
+
+### Step 1: foundation
+
+- **Dark only, for now.** The Glaze theme is dark-only and every colour is a token, so a light theme can come later. The theme toggle is gone.
+- **Inter Variable** for headings and body, with a new type scale (`text-hero`, `text-feature`, `text-title-sm`, `stmt`, `text-meta`).
+- **`DotWaves` background.** A live canvas of orange dots behind a 960px centre column of 90% panels; the footer uses a contained, dark-dot variant. It honours reduced motion and pauses off-screen and in hidden tabs.
+- **New header and footer**, with the live Tel Aviv clock and labelled LinkedIn and CV pill links.
+- **Storage key change.** The saved theme preference moved to `portfolio-theme-v2`, so any previously saved choice is reset once.
+
+### Step 2: Home
+
+- **Home matches the Paper design one to one.** Hero (availability pill, "Senior Product Designer", subtitle, no button), featured Shift block (autoplay muted loop, poster `featured-shift.webp`, still shown under reduced motion), four logo-only Recent Work tiles (Onyxia, Veriti, Semperis, Check Point) that link to their case studies, The Problem as four bordered cards, and Proposed Solution as a vertical Diagnose / Plan / Build stack joined by dot-line-dot connectors on a solid panel, ending in the founders statement. Copy, spacing, colours and section heights follow `docs/redesign/home-spec.md`, including the Paper copy quirks.
+- **Header and footer match the design.** The footer has the headline, a "Let's talk" pill, icon-only LinkedIn and CV buttons (with accessible names) and a bottom bar of copyright and clock. The "Agent view" footer link is gone; `/agent` still exists.
+- **Fonts.** Inter Variable now loads its optical-size axis (`opsz.css`) so text widths match the design.
+- **New site inks** for Paper values with no Glaze role: `bright` (white), `ink-soft`, `dim` and `copy-border`.
+- **Removed.** Parallax hero, project cards, Skillset, Blog teaser and the "Building a security product?" CTA on Home; the unused `.nav-pill*`, `.grid-lines` and availability CSS. The blog route is unchanged.
+- Home copy lives in `src/content/home.json`, which `scripts/generate-llms.mjs` also reads.
+
 ## 2026-10-13 — Glaze component library
 
 The site's UI now runs on [Glaze](https://www.npmjs.com/package/@amit-kap/glaze) (`@amit-kap/glaze`). The look is unchanged. Computed styles and layout were compared against the previous build on seven routes, in light and dark, at 1280px and 390px, and match.

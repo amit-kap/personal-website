@@ -1,48 +1,85 @@
-import { useEffect, useRef } from 'react'
-import { Link, useLocation } from 'react-router-dom'
-import { useTheme } from '@amit-kap/glaze/theme'
-import ThemeToggle from '@/components/ThemeToggle'
+import DotWaves from '@/components/DotWaves'
+import RollingText from '@/components/RollingText'
+import { CV_PDF_NAME, CV_PDF_URL } from '@/lib/cvPdf'
+import { useTelAvivClock } from '@/lib/useTelAvivClock'
+
+const LINKEDIN_URL = 'https://www.linkedin.com/in/amitkaplinsky'
+
+/* Dark (panel) pills on the orange band. */
+const darkPill = 'roll-host flex items-center justify-center rounded-pill bg-panel text-bright transition-transform duration-[180ms] active:scale-[0.97] motion-reduce:transition-none'
+
+function SendIcon() {
+  return (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="size-6 shrink-0">
+      <path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z" />
+      <path d="m21.854 2.147-10.94 10.939" />
+    </svg>
+  )
+}
+
+function LinkedInIcon() {
+  return (
+    <svg viewBox="0 0 22 22" width="22" height="22" aria-hidden="true" className="size-[22px] shrink-0">
+      <g fillRule="evenodd">
+        <path
+          className="fill-panel"
+          d="M2.445 22L19.556 22C20.905 22 22 20.906 22 19.556L22 2.445C22 1.095 20.905 0 19.556 0L2.445 0C1.094 0 0 1.095 0 2.445L0 19.556C0 20.906 1.094 22 2.445 22Z"
+        />
+        <path
+          className="fill-bright"
+          d="M18.945 18.945L15.68 18.945 15.68 13.384C15.68 11.86 15.101 11.007 13.894 11.007 12.581 11.007 11.895 11.895 11.895 13.384L11.895 18.945 8.749 18.945 8.749 8.352 11.895 8.352 11.895 9.779C11.895 9.779 12.842 8.028 15.09 8.028 17.336 8.028 18.945 9.4 18.945 12.238L18.945 18.945ZM4.996 6.965C3.924 6.965 3.056 6.09 3.056 5.01 3.056 3.931 3.924 3.056 4.996 3.056 6.067 3.056 6.935 3.931 6.935 5.01 6.935 6.09 6.067 6.965 4.996 6.965ZM3.371 18.945L6.651 18.945 6.651 8.352 3.371 8.352 3.371 18.945Z"
+        />
+      </g>
+    </svg>
+  )
+}
+
+function CvIcon() {
+  return (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="size-6 shrink-0">
+      <path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z" />
+      <path d="M14 2v5a1 1 0 0 0 1 1h5" />
+      <path d="M16 22a4 4 0 0 0-8 0" />
+      <circle cx="12" cy="15" r="3" />
+    </svg>
+  )
+}
 
 export default function Footer() {
-  const { pathname } = useLocation()
-  const isAgent = pathname === '/agent'
-  const wasAgent = useRef(false)
-  const { setMode } = useTheme()
-  // setMode changes identity with every theme update; the route change alone
-  // should drive the effect, so a manual toggle on /agent is not overridden.
-  const setModeRef = useRef(setMode)
-  useEffect(() => {
-    setModeRef.current = setMode
-  }, [setMode])
-
-  useEffect(() => {
-    const nextMode = isAgent ? 'dark' : wasAgent.current ? 'light' : null
-    wasAgent.current = isAgent
-    if (nextMode) setModeRef.current(nextMode)
-  }, [isAgent])
-
-  const segment = (to: string, label: string, active: boolean) => (
-    <Link
-      to={to}
-      aria-current={active ? 'page' : undefined}
-      className={`inline-flex h-[26px] items-center justify-center rounded-full px-3 transition-colors ${
-        active ? 'bg-secondary text-foreground' : 'text-muted-foreground hover:text-foreground'
-      }`}
-    >
-      {label}
-    </Link>
-  )
+  const clock = useTelAvivClock()
 
   return (
-    <footer className="relative border-t border-border">
-      <div className="inner-col flex flex-wrap items-center justify-between gap-4 py-6 text-meta text-muted-foreground">
-        <span>© 2026 Amit Kaplinsky · Tel Aviv</span>
-        <div className="ml-auto flex items-center gap-4">
-          <nav className="flex items-center gap-[3px] rounded-full border border-border p-[3px] text-caption" aria-label="View mode">
-            {segment('/', 'Human', !isAgent)}
-            {segment('/agent', 'Agent', isAgent)}
-          </nav>
-          <ThemeToggle />
+    <footer className="relative isolate overflow-hidden bg-primary text-bright">
+      {/* Dark dots on the orange band. */}
+      <DotWaves contained color="var(--background)" />
+      <div className="relative z-10 mx-auto flex w-full max-w-[930px] flex-col items-center gap-10 px-4 sm:px-0">
+        <div className="flex flex-col items-center gap-10 pt-20">
+          <h2 className="whitespace-pre-line text-center text-feature font-medium text-bright">
+            {"Building a new product?\nLet's see if it's a fit."}
+          </h2>
+          <a
+            href="mailto:amitka111@gmail.com"
+            data-umami-event="contact-email"
+            data-umami-event-location="footer"
+            className={`${darkPill} gap-2 px-6 py-4`}
+          >
+            <SendIcon />
+            <span className="text-body font-medium leading-5">
+              <RollingText text="Let's talk" />
+            </span>
+          </a>
+        </div>
+        <div className="flex flex-col items-center gap-10">
+          <a href={LINKEDIN_URL} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" data-umami-event="contact-linkedin" className={`${darkPill} p-3`}>
+            <LinkedInIcon />
+          </a>
+          <a href={CV_PDF_URL} download={CV_PDF_NAME} aria-label="CV" data-umami-event="download-cv" className={`${darkPill} p-3`}>
+            <CvIcon />
+          </a>
+        </div>
+        <div className="flex w-full items-start justify-between gap-4 py-4 text-meta">
+          <span>Amit Kaplinsky 2026</span>
+          <span suppressHydrationWarning>{clock}</span>
         </div>
       </div>
     </footer>

@@ -2,7 +2,7 @@
   "version": 1,
   "name": "personal-website",
   "extends": "nova",
-  "defaults": { "mode": "light", "density": "comfortable" },
+  "defaults": { "mode": "dark", "density": "comfortable" },
   "color": {
     "light": {
       "canvas": "#ffffff",
@@ -15,7 +15,7 @@
     },
     "dark": {
       "canvas": "#0f0f0e",
-      "surface": "#0f0f0e",
+      "surface": "#111111",
       "ink": "#f2f2ef",
       "ink-muted": "#8f8f8a",
       "line": "#262624",
@@ -31,8 +31,8 @@
     "shape-container": "0.875rem"
   },
   "type": {
-    "typeface-sans": "\"Plus Jakarta Sans\", ui-sans-serif, system-ui, sans-serif",
-    "typeface-heading": "\"Geist\", ui-sans-serif, system-ui, sans-serif",
+    "typeface-sans": "\"Inter Variable\", ui-sans-serif, system-ui, sans-serif",
+    "typeface-heading": "\"Inter Variable\", ui-sans-serif, system-ui, sans-serif",
     "typeface-mono": "ui-monospace, \"SFMono-Regular\", Menlo, monospace",
     "type-caption": "0.75rem",
     "type-caption-leading": "1.4",
