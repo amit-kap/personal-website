@@ -6,6 +6,7 @@ import Reveal from '@/components/Reveal'
 import { useTilt } from '@/lib/useTilt'
 import StarBorder from '@/components/react-bits/StarBorder'
 import Seo from '@/components/Seo'
+import FlowOverlay from '@/components/FlowOverlay'
 
 /* Company marks live next to each work's content as icon.svg. */
 const logoModules = import.meta.glob<string>('../content/experience/*/icon.svg', {
@@ -355,7 +356,7 @@ function Problem() {
         </div>
         <Reveal as="ol" className="grid grid-cols-1 items-start gap-8 pt-4 md:grid-cols-2">
           {problem.items.map((item, index) => (
-            <li key={index} className="flex flex-col items-start gap-4 rounded-container border border-border p-6">
+            <li key={index} data-flow="problem" className="flex flex-col items-start gap-4 rounded-container border border-border p-6">
               <span className="self-stretch text-meta text-muted-foreground">
                 {String(index + 1).padStart(2, '0')}
               </span>
@@ -425,7 +426,7 @@ function Solution() {
           {solution.steps.map((step, index) => (
             <li key={step.title} className="contents">
               {index > 0 && <Connector className="-mt-[3px] h-10" />}
-              <div className={`${stepCardClass} ${radius[index]} ${index > 0 ? '-mt-[3px]' : ''}`}>
+              <div data-flow="step" className={`${stepCardClass} ${radius[index]} ${index > 0 ? '-mt-[3px]' : ''}`}>
                 <svg className="size-8 shrink-0 text-primary" width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                   {stepIcons[index]}
                 </svg>
@@ -438,7 +439,7 @@ function Solution() {
         <div className="-mt-4 flex flex-col items-center">
           <Connector className="-mt-[3px] h-20" />
           <Reveal className="-mt-[3px] flex w-full flex-col items-center gap-10">
-            <div className="flex items-center rounded-pill bg-primary/15 p-6">
+            <div data-flow="final" className="flex items-center rounded-pill bg-primary/15 p-6">
               <div className="flex items-center rounded-pill bg-primary p-6">
                 <svg className="size-8 shrink-0 text-foreground" width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                   <path d="M22.667 28a6.667 6.667 0 0 0-13.334 0" />
@@ -460,6 +461,7 @@ function Solution() {
 
 export default function Home() {
   const works = getAllWorks()
+  const allowMotion = useAllowMotion()
 
   return (
     <main>
@@ -471,8 +473,11 @@ export default function Home() {
       <Hero />
       <Featured />
       <RecentWork works={works} />
-      <Problem />
-      <Solution />
+      <div className="relative">
+        <Problem />
+        <Solution />
+        <FlowOverlay animate={allowMotion} />
+      </div>
     </main>
   )
 }
