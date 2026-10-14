@@ -395,6 +395,55 @@
 .reveal-scale { transform: translateY(50px) scale(1.08); }
 .reveal-scale.is-in { transform: translateY(0) scale(1); }
 
+/* Tilt card (useTilt): tilts toward the cursor in 3D, lifts its content a
+   little off the surface, and shows a glare where the cursor is. */
+.tilt {
+  transform: perspective(700px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));
+  transform-style: preserve-3d;
+  transition:
+    transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.2s ease;
+  will-change: transform;
+}
+.tilt:hover { transition-duration: 0.12s, 0.2s; }
+.tilt-content { transform: translateZ(24px); }
+/* Hover reveal inside a tilt card: the group starts offset by half of
+   (gap + label height) so the logo alone is centred, then settles centred
+   as the label fades and drops in. */
+.tilt-reveal {
+  --reveal-offset: 18px; /* (16px gap + 20px label line) / 2 */
+  transform: translateZ(24px) translateY(var(--reveal-offset));
+  transition: transform 0.35s cubic-bezier(0.33, 1, 0.68, 1);
+}
+/* The label starts tucked up behind the logo and drops into place once the
+   logo has started to rise. */
+.tilt-reveal-label {
+  opacity: 0;
+  transform: translateY(-20px);
+  transition:
+    opacity 0.15s ease,
+    transform 0.35s cubic-bezier(0.33, 1, 0.68, 1);
+}
+.tilt:hover .tilt-reveal,
+.tilt:focus-visible .tilt-reveal { transform: translateZ(24px) translateY(0); }
+.tilt:hover .tilt-reveal-label,
+.tilt:focus-visible .tilt-reveal-label {
+  opacity: 1;
+  transform: translateY(0);
+  transition:
+    opacity 0.25s ease 0.06s,
+    transform 0.35s cubic-bezier(0.33, 1, 0.68, 1) 0.04s;
+}
+.tilt-glare {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  background: radial-gradient(circle at var(--glare-x, 50%) var(--glare-y, 50%), rgb(255 255 255 / 0.12), transparent 60%);
+  opacity: var(--glare, 0);
+  transition: opacity 0.3s ease;
+}
+
 /* Hero word rotation: each slot pushes the old word out as the new one
    enters from the opposite side. Duration, delay and easing are set inline
    from the timing constants in Home.tsx. */
@@ -420,6 +469,12 @@
   .roll-ch { transition: none; }
   .roll-host:hover .roll-ch { transform: none; }
   .reveal, .reveal-scale { opacity: 1; transform: none; transition: none; }
+  .tilt, .tilt-content { transform: none; }
+  .tilt-reveal, .tilt-reveal-label { transition: none; }
+  .tilt .tilt-reveal { transform: translateY(var(--reveal-offset)); }
+  .tilt:hover .tilt-reveal,
+  .tilt:focus-visible .tilt-reveal { transform: none; }
+  .tilt-glare { display: none; }
   .backdrop-media { transition: none; }
   .backdrop:hover .backdrop-media { transform: none; }
   .window-btn { transition: none; }

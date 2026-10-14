@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { getAllWorks, type Work } from '@/lib/content'
 import homeCopy from '@/content/home.json'
 import Reveal from '@/components/Reveal'
+import { useTilt } from '@/lib/useTilt'
 import StarBorder from '@/components/react-bits/StarBorder'
 import Seo from '@/components/Seo'
 
@@ -244,11 +245,15 @@ function Featured() {
             </div>
             <div className="flex items-center justify-between gap-2 py-4">
               <div className="flex flex-col gap-2">
-                <div className="flex items-center gap-2">
-                  <ShiftMark />
-                  <span className="text-stmt text-bright">Shift</span>
-                </div>
-                <p className="text-stmt text-copy">{featured.tagline}</p>
+                {/* Name and what it is read as one title line; the tagline
+                    wraps under the name on narrow screens. */}
+                <p className="flex flex-wrap items-center gap-x-3 gap-y-1 text-stmt">
+                  <span className="flex items-center gap-2 text-bright">
+                    <ShiftMark />
+                    Shift
+                  </span>
+                  <span className="text-copy">{featured.tagline}</span>
+                </p>
                 <p className="flex items-center gap-2 text-body leading-5 text-copy">
                   <span>{featured.role}</span>
                   <span aria-hidden="true" className="text-dim">/</span>
@@ -273,6 +278,7 @@ function RecentWork({ works }: { works: Work[] }) {
   const { recentWork } = homeCopy
   const outcomes = recentWork.outcomes as Record<string, string>
   const tiles = works.filter((work) => outcomes[work.slug])
+  const tilt = useTilt()
   return (
     <section className={`${bandClass} py-20`}>
       <div className={innerClass}>
@@ -288,9 +294,19 @@ function RecentWork({ works }: { works: Work[] }) {
                 key={work.slug}
                 to={`/work/${work.slug}`}
                 aria-label={`${company} case study: ${outcomes[work.slug]}`}
-                className="group relative flex h-[120px] items-center justify-center rounded-container border border-border bg-background transition-[border-color,transform] duration-200 hover:-translate-y-0.5 hover:border-primary focus-visible:border-primary motion-reduce:transition-none motion-reduce:hover:translate-y-0 md:h-auto md:flex-1"
+                {...tilt}
+                className="tilt group relative flex h-[120px] items-center justify-center rounded-container border border-border bg-background transition-[border-color] duration-200 hover:border-primary focus-visible:border-primary motion-reduce:transition-none md:h-auto md:flex-1"
               >
-                {logo && <img src={logo} alt="" width={40} height={40} className="size-10" />}
+                {/* Logo and name sit as one group: at rest it is offset so
+                    the logo alone is centred; on hover the logo rises, the
+                    name drops in below, and the pair ends up centred. */}
+                <span className="tilt-content tilt-reveal flex flex-col items-center gap-4">
+                  {logo && <img src={logo} alt="" width={40} height={40} className="size-10" />}
+                  <span aria-hidden="true" className="tilt-reveal-label text-body leading-5 text-foreground">
+                    {company}
+                  </span>
+                </span>
+                <span aria-hidden="true" className="tilt-glare" />
               </Link>
             )
           })}
