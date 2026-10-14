@@ -337,6 +337,10 @@ function RecentWork({ works }: { works: Work[] }) {
 
 function Problem() {
   const { problem } = homeCopy
+  // The second sentence of the headline takes the foreground colour.
+  const breakAt = problem.headline.indexOf('. ') + 2
+  const problemLead = problem.headline.slice(0, breakAt)
+  const problemPayoff = problem.headline.slice(breakAt)
   return (
     <section className={`${bandClass} py-20`}>
       <div className={innerClass}>
@@ -345,7 +349,8 @@ function Problem() {
             {problem.label}
           </Reveal>
           <Reveal as="p" delay={0.08} className="font-heading text-feature text-primary">
-            {problem.headline}
+            {problemLead}
+            <span className="text-primary-foreground">{problemPayoff}</span>
           </Reveal>
         </div>
         <Reveal as="ol" className="grid grid-cols-1 items-start gap-8 pt-4 md:grid-cols-2">
