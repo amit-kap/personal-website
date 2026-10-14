@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { getAllWorks, type Work } from '@/lib/content'
 import homeCopy from '@/content/home.json'
 import Reveal from '@/components/Reveal'
+import StarBorder from '@/components/react-bits/StarBorder'
 import Seo from '@/components/Seo'
 
 /* Company marks live next to each work's content as icon.svg. */
@@ -51,12 +52,38 @@ function useAllowMotion() {
   return allow
 }
 
+/* Canvas colours can't read custom properties, so resolve the token once
+   mounted. Transparent until then draws nothing under the 'lighter' blend. */
+function useTokenColor(token: string) {
+  const [color, setColor] = useState('transparent')
+  useEffect(() => {
+    setColor(getComputedStyle(document.documentElement).getPropertyValue(token).trim() || 'transparent')
+  }, [token])
+  return color
+}
+
 function Hero() {
+  const starColor = useTokenColor('--primary')
+
   return (
     <section className="flex flex-col items-center gap-8 px-6 py-20 text-center">
-      <Reveal className="flex items-center gap-4 rounded-pill border border-copy-border px-4 py-2">
-        <span aria-hidden="true" className="size-2 shrink-0 rounded-pill bg-primary" />
-        <span className="text-meta text-muted-foreground">{homeCopy.availability}</span>
+      <Reveal>
+        {/* React Bits Star Border (Ember trail and glow): one star lapping the pill outline. */}
+        <StarBorder
+          as="div"
+          color={starColor}
+          duration={4.8}
+          trailLength={0.45}
+          glow={0.8}
+          hover="brighten"
+          radius={9999}
+          backgroundColor="transparent"
+          textColor="inherit"
+          borderColor="var(--copy-border)"
+          className="gap-4! px-6! py-[9px]! font-normal! leading-normal!"
+        >
+          <span className="text-meta text-foreground">{homeCopy.availability}</span>
+        </StarBorder>
       </Reveal>
       <Reveal as="h1" delay={0.08} className="font-heading text-hero font-medium text-bright">
         {homeCopy.headlineLines.map((line) => (
