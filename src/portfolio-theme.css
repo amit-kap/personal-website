@@ -395,6 +395,27 @@
 .reveal-scale { transform: translateY(50px) scale(1.08); }
 .reveal-scale.is-in { transform: translateY(0) scale(1); }
 
+/* Hero word rotation: each slot pushes the old word out as the new one
+   enters from the opposite side. Duration, delay and easing are set inline
+   from the timing constants in Home.tsx. */
+@keyframes push-in-up { from { transform: translateY(100%); } }
+@keyframes push-out-up { to { transform: translateY(-100%); } }
+@keyframes push-in-down { from { transform: translateY(-100%); } }
+@keyframes push-out-down { to { transform: translateY(100%); } }
+/* Sideways pushes travel --push-x (the slot's widest word), since a word
+   wider than its slot overflows it and one slot width would not clear it. */
+@keyframes push-in-right { from { transform: translateX(calc(-1 * var(--push-x, 100%))); } }
+@keyframes push-out-right { to { transform: translateX(var(--push-x, 100%)); } }
+.push-in-up, .push-out-up, .push-in-down, .push-out-down, .push-in-right, .push-out-right {
+  animation-fill-mode: both;
+}
+.push-in-up { animation-name: push-in-up; }
+.push-out-up { animation-name: push-out-up; }
+.push-in-down { animation-name: push-in-down; }
+.push-out-down { animation-name: push-out-down; }
+.push-in-right { animation-name: push-in-right; }
+.push-out-right { animation-name: push-out-right; }
+
 @media (prefers-reduced-motion: reduce) {
   .roll-ch { transition: none; }
   .roll-host:hover .roll-ch { transform: none; }
