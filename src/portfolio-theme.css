@@ -434,6 +434,66 @@
     opacity 0.25s ease 0.06s,
     transform 0.35s cubic-bezier(0.33, 1, 0.68, 1) 0.04s;
 }
+
+/* Pulsating border: three light spots (--spot-1..3, set per card from its
+   logo colours; site colours by default) orbit the card edge, over a blurred
+   copy that pulses as a glow. Shown on hover and keyboard focus. The ring
+   is a conic gradient masked to the border; the blur sits on a wrapper so
+   the mask does not clip the glow. */
+@property --pulse-angle {
+  syntax: '<angle>';
+  inherits: true;
+  initial-value: 0deg;
+}
+@keyframes pulse-orbit { to { --pulse-angle: 360deg; } }
+@keyframes pulse-breathe {
+  from { opacity: 0.45; }
+  to { opacity: 1; }
+}
+.pulse-border {
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  animation: pulse-orbit 4s linear infinite;
+  animation-play-state: paused;
+}
+.tilt:hover .pulse-border,
+.tilt:focus-visible .pulse-border {
+  opacity: 1;
+  animation-play-state: running;
+}
+.pulse-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1.5px;
+  background: conic-gradient(
+    from var(--pulse-angle),
+    transparent 0%,
+    var(--spot-1, var(--primary)) 9%,
+    transparent 22%,
+    transparent 33%,
+    var(--spot-2, var(--foreground)) 41%,
+    transparent 52%,
+    transparent 66%,
+    var(--spot-3, color-mix(in srgb, var(--primary) 65%, #3a0f00)) 75%,
+    transparent 88%
+  );
+  mask:
+    linear-gradient(#000 0 0) content-box exclude,
+    linear-gradient(#000 0 0);
+}
+.pulse-glow {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  filter: blur(8px);
+  animation: pulse-breathe 1.6s ease-in-out infinite alternate;
+}
+.pulse-glow .pulse-ring { padding: 4px; }
 .tilt-glare {
   position: absolute;
   inset: 0;
@@ -475,6 +535,7 @@
   .tilt:hover .tilt-reveal,
   .tilt:focus-visible .tilt-reveal { transform: none; }
   .tilt-glare { display: none; }
+  .pulse-border, .pulse-glow { animation: none; }
   .backdrop-media { transition: none; }
   .backdrop:hover .backdrop-media { transform: none; }
   .window-btn { transition: none; }

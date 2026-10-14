@@ -24,6 +24,12 @@
       "veriti": "From known exposure to approved change",
       "semperis": "A product language for prevention",
       "checkpoint": "Twenty tabs into one security system"
+    },
+    "glow": {
+      "onyxia-cyber": ["#8a64c4", "#c9b3ef", "#6b4d96"],
+      "veriti": ["#fe596f", "#ffb0bb", "#7a3ef0"],
+      "semperis": ["#ef3842", "#f9a9ad", "#ea0182"],
+      "checkpoint": ["#ed0a5d", "#f89ab9", "#b3084a"]
     }
   },
   "problem": {

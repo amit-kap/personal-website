@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { Fragment, useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from 'react'
 import { Link } from 'react-router-dom'
 import { getAllWorks, type Work } from '@/lib/content'
 import homeCopy from '@/content/home.json'
@@ -277,6 +277,9 @@ function Featured() {
 function RecentWork({ works }: { works: Work[] }) {
   const { recentWork } = homeCopy
   const outcomes = recentWork.outcomes as Record<string, string>
+  /* Border glow spots per company: the logo's brightest hues plus a light
+     tint (darker logo colours would not show on the dark tile). */
+  const glow = recentWork.glow as Record<string, string[]>
   const tiles = works.filter((work) => outcomes[work.slug])
   const tilt = useTilt()
   return (
@@ -295,7 +298,16 @@ function RecentWork({ works }: { works: Work[] }) {
                 to={`/work/${work.slug}`}
                 aria-label={`${company} case study: ${outcomes[work.slug]}`}
                 {...tilt}
-                className="tilt group relative flex h-[120px] items-center justify-center rounded-container border border-border bg-background transition-[border-color] duration-200 hover:border-primary focus-visible:border-primary motion-reduce:transition-none md:h-auto md:flex-1"
+                style={
+                  glow[work.slug]
+                    ? ({
+                        '--spot-1': glow[work.slug][0],
+                        '--spot-2': glow[work.slug][1],
+                        '--spot-3': glow[work.slug][2],
+                      } as CSSProperties)
+                    : undefined
+                }
+                className="tilt group relative flex h-[120px] items-center justify-center rounded-container border border-border bg-background md:h-auto md:flex-1"
               >
                 {/* Logo and name sit as one group: at rest it is offset so
                     the logo alone is centred; on hover the logo rises, the
@@ -307,6 +319,13 @@ function RecentWork({ works }: { works: Work[] }) {
                   </span>
                 </span>
                 <span aria-hidden="true" className="tilt-glare" />
+                {/* Light spots orbiting the border on hover, with a pulsing glow. */}
+                <span aria-hidden="true" className="pulse-border">
+                  <span className="pulse-glow">
+                    <span className="pulse-ring" />
+                  </span>
+                  <span className="pulse-ring" />
+                </span>
               </Link>
             )
           })}
