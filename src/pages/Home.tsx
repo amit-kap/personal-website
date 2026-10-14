@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { getAllWorks, type Work } from '@/lib/content'
 import homeCopy from '@/content/home.json'
@@ -63,54 +63,84 @@ function useTokenColor(token: string) {
 
 type Push = 'up' | 'down' | 'right'
 
-const rotation: Record<string, string[]> = homeCopy.headlineRotation
-const pushFor: Record<string, Push> = { Senior: 'up', Product: 'down', Designer: 'right' }
-/* Stagger order: top word, then left, then right. */
-const orderFor: Record<string, number> = { Senior: 0, Product: 1, Designer: 2 }
+/* The title loops through these, back to the first after the last. Each
+   entry is [top word, left word, right word]; only words that differ from
+   the previous title move. */
+const titles: string[][] = homeCopy.headlineTitles
+const pushes: Push[] = ['up', 'down', 'right']
 
-/* One pulse moves the words on one after another (STAGGER_MS apart). Each
-   word pushes and resizes its slot together over PUSH_MS, then everything
-   holds for HOLD_MS. */
+/* Changing words move one after another (STAGGER_MS apart, top, then left,
+   then right), each pushing and resizing its slot over PUSH_MS. The title
+   then holds for HOLD_MS before the next one. */
 const PUSH_MS = 700
 const STAGGER_MS = 700
 const HOLD_MS = 3000
 const PUSH_EASE = 'cubic-bezier(0.22, 1, 0.36, 1)'
 
+/* Which slots change entering each title (from the one before it, wrapping
+   around), and each one's start delay. */
+const changes = titles.map((title, i) =>
+  title.map((word, slot) => word !== titles[(i - 1 + titles.length) % titles.length][slot]),
+)
+const delays = changes.map((changed) => {
+  let rank = 0
+  return changed.map((c) => (c ? rank++ * STAGGER_MS : 0))
+})
+const stepLength = (i: number) => {
+  const moving = changes[i].filter(Boolean).length
+  return Math.max(0, moving - 1) * STAGGER_MS + PUSH_MS + HOLD_MS
+}
+
 /* Clip each slot only along its push axis, so a width change never cuts a
    vertically pushed word at the sides. */
 const clipFor: Record<Push, string> = { up: 'inset(0 -100vw)', down: 'inset(0 -100vw)', right: 'inset(-100vh 0)' }
 
-function usePulse(enabled: boolean) {
-  const [pulse, setPulse] = useState(0)
+/* A step count that keeps climbing; the title shown is step % titles.length. */
+function useTitleStep(enabled: boolean) {
+  const [step, setStep] = useState(0)
   useEffect(() => {
     if (!enabled) return
-    const id = window.setInterval(() => setPulse((p) => p + 1), PUSH_MS + 2 * STAGGER_MS + HOLD_MS)
-    return () => window.clearInterval(id)
-  }, [enabled])
-  return enabled ? pulse : 0
+    const wait = step === 0 ? HOLD_MS : stepLength(step % titles.length)
+    const id = window.setTimeout(() => setStep((s) => s + 1), wait)
+    return () => window.clearTimeout(id)
+  }, [enabled, step])
+  return enabled ? step : 0
 }
 
-/* A word slot that pushes the old word out and the new one in while its
-   width eases to the new word. The pushed layers span the whole slot, so a
-   word always travels clear of it. */
-function RotatingWord({ words, index, push, order }: { words: string[]; index: number; push: Push; order: number }) {
-  const current = index % words.length
-  const previous = index > 0 ? (index - 1) % words.length : null
+/* One word of the title. When it changes, the old word pushes out and the
+   new one in, blurring and fading as they travel, while the slot eases to
+   the new width. The pushed layers span the whole slot, and sideways pushes
+   travel the widest word, so a word always clears the frame. */
+function RotatingWord({ slot, step }: { slot: number; step: number }) {
+  const push = pushes[slot]
+  const history = titles.map((title) => title[slot])
+  const words = [...new Set(history)]
+  const at = (s: number) => history[s % history.length]
+  // The step at which this word last changed (0 = the first render).
+  let changedAt = step
+  while (changedAt > 0 && !changes[changedAt % titles.length][slot]) changedAt--
+  const current = at(step)
+  const previous = changedAt > 0 ? at(changedAt - 1) : null
+
   const sizers = useRef<(HTMLSpanElement | null)[]>([])
-  const [widths, setWidths] = useState<number[]>([])
+  const [widths, setWidths] = useState<Record<string, number>>({})
 
   // Every word's width, kept current as the type scale or font changes.
   useLayoutEffect(() => {
-    const measure = () => setWidths(sizers.current.map((el) => el?.getBoundingClientRect().width ?? 0))
+    const measure = () =>
+      setWidths(Object.fromEntries(words.map((word, i) => [word, sizers.current[i]?.getBoundingClientRect().width ?? 0])))
     measure()
     const observer = new ResizeObserver(measure)
     sizers.current.forEach((el) => el && observer.observe(el))
     return () => observer.disconnect()
-  }, [words])
+    // words is derived from static titles and the slot.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [slot])
 
-  const delay = `${order * STAGGER_MS}ms`
+  const delay = `${delays[changedAt % titles.length][slot]}ms`
   const motion = { animationDuration: `${PUSH_MS}ms`, animationDelay: delay, animationTimingFunction: PUSH_EASE }
   const layer = 'absolute inset-0 flex justify-center'
+  const widest = Math.max(0, ...Object.values(widths))
 
   return (
     <span
@@ -118,7 +148,7 @@ function RotatingWord({ words, index, push, order }: { words: string[]; index: n
       style={{
         width: widths[current] || undefined,
         clipPath: clipFor[push],
-        ['--push-x' as string]: widths.length ? `${Math.max(...widths)}px` : undefined,
+        ['--push-x' as string]: widest ? `${widest}px` : undefined,
         transitionDuration: `${PUSH_MS}ms`,
         transitionDelay: delay,
         transitionTimingFunction: PUSH_EASE,
@@ -126,7 +156,7 @@ function RotatingWord({ words, index, push, order }: { words: string[]; index: n
     >
       {/* Invisible copies: the current one gives the slot its height, the
           absolute ones are measured for widths. */}
-      <span className="invisible inline-block">{words[current]}</span>
+      <span className="invisible inline-block">{current}</span>
       {words.map((word, i) => (
         <span
           key={word}
@@ -140,23 +170,27 @@ function RotatingWord({ words, index, push, order }: { words: string[]; index: n
         </span>
       ))}
       {previous !== null && (
-        <span key={`out-${index}`} className={`${layer} push-out-${push}`} style={motion}>
-          {words[previous]}
+        <span key={`out-${changedAt}`} className={`${layer} push-out-${push}`} style={motion}>
+          {previous}
         </span>
       )}
-      <span key={`in-${index}`} className={index > 0 ? `${layer} push-in-${push}` : layer} style={index > 0 ? motion : undefined}>
-        {words[current]}
+      <span
+        key={`in-${changedAt}`}
+        className={previous !== null ? `${layer} push-in-${push}` : layer}
+        style={previous !== null ? motion : undefined}
+      >
+        {current}
       </span>
     </span>
   )
 }
 
 function Hero() {
-  const pulse = usePulse(useAllowMotion())
+  const step = useTitleStep(useAllowMotion())
   const starColor = useTokenColor('--primary')
 
   return (
-    <section className="flex flex-col items-center gap-8 px-6 py-20 text-center">
+    <section className="flex flex-col items-center gap-16 px-6 py-20 text-center">
       <Reveal>
         {/* React Bits Star Border (Ember trail and glow): one star lapping the pill outline. */}
         <StarBorder
@@ -179,21 +213,12 @@ function Hero() {
         {/* Screen readers and search get the plain title; the rotating
             words are decoration. */}
         <span className="sr-only">{homeCopy.headlineLines.join(' ')}</span>
-        {homeCopy.headlineLines.map((line) => (
-          <span key={line} aria-hidden="true" className="block">
-            {line.split(' ').map((word, i) => (
-              <Fragment key={word}>
-                {i > 0 && ' '}
-                <RotatingWord
-                  words={rotation[word] ?? [word]}
-                  index={pulse}
-                  push={pushFor[word] ?? 'up'}
-                  order={orderFor[word] ?? 0}
-                />
-              </Fragment>
-            ))}
-          </span>
-        ))}
+        <span aria-hidden="true" className="block">
+          <RotatingWord slot={0} step={step} />
+        </span>
+        <span aria-hidden="true" className="block">
+          <RotatingWord slot={1} step={step} /> <RotatingWord slot={2} step={step} />
+        </span>
       </Reveal>
       <Reveal as="p" delay={0.16} className="w-full max-w-[568px] text-stmt text-muted-foreground">
         {homeCopy.supportingCopy}

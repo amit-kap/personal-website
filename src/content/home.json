@@ -4,11 +4,14 @@
     "Senior",
     "Product Designer"
   ],
-  "headlineRotation": {
-    "Senior": ["Senior", "Solo", "Lead", "Principal", "Staff"],
-    "Product": ["Product", "AI", "Design"],
-    "Designer": ["Designer", "Builder", "Engineer"]
-  },
+  "headlineTitles": [
+    ["Senior", "Product", "Designer"],
+    ["Lead", "Product", "Designer"],
+    ["Lead", "Design", "Engineer"],
+    ["Principal", "Design", "Engineer"],
+    ["Solo", "AI", "Builder"],
+    ["Staff", "AI", "Builder"]
+  ],
   "supportingCopy": "More than a decade designing cybersecurity products, from product direction and design systems to AI-assisted builds that ship.",
   "featured": {
     "label": "Featured",
