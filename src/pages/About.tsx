@@ -90,7 +90,7 @@ export default function About() {
           />
           </Reveal>
         </Parallax>
-        <div className="inner-col relative grid items-end gap-10 pb-16 pt-[clamp(260px,29vw,420px)] lg:grid-cols-[minmax(0,640px)_minmax(0,1fr)]">
+        <div className="inner-col relative grid items-end gap-10 pb-16 pt-[clamp(260px,29vw,420px)] lg:grid-cols-[minmax(0,1fr)_auto]">
           <div className="flex flex-col gap-5">
             <Reveal as="p" className="eyebrow" delay={0.15}>About</Reveal>
             <Reveal as="h1" className="font-heading text-feature font-medium tracking-[-0.02em]" delay={0.22}>
@@ -139,7 +139,7 @@ export default function About() {
           {cv.experience.map((entry, i) => (
             <Reveal
               key={entry.slug}
-              className={`grid items-baseline gap-x-8 gap-y-2 py-[26px] sm:grid-cols-[170px_330px_minmax(0,1fr)] ${i > 0 ? 'border-t border-border' : ''} ${i === cv.experience.length - 1 ? 'pb-1' : ''}`}
+              className={`grid items-baseline gap-x-8 gap-y-2 py-[26px] sm:grid-cols-[140px_260px_minmax(0,1fr)] ${i > 0 ? 'border-t border-border' : ''} ${i === cv.experience.length - 1 ? 'pb-1' : ''}`}
             >
               <p className="text-[13px] text-muted-foreground">{formatPeriod(entry.period)}</p>
               <h2 className="font-heading text-[17px] font-medium tracking-[-0.01em]">
@@ -166,7 +166,7 @@ export default function About() {
             return (
               <Reveal
                 key={entry.title}
-                className={`grid items-baseline gap-x-8 gap-y-2 py-[26px] sm:grid-cols-[170px_330px_minmax(0,1fr)] ${i > 0 ? 'border-t border-border' : ''} ${i === cv.certificates.length - 1 ? 'pb-1' : ''}`}
+                className={`grid items-baseline gap-x-8 gap-y-2 py-[26px] sm:grid-cols-[140px_260px_minmax(0,1fr)] ${i > 0 ? 'border-t border-border' : ''} ${i === cv.certificates.length - 1 ? 'pb-1' : ''}`}
               >
                 <p className="text-[13px] text-muted-foreground">{date}</p>
                 <h2 className="font-heading text-[17px] font-medium tracking-[-0.01em]">{entry.title}</h2>
@@ -186,7 +186,7 @@ export default function About() {
             return (
               <Reveal
                 key={entry.title}
-                className={`grid items-baseline gap-x-8 gap-y-2 py-[26px] sm:grid-cols-[170px_330px_minmax(0,1fr)] ${i > 0 ? 'border-t border-border' : ''} ${i === cv.education.length - 1 ? 'pb-1' : ''}`}
+                className={`grid items-baseline gap-x-8 gap-y-2 py-[26px] sm:grid-cols-[140px_260px_minmax(0,1fr)] ${i > 0 ? 'border-t border-border' : ''} ${i === cv.education.length - 1 ? 'pb-1' : ''}`}
               >
                 <p className="text-[13px] text-muted-foreground">{date}</p>
                 <h2 className="font-heading text-[17px] font-medium tracking-[-0.01em]">{entry.title}</h2>

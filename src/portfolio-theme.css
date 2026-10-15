@@ -92,12 +92,13 @@
 /* ----------------------------------------------------------------------------
    4 · STRUCTURE — the content column
 ---------------------------------------------------------------------------- */
-/* The content column, inside the 960px page column's panel. */
+/* The content column, inside the 960px page column's panel: the same as the
+   home sections, 800px of content with a 16px gutter on narrow screens. */
 .inner-col {
   width: 100%;
-  max-width: 1030px;
+  max-width: 832px;
   margin-inline: auto;
-  padding-inline: clamp(16px, 4vw, 32px);
+  padding-inline: 16px;
 }
 
 /* ----------------------------------------------------------------------------
