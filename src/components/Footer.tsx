@@ -1,3 +1,4 @@
+import { useLocation } from 'react-router-dom'
 import RollingText from '@/components/RollingText'
 import { CV_PDF_NAME, CV_PDF_URL } from '@/lib/cvPdf'
 import { useTelAvivClock } from '@/lib/useTelAvivClock'
@@ -46,11 +47,14 @@ function CvIcon() {
 
 export default function Footer() {
   const clock = useTelAvivClock()
+  // On the home page the package circle hangs 56px into the band, so the
+  // heading starts lower to keep 64px clear below it.
+  const home = useLocation().pathname === '/'
 
   /* As in Paper: one orange band, from the CTA down to the credits and clock. */
   return (
     <footer className="text-bright">
-      <div className="flex flex-col items-center gap-10 bg-primary/90 px-4 pt-20">
+      <div className={`flex flex-col items-center gap-10 bg-primary/90 px-4 ${home ? 'pt-30' : 'pt-20'}`}>
         <h2 className="whitespace-pre-line text-center text-feature font-medium text-bright">
           {"Building a new product?\nLet's see if it's a fit."}
         </h2>
