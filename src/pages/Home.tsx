@@ -424,7 +424,7 @@ function Solution() {
   return (
     /* 78px top: with the label (20px) and its gap (16px), the problem cards sit
        114px above Diagnose, the same as Build to the final circle. */
-    <section className="flex flex-col items-center px-4 pt-[78px] pb-20 md:px-[57px]">
+    <section className="flex flex-col items-center px-4 pt-[78px] md:px-[57px]">
       <div className={innerClass}>
         <Reveal as="h2" className={`${labelClass} text-center`}>
           {solution.label}
@@ -446,20 +446,22 @@ function Solution() {
         <div className="-mt-4 flex flex-col items-center">
           {/* Runs through the (hidden) halo to the solid circle, which sits 114px below Build. */}
           <Connector className="relative z-10 -mt-[3px] -mb-6 h-[120px]" />
-          <Reveal className="-mt-[3px] flex w-full flex-col items-center">
+          {/* The package sits half over the footer: its 160px box (112px circle
+              plus 24px padding) hangs 80px below the section, so the circle's
+              centre is on the footer's top edge; z-10 keeps it above the
+              footer, which comes later. */}
+          <Reveal className="relative z-10 -mt-[3px] -mb-20 flex w-full flex-col items-center">
             <div data-flow="final" className="relative flex items-center rounded-pill p-6">
-              <div className="package-blip relative z-[1] flex items-center rounded-pill bg-primary p-6">
-                {/* Lucide "package": the finished product. Drawn on a 24 grid, so a
-                    1.5 stroke matches the 2-on-32 strokes of the step icons. */}
-                <svg className="size-8 shrink-0 text-foreground" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <div className="relative z-[1] flex items-center rounded-pill bg-primary p-8 ring-6 ring-background">
+                {/* Lucide "package": the finished product. Drawn on a 24 grid at
+                    48px, so a 1 stroke matches the 2px strokes of the step icons. */}
+                <svg className="size-12 shrink-0 text-foreground" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                   <path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z" />
                   <path d="M12 22V12" />
                   <polyline points="3.29 7 12 12 20.71 7" />
                   <path d="m7.5 4.27 9 5.15" />
                 </svg>
               </div>
-              {/* The halo from the design, sent out on each blip (see .package-pulse). */}
-              <span aria-hidden="true" className="package-pulse pointer-events-none absolute inset-0 rounded-pill bg-primary/15" />
             </div>
           </Reveal>
         </div>
