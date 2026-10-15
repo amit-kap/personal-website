@@ -446,7 +446,7 @@ function Solution() {
         <div className="-mt-4 flex flex-col items-center">
           {/* Runs through the (hidden) halo to the solid circle, which sits 114px below Build. */}
           <Connector className="relative z-10 -mt-[3px] -mb-6 h-[120px]" />
-          <Reveal className="-mt-[3px] flex w-full flex-col items-center gap-10">
+          <Reveal className="-mt-[3px] flex w-full flex-col items-center">
             <div data-flow="final" className="relative flex items-center rounded-pill p-6">
               {/* The halo: hidden at rest, it grows out of the circle when a dash lands. */}
               <span data-flow-pulse aria-hidden="true" className="pointer-events-none absolute inset-0 rounded-pill bg-primary/15 opacity-0" />
@@ -461,7 +461,6 @@ function Solution() {
                 </svg>
               </div>
             </div>
-            <p className="w-full max-w-[586px] text-center font-heading text-title-sm text-foreground">{solution.closing}</p>
           </Reveal>
         </div>
       </div>

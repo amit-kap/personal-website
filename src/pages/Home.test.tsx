@@ -59,8 +59,5 @@ describe('Home', () => {
     const steps = within(screen.getByText('Proposed Solution').closest('section')!).getAllByRole('heading', { level: 3 })
     expect(steps.map((s) => s.textContent)).toEqual(['Diagnose', 'Plan', 'Build'])
     expect(screen.getByText("I'll Design and work with engineering until the fixes are live.")).toBeInTheDocument()
-    expect(
-      screen.getByText('For founders building complex B2B, AI, or dev tools who need senior product judgment without a full-time hire.'),
-    ).toBeInTheDocument()
   })
 })

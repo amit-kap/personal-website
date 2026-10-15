@@ -51,28 +51,33 @@ export default function Footer() {
     <footer className="bg-primary/90 text-bright">
       <div className="mx-auto flex w-full max-w-[930px] flex-col items-center gap-10 px-4 sm:px-0">
         <div className="flex flex-col items-center gap-10 pt-20">
-          <h2 className="whitespace-pre-line text-center text-feature font-medium text-bright">
-            {"Building a new product?\nLet's see if it's a fit."}
-          </h2>
-          <a
-            href="mailto:amitka111@gmail.com"
-            data-umami-event="contact-email"
-            data-umami-event-location="footer"
-            className={`${darkPill} gap-2 px-6 py-4`}
-          >
-            <SendIcon />
-            <span className="text-body font-medium leading-5">
-              <RollingText text="Let's talk" />
-            </span>
-          </a>
-        </div>
-        <div className="flex flex-col items-center gap-10">
-          <a href={LINKEDIN_URL} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" data-umami-event="contact-linkedin" className={`${darkPill} p-3`}>
-            <LinkedInIcon />
-          </a>
-          <a href={CV_PDF_URL} download={CV_PDF_NAME} aria-label="CV" data-umami-event="download-cv" className={`${darkPill} p-3`}>
-            <CvIcon />
-          </a>
+          <div className="flex flex-col items-center gap-4">
+            <p className="max-w-[586px] text-center text-body text-ink-soft">
+              For founders of complex B2B, AI and dev-tool products who need senior product judgment without a full-time hire.
+            </p>
+            <h2 className="whitespace-pre-line text-center text-feature font-medium text-bright">
+              {"Building a new product?\nLet's see if it's a fit."}
+            </h2>
+          </div>
+          <div className="flex items-center gap-4">
+            <a
+              href="mailto:amitka111@gmail.com"
+              data-umami-event="contact-email"
+              data-umami-event-location="footer"
+              className={`${darkPill} gap-2 px-6 py-4`}
+            >
+              <SendIcon />
+              <span className="text-body font-medium leading-5">
+                <RollingText text="Let's talk" />
+              </span>
+            </a>
+            <a href={LINKEDIN_URL} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" data-umami-event="contact-linkedin" className={`${darkPill} size-14`}>
+              <LinkedInIcon />
+            </a>
+            <a href={CV_PDF_URL} download={CV_PDF_NAME} aria-label="CV" data-umami-event="download-cv" className={`${darkPill} size-14`}>
+              <CvIcon />
+            </a>
+          </div>
         </div>
         <div className="flex w-full items-start justify-between gap-4 py-4 text-meta">
           <span>Amit Kaplinsky 2026</span>
