@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { getCV } from '@/lib/content'
-import { CV_PDF_NAME, CV_PDF_URL } from '@/lib/cvPdf'
+import { buttonVariants } from '@amit-kap/glaze/components/button'
+import { logoFor } from '@/lib/workLogos'
 import { ClaudeMark, CodexMark, CursorMark, FigmaMark } from '@/components/BrandLogos'
 import Parallax from '@/components/Parallax'
 import Reveal from '@/components/Reveal'
@@ -35,35 +35,8 @@ function splitMeta(meta: string): { place: string; date: string } {
   return { place: parts.join(' · '), date: date.replace(' to ', '–') }
 }
 
-function telAvivTime(): string {
-  const time = new Intl.DateTimeFormat('en-GB', {
-    timeZone: 'Asia/Jerusalem',
-    hour: '2-digit',
-    minute: '2-digit',
-  }).format(new Date())
-  const offset =
-    new Intl.DateTimeFormat('en-GB', { timeZone: 'Asia/Jerusalem', timeZoneName: 'shortOffset' })
-      .formatToParts(new Date())
-      .find((part) => part.type === 'timeZoneName')?.value ?? 'GMT+3'
-  return `${time} · ${offset}`
-}
-
-function DownArrowIcon() {
-  return (
-    <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
-      <path d="M8 3 V13 M3.5 8.5 L8 13 L12.5 8.5" />
-    </svg>
-  )
-}
-
 export default function About() {
   const cv = getCV()
-  const [localTime, setLocalTime] = useState(telAvivTime)
-
-  useEffect(() => {
-    const tick = setInterval(() => setLocalTime(telAvivTime()), 30_000)
-    return () => clearInterval(tick)
-  }, [])
 
   return (
     <main>
@@ -90,64 +63,62 @@ export default function About() {
           />
           </Reveal>
         </Parallax>
-        <div className="inner-col relative grid items-end gap-10 pb-16 pt-[clamp(260px,29vw,420px)] lg:grid-cols-[minmax(0,1fr)_auto]">
-          <div className="flex flex-col gap-5">
+        <div className="inner-col relative grid items-end gap-10 pb-16 pt-[clamp(260px,29vw,420px)]">
+          {/* Centred under the centred portrait, like the home section heads;
+              the headline balances its two lines so no word hangs alone. */}
+          <div className="flex flex-col items-center gap-5 text-center">
             <Reveal as="p" className="eyebrow" delay={0.15}>About</Reveal>
-            <Reveal as="h1" className="font-heading text-feature font-medium tracking-[-0.02em]" delay={0.22}>
+            <Reveal as="h1" className="text-balance font-heading text-feature font-medium tracking-[-0.02em]" delay={0.22}>
               I like figuring things out and seeing where they can go.
             </Reveal>
-            <Reveal className="flex max-w-[520px] flex-col gap-3" delay={0.3}>
-              <p className="body-copy">
+            <Reveal className="flex max-w-[640px] flex-col gap-3" delay={0.3}>
+              <p className="body-copy text-pretty">
                 {cv.header.intro}
               </p>
             </Reveal>
           </div>
-          <Reveal className="flex flex-col gap-[18px] pb-1 text-meta lg:items-end" delay={0.35}>
-            <p className="flex items-baseline gap-2">
-              <span className="text-muted-foreground">Local time:</span>
-              <span className="font-medium">{localTime}</span>
-            </p>
-            <div className="flex gap-6 font-medium">
-              <a href="mailto:amitka111@gmail.com" data-umami-event="contact-email" data-umami-event-location="about" className="text-primary transition-colors hover:text-foreground">Email</a>
-              <a
-                href="https://www.linkedin.com/in/amitkaplinsky"
-                data-umami-event="contact-linkedin"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-primary transition-colors hover:text-foreground"
-              >
-                LinkedIn
-              </a>
-              <a
-                href={CV_PDF_URL}
-                download={CV_PDF_NAME}
-                data-umami-event="download-cv"
-                className="inline-flex items-center gap-[7px] text-primary transition-colors hover:text-foreground"
-              >
-                Download CV
-                <DownArrowIcon />
-              </a>
-            </div>
-          </Reveal>
         </div>
       </section>
 
       {/* Experience in a compact hairline grid. */}
-      <section className="relative border-t border-border">
+      <section className="relative">
         <div className="inner-col pb-14 pt-12">
           <Reveal as="p" className="eyebrow pb-2.5">Experience</Reveal>
           {cv.experience.map((entry, i) => (
             <Reveal
               key={entry.slug}
-              className={`grid items-baseline gap-x-8 gap-y-2 py-[26px] sm:grid-cols-[140px_260px_minmax(0,1fr)] ${i > 0 ? 'border-t border-border' : ''} ${i === cv.experience.length - 1 ? 'pb-1' : ''}`}
+              className={`grid items-start gap-x-8 gap-y-2 py-[26px] sm:grid-cols-[140px_260px_minmax(0,1fr)] ${i > 0 ? 'border-t border-border' : ''} ${i === cv.experience.length - 1 ? 'pb-1' : ''}`}
             >
-              <p className="text-[13px] text-muted-foreground">{formatPeriod(entry.period)}</p>
-              <h2 className="font-heading text-[17px] font-medium tracking-[-0.01em]">
-                <Link to={`/work/${entry.slug}`} className="transition-colors hover:text-primary">{entry.company}</Link>
-                {' · '}
-                {entry.role}
-              </h2>
-              <ul className="flex flex-col gap-2 text-[14.5px] leading-[1.6] text-copy">
+              <p className="text-body text-muted-foreground">{formatPeriod(entry.period)}</p>
+              <div className="flex flex-col items-start gap-2">
+                <h2 className="font-heading text-stmt font-medium">
+                  {/* The mark sits centred on the company line. */}
+                  <span className="flex items-center gap-2.5">
+                    {logoFor(entry.slug) && (
+                      <img src={logoFor(entry.slug)} alt="" width={24} height={24} className="size-6 shrink-0" />
+                    )}
+                    {entry.company}
+                  </span>
+                  {/* The role on its own line; founding roles shimmer. */}
+                  <span className={`mt-1 block text-body font-normal text-copy ${/founding designer/i.test(entry.role) ? 'shimmer-text' : ''}`}>
+                    {entry.role}
+                  </span>
+                </h2>
+                {/* Glaze's ghost button, nudged left by its own padding so its
+                    label lines up with the text above. */}
+                <Link
+                  to={`/work/${entry.slug}`}
+                  aria-label={`View the ${entry.company} work`}
+                  className={buttonVariants({ variant: 'ghost', size: 'sm', className: '-ms-2.5 text-primary' })}
+                >
+                  View
+                  <svg viewBox="0 0 33 33" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <path d="M6.875 16.5h19.25" />
+                    <path d="M16.5 6.875l9.625 9.625-9.625 9.625" />
+                  </svg>
+                </Link>
+              </div>
+              <ul className="flex flex-col gap-2 text-body text-copy">
                 {entry.bullets.map((bullet) => (
                   <li key={bullet}>{bullet}</li>
                 ))}
@@ -158,7 +129,7 @@ export default function About() {
       </section>
 
       {/* Certificates: same rows as Experience, date left and institution right. */}
-      <section className="relative border-t border-border">
+      <section className="relative">
         <div className="inner-col pb-14 pt-12">
           <Reveal as="p" className="eyebrow pb-2.5">Certificates</Reveal>
           {cv.certificates.map((entry, i) => {
@@ -166,11 +137,11 @@ export default function About() {
             return (
               <Reveal
                 key={entry.title}
-                className={`grid items-baseline gap-x-8 gap-y-2 py-[26px] sm:grid-cols-[140px_260px_minmax(0,1fr)] ${i > 0 ? 'border-t border-border' : ''} ${i === cv.certificates.length - 1 ? 'pb-1' : ''}`}
+                className={`grid items-start gap-x-8 gap-y-2 py-[26px] sm:grid-cols-[140px_260px_minmax(0,1fr)] ${i > 0 ? 'border-t border-border' : ''} ${i === cv.certificates.length - 1 ? 'pb-1' : ''}`}
               >
-                <p className="text-[13px] text-muted-foreground">{date}</p>
-                <h2 className="font-heading text-[17px] font-medium tracking-[-0.01em]">{entry.title}</h2>
-                <p className="text-[14.5px] leading-[1.6] text-copy">{place}</p>
+                <p className="text-body text-muted-foreground">{date}</p>
+                <h2 className="font-heading text-stmt font-medium">{entry.title}</h2>
+                <p className="text-body text-copy">{place}</p>
               </Reveal>
             )
           })}
@@ -178,7 +149,7 @@ export default function About() {
       </section>
 
       {/* Education: same rows as Experience, date left and institution right. */}
-      <section className="relative border-t border-border">
+      <section className="relative">
         <div className="inner-col pb-14 pt-12">
           <Reveal as="p" className="eyebrow pb-2.5">Education</Reveal>
           {cv.education.map((entry, i) => {
@@ -186,11 +157,11 @@ export default function About() {
             return (
               <Reveal
                 key={entry.title}
-                className={`grid items-baseline gap-x-8 gap-y-2 py-[26px] sm:grid-cols-[140px_260px_minmax(0,1fr)] ${i > 0 ? 'border-t border-border' : ''} ${i === cv.education.length - 1 ? 'pb-1' : ''}`}
+                className={`grid items-start gap-x-8 gap-y-2 py-[26px] sm:grid-cols-[140px_260px_minmax(0,1fr)] ${i > 0 ? 'border-t border-border' : ''} ${i === cv.education.length - 1 ? 'pb-1' : ''}`}
               >
-                <p className="text-[13px] text-muted-foreground">{date}</p>
-                <h2 className="font-heading text-[17px] font-medium tracking-[-0.01em]">{entry.title}</h2>
-                <p className="text-[14.5px] leading-[1.6] text-copy">{place}</p>
+                <p className="text-body text-muted-foreground">{date}</p>
+                <h2 className="font-heading text-stmt font-medium">{entry.title}</h2>
+                <p className="text-body text-copy">{place}</p>
               </Reveal>
             )
           })}
@@ -198,15 +169,15 @@ export default function About() {
       </section>
 
       {/* Skills */}
-      <section className="relative border-t border-border">
-        <Reveal className="inner-col grid gap-6 pb-16 pt-12 lg:grid-cols-[340px_minmax(0,1fr)] lg:gap-14">
+      <section className="relative">
+        <Reveal className="inner-col flex flex-col gap-6 pb-16 pt-12">
           <p className="eyebrow">Skills</p>
           <div className="grid gap-8 sm:grid-cols-3 sm:gap-0">
             {cv.skills.map((group, i) => (
               <div key={group.category} className={`flex flex-col gap-3 ${i > 0 ? 'sm:border-l sm:border-border sm:pl-8' : 'sm:pr-8'}`}>
                 <h2 className="font-heading text-body font-medium tracking-[-0.01em]">{group.category}</h2>
                 {isTools(group.category) ? (
-                  <div className="flex flex-col text-[14.5px] text-copy">
+                  <div className="flex flex-col text-body text-copy">
                     {tools.map(({ Mark, name }) => (
                       <span key={name} className="flex h-8 items-center gap-2.5">
                         <Mark size={20} />
@@ -216,7 +187,7 @@ export default function About() {
                     <span className="flex h-8 items-center text-muted-foreground">More tools…</span>
                   </div>
                 ) : (
-                  <p className="text-[14.5px] leading-8 text-copy">
+                  <p className="text-body leading-8 text-copy">
                     {group.items.map((item) => (
                       <span key={item} className="block">{item}</span>
                     ))}

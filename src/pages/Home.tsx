@@ -4,21 +4,12 @@ import { getAllWorks, type Work } from '@/lib/content'
 import homeCopy from '@/content/home.json'
 import Reveal from '@/components/Reveal'
 import { RevealButton } from '@amit-kap/glaze/components/reveal-button'
+import { revealPill } from '@/components/pillButton'
 import { useTilt } from '@/lib/useTilt'
+import { logoFor } from '@/lib/workLogos'
 import StarBorder from '@/components/react-bits/StarBorder'
 import Seo from '@/components/Seo'
 import FlowOverlay from '@/components/FlowOverlay'
-
-/* Company marks live next to each work's content as icon.svg. */
-const logoModules = import.meta.glob<string>('../content/experience/*/icon.svg', {
-  eager: true,
-  query: '?url',
-  import: 'default',
-})
-
-function logoFor(slug: string): string | undefined {
-  return logoModules[`../content/experience/${slug}/icon.svg`]
-}
 
 /* Every section is a full-width band of the 960px centre column; the 800px
    content column sits inside it (Paper: padding-inline 16px, width 800px). */
@@ -267,7 +258,7 @@ function Featured() {
                 aria-label={`View the Shift case study: ${featured.tagline}`}
                 label="View"
                 iconSide="end"
-                className="h-[46px] min-w-[46px] shrink-0 rounded-pill px-[11px] text-body font-medium text-ink-soft transition-[padding,background-color] duration-(--duration-moderate) ease-standard hover:px-5"
+                className={revealPill}
               >
                 <svg className="size-[22px]" viewBox="0 0 33 33" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                   <path d="M6.875 16.5h19.25" />

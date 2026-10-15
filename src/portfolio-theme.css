@@ -105,15 +105,15 @@
    5 · LABELS & COPY
 ---------------------------------------------------------------------------- */
 .eyebrow {
-  font-size: var(--text-caption);
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
+  /* The home page's section label: body size, sentence case, muted. */
+  font-size: var(--text-body);
+  line-height: 1.25rem;
   color: var(--muted-foreground);
 }
 .meta-line {
-  font-size: var(--text-caption);
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+  /* Same as the section label: body size, sentence case, muted. */
+  font-size: var(--text-body);
+  line-height: 1.25rem;
   color: var(--muted-foreground);
 }
 .stmt {
@@ -148,6 +148,23 @@
 /* ----------------------------------------------------------------------------
    7 · MEDIA SURFACES — gradient backdrops and window chrome
 ---------------------------------------------------------------------------- */
+/* The hero product media, shown whole at its own ratio in the home page's
+   Featured frame: an even 1% border of the dim ink. */
+.media-frame {
+  overflow: hidden;
+  border-radius: var(--radius-container);
+  background: var(--dim);
+  padding: 1%;
+}
+.media-frame .backdrop-media {
+  width: 100%;
+  height: auto;
+  aspect-ratio: auto;
+  object-fit: contain;
+  border-radius: var(--radius-item);
+  box-shadow: none;
+}
+
 /* Per-project gradient backdrop with a faint white grid overlay. The media
    sits bottom-anchored inside. Set --g1/--g2/--g3 per project. */
 .backdrop {
@@ -179,21 +196,6 @@
 }
 .backdrop:hover .backdrop-media {
   transform: scale(1.02);
-}
-.backdrop-image-btn {
-  display: block;
-  width: 90%;
-  padding: 0;
-  border: 0;
-  background: transparent;
-  cursor: zoom-in;
-}
-.backdrop-image-btn:focus-visible {
-  outline: 2px solid var(--primary);
-  outline-offset: 6px;
-}
-.backdrop-image-btn .backdrop-media {
-  width: 100%;
 }
 /* Media shown whole at its own ratio, 90% wide so 5% of the backdrop
    stays visible either side, and centred rather than seated on the floor. */
@@ -357,6 +359,21 @@
   flex: none;
 }
 .windot { width: 6px; height: 6px; border-radius: 999px; display: inline-block; }
+/* The enlarged screenshot keeps its window bar, scaled up to suit it; the
+   image fits whatever height the viewport leaves under the bar. */
+.lightbox-window {
+  max-width: 100%;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.45);
+}
+.lightbox-window img {
+  display: block;
+  max-width: 100%;
+  max-height: calc(100dvh - 2 * clamp(16px, 4vw, 56px) - 28px);
+  width: auto;
+  height: auto;
+}
+.winbar-lg { height: 28px; gap: 8px; padding: 0 14px; }
+.winbar-lg .windot { width: 10px; height: 10px; }
 .windot-r { background: #f0685e; }
 .windot-y { background: #f6bf4f; }
 .windot-g { background: #5fc454; }
@@ -529,8 +546,21 @@
 .push-out-right { animation-name: push-out-right; }
 
 
+/* A soft light that sweeps across a line of text, for the founding roles on
+   the About page: the text is painted by a gradient (copy ink with a bright
+   band) that slides through it on a loop. */
+@keyframes shimmer-text { to { background-position: -100% 0; } }
+.shimmer-text {
+  background: linear-gradient(100deg, var(--copy) 40%, var(--bright) 50%, var(--copy) 60%) 100% 0 / 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: shimmer-text 2.8s linear infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .roll-ch { transition: none; }
+  .shimmer-text { animation: none; color: var(--copy); background: none; }
   .roll-host:hover .roll-ch { transform: none; }
   .reveal, .reveal-scale { opacity: 1; transform: none; transition: none; }
   .tilt, .tilt-content { transform: none; }

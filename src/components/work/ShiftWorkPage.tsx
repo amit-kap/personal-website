@@ -4,14 +4,11 @@ import Reveal from '@/components/Reveal'
 import {
   BackToHome,
   HeroBackdrop,
-  ReadLink,
   SplitSection,
   TitleBlock,
-  ZoomableImage,
+  WindowCard,
 } from '@/components/work/casePrimitives'
 import { imageFor } from '@/lib/workImages'
-
-const GRADIENT: [string, string, string] = ['#191040', '#4630b8', '#8a76f0']
 
 const features = [
   {
@@ -48,7 +45,7 @@ export default function ShiftWorkPage({ work }: { work: Work }) {
   return (
     <main>
       <TitleBlock
-        meta="Third-Party Risk  ·  Founding Designer  ·  2024–Now  ·  TLV"
+        meta="Third-Party Risk  ·  Founding Designer  ·  2024–2026"
         title="Designing Shift's agent-led third-party security platform from product model to shipped system."
         intro="I joined Shift as its first designer. I helped define the human-agent operating model, then built the design system, onboarding, and core workflows connecting vendor evidence, access, exposure, and risk decisions. Shift is now publicly available."
       />
@@ -56,7 +53,6 @@ export default function ShiftWorkPage({ work }: { work: Work }) {
         image={imageFor(work, '01-shift-dashboard')}
         video={`${import.meta.env.BASE_URL}shift-walk.mp4`}
         alt="Shift product walkthrough: vendor evidence, access, exposure, and assessment decisions"
-        gradient={GRADIENT}
       />
 
       <SplitSection eyebrow="The Starting Point" stmt="The product model and the interface had to develop together">
@@ -94,7 +90,7 @@ export default function ShiftWorkPage({ work }: { work: Work }) {
       </SplitSection>
 
       {features.map((feature) => (
-        <section key={feature.eyebrow} className="relative border-t border-border">
+        <section key={feature.eyebrow} className="relative">
           <div className="inner-col flex flex-col gap-[18px] pb-14 pt-12">
             <Reveal as="p" className="eyebrow">{feature.eyebrow}</Reveal>
             <Reveal as="h2" className="font-heading text-title-sm font-medium tracking-[-0.01em]" delay={0.06}>
@@ -102,12 +98,7 @@ export default function ShiftWorkPage({ work }: { work: Work }) {
             </Reveal>
             <Reveal as="p" className="body-copy max-w-[760px]" delay={0.12}>{feature.copy}</Reveal>
             <Reveal>
-              <div
-                className="backdrop h-[clamp(240px,39vw,560px)]"
-                style={{ '--g1': GRADIENT[0], '--g2': GRADIENT[1], '--g3': GRADIENT[2] } as React.CSSProperties}
-              >
-                <ZoomableImage image={imageFor(work, feature.image)} alt={feature.alt} />
-              </div>
+              <WindowCard image={imageFor(work, feature.image)} alt={feature.alt} />
             </Reveal>
           </div>
         </section>
@@ -124,10 +115,9 @@ export default function ShiftWorkPage({ work }: { work: Work }) {
         <p className="body-copy">
           The market scan, early directions, stakeholder decision, and product-strategy reframe are written up separately.
         </p>
-        <ReadLink to="/case-studies/designing-for-the-supervisor" label="Read: Designing for the Supervisor" />
       </SplitSection>
 
-      <BackToHome />
+      <BackToHome read={{ to: '/case-studies/designing-for-the-supervisor', label: 'Read: Designing for the Supervisor' }} />
     </main>
   )
 }

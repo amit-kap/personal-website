@@ -4,7 +4,6 @@ import {
   BackToHome,
   HeroBackdrop,
   JobGrid,
-  ReadLink,
   SplitSection,
   SurfacesMosaic,
   TitleBlock,
@@ -15,7 +14,6 @@ type CompactStory = {
   meta: string
   title: string
   intro: string
-  gradient: [string, string, string]
   heroImage: string
   heroAlt: string
   startingPoint: { stmt: string; paras: string[] }
@@ -30,10 +28,9 @@ type CompactStory = {
 
 const stories: Record<string, CompactStory> = {
   'onyxia-cyber': {
-    meta: 'CISO Data  ·  Product Design Team Lead  ·  2024  ·  TLV',
+    meta: 'CISO Data  ·  Product Design Team Lead  ·  2024',
     title: 'Turning CISO goals into owners, tasks, and measurable follow-through at Onyxia.',
     intro: 'At the time, Onyxia was developing a data platform for CISOs, connecting security products, BI, Jira, ServiceNow, and operational systems. I led product design during a six-month engagement, translating benchmarks and SLAs into workflows that connected executive priorities with owners, tasks, progress, and delays.',
-    gradient: ['#0c1f4a', '#1d4ed8', '#60a5fa'],
     heroImage: '01-SSM-1',
     heroAlt: 'Onyxia security stack map',
     startingPoint: {
@@ -87,10 +84,9 @@ const stories: Record<string, CompactStory> = {
     },
   },
   veriti: {
-    meta: 'Security Controls  ·  Founding Designer  ·  2021–2024  ·  TLV',
+    meta: 'Security Controls  ·  Founding Designer  ·  2021–2024',
     title: 'Turning a known exposure into an explained, approved security change at Veriti.',
     intro: 'As Founding Designer, I helped define a product for safe, multi-vendor remediation. The central problem was not finding another weakness. It was helping a security team understand the exact control change, its expected effect, and the risk before approving it.',
-    gradient: ['#06302b', '#0f766e', '#2dd4bf'],
     heroImage: '02',
     heroAlt: 'Veriti security controls product',
     startingPoint: {
@@ -158,10 +154,9 @@ const stories: Record<string, CompactStory> = {
     },
   },
   semperis: {
-    meta: 'Identity Security  ·  UX Team Lead  ·  2020–2021  ·  TLV',
+    meta: 'Identity Security  ·  UX Team Lead  ·  2020–2021',
     title: "Building the product language for Semperis's move from recovery to prevention.",
     intro: 'I led the UX transition as Semperis expanded from Active Directory recovery into continuous identity security. Alongside building the in-house design team, I defined how vulnerabilities, dangerous configurations, alerts, insights, severity, urgency, and required actions should appear across the product.',
-    gradient: ['#37200a', '#b45309', '#fbbf24'],
     heroImage: '01-semperis',
     heroAlt: 'Semperis identity security platform',
     startingPoint: {
@@ -182,10 +177,9 @@ const stories: Record<string, CompactStory> = {
     },
   },
   checkpoint: {
-    meta: 'Enterprise Security  ·  UX Expert  ·  2014–2020  ·  TLV',
+    meta: 'Enterprise Security  ·  UX Expert  ·  2014–2020',
     title: 'Reworking twenty management tabs into one enterprise security system at Check Point.',
     intro: 'At Check Point I learned cybersecurity and enterprise product design inside an R&D organization of hundreds of developers. The redesign began with management spread across more than twenty tabs. We reorganized products, objects, policies, and daily security tasks around how administrators worked.',
-    gradient: ['#380a1e', '#be185d', '#f472b6'],
     heroImage: '05-dashboard',
     heroAlt: 'Check Point security management dashboard',
     startingPoint: {
@@ -253,7 +247,7 @@ export default function CompactWorkPage({ work }: { work: Work }) {
   return (
     <main>
       <TitleBlock meta={story.meta} title={story.title} intro={story.intro} />
-      <HeroBackdrop image={imageFor(work, story.heroImage)} alt={story.heroAlt} gradient={story.gradient} />
+      <HeroBackdrop image={imageFor(work, story.heroImage)} alt={story.heroAlt} />
 
       <SplitSection eyebrow="The Starting Point" stmt={story.startingPoint.stmt}>
         {story.startingPoint.paras.map((para) => (
@@ -271,7 +265,7 @@ export default function CompactWorkPage({ work }: { work: Work }) {
       )}
 
       {story.related ? (
-        <section className="relative border-t border-border">
+        <section className="relative">
           <div className="inner-col grid gap-10 py-14 sm:grid-cols-2 sm:gap-0">
             <div className="flex flex-col gap-3 sm:pr-12">
               <p className="eyebrow">Results</p>
@@ -280,11 +274,10 @@ export default function CompactWorkPage({ work }: { work: Work }) {
                 <p key={para.slice(0, 24)} className="body-copy">{para}</p>
               ))}
             </div>
-            <div className="flex flex-col gap-3 sm:border-l sm:border-border sm:pl-12">
+            <div className="flex flex-col gap-3 sm:pl-12">
               <p className="eyebrow">From the Work</p>
               <h2 className="stmt">{story.related.stmt}</h2>
               <p className="body-copy">{story.related.copy}</p>
-              <ReadLink to={story.related.to} label={story.related.label} />
             </div>
           </div>
         </section>
@@ -296,7 +289,7 @@ export default function CompactWorkPage({ work }: { work: Work }) {
         </SplitSection>
       )}
 
-      <BackToHome />
+      <BackToHome read={story.related && { to: story.related.to, label: story.related.label }} />
     </main>
   )
 }

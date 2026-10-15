@@ -2,10 +2,10 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import type { ContentImage } from '@/lib/content'
 import Reveal from '@/components/Reveal'
-import RollingText from '@/components/RollingText'
+import { RevealButton } from '@amit-kap/glaze/components/reveal-button'
 import Lightbox from '@/components/work/Lightbox'
 import ProductVideo from '@/components/work/ProductVideo'
-import { pillButton } from '@/components/pillButton'
+import { revealPill } from '@/components/pillButton'
 
 export function ArrowIcon() {
   return (
@@ -15,15 +15,7 @@ export function ArrowIcon() {
   )
 }
 
-export function BackArrowIcon() {
-  return (
-    <svg className="size-[15px]" width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
-      <path d="M12 4 L4 12 M10.5 12 H4 V5.5" />
-    </svg>
-  )
-}
-
-/* Page title block: caps meta line, Geist title, intro paragraph. */
+/* Page title block: meta line, title, intro paragraph. */
 export function TitleBlock({ meta, title, intro }: { meta: string; title: string; intro: string }) {
   return (
     <div className="relative">
@@ -38,27 +30,14 @@ export function TitleBlock({ meta, title, intro }: { meta: string; title: string
   )
 }
 
-/* Full-width gradient backdrop with the bottom-anchored product media.
+/* The hero product media, whole, in the home page's Featured frame.
    Pass `video` for a looping walkthrough; `image` then serves as its poster. */
-export function HeroBackdrop({
-  image,
-  video,
-  alt,
-  gradient,
-}: {
-  image?: ContentImage
-  video?: string
-  alt: string
-  gradient: [string, string, string]
-}) {
+export function HeroBackdrop({ image, video, alt }: { image?: ContentImage; video?: string; alt: string }) {
   return (
     <div className="relative">
       <div className="inner-col pb-16">
         <Reveal>
-          <div
-            className="backdrop h-[clamp(240px,40vw,580px)]"
-            style={{ '--g1': gradient[0], '--g2': gradient[1], '--g3': gradient[2] } as React.CSSProperties}
-          >
+          <div className="media-frame">
             {video ? (
               <ProductVideo src={video} poster={image?.src} label={alt} />
             ) : (
@@ -73,35 +52,6 @@ export function HeroBackdrop({
   )
 }
 
-/* A product screenshot that opens in the same full-frame viewer as the hero
-   video. The button keeps the image keyboard and touch accessible while the
-   inner width preserves the backdrop's existing 90% media footprint. */
-export function ZoomableImage({ image, alt }: { image?: ContentImage; alt: string }) {
-  const [open, setOpen] = useState(false)
-  if (!image) return null
-
-  return (
-    <>
-      <button
-        type="button"
-        className="backdrop-image-btn"
-        onClick={() => setOpen(true)}
-        aria-label={`Enlarge: ${alt}`}
-      >
-        <img
-          src={image.src}
-          alt={alt}
-          width={image.width}
-          height={image.height}
-          loading="lazy"
-          className="backdrop-media"
-        />
-      </button>
-      {open && <Lightbox src={image.src} alt={alt} onClose={() => setOpen(false)} />}
-    </>
-  )
-}
-
 /* Eyebrow + statement on the left, body content on the right. */
 export function SplitSection({
   eyebrow,
@@ -113,7 +63,7 @@ export function SplitSection({
   children: React.ReactNode
 }) {
   return (
-    <section className="relative border-t border-border">
+    <section className="relative">
       <Reveal className="inner-col grid gap-8 py-14 lg:grid-cols-[340px_minmax(0,1fr)] lg:gap-14">
         <div className="flex flex-col gap-3.5">
           <p className="eyebrow">{eyebrow}</p>
@@ -128,7 +78,7 @@ export function SplitSection({
 /* Three numbered columns divided by hairlines. */
 export function JobGrid({ jobs }: { jobs: Array<{ title: string; copy: string }> }) {
   return (
-    <section className="relative border-t border-border">
+    <section className="relative">
       <Reveal className="inner-col grid gap-y-8 py-12 sm:grid-cols-3 sm:gap-y-0">
         {jobs.map((job, i) => (
           <div
@@ -163,24 +113,17 @@ export function ZoomableWindow({ src, alt, children }: { src: string; alt: strin
           {children}
         </span>
       </button>
-      {open && <Lightbox src={src} alt={alt} onClose={() => setOpen(false)} />}
+      {open && <Lightbox src={src} alt={alt} chrome onClose={() => setOpen(false)} />}
     </>
   )
 }
 
-/* A product screenshot in browser-window chrome, as used by the case pages. */
+/* A product screenshot, shown whole, in browser-window chrome. */
 export function WindowCard({ image, alt }: { image?: ContentImage; alt: string }) {
   if (!image) return null
   return (
     <ZoomableWindow src={image.src} alt={alt}>
-      <img
-        src={image.src}
-        alt={alt}
-        width={image.width}
-        height={image.height}
-        loading="lazy"
-        className="block aspect-video w-full object-cover object-left-top"
-      />
+      <img src={image.src} alt={alt} width={image.width} height={image.height} loading="lazy" className="block h-auto w-full" />
     </ZoomableWindow>
   )
 }
@@ -193,12 +136,11 @@ export interface SurfaceItem {
   copy: React.ReactNode
 }
 
-/* Staggered 2×2 mosaic of window-chrome cards: left column, then a right
-   column pushed down. Each card has an eyebrow, title, and caption below. */
+/* A 2×2 grid of surfaces: each screenshot, in window chrome, over its
+   label, title and caption. 60px between items, as in the home problem grid. */
 export function SurfacesMosaic({ heading, items }: { heading: string; items: SurfaceItem[] }) {
-  const columns = [items.slice(0, 2), items.slice(2, 4)]
   return (
-    <section className="relative border-t border-border">
+    <section className="relative">
       <div className="inner-col flex flex-col gap-9 pb-16 pt-14">
         <div className="flex flex-col items-center gap-2 text-center">
           <Reveal as="p" className="eyebrow">The Surfaces</Reveal>
@@ -206,20 +148,16 @@ export function SurfacesMosaic({ heading, items }: { heading: string; items: Sur
             {heading}
           </Reveal>
         </div>
-        <div className="flex flex-col gap-12 sm:flex-row sm:gap-6">
-          {columns.map((column, c) => (
-            <div key={c} className={`flex min-w-0 flex-1 flex-col gap-12 ${c === 1 ? 'sm:pt-[88px]' : ''}`}>
-              {column.map((item) => (
-                <Reveal key={item.title} className="flex flex-col gap-3.5">
-                  <WindowCard image={item.image} alt={item.alt} />
-                  <div className="flex flex-col gap-1.5">
-                    <p className="eyebrow">{item.eyebrow}</p>
-                    <h3 className="font-heading text-[20px] font-medium leading-tight tracking-[-0.01em]">{item.title}</h3>
-                    <p className="text-[14.5px] leading-[1.55] text-copy">{item.copy}</p>
-                  </div>
-                </Reveal>
-              ))}
-            </div>
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 md:gap-15">
+          {items.map((item) => (
+            <Reveal key={item.title} className="flex flex-col gap-4">
+              <WindowCard image={item.image} alt={item.alt} />
+              <div className="flex flex-col gap-1.5">
+                <p className="eyebrow">{item.eyebrow}</p>
+                <h3 className="font-heading text-[20px] font-medium leading-tight tracking-[-0.01em]">{item.title}</h3>
+                <p className="text-[14.5px] leading-[1.55] text-copy">{item.copy}</p>
+              </div>
+            </Reveal>
           ))}
         </div>
       </div>
@@ -227,25 +165,54 @@ export function SurfacesMosaic({ heading, items }: { heading: string; items: Sur
   )
 }
 
-/* Related-writing link used inside Results sections. */
-export function ReadLink({ to, label }: { to: string; label: string }) {
+/* The 22px arrows of the reveal buttons, as on the home page's Featured. */
+function RevealArrow({ back = false }: { back?: boolean }) {
   return (
-    <Link to={to} className="text-link roll-host self-start text-[14.5px]">
-      <RollingText text={label} />
-      <ArrowIcon />
-    </Link>
+    <svg className="size-[22px]" viewBox="0 0 33 33" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      {back ? (
+        <>
+          <path d="M26.125 16.5H6.875" />
+          <path d="M16.5 6.875 6.875 16.5l9.625 9.625" />
+        </>
+      ) : (
+        <>
+          <path d="M6.875 16.5h19.25" />
+          <path d="M16.5 6.875l9.625 9.625-9.625 9.625" />
+        </>
+      )}
+    </svg>
   )
 }
 
-/* Centered orange pill back to the home page. */
-export function BackToHome() {
+/* Lucide "book-open" at 22px for the related-writing link. */
+function ReadIcon() {
   return (
-    <section className="relative border-t border-border">
-      <div className="inner-col flex justify-center pb-[72px] pt-16">
-        <Link to="/" className={pillButton('roll-host px-[30px] py-3.5 text-[15px]')}>
-          <RollingText text="Back to Home" />
-          <BackArrowIcon />
-        </Link>
+    <svg className="size-[22px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M12 7v14" />
+      <path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z" />
+    </svg>
+  )
+}
+
+/* Related-writing link: an orange reveal button with a read icon. */
+export function ReadLink({ to, label, className = 'self-start' }: { to: string; label: string; className?: string }) {
+  return (
+    <RevealButton render={<Link to={to} />} nativeButton={false} role="link" label={label} iconSide="end" className={`${revealPill} ${className}`}>
+      <ReadIcon />
+    </RevealButton>
+  )
+}
+
+/* The page's closing buttons, in a centred row 40px apart like the footer's:
+   back to the home page, then (optionally) the related writing. */
+export function BackToHome({ read }: { read?: { to: string; label: string } }) {
+  return (
+    <section className="relative">
+      <div className="inner-col flex items-center justify-center gap-10 pb-[72px] pt-16">
+        <RevealButton render={<Link to="/" />} nativeButton={false} role="link" label="Back to home" className={revealPill}>
+          <RevealArrow back />
+        </RevealButton>
+        {read && <ReadLink to={read.to} label={read.label} className="" />}
       </div>
     </section>
   )

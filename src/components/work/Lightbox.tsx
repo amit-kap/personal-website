@@ -5,17 +5,20 @@ import { getLenis } from '@/lib/useSmoothScroll'
 /* Full-frame view of a product screenshot. Glaze's Dialog portals it to the
    body (the reveal wrappers carry a transform, which would make `fixed`
    resolve against the card), traps focus, locks scroll and closes on Escape.
-   The popup is stretched over the viewport and carries the dark backdrop. */
+   The popup is stretched over the viewport and carries the dark backdrop.
+   `chrome` keeps the browser-window bar of the card the image came from. */
 export default function Lightbox({
   src,
   alt,
   onClose,
   video = false,
+  chrome = false,
 }: {
   src: string
   alt: string
   onClose: () => void
   video?: boolean
+  chrome?: boolean
 }) {
   useEffect(() => {
     const opener = document.activeElement as HTMLElement | null
@@ -53,6 +56,15 @@ export default function Lightbox({
             preload="metadata"
             onClick={(event) => event.stopPropagation()}
           />
+        ) : chrome ? (
+          <span className="window lightbox-window" onClick={(event) => event.stopPropagation()}>
+            <span className="winbar winbar-lg">
+              <span className="windot windot-r" />
+              <span className="windot windot-y" />
+              <span className="windot windot-g" />
+            </span>
+            <img src={src} alt={alt} />
+          </span>
         ) : (
           <img className="lightbox-media" src={src} alt={alt} onClick={(event) => event.stopPropagation()} />
         )}
