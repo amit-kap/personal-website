@@ -349,9 +349,11 @@ function Problem() {
           <Reveal as="h2" className={`${labelClass} text-center`}>
             {problem.label}
           </Reveal>
-          <Reveal as="p" delay={0.08} className="text-center font-heading text-feature text-primary">
-            {problemLead}
-            <span className="text-primary-foreground">{problemPayoff}</span>
+          {/* Two lines on desktop: the lead (816px at 46px) runs a little past
+              the 800px column, so the headline reaches 32px out on each side. */}
+          <Reveal as="p" delay={0.08} className="text-center font-heading text-feature text-primary md:-mx-8">
+            {problemLead.trim()}
+            <span className="block text-primary-foreground">{problemPayoff}</span>
           </Reveal>
         </div>
         <Reveal as="ol" className="grid grid-cols-1 items-start gap-8 pt-4 md:grid-cols-2 md:gap-15">
@@ -430,7 +432,7 @@ function Solution() {
         <Reveal as="ol" className="flex flex-col items-stretch">
           {solution.steps.map((step, index) => (
             <li key={step.title} className="contents">
-              {index > 0 && <Connector className="-mt-[3px] h-10" />}
+              {index > 0 && <Connector className="-mt-[3px] h-20" />}
               <div data-flow="step" className={`${stepCardClass} rounded-container ${index > 0 ? '-mt-[3px]' : ''}`}>
                 <svg className="size-8 shrink-0 text-primary" width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                   {stepIcons[index]}
@@ -445,17 +447,19 @@ function Solution() {
           {/* Runs through the (hidden) halo to the solid circle, which sits 114px below Build. */}
           <Connector className="relative z-10 -mt-[3px] -mb-6 h-[120px]" />
           <Reveal className="-mt-[3px] flex w-full flex-col items-center">
-            <div data-flow="final" className="flex items-center rounded-pill p-6">
-              <div className="flex items-center rounded-pill bg-primary p-6">
-                <svg className="size-8 shrink-0 text-foreground" width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                  <path d="M22.667 28a6.667 6.667 0 0 0-13.334 0" />
-                  <path d="M29.333 14a4.667 4.667 0 0 0-7.342-3.824" />
-                  <path d="M10.009 10.176A4.667 4.667 0 0 0 2.667 14" />
-                  <circle cx="16" cy="17.333" r="3" />
-                  <circle cx="24.667" cy="6" r="2.5" />
-                  <circle cx="7.333" cy="6" r="2.5" />
+            <div data-flow="final" className="relative flex items-center rounded-pill p-6">
+              <div className="package-blip relative z-[1] flex items-center rounded-pill bg-primary p-6">
+                {/* Lucide "package": the finished product. Drawn on a 24 grid, so a
+                    1.5 stroke matches the 2-on-32 strokes of the step icons. */}
+                <svg className="size-8 shrink-0 text-foreground" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z" />
+                  <path d="M12 22V12" />
+                  <polyline points="3.29 7 12 12 20.71 7" />
+                  <path d="m7.5 4.27 9 5.15" />
                 </svg>
               </div>
+              {/* The halo from the design, sent out on each blip (see .package-pulse). */}
+              <span aria-hidden="true" className="package-pulse pointer-events-none absolute inset-0 rounded-pill bg-primary/15" />
             </div>
           </Reveal>
         </div>
