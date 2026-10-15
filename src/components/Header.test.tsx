@@ -31,9 +31,13 @@ describe('Header', () => {
     expect(screen.getByRole('link', { name: 'Work' })).toHaveAttribute('aria-current', 'page')
   })
 
-  it('shows the Tel Aviv clock', () => {
+  it('switches between the human and agent views', () => {
     renderAt('/')
+    expect(screen.getByRole('switch', { name: 'Agent view' })).not.toBeChecked()
 
-    expect(screen.getByText(/^Tel Aviv · \d{2}:\d{2}:\d{2}$/)).toBeInTheDocument()
+    cleanup()
+    renderAt('/agent')
+    expect(screen.getByRole('switch', { name: 'Agent view' })).toBeChecked()
+    expect(screen.queryByRole('navigation', { name: 'Primary navigation' })).not.toBeInTheDocument()
   })
 })
