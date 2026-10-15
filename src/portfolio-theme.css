@@ -165,20 +165,6 @@
   box-shadow: none;
 }
 
-/* Per-project gradient backdrop with a faint white grid overlay. The media
-   sits bottom-anchored inside. Set --g1/--g2/--g3 per project. */
-.backdrop {
-  border-radius: var(--radius);
-  overflow: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: flex-end;
-  background-size: 150px 150px, 150px 150px, 100% 100%;
-  background-image:
-    linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-    linear-gradient(205deg, var(--g1) 0%, var(--g2) 55%, var(--g3) 100%);
-}
 .backdrop-media {
   width: 90%;
   aspect-ratio: 16 / 9;
@@ -193,9 +179,6 @@
      first third, then a long soft settle. */
   transform-origin: bottom center;
   transition: transform 450ms cubic-bezier(0.22, 1, 0.36, 1);
-}
-.backdrop:hover .backdrop-media {
-  transform: scale(1.02);
 }
 /* Media shown whole at its own ratio, 90% wide so 5% of the backdrop
    stays visible either side, and centred rather than seated on the floor. */
@@ -308,8 +291,7 @@
     0 6px 16px rgba(17, 17, 17, 0.04),
     0 16px 32px rgba(17, 17, 17, 0.03);
 }
-/* The card is a button into the full-frame view. Same lift and curve as the
-   hero backdrop, so every enlargeable surface on the site behaves alike. */
+/* The card is a button into the full-frame view. */
 .window-btn {
   display: block;
   width: 100%;
@@ -571,7 +553,6 @@
   .tilt-glare { display: none; }
   .pulse-border, .pulse-glow { animation: none; }
   .backdrop-media { transition: none; }
-  .backdrop:hover .backdrop-media { transform: none; }
   .window-btn { transition: none; }
   .window-btn:hover { transform: none; }
   .text-link { transition: none; }
