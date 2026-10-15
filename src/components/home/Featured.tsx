@@ -8,7 +8,7 @@ import { accentRevealButton } from '@/components/actionButtons'
 import { useAllowMotion } from '@/lib/useAllowMotion'
 import { RevealArrow } from '@/components/icons'
 import { ShiftMark } from './ShiftMark'
-import { bandClass, innerClass } from './layout'
+import { bandClass, innerClass, labelClass } from './layout'
 
 /* The Shift capture sits whole inside the frame with an even 1% border
    (percentage padding is relative to width on every side), and the frame
@@ -21,7 +21,7 @@ export function Featured() {
   return (
     <section className={`${bandClass} py-10`}>
       <div className={innerClass}>
-        <Reveal as="h2" className="text-body leading-5 text-primary">
+        <Reveal as="h2" className={`${labelClass} text-center`}>
           {featured.label}
         </Reveal>
         <Reveal>
