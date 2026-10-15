@@ -9,7 +9,7 @@ const darkPill = 'roll-host flex items-center justify-center rounded-pill bg-pan
 
 function SendIcon() {
   return (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="size-6 shrink-0">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="size-5 shrink-0">
       <path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z" />
       <path d="m21.854 2.147-10.94 10.939" />
     </svg>
@@ -18,7 +18,7 @@ function SendIcon() {
 
 function LinkedInIcon() {
   return (
-    <svg viewBox="0 0 22 22" width="22" height="22" aria-hidden="true" className="size-[22px] shrink-0">
+    <svg viewBox="0 0 22 22" width="22" height="22" aria-hidden="true" className="size-5 shrink-0">
       <g fillRule="evenodd">
         <path
           className="fill-panel"
@@ -35,7 +35,7 @@ function LinkedInIcon() {
 
 function CvIcon() {
   return (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="size-6 shrink-0">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="size-5 shrink-0">
       <path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z" />
       <path d="M14 2v5a1 1 0 0 0 1 1h5" />
       <path d="M16 22a4 4 0 0 0-8 0" />
@@ -47,40 +47,37 @@ function CvIcon() {
 export default function Footer() {
   const clock = useTelAvivClock()
 
+  /* As in Paper: one orange band, from the CTA down to the credits and clock. */
   return (
-    <footer className="bg-primary/90 text-bright">
-      <div className="mx-auto flex w-full max-w-[930px] flex-col items-center gap-10 px-4 sm:px-0">
-        <div className="flex flex-col items-center gap-10 pt-20">
-          <div className="flex flex-col items-center gap-4">
-            <p className="max-w-[586px] text-center text-body text-ink-soft">
-              For founders of complex B2B, AI and dev-tool products who need senior product judgment without a full-time hire.
-            </p>
-            <h2 className="whitespace-pre-line text-center text-feature font-medium text-bright">
-              {"Building a new product?\nLet's see if it's a fit."}
-            </h2>
-          </div>
-          <div className="flex items-center gap-4">
-            <a
-              href="mailto:amitka111@gmail.com"
-              data-umami-event="contact-email"
-              data-umami-event-location="footer"
-              className={`${darkPill} gap-2 px-6 py-4`}
-            >
-              <SendIcon />
-              <span className="text-body font-medium leading-5">
-                <RollingText text="Let's talk" />
-              </span>
-            </a>
-            <a href={LINKEDIN_URL} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" data-umami-event="contact-linkedin" className={`${darkPill} size-14`}>
-              <LinkedInIcon />
-            </a>
-            <a href={CV_PDF_URL} download={CV_PDF_NAME} aria-label="CV" data-umami-event="download-cv" className={`${darkPill} size-14`}>
-              <CvIcon />
-            </a>
-          </div>
+    <footer className="text-bright">
+      <div className="flex flex-col items-center gap-10 bg-primary/90 px-4 pt-20">
+        <h2 className="whitespace-pre-line text-center text-feature font-medium text-bright">
+          {"Building a new product?\nLet's see if it's a fit."}
+        </h2>
+        <p className="w-full max-w-[586px] text-center text-body leading-5 text-ink-soft">
+          For founders of complex B2B, AI and dev-tool products who need senior product judgment without a full-time hire.
+        </p>
+        <div className="flex items-center gap-10">
+          <a
+            href="mailto:amitka111@gmail.com"
+            data-umami-event="contact-email"
+            data-umami-event-location="footer"
+            className={`${darkPill} h-[52px] gap-2 px-6`}
+          >
+            <SendIcon />
+            <span className="text-body font-medium leading-5">
+              <RollingText text="Let's talk" />
+            </span>
+          </a>
+          <a href={LINKEDIN_URL} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" data-umami-event="contact-linkedin" className={`${darkPill} p-4`}>
+            <LinkedInIcon />
+          </a>
+          <a href={CV_PDF_URL} download={CV_PDF_NAME} aria-label="CV" data-umami-event="download-cv" className={`${darkPill} p-4`}>
+            <CvIcon />
+          </a>
         </div>
-        <div className="flex w-full items-start justify-between gap-4 py-4 text-meta">
-          <span>Amit Kaplinsky 2026</span>
+        <div className="flex flex-col items-center gap-2 self-stretch py-5 text-center text-caption leading-4 text-copy">
+          <span>Built using Claude Code, Devin AI</span>
           <span suppressHydrationWarning className="tabular-nums">{clock}</span>
         </div>
       </div>

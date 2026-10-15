@@ -35,10 +35,10 @@ describe('Footer', () => {
     expect(cv).toHaveTextContent('')
   })
 
-  it('has only the copyright and clock in the bottom bar, with no agent link or switches', () => {
+  it('has the credits and clock at the bottom, with no agent link or switches', () => {
     renderFooter()
 
-    expect(screen.getByText('Amit Kaplinsky 2026')).toBeInTheDocument()
+    expect(screen.getByText('Built using Claude Code, Devin AI')).toBeInTheDocument()
     expect(screen.queryByRole('link', { name: 'Agent view' })).not.toBeInTheDocument()
     expect(screen.queryByRole('navigation', { name: 'View mode' })).not.toBeInTheDocument()
     expect(screen.queryByRole('button', { name: /theme/i })).not.toBeInTheDocument()
