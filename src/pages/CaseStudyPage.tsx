@@ -8,7 +8,7 @@ import Seo from '@/components/Seo'
 import SkeletonImage from '@/components/SkeletonImage'
 import { markdownComponents } from '@/components/caseStudy/markdownComponents'
 import { ArrowBackIcon } from '@/components/icons'
-import { pillButton } from '@/components/pillButton'
+import { pillLink } from '@/components/actionButtons'
 
 export default function CaseStudyPage() {
   const { slug } = useParams<{ slug: string }>()
@@ -83,7 +83,7 @@ export default function CaseStudyPage() {
       {/* Back to Blog */}
       <section className="relative border-t border-border">
         <div className="inner-col flex justify-center pb-16 pt-14">
-          <Link to="/blog" className={pillButton('roll-host px-7.5 py-3.5 text-meta')}>
+          <Link to="/blog" className={pillLink('roll-host px-7.5 py-3.5 text-meta')}>
             <RollingText text="Back to Blog" />
             <ArrowBackIcon />
           </Link>

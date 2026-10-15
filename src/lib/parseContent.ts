@@ -1,4 +1,4 @@
-/* Markdown -> structured data. This runs at BUILD time (see the `virtual:cv`
+/* Markdown -> structured data. This runs at BUILD time (see the `virtual:content`
    plugin in vite.config.ts), never in the browser, which is the whole point:
    it keeps unified/remark/mdast — about 95 kB gzipped — out of the bundle.
 

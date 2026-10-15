@@ -1,3 +1,5 @@
+/* An <img> with a pulsing placeholder until it loads, and an "Image
+   unavailable" message if it fails. */
 import { useCallback, useRef, useState, type ImgHTMLAttributes } from 'react'
 
 type ImageLoadState = 'loading' | 'loaded' | 'error'

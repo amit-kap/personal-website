@@ -1,3 +1,6 @@
+/* Home "Proposed Solution": Diagnose, Plan and Build cards joined by connector
+   lines down to the package circle. FlowOverlay animates the lines, measuring
+   them from the data-flow attributes here. */
 import homeCopy from '@/content/home.json'
 import Reveal from '@/components/Reveal'
 import { innerClass, labelClass } from './layout'
@@ -14,6 +17,7 @@ function Connector({ className = 'h-10' }: { className?: string }) {
   )
 }
 
+/* One icon per step, in order: inner SVG paths on a 32 grid. */
 const stepIcons = [
   // Diagnose
   <>
@@ -58,6 +62,7 @@ export function Solution() {
         <Reveal as="ol" className="flex flex-col items-stretch">
           {solution.steps.map((step, index) => (
             <li key={step.title} className="contents">
+              {/* 80px connectors between cards; -mt-[3px] tucks the end dots over the card borders. */}
               {index > 0 && <Connector className="-mt-[3px] h-20" />}
               <div data-flow="step" className={`${stepCardClass} rounded-container ${index > 0 ? '-mt-[3px]' : ''}`}>
                 <svg className="size-8 shrink-0 text-primary" width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -70,7 +75,7 @@ export function Solution() {
           ))}
         </Reveal>
         <div className="-mt-4 flex flex-col items-center">
-          {/* Runs through the (hidden) halo to the solid circle, which sits 114px below Build. */}
+          {/* Runs on to the solid circle, which sits 114px below Build. */}
           <Connector className="relative z-10 -mt-[3px] -mb-6 h-[120px]" />
           {/* The package sits half over the footer: its 160px box (112px circle
               plus 24px padding) hangs 80px below the section, so the circle's

@@ -35,8 +35,9 @@
 .reveal-scale { transform: translateY(50px) scale(1.08); }
 .reveal-scale.is-in { transform: translateY(0) scale(1); }
 
-/* Tilt card (useTilt): tilts toward the cursor in 3D, lifts its content a
-   little off the surface, and shows a glare where the cursor is. */
+/* Tilt card (useTilt, the Recent Work tiles): tilts toward the cursor in 3D,
+   lifts its content a little off the surface, and shows a glare where the
+   cursor is. */
 .tilt {
   transform: perspective(700px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));
   transform-style: preserve-3d;
@@ -79,7 +80,8 @@
    logo colours; site colours by default) orbit the card edge, over a blurred
    copy that pulses as a glow. Shown on hover and keyboard focus. The ring
    is a conic gradient masked to the border; the blur sits on a wrapper so
-   the mask does not clip the glow. */
+   the mask does not clip the glow. --pulse-angle is registered with
+   @property so the browser can interpolate the angle for the orbit. */
 @property --pulse-angle {
   syntax: '<angle>';
   inherits: true;
@@ -178,6 +180,9 @@
   animation: shimmer-text 2.8s linear infinite;
 }
 
+/* Reduced motion switches every effect above to its resting state: rolls,
+   reveals, tilts and pulses stop, and the hover reveal in tilt cards keeps
+   its end position without animating there. */
 @media (prefers-reduced-motion: reduce) {
   .roll-ch { transition: none; }
   .shimmer-text { animation: none; color: var(--copy); background: none; }
@@ -190,7 +195,6 @@
   .tilt:focus-visible .tilt-reveal { transform: none; }
   .tilt-glare { display: none; }
   .pulse-border, .pulse-glow { animation: none; }
-  .backdrop-media { transition: none; }
   .window-btn { transition: none; }
   .window-btn:hover { transform: none; }
   .text-link { transition: none; }

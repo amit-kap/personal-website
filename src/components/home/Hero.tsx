@@ -1,13 +1,18 @@
 import { Fragment, useEffect, useLayoutEffect, useRef, useState } from 'react'
+/* Home hero: availability pill, the title with its rotating words, and the
+   supporting line. */
 import homeCopy from '@/content/home.json'
 import Reveal from '@/components/Reveal'
 import StarBorder from '@/components/react-bits/StarBorder'
 import { useAllowMotion } from '@/lib/useAllowMotion'
 import { useTokenColor } from '@/lib/useTokenColor'
 
+/* Which way a slot's words travel as they swap. */
 type Push = 'up' | 'down' | 'right'
 
+/* Each headline word maps to the words it rotates through (home.json). */
 const rotation: Record<string, string[]> = homeCopy.headlineRotation
+/* Words push in from a different side each: the headline is Senior / Product Designer. */
 const pushFor: Record<string, Push> = { Senior: 'up', Product: 'down', Designer: 'right' }
 /* Stagger order: top word, then left, then right. */
 const orderFor: Record<string, number> = { Senior: 0, Product: 1, Designer: 2 }
@@ -24,11 +29,14 @@ const PUSH_EASE = 'cubic-bezier(0.22, 1, 0.36, 1)'
    vertically pushed word at the sides. */
 const clipFor: Record<Push, string> = { up: 'inset(0 -100vw)', down: 'inset(0 -100vw)', right: 'inset(-100vh 0)' }
 
+/* Counts rotations. Stays at 0 (the first word of each slot) when motion is
+   not allowed. The interval is one full cycle: the last slot's start offset
+   (2 staggers), its push, then the hold. */
 function usePulse(enabled: boolean) {
   const [pulse, setPulse] = useState(0)
   useEffect(() => {
     if (!enabled) return
-    const id = window.setInterval(() => setPulse((p) => p + 1), PUSH_MS + 2 * STAGGER_MS + HOLD_MS)
+    const id = window.setInterval(() => setPulse((count) => count + 1), PUSH_MS + 2 * STAGGER_MS + HOLD_MS)
     return () => window.clearInterval(id)
   }, [enabled])
   return enabled ? pulse : 0
@@ -40,20 +48,22 @@ function usePulse(enabled: boolean) {
 function RotatingWord({ words, index, push, order }: { words: string[]; index: number; push: Push; order: number }) {
   const current = index % words.length
   const previous = index > 0 ? (index - 1) % words.length : null
-  const sizers = useRef<(HTMLSpanElement | null)[]>([])
+  const wordSizers = useRef<(HTMLSpanElement | null)[]>([])
   const [widths, setWidths] = useState<number[]>([])
 
   // Every word's width, kept current as the type scale or font changes.
   useLayoutEffect(() => {
-    const measure = () => setWidths(sizers.current.map((el) => el?.getBoundingClientRect().width ?? 0))
+    const measure = () => setWidths(wordSizers.current.map((el) => el?.getBoundingClientRect().width ?? 0))
     measure()
     const observer = new ResizeObserver(measure)
-    sizers.current.forEach((el) => el && observer.observe(el))
+    wordSizers.current.forEach((el) => el && observer.observe(el))
     return () => observer.disconnect()
   }, [words])
 
+  // Slots start one stagger apart, in `order`; the width change shares the push's delay.
   const delay = `${order * STAGGER_MS}ms`
   const motion = { animationDuration: `${PUSH_MS}ms`, animationDelay: delay, animationTimingFunction: PUSH_EASE }
+  // The pushed words fill the whole slot, so they travel its full height or width.
   const layer = 'absolute inset-0 flex justify-center'
 
   return (
@@ -75,7 +85,7 @@ function RotatingWord({ words, index, push, order }: { words: string[]; index: n
         <span
           key={word}
           ref={(el) => {
-            sizers.current[i] = el
+            wordSizers.current[i] = el
           }}
           aria-hidden="true"
           className="invisible absolute top-0 left-0 inline-block"
@@ -83,6 +93,7 @@ function RotatingWord({ words, index, push, order }: { words: string[]; index: n
           {word}
         </span>
       ))}
+      {/* Remount on every rotation (the key) so the entrance animations restart. */}
       {previous !== null && (
         <span key={`out-${index}`} className={`${layer} push-out-${push}`} style={motion}>
           {words[previous]}

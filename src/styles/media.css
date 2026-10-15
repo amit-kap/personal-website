@@ -1,50 +1,27 @@
 /* ----------------------------------------------------------------------------
-   6 · MEDIA SURFACES — gradient backdrops and window chrome
+   6 · MEDIA SURFACES — hero media frame, video controls, window chrome
 ---------------------------------------------------------------------------- */
 /* The hero product media, shown whole at its own ratio in the home page's
-   Featured frame: an even 1% border of the dim ink. */
-.media-frame {
+   Featured frame: an even 1% border of the dim ink (percentage padding is
+   relative to the width on every side). */
+.hero-media-frame {
   overflow: hidden;
   border-radius: var(--radius-container);
   background: var(--dim);
   padding: 1%;
 }
-.media-frame .backdrop-media {
+/* The image or ProductVideo inside: full width, natural height, rounded to
+   sit inside the frame's own radius. */
+.hero-media-frame .product-media {
+  display: block;
   width: 100%;
   height: auto;
-  aspect-ratio: auto;
-  object-fit: contain;
   border-radius: var(--radius-item);
-  box-shadow: none;
-}
-
-.backdrop-media {
-  width: 90%;
-  aspect-ratio: 16 / 9;
-  object-fit: cover;
-  object-position: left top;
-  border-radius: 8px 8px 0 0;
-  box-shadow: 0 -10px 60px rgba(0, 0, 0, 0.35);
   overflow: hidden;
-  display: block;
-  /* Grows from its bottom edge so it stays seated on the backdrop floor.
-     Curve matches the source site's hover motion: most of the travel in the
-     first third, then a long soft settle. */
-  transform-origin: bottom center;
-  transition: transform 450ms cubic-bezier(0.22, 1, 0.36, 1);
-}
-/* Media shown whole at its own ratio, 90% wide so 5% of the backdrop
-   stays visible either side, and centred rather than seated on the floor. */
-.backdrop-media--fit {
-  height: auto;
-  aspect-ratio: auto;
-  object-fit: contain;
-  align-self: center;
-  border-radius: 8px;
-  transform-origin: center;
 }
 
-/* Video controls: hairline progress on the bottom edge, play/pause on hover. */
+/* Video controls: hairline progress on the bottom edge, play/pause on hover.
+   .vid is the positioned wrapper the controls are placed against. */
 .vid {
   position: relative;
 }
@@ -120,6 +97,8 @@
   to { transform: rotate(360deg); }
 }
 
+/* Reduced motion: no hover-only controls (play/pause stays visible), no
+   progress easing, no spinner rotation. */
 @media (prefers-reduced-motion: reduce) {
   .vid-btn {
     opacity: 1;
@@ -132,7 +111,8 @@
   }
 }
 
-/* Browser-window chrome for product UI screenshots. */
+/* Browser-window chrome for product UI screenshots: .window is the frame,
+   .winbar the title bar with its three .windot lights. */
 .window {
   border-radius: var(--radius);
   overflow: hidden;
@@ -144,7 +124,7 @@
     0 6px 16px rgba(17, 17, 17, 0.04),
     0 16px 32px rgba(17, 17, 17, 0.03);
 }
-/* The card is a button into the full-frame view. */
+/* The card is a button into the full-frame view: it lifts 2% on hover. */
 .window-btn {
   display: block;
   width: 100%;

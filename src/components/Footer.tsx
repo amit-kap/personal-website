@@ -1,3 +1,5 @@
+/* Site footer: the orange call-to-action band with contact links, credits and
+   a Tel Aviv clock. */
 import { useLocation } from 'react-router-dom'
 import { RevealButton } from '@amit-kap/glaze/components/reveal-button'
 import { CV_PDF_NAME, CV_PDF_URL } from '@/lib/cvPdf'
@@ -5,11 +7,10 @@ import { useTelAvivClock } from '@/lib/useTelAvivClock'
 
 const LINKEDIN_URL = 'https://www.linkedin.com/in/amitkaplinsky'
 
-/* Dark (panel) pills on the orange band. */
 /* Dark (panel) reveal buttons on the orange band: Glaze's RevealButton as a
    link, a 52px circle at rest (20px icon + 15px padding + 1px border) that
    opens to show its label on hover or keyboard focus. */
-const revealPill =
+const bandRevealButton =
   'h-[52px] min-w-[52px] rounded-pill bg-card px-[15px] text-body font-medium text-foreground hover:bg-card hover:px-5 focus-visible:px-5 transition-[padding,background-color,transform] duration-(--duration-moderate) ease-standard active:scale-[0.97] motion-reduce:transition-none'
 
 function SendIcon() {
@@ -65,13 +66,16 @@ export default function Footer() {
         <p className="w-full max-w-[586px] text-center text-body leading-5 text-secondary-foreground">
           For founders of complex B2B, AI and dev-tool products who need senior product judgment without a full-time hire.
         </p>
+        {/* RevealButton is a Base UI <button> that renders these anchors
+            (nativeButton={false}); role="link" keeps them announced as links.
+            The data-umami-* attributes are the analytics event names. */}
         <div className="flex items-center gap-10">
           <RevealButton
             render={<a href="mailto:amitka111@gmail.com" data-umami-event="contact-email" data-umami-event-location="footer" />}
             nativeButton={false}
             role="link"
             label="Let's talk"
-            className={revealPill}
+            className={bandRevealButton}
           >
             <SendIcon />
           </RevealButton>
@@ -80,7 +84,7 @@ export default function Footer() {
             nativeButton={false}
             role="link"
             label="View profile"
-            className={revealPill}
+            className={bandRevealButton}
           >
             <LinkedInIcon />
           </RevealButton>
@@ -89,7 +93,7 @@ export default function Footer() {
             nativeButton={false}
             role="link"
             label="Download CV"
-            className={revealPill}
+            className={bandRevealButton}
           >
             <CvIcon />
           </RevealButton>

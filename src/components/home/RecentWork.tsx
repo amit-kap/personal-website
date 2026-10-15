@@ -1,3 +1,5 @@
+/* Home "Recent Work": a row of company tiles, each linking to its work page.
+   Tiles tilt toward the cursor and orbit light spots round their border. */
 import type { CSSProperties } from 'react'
 import { Link } from 'react-router-dom'
 import type { Work } from '@/lib/content'
@@ -21,6 +23,7 @@ export function RecentWork({ works }: { works: Work[] }) {
         <Reveal as="h2" className={`${labelClass} text-center`}>
           {recentWork.label}
         </Reveal>
+        {/* Two columns of 120px tiles on phones; one 180px row from md up. */}
         <Reveal className="grid grid-cols-2 gap-4 md:flex md:h-45">
           {tiles.map((work) => {
             const company = work.company.replace(/ Software$/, '')

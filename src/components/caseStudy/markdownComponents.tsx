@@ -1,8 +1,13 @@
+/* Element overrides for rendering case-study markdown (react-markdown):
+   headings, lists and quotes in the site's type, and images routed through
+   the content image map, with window chrome for wide product screenshots. */
 import { Children, isValidElement } from 'react'
 import type { ContentImage } from '@/lib/content'
 import SkeletonImage from '@/components/SkeletonImage'
 import { ZoomableWindow } from '@/components/work/WindowCard'
 
+/* Children without whitespace-only strings, so a paragraph holding just
+   images (plus the newlines between them) counts as image-only. */
 function meaningfulChildren(children: React.ReactNode) {
   return Children
     .toArray(children)
@@ -23,6 +28,8 @@ function isImageRowParagraph(children: React.ReactNode) {
   return childArray.length > 1 && childArray.every(isMarkdownImage)
 }
 
+/* Markdown may percent-encode filenames (spaces as %20); the image map is
+   keyed by the decoded source filename. */
 function imageLookupKey(src: string) {
   try {
     return decodeURIComponent(src)

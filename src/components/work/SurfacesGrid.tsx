@@ -10,9 +10,10 @@ export interface SurfaceItem {
   copy: React.ReactNode
 }
 
-/* A 2×2 grid of surfaces: each screenshot, in window chrome, over its
-   label, title and caption. 60px between items, as in the home problem grid. */
-export function SurfacesMosaic({ heading, items }: { heading: string; items: SurfaceItem[] }) {
+/* A 2×2 grid of surfaces (one column on phones): each screenshot, in window
+   chrome, over its label, title and caption. md:gap-15 is the 60px between
+   items, as in the home problem grid. */
+export function SurfacesGrid({ heading, items }: { heading: string; items: SurfaceItem[] }) {
   return (
     <section className="relative">
       <div className="inner-col flex flex-col gap-9 pb-16 pt-14">

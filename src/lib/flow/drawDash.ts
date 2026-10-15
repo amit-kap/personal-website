@@ -1,45 +1,52 @@
+/* Draws one glowing dash of the flow overlay onto its canvas. */
 import { WHITE, mix, rgba, type Rgb } from './color'
-import { pointAt, type Pt, type Spec } from './geometry'
+import { pointAt, type Pt, type FlowLine } from './geometry'
 
+/* Length of a dash in px, tail to head. */
 export const DASH = 20
+/* Overall strength of the glow stroke and the bloom at the head. */
 const GLOW = 0.5
+/* Width of the crisp core stroke. */
 const THICKNESS = 1
 
-const stroke = (c: CanvasRenderingContext2D, a: Pt, b: Pt, width: number, style: string) => {
-  c.lineWidth = width
-  c.strokeStyle = style
-  c.beginPath()
-  c.moveTo(a[0], a[1])
-  c.lineTo(b[0], b[1])
-  c.stroke()
+const stroke = (ctx: CanvasRenderingContext2D, from: Pt, to: Pt, width: number, style: string) => {
+  ctx.lineWidth = width
+  ctx.strokeStyle = style
+  ctx.beginPath()
+  ctx.moveTo(from[0], from[1])
+  ctx.lineTo(to[0], to[1])
+  ctx.stroke()
 }
 
-/* One dash with its head at t along the path: ~2px steps fading in from
+/* One dash with its head `head` px along the line: ~2px steps fading in from
    the tail, whitening toward the head, over a faint wide glow. */
-export function drawDash(c: CanvasRenderingContext2D, spec: Spec, t: number, color: Rgb) {
-  if (t <= 0 || t > spec.len + DASH) return
-  const n = Math.ceil(DASH / 2)
-  for (let i = 1; i <= n; i++) {
-    const from = Math.min(spec.len, t - (DASH * (i - 1)) / n)
-    const to = Math.max(0, t - (DASH * i) / n)
-    if (from <= to) continue
-    const u = 1 - (i - 0.5) / n
-    const fade = u * u
-    const tone = mix(color, WHITE, u ** 6 * 0.65)
-    const a = pointAt(spec, from)
-    const b = pointAt(spec, to)
-    stroke(c, a, b, 2 + 6 * GLOW, rgba(tone, fade * 0.2 * GLOW))
-    stroke(c, a, b, THICKNESS, rgba(tone, fade))
+export function drawDash(ctx: CanvasRenderingContext2D, line: FlowLine, head: number, color: Rgb) {
+  if (head <= 0 || head > line.len + DASH) return
+  const steps = Math.ceil(DASH / 2)
+  for (let i = 1; i <= steps; i++) {
+    // Each step is clamped to the line, so a dash slides on and off its ends.
+    const stepStart = Math.min(line.len, head - (DASH * (i - 1)) / steps)
+    const stepEnd = Math.max(0, head - (DASH * i) / steps)
+    if (stepStart <= stepEnd) continue
+    // 1 at the head, 0 at the tail; the fade is quadratic, the whitening much sharper.
+    const nearHead = 1 - (i - 0.5) / steps
+    const fade = nearHead * nearHead
+    const tone = mix(color, WHITE, nearHead ** 6 * 0.65)
+    const from = pointAt(line, stepStart)
+    const to = pointAt(line, stepEnd)
+    stroke(ctx, from, to, 2 + 6 * GLOW, rgba(tone, fade * 0.2 * GLOW))
+    stroke(ctx, from, to, THICKNESS, rgba(tone, fade))
   }
-  if (t > spec.len) return
-  const [x, y] = pointAt(spec, t)
+  // The bloom belongs to the head, so it is only drawn while the head is on the line.
+  if (head > line.len) return
+  const [x, y] = pointAt(line, head)
   const reach = 12 + 40 * GLOW
   const strength = 0.4 * GLOW
-  const bloom = c.createRadialGradient(x, y, 0, x, y, reach)
+  const bloom = ctx.createRadialGradient(x, y, 0, x, y, reach)
   bloom.addColorStop(0, rgba(color, strength))
   bloom.addColorStop(0.2, rgba(color, strength * 0.4))
   bloom.addColorStop(0.5, rgba(color, strength * 0.1))
   bloom.addColorStop(1, rgba(color, 0))
-  c.fillStyle = bloom
-  c.fillRect(x - reach, y - reach, reach * 2, reach * 2)
+  ctx.fillStyle = bloom
+  ctx.fillRect(x - reach, y - reach, reach * 2, reach * 2)
 }

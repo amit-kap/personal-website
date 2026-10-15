@@ -1,3 +1,5 @@
+/* Copy for the compact work pages, keyed by work slug. Image fields are
+   source-filename prefixes, resolved against the work's images by imageFor. */
 import { Link } from 'react-router-dom'
 
 export type CompactStory = {

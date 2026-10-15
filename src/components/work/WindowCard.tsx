@@ -1,3 +1,4 @@
+/* Product screenshots in browser-window chrome, enlargeable in the Lightbox. */
 import { useState } from 'react'
 import type { ContentImage } from '@/lib/content'
 import Lightbox from '@/components/work/Lightbox'

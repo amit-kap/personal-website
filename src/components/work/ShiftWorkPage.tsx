@@ -1,8 +1,10 @@
+/* The Shift work page: bespoke, with a walkthrough video and four feature
+   sections. Every other work uses CompactWorkPage. */
 import { Link } from 'react-router-dom'
 import type { Work } from '@/lib/content'
 import Reveal from '@/components/Reveal'
-import { BackToHome } from '@/components/work/ClosingButtons'
-import { HeroBackdrop } from '@/components/work/HeroBackdrop'
+import { ClosingActions } from '@/components/work/ClosingActions'
+import { HeroMedia } from '@/components/work/HeroMedia'
 import { SplitSection } from '@/components/work/SplitSection'
 import { TitleBlock } from '@/components/work/TitleBlock'
 import { WindowCard } from '@/components/work/WindowCard'
@@ -47,7 +49,7 @@ export default function ShiftWorkPage({ work }: { work: Work }) {
         title="Designing Shift's agent-led third-party security platform from product model to shipped system."
         intro="I joined Shift as its first designer. I helped define the human-agent operating model, then built the design system, onboarding, and core workflows connecting vendor evidence, access, exposure, and risk decisions. Shift is now publicly available."
       />
-      <HeroBackdrop
+      <HeroMedia
         image={imageFor(work, '01-shift-dashboard')}
         video={`${import.meta.env.BASE_URL}shift-walk.mp4`}
         alt="Shift product walkthrough: vendor evidence, access, exposure, and assessment decisions"
@@ -115,7 +117,7 @@ export default function ShiftWorkPage({ work }: { work: Work }) {
         </p>
       </SplitSection>
 
-      <BackToHome read={{ to: '/case-studies/designing-for-the-supervisor', label: 'Read: Designing for the Supervisor' }} />
+      <ClosingActions read={{ to: '/case-studies/designing-for-the-supervisor', label: 'Read: Designing for the Supervisor' }} />
     </main>
   )
 }

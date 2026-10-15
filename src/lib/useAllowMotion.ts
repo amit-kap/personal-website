@@ -1,3 +1,6 @@
+/* True unless the visitor prefers reduced motion; follows live changes.
+   Starts true and corrects after mount, so motion is on until the
+   query says otherwise. */
 import { useEffect, useState } from 'react'
 
 export function useAllowMotion() {

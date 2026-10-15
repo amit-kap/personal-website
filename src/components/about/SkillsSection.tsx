@@ -1,3 +1,4 @@
+/* About page skills: three columns, with brand marks for the tools group. */
 import Reveal from '@/components/Reveal'
 import { ClaudeMark, CodexMark, CursorMark, FigmaMark } from '@/components/BrandLogos'
 import type { CVSkillGroup } from '@/lib/content'

@@ -1,3 +1,6 @@
+/* App shell: page field, header, routed page and footer, plus scroll
+   restoration on navigation. Only Home loads eagerly; the other routes are
+   split into their own chunks. */
 import { lazy, Suspense, useEffect } from 'react'
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import DotWaves from '@/components/DotWaves'
@@ -17,6 +20,9 @@ export default function App() {
   const location = useLocation()
   const lenis = useSmoothScroll()
 
+  /* On every navigation: scroll to the #hash target if there is one, else to
+     the top. Goes through Lenis when smooth scroll is on, since native
+     scrolling fights it. */
   useEffect(() => {
     const scrollTo = () => {
       if (location.hash) {

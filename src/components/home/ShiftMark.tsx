@@ -1,3 +1,4 @@
+/* The Shift product mark, inline so it takes the text colour. */
 export function ShiftMark() {
   return (
     <svg className="size-7.5 shrink-0 text-foreground" width="30" height="30" viewBox="0 -38 30 30" fill="currentColor" aria-hidden="true">

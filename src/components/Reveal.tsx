@@ -2,7 +2,9 @@ import { useEffect, useRef } from 'react'
 
 /* Shared entrance contract: starts hidden (.reveal), IntersectionObserver adds
    .is-in once. Elements already in the viewport animate on load; everything
-   else animates when scrolled into view. `delay` staggers via --reveal-delay. */
+   else animates when scrolled into view. `delay` staggers via --reveal-delay.
+   Under reduced motion the CSS shows .reveal at once, so nothing waits on the
+   observer. */
 export default function Reveal({
   as: Tag = 'div',
   className = '',

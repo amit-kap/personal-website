@@ -9,7 +9,8 @@ import { useEffect, useRef } from 'react'
    Colours are CSS custom properties, resolved at draw time, so a theme change
    re-tints the field without remounting. */
 
-const MIN_R = 0.6
+/* Smallest dot radius in px: the pinprick at a wave trough. */
+const MIN_RADIUS = 0.6
 
 type Props = {
   /* CSS colour or `var(--token)`. */
@@ -21,7 +22,8 @@ type Props = {
   className?: string
 }
 
-/* maxRadius 5 = 10px across at a wave crest. */
+/* maxRadius 5 = 10px across at a wave crest. `live` holds the latest props so
+   the draw loop reads them without restarting. */
 export default function DotWaves({
   color = 'var(--primary)',
   speed = 1,
@@ -80,27 +82,30 @@ export default function DotWaves({
     }
 
     const draw = (ms: number) => {
-      const { speed: spd, gap: GAP, maxRadius: MAX_R } = live.current
-      const t = (ms / 1000) * spd
+      const { speed: waveSpeed, gap: cell, maxRadius: crestRadius } = live.current
+      const time = (ms / 1000) * waveSpeed
       resolveColor()
-      ctx.clearRect(0, 0, cols * GAP, rows * GAP)
+      ctx.clearRect(0, 0, cols * cell, rows * cell)
       ctx.fillStyle = fill
       ctx.beginPath()
       for (let y = 0; y < rows; y++) {
         for (let x = 0; x < cols; x++) {
-          let v =
-            Math.sin(x * 0.11 + t * 0.9 + Math.sin(y * 0.08 + t * 0.4) * 1.8) +
-            Math.sin(y * 0.18 - t * 0.7 + x * 0.04) * 0.8 +
-            Math.sin((x + y) * 0.06 + t * 0.5) * 0.6
+          // Three overlapping travelling waves, summed; x and y are grid cells, not px.
+          let wave =
+            Math.sin(x * 0.11 + time * 0.9 + Math.sin(y * 0.08 + time * 0.4) * 1.8) +
+            Math.sin(y * 0.18 - time * 0.7 + x * 0.04) * 0.8 +
+            Math.sin((x + y) * 0.06 + time * 0.5) * 0.6
+          // The pointer adds a ripple that fades out over 240px.
           if (pointer.x >= 0) {
-            const d = Math.hypot(x * GAP - pointer.x, y * GAP - pointer.y)
-            v += Math.max(0, 1 - d / 240) * 1.6 * Math.sin(d * 0.05 - t * 3)
+            const distance = Math.hypot(x * cell - pointer.x, y * cell - pointer.y)
+            wave += Math.max(0, 1 - distance / 240) * 1.6 * Math.sin(distance * 0.05 - time * 3)
           }
-          const n = Math.min(1, Math.max(0, (v + 2.4) / 4.8))
+          // The waves sum to about -2.4..2.4; normalise to 0..1.
+          const level = Math.min(1, Math.max(0, (wave + 2.4) / 4.8))
           // Sharpen the curve so most dots stay tiny and crests pop.
-          const r = MIN_R + n * n * n * (MAX_R - MIN_R)
-          ctx.moveTo(x * GAP + r, y * GAP)
-          ctx.arc(x * GAP, y * GAP, r, 0, Math.PI * 2)
+          const radius = MIN_RADIUS + level * level * level * (crestRadius - MIN_RADIUS)
+          ctx.moveTo(x * cell + radius, y * cell)
+          ctx.arc(x * cell, y * cell, radius, 0, Math.PI * 2)
         }
       }
       ctx.fill()
@@ -118,10 +123,10 @@ export default function DotWaves({
       if (reduced.matches) draw(2000)
       else if (onScreen && !document.hidden) raf = requestAnimationFrame(loop)
     }
-    const onMove = (e: PointerEvent) => {
+    const onMove = (event: PointerEvent) => {
       const rect = canvas.getBoundingClientRect()
-      pointer.x = e.clientX - rect.left
-      pointer.y = e.clientY - rect.top
+      pointer.x = event.clientX - rect.left
+      pointer.y = event.clientY - rect.top
     }
     const onLeave = () => {
       pointer.x = pointer.y = -1
@@ -136,15 +141,16 @@ export default function DotWaves({
     resize()
     start()
 
-    const io = new IntersectionObserver(([entry]) => {
+    const visibilityObserver = new IntersectionObserver(([entry]) => {
       onScreen = entry.isIntersecting
       start()
     })
-    io.observe(canvas)
-    let ro: ResizeObserver | undefined
+    visibilityObserver.observe(canvas)
+    // Contained fields follow their parent's size; the fixed page field follows the window.
+    let resizeObserver: ResizeObserver | undefined
     if (contained && canvas.parentElement) {
-      ro = new ResizeObserver(onResize)
-      ro.observe(canvas.parentElement)
+      resizeObserver = new ResizeObserver(onResize)
+      resizeObserver.observe(canvas.parentElement)
     } else {
       window.addEventListener('resize', onResize)
     }
@@ -155,8 +161,8 @@ export default function DotWaves({
     return () => {
       relayout.current = null
       cancelAnimationFrame(raf)
-      io.disconnect()
-      ro?.disconnect()
+      visibilityObserver.disconnect()
+      resizeObserver?.disconnect()
       window.removeEventListener('resize', onResize)
       window.removeEventListener('pointermove', onMove)
       document.removeEventListener('pointerleave', onLeave)

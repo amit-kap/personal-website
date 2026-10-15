@@ -1,3 +1,4 @@
+/* Sticky site header: name, Work / About nav, and the human / agent view switch. */
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { IconSwitch } from '@amit-kap/glaze/components/icon-switch'
 
@@ -6,6 +7,7 @@ const navItems = [
   { label: 'About', to: '/about' },
 ]
 
+/* Work is also current on its case pages; the other items match exactly. */
 function isActive(to: string, pathname: string): boolean {
   if (to === '/') return pathname === '/' || pathname.startsWith('/work/')
   return pathname === to
@@ -52,7 +54,7 @@ export default function Header() {
         <Link to="/" className="shrink-0 text-foreground">
           Amit Kaplinsky
         </Link>
-{/* The agent view is plain text; Work and About belong to the human view. */}
+        {/* The agent view is plain text; Work and About belong to the human view. */}
         {!agent && (
           <nav aria-label="Primary navigation" className="flex items-start gap-1">
             {navItems.map((item, i) => (

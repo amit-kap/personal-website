@@ -1,3 +1,5 @@
+/* Home "The Problem": a two-line headline and four numbered problem cards
+   (the data-flow="problem" cards are where FlowOverlay's connectors start). */
 import homeCopy from '@/content/home.json'
 import Reveal from '@/components/Reveal'
 import { bandClass, innerClass, labelClass } from './layout'

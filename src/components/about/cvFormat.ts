@@ -1,3 +1,5 @@
+/* Display formatting for CV dates. */
+
 /* cv.md writes periods as "10/2024 to now"; the page renders "10/2024–Now". */
 export function formatPeriod(period: string): string {
   return period.replace(' to ', '–').replace(/now$/i, 'Now')

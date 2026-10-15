@@ -42,7 +42,7 @@
 /* ----------------------------------------------------------------------------
    5 · ACTIONS — orange pills (Glaze Button) and quiet text links
 ---------------------------------------------------------------------------- */
-/* The pill itself is Glaze's Button (components/pillButton.ts). */
+/* The pill itself is Glaze's Button (components/actionButtons.ts). */
 .text-link {
   display: inline-flex;
   align-items: center;

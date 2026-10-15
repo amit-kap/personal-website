@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import Seo from '@/components/Seo'
-import { pillButton } from '@/components/pillButton'
+import { pillLink } from '@/components/actionButtons'
 
 export default function NotFound() {
   return (
@@ -8,7 +8,7 @@ export default function NotFound() {
       <Seo title="Page not found" description="This page does not exist." path="/404" noIndex />
       <p className="eyebrow">404</p>
       <h1 className="font-heading text-feature font-medium">This page does not exist.</h1>
-      <Link to="/" className={pillButton('px-7.5 py-3.5 text-meta')}>Back to home</Link>
+      <Link to="/" className={pillLink('px-7.5 py-3.5 text-meta')}>Back to home</Link>
     </main>
   )
 }

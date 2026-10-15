@@ -1,8 +1,10 @@
+/* Home featured work: the Shift walkthrough in a frame, with a title line and
+   a link into its case study. */
 import { Link } from 'react-router-dom'
 import homeCopy from '@/content/home.json'
 import Reveal from '@/components/Reveal'
 import { RevealButton } from '@amit-kap/glaze/components/reveal-button'
-import { revealPill } from '@/components/pillButton'
+import { accentRevealButton } from '@/components/actionButtons'
 import { useAllowMotion } from '@/lib/useAllowMotion'
 import { RevealArrow } from '@/components/icons'
 import { ShiftMark } from './ShiftMark'
@@ -70,7 +72,7 @@ export function Featured() {
                 aria-label={`View the Shift case study: ${featured.tagline}`}
                 label="View"
                 iconSide="end"
-                className={revealPill}
+                className={accentRevealButton}
               >
                 <RevealArrow />
               </RevealButton>

@@ -3,7 +3,7 @@ import { getAllCaseStudies, getWorkBySlug, type CaseStudy } from '@/lib/content'
 import Reveal from '@/components/Reveal'
 import RollingText from '@/components/RollingText'
 import Seo from '@/components/Seo'
-import { pillButton } from '@/components/pillButton'
+import { pillLink } from '@/components/actionButtons'
 import { ArrowUpRightIcon } from '@/components/icons'
 
 function metaFor(study: CaseStudy): string {
@@ -57,7 +57,7 @@ export default function Blog() {
                 <h2 className="font-heading text-section font-medium">{featured.title}</h2>
                 <p className="body-copy max-w-[640px]">{featured.excerpt}</p>
               </div>
-              <Link to={`/case-studies/${featured.slug}`} className={pillButton('roll-host flex-none px-6 py-3 text-meta')}>
+              <Link to={`/case-studies/${featured.slug}`} className={pillLink('roll-host flex-none px-6 py-3 text-meta')}>
                 <RollingText text="Read Article" />
                 <ArrowUpRightIcon />
               </Link>

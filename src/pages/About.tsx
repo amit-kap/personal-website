@@ -21,17 +21,17 @@ export default function About() {
         {/* Centered with auto margins, not a transform, so the drift owns it. */}
         <Parallax ratio={0.4} className="pointer-events-none absolute inset-x-0 top-0 mx-auto w-[min(500px,64vw)]">
           <Reveal scale>
-          <img
-            src={`${import.meta.env.BASE_URL}portrait-hero.png`}
-            alt="Amit Kaplinsky"
-            width={847}
-            height={1270}
-            className="block w-full"
-            style={{
-              WebkitMaskImage: 'linear-gradient(180deg, #000 34%, rgba(0,0,0,0.38) 58%, transparent 86%)',
-              maskImage: 'linear-gradient(180deg, #000 34%, rgba(0,0,0,0.38) 58%, transparent 86%)',
-            }}
-          />
+            <img
+              src={`${import.meta.env.BASE_URL}portrait-hero.png`}
+              alt="Amit Kaplinsky"
+              width={847}
+              height={1270}
+              className="block w-full"
+              style={{
+                WebkitMaskImage: 'linear-gradient(180deg, #000 34%, rgba(0,0,0,0.38) 58%, transparent 86%)',
+                maskImage: 'linear-gradient(180deg, #000 34%, rgba(0,0,0,0.38) 58%, transparent 86%)',
+              }}
+            />
           </Reveal>
         </Parallax>
         <div className="inner-col relative grid items-end gap-10 pb-16 pt-[clamp(260px,29vw,420px)]">

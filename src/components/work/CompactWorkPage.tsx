@@ -1,13 +1,15 @@
 import type { Work } from '@/lib/content'
-import { BackToHome } from '@/components/work/ClosingButtons'
-import { HeroBackdrop } from '@/components/work/HeroBackdrop'
+import { ClosingActions } from '@/components/work/ClosingActions'
+import { HeroMedia } from '@/components/work/HeroMedia'
 import { JobGrid } from '@/components/work/JobGrid'
 import { SplitSection } from '@/components/work/SplitSection'
-import { SurfacesMosaic } from '@/components/work/SurfacesMosaic'
+import { SurfacesGrid } from '@/components/work/SurfacesGrid'
 import { TitleBlock } from '@/components/work/TitleBlock'
 import { compactStories } from '@/components/work/compactStories'
 import { imageFor } from '@/lib/workImages'
 
+/* The shorter work-page template used by every work except Shift, which has
+   its own page (ShiftWorkPage). Copy and image keys come from compactStories. */
 export default function CompactWorkPage({ work }: { work: Work }) {
   const story = compactStories[work.slug]
   if (!story) return null
@@ -15,7 +17,7 @@ export default function CompactWorkPage({ work }: { work: Work }) {
   return (
     <main>
       <TitleBlock meta={story.meta} title={story.title} intro={story.intro} />
-      <HeroBackdrop image={imageFor(work, story.heroImage)} alt={story.heroAlt} />
+      <HeroMedia image={imageFor(work, story.heroImage)} alt={story.heroAlt} />
 
       <SplitSection eyebrow="The Starting Point" stmt={story.startingPoint.stmt}>
         {story.startingPoint.paras.map((para) => (
@@ -26,7 +28,7 @@ export default function CompactWorkPage({ work }: { work: Work }) {
       <JobGrid jobs={story.jobs} />
 
       {story.surfaces && (
-        <SurfacesMosaic
+        <SurfacesGrid
           heading={story.surfaces.heading}
           items={story.surfaces.items.map((item) => ({ ...item, image: imageFor(work, item.image) }))}
         />
@@ -57,7 +59,7 @@ export default function CompactWorkPage({ work }: { work: Work }) {
         </SplitSection>
       )}
 
-      <BackToHome read={story.related && { to: story.related.to, label: story.related.label }} />
+      <ClosingActions read={story.related && { to: story.related.to, label: story.related.label }} />
     </main>
   )
 }

@@ -1,12 +1,11 @@
 /* ============================================================================
-   PORTFOLIO — THEME & DESIGN SYSTEM ("Story Cards")
+   PORTFOLIO — THEME & DESIGN SYSTEM
    Single source of truth for the site's visual language: fonts, type scale,
    color palette, radius, motion, and shared component utilities.
 
    The system: dark only for now. Panels at 90% on a live DotWaves field,
-   hairline borders, Inter throughout, one orange accent for every action, and
-   per-project dark→luminous gradient backdrops for product media. Every
-   colour is a token so a light theme can override them later.
+   hairline borders, Inter throughout, and one orange accent for every
+   action. Every colour is a token so a light theme can override them later.
 
    Layout is composed with Tailwind utilities in the components — this file
    owns the *system* those utilities draw from. Framework imports live in
@@ -18,7 +17,9 @@
    shared component utilities.
 
    The rules live in topic files under styles/, imported below in cascade
-   order. Sections are numbered across them: 1-2 site-tokens, 3-5 structure,
+   order. Keep that order: motion.css's reduced-motion block resets
+   transitions that media.css declares (.window-btn), so it must come after.
+   Sections are numbered across the files: 1-2 site-tokens, 3-5 structure,
    6 media, 7 motion, 8 prose.
    ============================================================================ */
 @import './styles/site-tokens.css';
