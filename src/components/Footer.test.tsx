@@ -1,11 +1,11 @@
 import { MemoryRouter } from 'react-router-dom'
-import { cleanup, render, screen } from '@testing-library/react'
-import { CV_PDF_URL } from '@/lib/cvPdf'
+import { cleanup, render, screen, within } from '@testing-library/react'
+import { CV_PDF_NAME, CV_PDF_URL } from '@/lib/cvPdf'
 import Footer from './Footer'
 
-function renderFooter() {
+function renderFooter(path = '/') {
   return render(
-    <MemoryRouter>
+    <MemoryRouter initialEntries={[path]}>
       <Footer />
     </MemoryRouter>,
   )
@@ -48,5 +48,32 @@ describe('Footer', () => {
     renderFooter()
 
     expect(screen.getByText(/^Tel Aviv · \d{2}:\d{2}:\d{2}$/)).toBeInTheDocument()
+  })
+
+  it('offers exactly three reveal links with their names, targets and analytics events', () => {
+    renderFooter()
+    const links = within(screen.getByRole('contentinfo')).getAllByRole('link')
+    expect(links.map((l) => l.getAttribute('aria-label') ?? l.textContent)).toHaveLength(3)
+
+    const [talk, linkedin, cv] = ['Let\'s talk', 'View profile', 'Download CV'].map((name) => screen.getByRole('link', { name }))
+    expect(links).toEqual([talk, linkedin, cv])
+
+    expect(talk).not.toHaveAttribute('target')
+    expect(linkedin).toHaveAttribute('rel', 'noopener noreferrer')
+    expect(linkedin).toHaveAttribute('data-umami-event', 'contact-linkedin')
+    expect(cv).toHaveAttribute('data-umami-event', 'download-cv')
+    expect(cv).toHaveAttribute('download', CV_PDF_NAME)
+    expect(cv).not.toHaveAttribute('target')
+  })
+
+  it('leaves extra room for the package circle on the home page only', () => {
+    const { container, unmount } = renderFooter('/')
+    expect(container.querySelector('.bg-primary\\/90')).toHaveClass('pt-30')
+    expect(container.querySelector('.bg-primary\\/90')).not.toHaveClass('pt-20')
+    unmount()
+
+    const other = renderFooter('/about')
+    expect(other.container.querySelector('.bg-primary\\/90')).toHaveClass('pt-20')
+    expect(other.container.querySelector('.bg-primary\\/90')).not.toHaveClass('pt-30')
   })
 })
