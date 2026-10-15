@@ -1,21 +1,24 @@
 import { useLayoutEffect, useRef } from 'react'
 
-/* The "flow" along the problem and solution cards, running on its own at one
-   slow speed with a new wave every few seconds. Dashes run round each problem
-   card's border both ways and meet in the ring, which pulses; a new dash
-   leaves the ring, runs round each step card and slides into the final
-   circle. Drawn on a canvas the same way as the hero pill's Star Border: the
-   trail is cut into ~2px steps that fade in and whiten toward the head, under
-   a faint wide glow stroke, with a soft bloom at the head. Geometry is
-   measured from [data-flow] elements (problem, step, final). */
+/* The "flow" from the problem cards to the solution. Clicking a problem card
+   presses it like a button and fires one wave: a dash runs round that card's border both ways to its inner
+   corner while a wide light sweeps across the card the same way, the dashes
+   meet in the ring, which pulses, and a new dash leaves the ring, runs round
+   each step card and slides into the final circle, whose halo grows out and
+   fades when it lands. A hovered card scales down a little, so its sweep and
+   border dashes are drawn scaled to the card's live size. Drawn on a canvas the same
+   way as the hero pill's Star Border: the trail is cut into ~2px steps that
+   fade in and whiten toward the head, under a faint wide glow stroke, with a
+   soft bloom at the head. Geometry is measured from [data-flow] elements
+   (problem, step, final). */
 const DASH = 56
 const SPEED = 150 // px per second
-const EVERY = 10 // seconds between waves
-const GAP = SPEED * EVERY // px between waves along the route
 const PULSE = 60 // px of travel the ring stays lit after an arrival
 const GLOW = 0.8
 const THICKNESS = 1
 const BLEED = 48 // canvas overhang so the glow isn't clipped
+const SWEEP = 280 // px width of the light band across a card
+const SWEEP_ALPHA = 0.35
 const STEPS = 8
 /* Per problem card: outer corner, then the inner corner nearest the ring. */
 const CORNERS = [['tl', 'br'], ['tr', 'bl'], ['bl', 'tr'], ['br', 'tl']]
@@ -24,6 +27,11 @@ type Pt = [number, number]
 type Box = { x: number; y: number; w: number; h: number }
 type Rgb = [number, number, number]
 type Spec = { pts: Pt[]; cum: number[]; len: number; s: number }
+/* A problem card: its two border runs to the inner corner (the dashes then
+   cross to the ring), the sweep axis from its outer corner to its inner
+   corner, and how far its dashes travel. */
+type Card = { el: HTMLElement; box: Box; radius: number; edges: Spec[]; from: Pt; to: Pt; border: number; arrive: number }
+type Wave = { card: number; t0: number; landed: boolean }
 
 const WHITE: Rgb = [255, 255, 255]
 const mix = (a: Rgb, b: Rgb, t: number): Rgb => [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t]
@@ -114,19 +122,26 @@ export default function FlowOverlay({ animate }: { animate: boolean }) {
     const wrap = ringEl?.parentElement
     if (!wrap || !ringEl || !lineEl) return
 
-    let specs: Spec[] = []
+    let cards: Card[] = []
+    let chain: Spec[] = [] // from the ring to the final circle, s relative to the ring
+    let chainEnd = 0
+    let waves: Wave[] = []
     let color: Rgb = WHITE
     let dpr = 1
-    let arrive = 0
     let frame = 0
     let lastRing = false
-    const t0 = performance.now()
+    let ringPt: Pt = [0, 0]
+    const pulseEl = wrap.querySelector<HTMLElement>('[data-flow-pulse]')
 
-    /* Rects relative to the wrapper, minus any Reveal entrance offset. */
+    /* Rects relative to the wrapper, minus any Reveal entrance offset. Taken
+       from the rect's centre and the layout size, so a card scaled on hover
+       still gives its full-size box. */
     const boxOf = (el: Element, wr: DOMRect): Box => {
       const r = el.getBoundingClientRect()
       const ty = typeof DOMMatrix === 'function' ? new DOMMatrix(getComputedStyle(el.closest('.reveal') ?? el).transform).m42 : 0
-      return { x: r.left - wr.left, y: r.top - wr.top - ty, w: r.width, h: r.height }
+      const w = (el as HTMLElement).offsetWidth || r.width
+      const h = (el as HTMLElement).offsetHeight || r.height
+      return { x: r.left + r.width / 2 - w / 2 - wr.left, y: r.top + r.height / 2 - h / 2 - wr.top - ty, w, h }
     }
     const radiiOf = (el: Element) => {
       const s = getComputedStyle(el)
@@ -135,18 +150,18 @@ export default function FlowOverlay({ animate }: { animate: boolean }) {
       )
     }
 
-    const mod = (n: number) => ((n % GAP) + GAP) % GAP
-    const stroke = (a: Pt, b: Pt, width: number, style: string | CanvasGradient) => {
-      ctx!.lineWidth = width
-      ctx!.strokeStyle = style
-      ctx!.beginPath()
-      ctx!.moveTo(a[0], a[1])
-      ctx!.lineTo(b[0], b[1])
-      ctx!.stroke()
+    const stroke = (c: CanvasRenderingContext2D, a: Pt, b: Pt, width: number, style: string) => {
+      c.lineWidth = width
+      c.strokeStyle = style
+      c.beginPath()
+      c.moveTo(a[0], a[1])
+      c.lineTo(b[0], b[1])
+      c.stroke()
     }
     /* One dash with its head at t along the path: ~2px steps fading in from
        the tail, whitening toward the head, over a faint wide glow. */
-    const dash = (spec: Spec, t: number) => {
+    const dash = (c: CanvasRenderingContext2D, spec: Spec, t: number) => {
+      if (t <= 0 || t > spec.len + DASH) return
       const steps = Math.ceil(DASH / 2)
       for (let i = 1; i <= steps; i++) {
         const from = Math.min(spec.len, t - (DASH * (i - 1)) / steps)
@@ -157,53 +172,111 @@ export default function FlowOverlay({ animate }: { animate: boolean }) {
         const tone = mix(color, WHITE, u ** 6 * 0.65)
         const a = pointAt(spec, from)
         const b = pointAt(spec, to)
-        stroke(a, b, 2 + 6 * GLOW, rgba(tone, fade * 0.2 * GLOW))
-        stroke(a, b, THICKNESS, rgba(tone, fade))
+        stroke(c, a, b, 2 + 6 * GLOW, rgba(tone, fade * 0.2 * GLOW))
+        stroke(c, a, b, THICKNESS, rgba(tone, fade))
       }
-      if (t < 0 || t > spec.len) return
+      if (t > spec.len) return
       const [x, y] = pointAt(spec, t)
       const reach = 12 + 40 * GLOW
       const strength = 0.4 * GLOW
-      const bloom = ctx!.createRadialGradient(x, y, 0, x, y, reach)
+      const bloom = c.createRadialGradient(x, y, 0, x, y, reach)
       bloom.addColorStop(0, rgba(color, strength))
       bloom.addColorStop(0.2, rgba(color, strength * 0.4))
       bloom.addColorStop(0.5, rgba(color, strength * 0.1))
       bloom.addColorStop(1, rgba(color, 0))
-      ctx!.fillStyle = bloom
-      ctx!.fillRect(x - reach, y - reach, reach * 2, reach * 2)
+      c.fillStyle = bloom
+      c.fillRect(x - reach, y - reach, reach * 2, reach * 2)
     }
+    /* A wide band of light crossing the card from its outer corner to its
+       inner corner, in step with the dashes on its border. */
+    const sweep = (c: CanvasRenderingContext2D, card: Card, d: number) => {
+      const [fx, fy] = card.from
+      const dx = card.to[0] - fx
+      const dy = card.to[1] - fy
+      const span = Math.hypot(dx, dy)
+      const p = d / card.border
+      if (p <= 0 || p >= 1) return
+      const [ux, uy] = [dx / span, dy / span]
+      const mid = -SWEEP / 2 + p * (span + SWEEP)
+      const g = c.createLinearGradient(fx + ux * (mid - SWEEP / 2), fy + uy * (mid - SWEEP / 2), fx + ux * (mid + SWEEP / 2), fy + uy * (mid + SWEEP / 2))
+      g.addColorStop(0, rgba(color, 0))
+      g.addColorStop(0.5, rgba(color, SWEEP_ALPHA))
+      g.addColorStop(1, rgba(color, 0))
+      const { x, y, w, h } = card.box
+      c.save()
+      c.beginPath()
+      c.roundRect(x, y, w, h, card.radius)
+      c.clip()
+      c.fillStyle = g
+      c.fillRect(x, y, w, h)
+      c.restore()
+    }
+
     const draw = (now = performance.now()) => {
       if (!ctx || !canvasEl) return
-      const d = ((now - t0) / 1000) * SPEED
       ctx.setTransform(1, 0, 0, 1, 0, 0)
       ctx.clearRect(0, 0, canvasEl.width, canvasEl.height)
       ctx.setTransform(dpr, 0, 0, dpr, BLEED * dpr, BLEED * dpr)
       ctx.globalCompositeOperation = 'lighter'
       ctx.lineCap = 'butt'
-      for (const spec of specs) {
-        const t = mod(d - spec.s)
-        if (t <= spec.len + DASH) dash(spec, t)
+      let lit = false
+      waves = waves.filter((w) => cards[w.card] && ((now - w.t0) / 1000) * SPEED <= cards[w.card].arrive + chainEnd + DASH)
+      for (const w of waves) {
+        const card = cards[w.card]
+        const d = ((now - w.t0) / 1000) * SPEED
+        // The card's live scale (hover and press), about its centre.
+        const k = card.el.getBoundingClientRect().width / card.box.w || 1
+        const cx = card.box.x + card.box.w / 2
+        const cy = card.box.y + card.box.h / 2
+        const scaled = (p: Pt): Pt => [cx + (p[0] - cx) * k, cy + (p[1] - cy) * k]
+        ctx.save()
+        ctx.transform(k, 0, 0, k, cx * (1 - k), cy * (1 - k))
+        sweep(ctx, card, d)
+        for (const spec of card.edges) dash(ctx, spec, d)
+        ctx.restore()
+        // Then straight from the (scaled) inner corner into the ring.
+        for (const spec of card.edges) dash(ctx, polyline([scaled(spec.pts[spec.pts.length - 1]), ringPt], spec.len), d - spec.len)
+        const out = d - card.arrive
+        for (const spec of chain) dash(ctx, spec, out - spec.s)
+        if (out >= 0 && out <= PULSE) lit = true
+        if (!w.landed && out >= chainEnd) {
+          w.landed = true
+          // The halo grows out from the solid circle (80 of its 128px) and fades.
+          pulseEl?.animate(
+            [
+              { opacity: 1, transform: 'scale(0.625)' },
+              { opacity: 1, transform: 'scale(1)', offset: 0.45 },
+              { opacity: 0, transform: 'scale(1.15)' },
+            ],
+            { duration: 1600, easing: 'cubic-bezier(0.2, 0.6, 0.3, 1)' },
+          )
+        }
       }
-      const lit = arrive > 0 && mod(d - arrive) <= PULSE
       if (lit !== lastRing) {
         lastRing = lit
         ringEl.style.borderColor = lit ? 'var(--color-primary)' : ''
       }
     }
+    const polyline = (pts: Pt[], s = 0): Spec => {
+      const cum = pts.map((_, i) => length(pts.slice(0, i + 1)))
+      return { pts, cum, len: cum[cum.length - 1], s }
+    }
     const loop = (now: number) => {
       draw(now)
-      frame = requestAnimationFrame(loop)
+      frame = waves.length ? requestAnimationFrame(loop) : 0
     }
 
     const measure = () => {
       const wr = wrap.getBoundingClientRect()
       const wide = window.matchMedia('(min-width: 768px)').matches
-      const problem = [...wrap.querySelectorAll('[data-flow="problem"]')].map((el) => boxOf(el, wr))
+      const problemEls = [...wrap.querySelectorAll<HTMLElement>('[data-flow="problem"]')]
+      const problem = problemEls.map((el) => boxOf(el, wr))
       const stepEls = [...wrap.querySelectorAll('[data-flow="step"]')]
       const finalEl = wrap.querySelector('[data-flow="final"]')
       if (!stepEls.length || !finalEl) return
       const steps = stepEls.map((el) => boxOf(el, wr))
-      const fin = boxOf(finalEl, wr)
+      // The dash ends on the solid circle, inside the halo.
+      const fin = boxOf(finalEl.querySelector(':scope > :not([data-flow-pulse])') ?? finalEl, wr)
 
       const cx = wide && problem.length === 4 ? (problem[0].x + problem[0].w + problem[1].x) / 2 : 0
       const cy = wide && problem.length === 4 ? (problem[0].y + problem[0].h + problem[2].y) / 2 : 0
@@ -218,29 +291,33 @@ export default function FlowOverlay({ animate }: { animate: boolean }) {
       canvasEl.width = Math.round((wr.width + BLEED * 2) * dpr)
       canvasEl.height = Math.round((wr.height + BLEED * 2) * dpr)
       color = toRgb(ctx, getComputedStyle(wrap).getPropertyValue('--color-primary').trim() || '#f04a00')
-      const ringPt: Pt = [cx, cy]
-      const route = (pts: Pt[], start: number) => {
-        const cum = pts.map((_, i) => length(pts.slice(0, i + 1)))
-        specs.push({ pts, cum, len: cum[cum.length - 1], s: start })
-        return cum[cum.length - 1]
-      }
-      specs = []
-      // Problem phase: both ways round each card to its inner corner, then into the ring.
-      const runs: Pt[][] = []
+      ringPt = [cx, cy]
+      const spec = polyline
+
+      // Each card: both ways round its border to the inner corner, then into the ring.
+      cards = []
       if (wide && problem.length === 4) {
-        const radii = radiiOf(wrap.querySelector('[data-flow="problem"]')!)
         problem.forEach((b, i) => {
+          const radii = radiiOf(problemEls[i])
           const o = outline(b, radii)
           const [from, to] = CORNERS[i]
-          runs.push([...o.slice(o.pos[from], o.pos[to]), ringPt], [...o.slice(o.pos[to], o.pos[from]).reverse(), ringPt])
+          const one = o.slice(o.pos[from], o.pos[to])
+          const two = o.slice(o.pos[to], o.pos[from]).reverse()
+          const edges = [spec(one), spec(two)]
+          const border = Math.max(...edges.map((e) => e.len))
+          const arrive = Math.max(...edges.map((e) => e.len + length([e.pts[e.pts.length - 1], ringPt])))
+          cards.push({ el: problemEls[i], box: b, radius: radii[0], edges, from: one[0], to: one[one.length - 1], border, arrive })
         })
       }
-      // Every run ends at the ring on the same beat: shorter ones start later.
-      const maxLen = Math.max(0, ...runs.map(length))
-      runs.forEach((pts) => route(pts, maxLen - length(pts)))
 
-      let cursor = maxLen
-      const add = (pts: Pt[]) => route(pts, cursor)
+      // From the ring: down to Diagnose, both ways round each step card, down to the circle.
+      chain = []
+      let cursor = 0
+      const add = (pts: Pt[]) => {
+        const sp = spec(pts, cursor)
+        chain.push(sp)
+        return sp.len
+      }
       const outs = stepEls.map((el, i) => outline(steps[i], radiiOf(el)))
       if (wide) cursor += add([ringPt, [outs[0].x, outs[0].top]])
       outs.forEach((o, i) => {
@@ -250,20 +327,29 @@ export default function FlowOverlay({ animate }: { animate: boolean }) {
         const next: Pt = i + 1 < outs.length ? [outs[i + 1].x, outs[i + 1].top] : [fin.x + fin.w / 2, fin.y]
         cursor += add([[o.x, o.bottom], next])
       })
-      arrive = maxLen
+      chainEnd = cursor
       draw()
     }
 
-    measure()
-    // Only run frames while the flow is on screen.
-    let io: IntersectionObserver | undefined
-    if (animate && typeof IntersectionObserver === 'function') {
-      io = new IntersectionObserver(([entry]) => {
-        cancelAnimationFrame(frame)
-        frame = entry.isIntersecting ? requestAnimationFrame(loop) : 0
+    /* Clicking a card presses it (scale down, then back up) and fires one wave
+       from it, unless its last one is still on the card. */
+    const onClick = (event: Event) => {
+      const i = cards.findIndex((c) => c.el === event.currentTarget)
+      if (i < 0) return
+      // From and back to whatever scale the card has (hover scales it down).
+      cards[i].el.animate([{ scale: '0.95', offset: 0.35 }], {
+        duration: 260,
+        easing: 'cubic-bezier(0.3, 0, 0.2, 1)',
       })
-      io.observe(wrap)
+      const now = performance.now()
+      if (waves.some((w) => w.card === i && ((now - w.t0) / 1000) * SPEED < cards[i].border)) return
+      waves.push({ card: i, t0: now, landed: false })
+      if (!frame) frame = requestAnimationFrame(loop)
     }
+
+    measure()
+    const problemEls = [...wrap.querySelectorAll('[data-flow="problem"]')]
+    if (animate) problemEls.forEach((el) => el.addEventListener('click', onClick))
     let observer: ResizeObserver | undefined
     if (typeof ResizeObserver === 'function') {
       observer = new ResizeObserver(measure)
@@ -273,7 +359,7 @@ export default function FlowOverlay({ animate }: { animate: boolean }) {
     document.fonts?.ready.then(measure)
     return () => {
       cancelAnimationFrame(frame)
-      io?.disconnect()
+      problemEls.forEach((el) => el.removeEventListener('click', onClick))
       observer?.disconnect()
     }
   }, [animate])

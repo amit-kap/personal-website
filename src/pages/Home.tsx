@@ -343,7 +343,7 @@ function Problem() {
   const problemLead = problem.headline.slice(0, breakAt)
   const problemPayoff = problem.headline.slice(breakAt)
   return (
-    <section className={`${bandClass} py-20`}>
+    <section className={`${bandClass} pt-20`}>
       <div className={innerClass}>
         <div className="flex flex-col gap-4">
           <Reveal as="h2" className={labelClass}>
@@ -356,7 +356,11 @@ function Problem() {
         </div>
         <Reveal as="ol" className="grid grid-cols-1 items-start gap-8 pt-4 md:grid-cols-2">
           {problem.items.map((item, index) => (
-            <li key={index} data-flow="problem" className="flex flex-col items-start gap-4 rounded-container border border-border p-6">
+            <li
+              key={index}
+              data-flow="problem"
+              className="flex flex-col items-start gap-4 rounded-container border border-border p-6 transition-[scale] duration-200 ease-out md:motion-safe:cursor-pointer md:motion-safe:select-none md:motion-safe:hover:scale-[0.98]"
+            >
               <span className="self-stretch text-meta text-muted-foreground">
                 {String(index + 1).padStart(2, '0')}
               </span>
@@ -417,7 +421,9 @@ function Solution() {
   const { solution } = homeCopy
   const radius = ['rounded-t-container', '', 'rounded-b-container']
   return (
-    <section className="flex flex-col items-center px-4 py-20 md:px-[57px]">
+    /* 78px top: with the label (20px) and its gap (16px), the problem cards sit
+       114px above Diagnose, the same as Build to the final circle. */
+    <section className="flex flex-col items-center px-4 pt-[78px] pb-20 md:px-[57px]">
       <div className={innerClass}>
         <Reveal as="h2" className={labelClass}>
           {solution.label}
@@ -437,9 +443,12 @@ function Solution() {
           ))}
         </Reveal>
         <div className="-mt-4 flex flex-col items-center">
-          <Connector className="-mt-[3px] h-20" />
+          {/* Runs through the (hidden) halo to the solid circle, which sits 114px below Build. */}
+          <Connector className="relative z-10 -mt-[3px] -mb-6 h-[120px]" />
           <Reveal className="-mt-[3px] flex w-full flex-col items-center gap-10">
-            <div data-flow="final" className="flex items-center rounded-pill bg-primary/15 p-6">
+            <div data-flow="final" className="relative flex items-center rounded-pill p-6">
+              {/* The halo: hidden at rest, it grows out of the circle when a dash lands. */}
+              <span data-flow-pulse aria-hidden="true" className="pointer-events-none absolute inset-0 rounded-pill bg-primary/15 opacity-0" />
               <div className="flex items-center rounded-pill bg-primary p-6">
                 <svg className="size-8 shrink-0 text-foreground" width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                   <path d="M22.667 28a6.667 6.667 0 0 0-13.334 0" />
