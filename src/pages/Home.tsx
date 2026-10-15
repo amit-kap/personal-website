@@ -426,7 +426,7 @@ function Solution() {
        114px above Diagnose, the same as Build to the final circle. */
     <section className="flex flex-col items-center px-4 pt-[78px] pb-20 md:px-[57px]">
       <div className={innerClass}>
-        <Reveal as="h2" className={labelClass}>
+        <Reveal as="h2" className={`${labelClass} text-center`}>
           {solution.label}
         </Reveal>
         <Reveal as="ol" className="flex flex-col items-stretch">

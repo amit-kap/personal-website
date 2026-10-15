@@ -5,8 +5,8 @@ import { useLayoutEffect, useRef } from 'react'
    before the next round. Step one: all four problem cards fire at once: a dash
    runs round each card's border both ways to its inner corner while a wide
    light sweeps across it, the dashes meet in the ring, which lights, and one
-   dash runs down the connector to Diagnose, which turns on with a sweep from
-   top to bottom. Steps two to four: a dash runs down the connector from the
+   dash runs down the connector, which stops just above the centred Proposed
+   Solution label, and Diagnose turns on with a sweep from top to bottom. Steps two to four: a dash runs down the connector from the
    card that is on and turns the next one on (Plan, then Build), which turns
    the one before off; at the circle the halo grows out and fades and the last
    card turns off.
@@ -25,6 +25,7 @@ const SWEEP_ALPHA = 0.35
 const SWEEP_MS = 900 // how long a step card's turn-on sweep takes
 const STEP_MS = 500 // pause between the steps of a round
 const LOOP_MS = 2500 // pause before the next round
+const LABEL_GAP = 8 // px between the ring's connector and the solution label
 const STEPS = 8
 /* Per problem card: outer corner, then the inner corner nearest the ring. */
 const CORNERS = [['tl', 'br'], ['tr', 'bl'], ['bl', 'tr'], ['br', 'tl']]
@@ -314,16 +315,22 @@ export default function FlowOverlay({ animate }: { animate: boolean }) {
       if (!stepEls.length || !finalEl) return
       const stepBoxes = stepEls.map((el) => boxOf(el, wr))
       // The dash ends on the solid circle, inside the halo.
+      // The ring's connector ends LABEL_GAP above the solution label. The label
+      // sits a column gap above the step list; measured from layout, not its
+      // rect, so its own entrance offset can't skew it.
+      const labelEl = stepEls[0].closest('section')?.querySelector<HTMLElement>('h2')
+      const labelGap = labelEl?.parentElement ? parseFloat(getComputedStyle(labelEl.parentElement).rowGap) || 0 : 0
+      const stop = stepBoxes[0].y - (labelEl ? labelEl.offsetHeight + labelGap : 0) - LABEL_GAP
       const fin = boxOf(finalEl.querySelector(':scope > :not([data-flow-pulse])') ?? finalEl, wr)
 
       const grid = wide && problem.length === 4
       const cx = grid ? (problem[0].x + problem[0].w + problem[1].x) / 2 : 0
       const cy = grid ? (problem[0].y + problem[0].h + problem[2].y) / 2 : 0
-      // Ring centred between the four cards, connector down to Diagnose (+3px overlap).
+      // Ring centred between the four cards, connector down to just above the label.
       ringEl.style.visibility = lineEl.style.visibility = wide ? 'visible' : 'hidden'
       ringEl.style.transform = `translate(${cx - 12}px, ${cy - 12}px)`
       lineEl.style.transform = `translate(${cx - 3}px, ${cy + 9}px)`
-      lineEl.style.height = `${stepBoxes[0].y + 3 - (cy + 9)}px`
+      lineEl.style.height = `${stop - (cy + 9)}px`
 
       if (!animate || !canvasEl || !ctx) return
       dpr = Math.min(window.devicePixelRatio || 1, 2)
@@ -357,7 +364,7 @@ export default function FlowOverlay({ animate }: { animate: boolean }) {
       const top = (b: Box): Pt => [b.x + b.w / 2, b.y + 0.5]
       const bottom = (b: Box): Pt => [b.x + b.w / 2, b.y + b.h - 0.5]
       const next: Leg[] = [
-        { problems: grid, path: grid ? polyline([ringPt, top(stepBoxes[0])]) : undefined, step: 0, done: false },
+        { problems: grid, path: grid ? polyline([ringPt, [cx, stop - 3]]) : undefined, step: 0, done: false },
         ...stepBoxes.slice(1).map((b, i) => ({ problems: false, path: polyline([bottom(stepBoxes[i]), top(b)]), step: i + 1, done: false })),
         { problems: false, path: polyline([bottom(stepBoxes[stepBoxes.length - 1]), [fin.x + fin.w / 2, fin.y]]), done: false },
       ]
