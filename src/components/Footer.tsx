@@ -10,7 +10,7 @@ const LINKEDIN_URL = 'https://www.linkedin.com/in/amitkaplinsky'
    link, a 52px circle at rest (20px icon + 15px padding + 1px border) that
    opens to show its label on hover or keyboard focus. */
 const revealPill =
-  'h-[52px] min-w-[52px] rounded-pill bg-panel px-[15px] text-body font-medium text-bright hover:bg-panel hover:px-5 focus-visible:px-5 transition-[padding,background-color,transform] duration-(--duration-moderate) ease-standard active:scale-[0.97] motion-reduce:transition-none'
+  'h-[52px] min-w-[52px] rounded-pill bg-card px-[15px] text-body font-medium text-foreground hover:bg-card hover:px-5 focus-visible:px-5 transition-[padding,background-color,transform] duration-(--duration-moderate) ease-standard active:scale-[0.97] motion-reduce:transition-none'
 
 function SendIcon() {
   return (
@@ -26,11 +26,11 @@ function LinkedInIcon() {
     <svg viewBox="0 0 22 22" width="22" height="22" aria-hidden="true" className="size-5 shrink-0">
       <g fillRule="evenodd">
         <path
-          className="fill-panel"
+          className="fill-card"
           d="M2.445 22L19.556 22C20.905 22 22 20.906 22 19.556L22 2.445C22 1.095 20.905 0 19.556 0L2.445 0C1.094 0 0 1.095 0 2.445L0 19.556C0 20.906 1.094 22 2.445 22Z"
         />
         <path
-          className="fill-bright"
+          className="fill-foreground"
           d="M18.945 18.945L15.68 18.945 15.68 13.384C15.68 11.86 15.101 11.007 13.894 11.007 12.581 11.007 11.895 11.895 11.895 13.384L11.895 18.945 8.749 18.945 8.749 8.352 11.895 8.352 11.895 9.779C11.895 9.779 12.842 8.028 15.09 8.028 17.336 8.028 18.945 9.4 18.945 12.238L18.945 18.945ZM4.996 6.965C3.924 6.965 3.056 6.09 3.056 5.01 3.056 3.931 3.924 3.056 4.996 3.056 6.067 3.056 6.935 3.931 6.935 5.01 6.935 6.09 6.067 6.965 4.996 6.965ZM3.371 18.945L6.651 18.945 6.651 8.352 3.371 8.352 3.371 18.945Z"
         />
       </g>
@@ -57,12 +57,12 @@ export default function Footer() {
 
   /* As in Paper: one orange band, from the CTA down to the credits and clock. */
   return (
-    <footer className="text-bright">
+    <footer className="text-primary-foreground">
       <div className={`flex flex-col items-center gap-10 bg-primary/90 px-4 ${home ? 'pt-30' : 'pt-20'}`}>
-        <h2 className="whitespace-pre-line text-center text-feature font-medium text-bright">
+        <h2 className="whitespace-pre-line text-center text-feature font-medium text-primary-foreground">
           {"Building a new product?\nLet's see if it's a fit."}
         </h2>
-        <p className="w-full max-w-[586px] text-center text-body leading-5 text-ink-soft">
+        <p className="w-full max-w-[586px] text-center text-body leading-5 text-secondary-foreground">
           For founders of complex B2B, AI and dev-tool products who need senior product judgment without a full-time hire.
         </p>
         <div className="flex items-center gap-10">

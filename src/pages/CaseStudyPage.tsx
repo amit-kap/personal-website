@@ -48,13 +48,13 @@ const markdownComponents = (images: Record<string, ContentImage>) => ({
   // The md pattern is `### Heading` followed by `---`: the h3 is the section
   // head, the hr below it draws the hairline.
   h3: ({ children }: { children?: React.ReactNode }) => (
-    <h2 className="mt-9 font-heading text-[24px] font-medium leading-tight tracking-[-0.015em] text-foreground">{children}</h2>
+    <h2 className="mt-9 font-heading text-heading font-medium text-foreground">{children}</h2>
   ),
   h2: ({ children }: { children?: React.ReactNode }) => (
-    <h2 className="mt-9 font-heading text-[24px] font-medium leading-tight tracking-[-0.015em] text-foreground">{children}</h2>
+    <h2 className="mt-9 font-heading text-heading font-medium text-foreground">{children}</h2>
   ),
   h4: ({ children }: { children?: React.ReactNode }) => (
-    <h3 className="mt-6 font-heading text-[18px] font-medium text-foreground">{children}</h3>
+    <h3 className="mt-6 font-heading text-title font-medium text-foreground">{children}</h3>
   ),
   hr: () => <hr className="border-border" />,
   p: ({ children }: { children?: React.ReactNode }) => (
@@ -71,12 +71,12 @@ const markdownComponents = (images: Record<string, ContentImage>) => ({
     <ol className="flex flex-col gap-2.5">{children}</ol>
   ),
   li: ({ children }: { children?: React.ReactNode }) => (
-    <li className="grid grid-cols-[18px_minmax(0,1fr)] text-[17px] leading-[1.7] text-copy before:content-['–'] before:text-muted-foreground">
+    <li className="grid grid-cols-[18px_minmax(0,1fr)] text-title leading-relaxed text-copy before:content-['–'] before:text-muted-foreground">
       <span className="col-start-2">{children}</span>
     </li>
   ),
   blockquote: ({ children }: { children?: React.ReactNode }) => (
-    <blockquote className="prose-quote my-2.5 [&>p]:m-0 [&>p]:font-heading [&>p]:text-[20px] [&>p]:leading-[1.5] [&>p]:text-foreground">
+    <blockquote className="prose-quote my-2.5 [&>p]:m-0 [&>p]:font-heading [&>p]:text-stmt [&>p]:leading-normal [&>p]:text-foreground">
       {children}
     </blockquote>
   ),
@@ -85,7 +85,7 @@ const markdownComponents = (images: Record<string, ContentImage>) => ({
   ),
   em: ({ children }: { children?: React.ReactNode }) => <em className="italic">{children}</em>,
   a: ({ children, href }: { children?: React.ReactNode; href?: string }) => (
-    <a href={href} target="_blank" rel="noopener noreferrer" className="font-medium text-primary hover:underline hover:underline-offset-[3px]">
+    <a href={href} target="_blank" rel="noopener noreferrer" className="font-medium text-primary hover:underline hover:underline-offset-4">
       {children}
     </a>
   ),
@@ -110,11 +110,11 @@ const markdownComponents = (images: Record<string, ContentImage>) => ({
               width={width}
               height={height}
               loading="lazy"
-              wrapperClassName="w-full min-h-[180px]"
+              wrapperClassName="w-full min-h-45"
               className="block w-full"
             />
           </ZoomableWindow>
-          {alt ? <figcaption className="mt-2.5 text-center text-[13px] text-muted-foreground">{alt}</figcaption> : null}
+          {alt ? <figcaption className="mt-2.5 text-center text-caption text-muted-foreground">{alt}</figcaption> : null}
         </figure>
       )
     }
@@ -126,10 +126,10 @@ const markdownComponents = (images: Record<string, ContentImage>) => ({
           width={width}
           height={height}
           loading="lazy"
-          wrapperClassName="w-full overflow-hidden rounded-lg border border-border min-h-[120px]"
+          wrapperClassName="w-full overflow-hidden rounded-lg border border-border min-h-30"
           className="block w-full"
         />
-        {alt ? <figcaption className="mt-2.5 text-center text-[13px] text-muted-foreground">{alt}</figcaption> : null}
+        {alt ? <figcaption className="mt-2.5 text-center text-caption text-muted-foreground">{alt}</figcaption> : null}
       </figure>
     )
   },
@@ -137,7 +137,7 @@ const markdownComponents = (images: Record<string, ContentImage>) => ({
 
 function ArrowBackIcon() {
   return (
-    <svg className="size-[15px]" width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
+    <svg className="size-4" width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
       <path d="M12 4 L4 12 M10.5 12 H4 V5.5" />
     </svg>
   )
@@ -168,13 +168,13 @@ export default function CaseStudyPage() {
       />
       {/* Title block */}
       <section className="relative">
-        <div className="inner-col flex flex-col items-center gap-[18px] pb-12 pt-16 text-center">
+        <div className="inner-col flex flex-col items-center gap-4.5 pb-12 pt-16 text-center">
           <Reveal as="p" className="meta-line" delay={0.08}>{meta}</Reveal>
-          <Reveal as="h1" className="max-w-[820px] font-heading text-feature font-medium tracking-[-0.02em]" delay={0.16}>
+          <Reveal as="h1" className="max-w-[820px] font-heading text-feature font-medium" delay={0.16}>
             {caseStudy.title}
           </Reveal>
           {caseStudy.excerpt && (
-            <Reveal as="p" className="max-w-[640px] text-[19px] font-light leading-normal text-muted-foreground" delay={0.24}>
+            <Reveal as="p" className="max-w-[640px] text-title font-light text-muted-foreground" delay={0.24}>
               {caseStudy.excerpt}
             </Reveal>
           )}
@@ -205,7 +205,7 @@ export default function CaseStudyPage() {
       {/* Body */}
       <section className="relative border-t border-border">
         <div className="inner-col pb-16 pt-14">
-          <article className="prose-col flex flex-col gap-[22px]">
+          <article className="prose-col flex flex-col gap-5.5">
             <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents(caseStudy.bodyImages)}>
               {caseStudy.body}
             </ReactMarkdown>
@@ -216,7 +216,7 @@ export default function CaseStudyPage() {
       {/* Back to Blog */}
       <section className="relative border-t border-border">
         <div className="inner-col flex justify-center pb-16 pt-14">
-          <Link to="/blog" className={pillButton('roll-host px-[30px] py-3.5 text-[15px]')}>
+          <Link to="/blog" className={pillButton('roll-host px-7.5 py-3.5 text-meta')}>
             <RollingText text="Back to Blog" />
             <ArrowBackIcon />
           </Link>

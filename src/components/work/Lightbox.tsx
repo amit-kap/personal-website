@@ -35,7 +35,7 @@ export default function Lightbox({
       <DialogContent
         showCloseButton={false}
         onClick={onClose}
-        className="inset-0 z-60 grid h-full w-full max-w-none translate-x-0 translate-y-0 cursor-zoom-out place-items-center gap-0 rounded-none bg-[rgba(10,10,12,0.86)] p-[clamp(16px,4vw,56px)] ring-0 duration-200 data-open:zoom-in-100 data-closed:zoom-out-100 sm:max-w-none"
+        className="inset-0 z-60 grid h-full w-full max-w-none translate-x-0 translate-y-0 cursor-zoom-out place-items-center gap-0 rounded-none bg-[rgba(10,10,12,0.86)] p-[clamp(16px,4vw,56px)] ring-0 duration-(--duration-moderate) data-open:zoom-in-100 data-closed:zoom-out-100 sm:max-w-none"
       >
         <DialogTitle className="sr-only">{alt}</DialogTitle>
         <DialogClose className="lightbox-close" aria-label="Close" onClick={(event) => event.stopPropagation()}>

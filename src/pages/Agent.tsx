@@ -38,7 +38,7 @@ export default function Agent() {
           <header className="flex flex-wrap items-end justify-between gap-5 border-b border-border pb-8">
             <div className="flex flex-col gap-3">
               <p className="eyebrow">Agent view</p>
-              <h1 className="font-heading text-feature font-medium tracking-[-0.02em]">The portfolio in plain text.</h1>
+              <h1 className="font-heading text-feature font-medium">The portfolio in plain text.</h1>
               <p className="body-copy max-w-[640px]">
                 A text-first version of this site for fast reading, indexing, and retrieval.
               </p>
@@ -52,14 +52,14 @@ export default function Agent() {
               <ReactMarkdown
                 remarkPlugins={[remarkGfm]}
                 components={{
-                  h1: ({ children }) => <h2 className="font-heading text-section font-medium tracking-[-0.02em]">{children}</h2>,
-                  h2: ({ children }) => <h2 className="mt-8 font-heading text-[28px] font-medium tracking-[-0.02em]">{children}</h2>,
-                  h3: ({ children }) => <h3 className="mt-6 font-heading text-[22px] font-medium tracking-[-0.015em]">{children}</h3>,
+                  h1: ({ children }) => <h2 className="font-heading text-section font-medium">{children}</h2>,
+                  h2: ({ children }) => <h2 className="mt-8 font-heading text-display font-medium">{children}</h2>,
+                  h3: ({ children }) => <h3 className="mt-6 font-heading text-heading font-medium">{children}</h3>,
                   p: ({ children }) => <p className="body-copy">{children}</p>,
                   a: ({ href, children }) => <a href={href} className="text-link">{children}</a>,
-                  ul: ({ children }) => <ul className="list-disc space-y-2 pl-6 text-[16px] leading-[1.65] text-muted-foreground">{children}</ul>,
-                  ol: ({ children }) => <ol className="list-decimal space-y-2 pl-6 text-[16px] leading-[1.65] text-muted-foreground">{children}</ol>,
-                  blockquote: ({ children }) => <blockquote className="border-l-2 border-primary pl-5 text-[18px] italic leading-[1.55] text-muted-foreground">{children}</blockquote>,
+                  ul: ({ children }) => <ul className="list-disc space-y-2 pl-6 text-body text-muted-foreground">{children}</ul>,
+                  ol: ({ children }) => <ol className="list-decimal space-y-2 pl-6 text-body text-muted-foreground">{children}</ol>,
+                  blockquote: ({ children }) => <blockquote className="border-l-2 border-primary pl-5 text-title italic text-muted-foreground">{children}</blockquote>,
                   hr: () => <hr className="my-5 border-border" />,
                   img: ({ alt }) => <p className="text-meta text-muted-foreground">Image: {alt}</p>,
                 }}

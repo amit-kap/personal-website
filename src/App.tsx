@@ -45,7 +45,7 @@ export default function App() {
         {/* The 960px centre column. Pages render into it. */}
         <div className="mx-auto w-full max-w-[960px] flex-1 px-4 sm:px-0">
           <Header />
-          <div className="bg-panel-90">
+          <div className="bg-card/90">
             <Suspense fallback={null}>
               <Routes>
                 <Route path="/" element={<Home />} />

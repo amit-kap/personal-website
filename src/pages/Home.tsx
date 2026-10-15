@@ -19,7 +19,7 @@ const labelClass = 'text-body leading-5 text-muted-foreground'
 
 function ShiftMark() {
   return (
-    <svg className="size-[30px] shrink-0 text-bright" width="30" height="30" viewBox="0 -38 30 30" fill="currentColor" aria-hidden="true">
+    <svg className="size-7.5 shrink-0 text-foreground" width="30" height="30" viewBox="0 -38 30 30" fill="currentColor" aria-hidden="true">
       <path fillRule="evenodd" clipRule="evenodd" d="M13.309-37.917C13.506-38.027 13.749-38.027 13.946-37.917L21.936-33.49C22.24-33.321 22.344-32.949 22.169-32.657 21.992-32.366 21.604-32.267 21.3-32.436L13.627-36.688 6.272-32.611V-24.459L13.946-20.206C14.25-20.037 14.354-19.665 14.178-19.374 14.002-19.082 13.613-18.984 13.309-19.152L5.317-23.58C5.121-23.689 5-23.89 5-24.108V-32.962C5-33.18 5.121-33.381 5.317-33.49L13.309-37.917Z" />
       <path fillRule="evenodd" clipRule="evenodd" d="M5.085-33.269C5.261-33.56 5.65-33.659 5.955-33.49L13.946-29.064C14.25-28.895 14.354-28.523 14.178-28.231 14.001-27.94 13.613-27.841 13.309-28.009L5.317-32.436C5.014-32.605 4.91-32.977 5.085-33.269Z" />
       <path d="M13.627-28.535V-19.68L21.617-32.962 13.627-28.535Z" />
@@ -164,12 +164,12 @@ function Hero() {
           backgroundColor="transparent"
           textColor="inherit"
           borderColor="var(--copy-border)"
-          className="gap-4! px-6! py-[9px]! font-normal! leading-normal!"
+          className="gap-4! px-6! py-2.25! font-normal! leading-normal!"
         >
           <span className="text-meta text-foreground">{homeCopy.availability}</span>
         </StarBorder>
       </Reveal>
-      <Reveal as="h1" delay={0.08} className="mt-10 font-heading text-hero font-medium text-bright">
+      <Reveal as="h1" delay={0.08} className="mt-10 font-heading text-hero font-medium text-foreground">
         {/* Screen readers and search get the plain title; the rotating
             words are decoration. */}
         <span className="sr-only">{homeCopy.headlineLines.join(' ')}</span>
@@ -237,7 +237,7 @@ function Featured() {
                 {/* Name and what it is read as one title line; the tagline
                     wraps under the name on narrow screens. */}
                 <p className="flex flex-wrap items-center gap-x-3 gap-y-1 text-stmt">
-                  <span className="flex items-center gap-2 text-bright">
+                  <span className="flex items-center gap-2 text-foreground">
                     <ShiftMark />
                     Shift
                   </span>
@@ -260,7 +260,7 @@ function Featured() {
                 iconSide="end"
                 className={revealPill}
               >
-                <svg className="size-[22px]" viewBox="0 0 33 33" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <svg className="size-5.5" viewBox="0 0 33 33" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                   <path d="M6.875 16.5h19.25" />
                   <path d="M16.5 6.875l9.625 9.625-9.625 9.625" />
                 </svg>
@@ -287,7 +287,7 @@ function RecentWork({ works }: { works: Work[] }) {
         <Reveal as="h2" className={`${labelClass} text-center`}>
           {recentWork.label}
         </Reveal>
-        <Reveal className="grid grid-cols-2 gap-4 md:flex md:h-[180px]">
+        <Reveal className="grid grid-cols-2 gap-4 md:flex md:h-45">
           {tiles.map((work) => {
             const company = work.company.replace(/ Software$/, '')
             const logo = logoFor(work.slug)
@@ -306,7 +306,7 @@ function RecentWork({ works }: { works: Work[] }) {
                       } as CSSProperties)
                     : undefined
                 }
-                className="tilt group relative flex h-[120px] items-center justify-center rounded-container border border-border bg-background md:h-auto md:flex-1"
+                className="tilt group relative flex h-30 items-center justify-center rounded-container border border-border bg-background md:h-auto md:flex-1"
               >
                 {/* Logo and name sit as one group: at rest it is offset so
                     the logo alone is centred; on hover the logo rises, the
@@ -364,7 +364,7 @@ function Problem() {
               <span className="self-stretch text-meta text-muted-foreground">
                 {String(index + 1).padStart(2, '0')}
               </span>
-              <h3 className="self-stretch font-heading text-stmt text-bright">{item.title}</h3>
+              <h3 className="self-stretch font-heading text-stmt text-foreground">{item.title}</h3>
               <p className="self-stretch text-body leading-5 text-muted-foreground">{item.body}</p>
             </li>
           ))}
@@ -422,7 +422,7 @@ function Solution() {
   return (
     /* 78px top: with the label (20px) and its gap (16px), the problem cards sit
        114px above Diagnose, the same as Build to the final circle. */
-    <section className="flex flex-col items-center px-4 pt-[78px] md:px-[57px]">
+    <section className="flex flex-col items-center px-4 pt-19.5 md:px-[57px]">
       <div className={innerClass}>
         <Reveal as="h2" className={`${labelClass} text-center`}>
           {solution.label}
@@ -453,7 +453,7 @@ function Solution() {
               <div className="relative z-[1] flex items-center rounded-pill bg-primary p-8 ring-6 ring-background">
                 {/* Lucide "package": the finished product. Drawn on a 24 grid at
                     48px, so a 1 stroke matches the 2px strokes of the step icons. */}
-                <svg className="size-12 shrink-0 text-foreground" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <svg className="size-12 shrink-0 text-primary-foreground" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                   <path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z" />
                   <path d="M12 22V12" />
                   <polyline points="3.29 7 12 12 20.71 7" />

@@ -68,7 +68,7 @@ export default function About() {
               the headline balances its two lines so no word hangs alone. */}
           <div className="flex flex-col items-center gap-5 text-center">
             <Reveal as="p" className="eyebrow" delay={0.15}>About</Reveal>
-            <Reveal as="h1" className="text-balance font-heading text-feature font-medium tracking-[-0.02em]" delay={0.22}>
+            <Reveal as="h1" className="text-balance font-heading text-feature font-medium" delay={0.22}>
               I like figuring things out and seeing where they can go.
             </Reveal>
             <Reveal className="flex max-w-[640px] flex-col gap-3" delay={0.3}>
@@ -87,7 +87,7 @@ export default function About() {
           {cv.experience.map((entry, i) => (
             <Reveal
               key={entry.slug}
-              className={`grid items-start gap-x-8 gap-y-2 py-[26px] sm:grid-cols-[140px_260px_minmax(0,1fr)] ${i > 0 ? 'border-t border-border' : ''} ${i === cv.experience.length - 1 ? 'pb-1' : ''}`}
+              className={`grid items-start gap-x-8 gap-y-2 py-6.5 sm:grid-cols-[140px_260px_minmax(0,1fr)] ${i > 0 ? 'border-t border-border' : ''} ${i === cv.experience.length - 1 ? 'pb-1' : ''}`}
             >
               <p className="text-body text-muted-foreground">{formatPeriod(entry.period)}</p>
               <div className="flex flex-col items-start gap-2">
@@ -137,7 +137,7 @@ export default function About() {
             return (
               <Reveal
                 key={entry.title}
-                className={`grid items-start gap-x-8 gap-y-2 py-[26px] sm:grid-cols-[140px_260px_minmax(0,1fr)] ${i > 0 ? 'border-t border-border' : ''} ${i === cv.certificates.length - 1 ? 'pb-1' : ''}`}
+                className={`grid items-start gap-x-8 gap-y-2 py-6.5 sm:grid-cols-[140px_260px_minmax(0,1fr)] ${i > 0 ? 'border-t border-border' : ''} ${i === cv.certificates.length - 1 ? 'pb-1' : ''}`}
               >
                 <p className="text-body text-muted-foreground">{date}</p>
                 <h2 className="font-heading text-stmt font-medium">{entry.title}</h2>
@@ -157,7 +157,7 @@ export default function About() {
             return (
               <Reveal
                 key={entry.title}
-                className={`grid items-start gap-x-8 gap-y-2 py-[26px] sm:grid-cols-[140px_260px_minmax(0,1fr)] ${i > 0 ? 'border-t border-border' : ''} ${i === cv.education.length - 1 ? 'pb-1' : ''}`}
+                className={`grid items-start gap-x-8 gap-y-2 py-6.5 sm:grid-cols-[140px_260px_minmax(0,1fr)] ${i > 0 ? 'border-t border-border' : ''} ${i === cv.education.length - 1 ? 'pb-1' : ''}`}
               >
                 <p className="text-body text-muted-foreground">{date}</p>
                 <h2 className="font-heading text-stmt font-medium">{entry.title}</h2>
@@ -175,7 +175,7 @@ export default function About() {
           <div className="grid gap-8 sm:grid-cols-3 sm:gap-0">
             {cv.skills.map((group, i) => (
               <div key={group.category} className={`flex flex-col gap-3 ${i > 0 ? 'sm:border-l sm:border-border sm:pl-8' : 'sm:pr-8'}`}>
-                <h2 className="font-heading text-body font-medium tracking-[-0.01em]">{group.category}</h2>
+                <h2 className="font-heading text-body font-medium">{group.category}</h2>
                 {isTools(group.category) ? (
                   <div className="flex flex-col text-body text-copy">
                     {tools.map(({ Mark, name }) => (

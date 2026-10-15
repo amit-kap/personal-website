@@ -14,8 +14,8 @@
 
    Colour, shape, base type and elevation come from the Glaze theme
    "personal-website" (theme/personal-website.config.json → .css). This file
-   keeps only what Glaze has no token for: the extended type scale, the
-   site-only inks, structure, and the shared component utilities.
+   keeps only what Glaze has no token for (section 2), structure, and the
+   shared component utilities.
    ============================================================================ */
 
 /* ----------------------------------------------------------------------------
@@ -24,11 +24,17 @@
 @import '@fontsource-variable/inter/opsz.css';
 
 /* ----------------------------------------------------------------------------
-   2 · TYPE  — extended scale (generates text-* utilities)
-   Max values are the design's (Paper) sizes; the clamps step down on phones.
+   2 · SITE EXTENSIONS TO GLAZE
+   Everything here has no Glaze token (verified against dark mode): the
+   extended type scale, three Paper inks, and the primary hover shade. Colour,
+   shape, base type (caption/body/title/heading/display) and elevation come
+   from the Glaze theme "personal-website"; orange is Glaze's `primary`.
+   Panels, white text and soft inks use Glaze's card / foreground /
+   secondary-foreground directly.
 ---------------------------------------------------------------------------- */
+/* Type scale: generates text-* utilities. Max values are the design's (Paper)
+   sizes; the clamps step down on phones. */
 @theme {
-  /* Families, caption (12px) and body (16px) are Glaze theme inputs. */
   --text-meta: 0.875rem;                               /* 14px — nav, secondary UI */
   --text-meta--line-height: 1.286;                     /* 18px */
   --text-stmt: clamp(1.25rem, 1.55vw, 1.375rem);       /* 20→22px / 28 — section statements */
@@ -43,32 +49,29 @@
   --text-hero--line-height: 1.22;
 }
 
-/* ----------------------------------------------------------------------------
-   3 · COLOR — ink, hairlines, one orange accent for actions.
-   The palette lives in the Glaze theme. Orange is Glaze's `primary` (the
-   brand); Glaze's `accent` is a neutral hover fill, so actions use primary.
----------------------------------------------------------------------------- */
-/* Site-only inks, outside Glaze's token contract. */
+/* Inks and shades: long-form body ink (Glaze's muted-foreground is too dim
+   for paragraphs), the dim meta ink (between Glaze's muted- and
+   subtle-foreground), the availability pill's outline, and the darker
+   primary the header switch thumb uses. */
 :root {
-  --copy: #454542;                       /* long-form body ink */
-  --panel: #ffffff;                      /* content panels over the page field */
-  --panel-90: color-mix(in srgb, var(--panel) 90%, transparent);
-  --winbar: #fbfbfa;                     /* window-chrome title bar */
-  /* Paper inks with no Glaze role: white text, soft nav ink, dim meta ink,
-     and the availability pill's outline. Same in both modes for now. */
-  --bright: #ffffff;
-  --ink-soft: #f4f4f2;
+  --copy: #454542;
   --dim: #70706d;
   --copy-border: #454542;
-  --primary-hover: #d63e00;              /* Paper's primary-hover; the header switch thumb */
+  --primary-hover: #d63e00;
 }
 .dark {
   --copy: #b8b8b2;
-  --panel: #111111;
-  --winbar: #191917;
 }
 
-/* Glaze derives these fills from ink; the site's are slightly warmer. */
+@theme inline {
+  --color-copy: var(--copy);
+  --color-dim: var(--dim);
+  --color-copy-border: var(--copy-border);
+  --color-primary-hover: var(--primary-hover);
+}
+
+/* Glaze derives these fills from ink; the site's are slightly warmer. Also
+   the window-chrome title bar (.winbar) fill. */
 [data-theme='personal-website'] {
   --secondary: #f4f4f2;
   --muted: #f4f4f2;
@@ -78,19 +81,8 @@
   --muted: #1d1d1b;
 }
 
-@theme inline {
-  --color-copy: var(--copy);
-  --color-panel: var(--panel);
-  --color-panel-90: var(--panel-90);
-  --color-bright: var(--bright);
-  --color-ink-soft: var(--ink-soft);
-  --color-dim: var(--dim);
-  --color-copy-border: var(--copy-border);
-  --color-primary-hover: var(--primary-hover);
-}
-
 /* ----------------------------------------------------------------------------
-   4 · STRUCTURE — the content column
+   3 · STRUCTURE — the content column
 ---------------------------------------------------------------------------- */
 /* The content column, inside the 960px page column's panel: the same as the
    home sections, 800px of content with a 16px gutter on narrow screens. */
@@ -102,7 +94,7 @@
 }
 
 /* ----------------------------------------------------------------------------
-   5 · LABELS & COPY
+   4 · LABELS & COPY
 ---------------------------------------------------------------------------- */
 .eyebrow {
   /* The home page's section label: body size, sentence case, muted. */
@@ -131,7 +123,7 @@
 }
 
 /* ----------------------------------------------------------------------------
-   6 · ACTIONS — orange pills (Glaze Button) and quiet text links
+   5 · ACTIONS — orange pills (Glaze Button) and quiet text links
 ---------------------------------------------------------------------------- */
 /* The pill itself is Glaze's Button (components/pillButton.ts). */
 .text-link {
@@ -146,7 +138,7 @@
 .text-link:focus-visible { color: var(--primary); }
 
 /* ----------------------------------------------------------------------------
-   7 · MEDIA SURFACES — gradient backdrops and window chrome
+   6 · MEDIA SURFACES — gradient backdrops and window chrome
 ---------------------------------------------------------------------------- */
 /* The hero product media, shown whole at its own ratio in the home page's
    Featured frame: an even 1% border of the dim ink. */
@@ -336,7 +328,7 @@
   gap: 5px;
   height: 18px;
   padding: 0 9px;
-  background: var(--winbar);
+  background: var(--muted);
   border-bottom: 1px solid var(--border);
   flex: none;
 }
@@ -361,7 +353,7 @@
 .windot-g { background: #5fc454; }
 
 /* ----------------------------------------------------------------------------
-   8 · MOTION — rolling-letter hover, entrances, scroll reveals
+   7 · MOTION — rolling-letter hover, entrances, scroll reveals
 ---------------------------------------------------------------------------- */
 /* Rolling text: each character is a column of two stacked copies inside an
    overflow-hidden line; hover on the host rolls the columns up in a stagger. */
@@ -533,7 +525,7 @@
    band) that slides through it on a loop. */
 @keyframes shimmer-text { to { background-position: -100% 0; } }
 .shimmer-text {
-  background: linear-gradient(100deg, var(--copy) 40%, var(--bright) 50%, var(--copy) 60%) 100% 0 / 200% 100%;
+  background: linear-gradient(100deg, var(--copy) 40%, var(--foreground) 50%, var(--copy) 60%) 100% 0 / 200% 100%;
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -559,7 +551,7 @@
 }
 
 /* ----------------------------------------------------------------------------
-   9 · ARTICLE PROSE — the blog article template
+   8 · ARTICLE PROSE — the blog article template
 ---------------------------------------------------------------------------- */
 .prose-col {
   width: 100%;
@@ -567,7 +559,7 @@
   margin-inline: auto;
 }
 .prose-col p {
-  font-size: 17px;
+  font-size: var(--text-title);
   line-height: 1.75;
   color: var(--copy);
 }
@@ -581,7 +573,7 @@
   padding: 4px 0 4px 24px;
   font-family: var(--font-heading);
   font-weight: 500;
-  font-size: 20px;
+  font-size: var(--text-stmt);
   line-height: 1.5;
   letter-spacing: -0.01em;
   color: var(--foreground);

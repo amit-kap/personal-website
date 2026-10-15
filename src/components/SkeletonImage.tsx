@@ -60,7 +60,7 @@ export default function SkeletonImage({
           updateLoadState('error')
           onError?.(event)
         }}
-        className={`${className} transition-opacity duration-300 ${
+        className={`${className} transition-opacity duration-(--duration-slow) ${
           currentState === 'loaded' ? 'opacity-100' : 'opacity-0'
         }`}
         {...rest}

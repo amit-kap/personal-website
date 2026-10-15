@@ -71,19 +71,19 @@ export default function ShiftWorkPage({ work }: { work: Work }) {
       <SplitSection eyebrow="The Job" stmt="Four domains, one navigable product">
         <div className="flex flex-col gap-6">
           <div className="flex flex-col gap-1.5">
-            <h3 className="font-heading text-[17px] font-medium">A design system from zero</h3>
+            <h3 className="font-heading text-title font-medium">A design system from zero</h3>
             <p className="body-copy">Tokens, components, and density rules for a data-heavy security product: one language across dashboards, records, graphs, and conversations.</p>
           </div>
           <div className="flex flex-col gap-1.5">
-            <h3 className="font-heading text-[17px] font-medium">Onboarding</h3>
+            <h3 className="font-heading text-title font-medium">Onboarding</h3>
             <p className="body-copy">Onboarding takes a new customer from login through connected data sources to a vendor inventory populated with usable context.</p>
           </div>
           <div className="flex flex-col gap-1.5">
-            <h3 className="font-heading text-[17px] font-medium">The core surfaces</h3>
+            <h3 className="font-heading text-title font-medium">The core surfaces</h3>
             <p className="body-copy">Vendor evidence, access, exposure, and assessment decisions could each become a separate tool. The product needed one model a supervisor could understand and navigate.</p>
           </div>
           <div className="flex flex-col gap-1.5">
-            <h3 className="font-heading text-[17px] font-medium">Human-agent supervision</h3>
+            <h3 className="font-heading text-title font-medium">Human-agent supervision</h3>
             <p className="body-copy">Define where the agent can act, where it must ask, and what evidence a person needs before making the final decision.</p>
           </div>
         </div>
@@ -91,9 +91,9 @@ export default function ShiftWorkPage({ work }: { work: Work }) {
 
       {features.map((feature) => (
         <section key={feature.eyebrow} className="relative">
-          <div className="inner-col flex flex-col gap-[18px] pb-14 pt-12">
+          <div className="inner-col flex flex-col gap-4.5 pb-14 pt-12">
             <Reveal as="p" className="eyebrow">{feature.eyebrow}</Reveal>
-            <Reveal as="h2" className="font-heading text-title-sm font-medium tracking-[-0.01em]" delay={0.06}>
+            <Reveal as="h2" className="font-heading text-title-sm font-medium" delay={0.06}>
               {feature.title}
             </Reveal>
             <Reveal as="p" className="body-copy max-w-[760px]" delay={0.12}>{feature.copy}</Reveal>

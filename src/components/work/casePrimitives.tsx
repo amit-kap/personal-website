@@ -9,7 +9,7 @@ import { revealPill } from '@/components/pillButton'
 
 export function ArrowIcon() {
   return (
-    <svg className="size-[14px]" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
+    <svg className="size-3.5" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
       <path d="M4 12 L12 4 M5.5 4 H12 V10.5" />
     </svg>
   )
@@ -21,7 +21,7 @@ export function TitleBlock({ meta, title, intro }: { meta: string; title: string
     <div className="relative">
       <div className="inner-col flex flex-col gap-5 pb-10 pt-16">
         <Reveal as="p" className="meta-line" delay={0.05}>{meta}</Reveal>
-        <Reveal as="h1" className="max-w-[880px] font-heading text-feature font-medium tracking-[-0.02em]" delay={0.12}>
+        <Reveal as="h1" className="max-w-[880px] font-heading text-feature font-medium" delay={0.12}>
           {title}
         </Reveal>
         <Reveal as="p" className="body-copy max-w-[720px]" delay={0.2}>{intro}</Reveal>
@@ -86,8 +86,8 @@ export function JobGrid({ jobs }: { jobs: Array<{ title: string; copy: string }>
             className={`flex flex-col gap-2 py-1 sm:px-8 ${i === 0 ? 'sm:pl-0' : 'sm:border-l sm:border-border'} ${i === jobs.length - 1 ? 'sm:pr-0' : ''}`}
           >
             <p className="eyebrow">The Job / 0{i + 1}</p>
-            <h3 className="font-heading text-[17px] font-medium">{job.title}</h3>
-            <p className="text-[14.5px] leading-[1.55] text-copy">{job.copy}</p>
+            <h3 className="font-heading text-title font-medium">{job.title}</h3>
+            <p className="text-meta leading-normal text-copy">{job.copy}</p>
           </div>
         ))}
       </Reveal>
@@ -144,7 +144,7 @@ export function SurfacesMosaic({ heading, items }: { heading: string; items: Sur
       <div className="inner-col flex flex-col gap-9 pb-16 pt-14">
         <div className="flex flex-col items-center gap-2 text-center">
           <Reveal as="p" className="eyebrow">The Surfaces</Reveal>
-          <Reveal as="h2" className="font-heading text-section font-medium tracking-[-0.015em]" delay={0.08}>
+          <Reveal as="h2" className="font-heading text-section font-medium" delay={0.08}>
             {heading}
           </Reveal>
         </div>
@@ -154,8 +154,8 @@ export function SurfacesMosaic({ heading, items }: { heading: string; items: Sur
               <WindowCard image={item.image} alt={item.alt} />
               <div className="flex flex-col gap-1.5">
                 <p className="eyebrow">{item.eyebrow}</p>
-                <h3 className="font-heading text-[20px] font-medium leading-tight tracking-[-0.01em]">{item.title}</h3>
-                <p className="text-[14.5px] leading-[1.55] text-copy">{item.copy}</p>
+                <h3 className="font-heading text-stmt font-medium leading-tight">{item.title}</h3>
+                <p className="text-meta leading-normal text-copy">{item.copy}</p>
               </div>
             </Reveal>
           ))}
@@ -168,7 +168,7 @@ export function SurfacesMosaic({ heading, items }: { heading: string; items: Sur
 /* The 22px arrows of the reveal buttons, as on the home page's Featured. */
 function RevealArrow({ back = false }: { back?: boolean }) {
   return (
-    <svg className="size-[22px]" viewBox="0 0 33 33" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <svg className="size-5.5" viewBox="0 0 33 33" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
       {back ? (
         <>
           <path d="M26.125 16.5H6.875" />
@@ -187,7 +187,7 @@ function RevealArrow({ back = false }: { back?: boolean }) {
 /* Lucide "book-open" at 22px for the related-writing link. */
 function ReadIcon() {
   return (
-    <svg className="size-[22px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <svg className="size-5.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
       <path d="M12 7v14" />
       <path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z" />
     </svg>
@@ -208,7 +208,7 @@ export function ReadLink({ to, label, className = 'self-start' }: { to: string; 
 export function BackToHome({ read }: { read?: { to: string; label: string } }) {
   return (
     <section className="relative">
-      <div className="inner-col flex items-center justify-center gap-10 pb-[72px] pt-16">
+      <div className="inner-col flex items-center justify-center gap-10 pb-18 pt-16">
         <RevealButton render={<Link to="/" />} nativeButton={false} role="link" label="Back to home" className={revealPill}>
           <RevealArrow back />
         </RevealButton>

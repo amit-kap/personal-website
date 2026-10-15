@@ -9,7 +9,7 @@ import { cn } from '@amit-kap/glaze/lib/utils'
    rest (22px icon + 11px padding + 1px border) that opens to its label on
    hover or keyboard focus. */
 export const revealPill =
-  'h-[46px] min-w-[46px] shrink-0 rounded-pill px-[11px] text-body font-medium text-ink-soft transition-[padding,background-color] duration-(--duration-moderate) ease-standard hover:px-5 focus-visible:px-5'
+  'h-[46px] min-w-[46px] shrink-0 rounded-pill px-[11px] text-body font-medium text-primary-foreground transition-[padding,background-color] duration-(--duration-moderate) ease-standard hover:px-5 focus-visible:px-5'
 
 export function pillButton(className?: string) {
   return cn(

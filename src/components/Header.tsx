@@ -47,9 +47,9 @@ export default function Header() {
   return (
     /* Stays pinned to the top of the 960px column while the page scrolls.
        Its row lines up with the sections' content: 16px gutter, 800px wide. */
-    <header className="sticky top-0 z-50 flex justify-center bg-panel-90 px-4 text-meta font-medium">
+    <header className="sticky top-0 z-50 flex justify-center bg-card/90 px-4 text-meta font-medium">
       <div className="flex w-full max-w-[800px] items-center justify-between gap-6 py-4 sm:py-6">
-        <Link to="/" className="shrink-0 text-bright">
+        <Link to="/" className="shrink-0 text-foreground">
           Amit Kaplinsky
         </Link>
 {/* The agent view is plain text; Work and About belong to the human view. */}
@@ -65,7 +65,7 @@ export default function Header() {
                 <Link
                   to={item.to}
                   aria-current={isActive(item.to, pathname) ? 'page' : undefined}
-                  className="text-dim transition-colors hover:text-ink-soft aria-[current=page]:text-primary"
+                  className="text-dim transition-colors hover:text-secondary-foreground aria-[current=page]:text-primary"
                 >
                   {item.label}
                 </Link>
