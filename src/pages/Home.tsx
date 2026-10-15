@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { getAllWorks, type Work } from '@/lib/content'
 import homeCopy from '@/content/home.json'
 import Reveal from '@/components/Reveal'
+import { RevealButton } from '@amit-kap/glaze/components/reveal-button'
 import { useTilt } from '@/lib/useTilt'
 import StarBorder from '@/components/react-bits/StarBorder'
 import Seo from '@/components/Seo'
@@ -219,11 +220,7 @@ function Featured() {
           {featured.label}
         </Reveal>
         <Reveal>
-          <Link
-            to={`/work/${featured.slug}`}
-            aria-label={`Shift, ${featured.tagline}: view case study`}
-            className="group flex flex-col gap-4 rounded-container outline-offset-4"
-          >
+          <div className="flex flex-col gap-4">
             <div className="overflow-hidden rounded-container bg-dim p-[1%]">
               {allowMotion ? (
                 <video
@@ -261,14 +258,24 @@ function Featured() {
                   <span>{featured.years}</span>
                 </p>
               </div>
-              <span className="flex shrink-0 items-center rounded-pill bg-primary p-3 text-ink-soft transition-transform duration-200 group-hover:scale-105 motion-reduce:transition-none">
+              {/* The one way into the case study: Glaze's RevealButton as a link,
+                  which opens to show its label on hover or keyboard focus. */}
+              <RevealButton
+                render={<Link to={`/work/${featured.slug}`} />}
+                nativeButton={false}
+                role="link"
+                aria-label={`View the Shift case study: ${featured.tagline}`}
+                label="View"
+                iconSide="end"
+                className="h-[46px] min-w-[46px] shrink-0 rounded-pill px-[11px] text-body font-medium text-ink-soft transition-[padding,background-color] duration-(--duration-moderate) ease-standard hover:px-5"
+              >
                 <svg className="size-[22px]" viewBox="0 0 33 33" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                   <path d="M6.875 16.5h19.25" />
                   <path d="M16.5 6.875l9.625 9.625-9.625 9.625" />
                 </svg>
-              </span>
+              </RevealButton>
             </div>
-          </Link>
+          </div>
         </Reveal>
       </div>
     </section>

@@ -1,12 +1,16 @@
 import { useLocation } from 'react-router-dom'
-import RollingText from '@/components/RollingText'
+import { RevealButton } from '@amit-kap/glaze/components/reveal-button'
 import { CV_PDF_NAME, CV_PDF_URL } from '@/lib/cvPdf'
 import { useTelAvivClock } from '@/lib/useTelAvivClock'
 
 const LINKEDIN_URL = 'https://www.linkedin.com/in/amitkaplinsky'
 
 /* Dark (panel) pills on the orange band. */
-const darkPill = 'roll-host flex items-center justify-center rounded-pill bg-panel text-bright transition-transform duration-[180ms] active:scale-[0.97] motion-reduce:transition-none'
+/* Dark (panel) reveal buttons on the orange band: Glaze's RevealButton as a
+   link, a 52px circle at rest (20px icon + 15px padding + 1px border) that
+   opens to show its label on hover or keyboard focus. */
+const revealPill =
+  'h-[52px] min-w-[52px] rounded-pill bg-panel px-[15px] text-body font-medium text-bright hover:bg-panel hover:px-5 focus-visible:px-5 transition-[padding,background-color,transform] duration-(--duration-moderate) ease-standard active:scale-[0.97] motion-reduce:transition-none'
 
 function SendIcon() {
   return (
@@ -62,23 +66,33 @@ export default function Footer() {
           For founders of complex B2B, AI and dev-tool products who need senior product judgment without a full-time hire.
         </p>
         <div className="flex items-center gap-10">
-          <a
-            href="mailto:amitka111@gmail.com"
-            data-umami-event="contact-email"
-            data-umami-event-location="footer"
-            className={`${darkPill} h-[52px] gap-2 px-6`}
+          <RevealButton
+            render={<a href="mailto:amitka111@gmail.com" data-umami-event="contact-email" data-umami-event-location="footer" />}
+            nativeButton={false}
+            role="link"
+            label="Let's talk"
+            className={revealPill}
           >
             <SendIcon />
-            <span className="text-body font-medium leading-5">
-              <RollingText text="Let's talk" />
-            </span>
-          </a>
-          <a href={LINKEDIN_URL} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" data-umami-event="contact-linkedin" className={`${darkPill} p-4`}>
+          </RevealButton>
+          <RevealButton
+            render={<a href={LINKEDIN_URL} target="_blank" rel="noopener noreferrer" data-umami-event="contact-linkedin" />}
+            nativeButton={false}
+            role="link"
+            label="View profile"
+            className={revealPill}
+          >
             <LinkedInIcon />
-          </a>
-          <a href={CV_PDF_URL} download={CV_PDF_NAME} aria-label="CV" data-umami-event="download-cv" className={`${darkPill} p-4`}>
+          </RevealButton>
+          <RevealButton
+            render={<a href={CV_PDF_URL} download={CV_PDF_NAME} data-umami-event="download-cv" />}
+            nativeButton={false}
+            role="link"
+            label="Download CV"
+            className={revealPill}
+          >
             <CvIcon />
-          </a>
+          </RevealButton>
         </div>
         <div className="flex flex-col items-center gap-2 self-stretch py-5 text-center text-caption leading-4 text-copy">
           <span>Built using Claude Code, Devin AI</span>

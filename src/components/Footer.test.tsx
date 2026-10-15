@@ -24,15 +24,15 @@ describe('Footer', () => {
     expect(talk).toHaveAttribute('data-umami-event-location', 'footer')
   })
 
-  it('offers LinkedIn and CV as icon-only links', () => {
+  it('offers LinkedIn and CV as links named by their revealed labels', () => {
     renderFooter()
 
-    const linkedin = screen.getByRole('link', { name: 'LinkedIn' })
+    const linkedin = screen.getByRole('link', { name: 'View profile' })
     expect(linkedin).toHaveAttribute('href', 'https://www.linkedin.com/in/amitkaplinsky')
-    expect(linkedin).toHaveTextContent('')
-    const cv = screen.getByRole('link', { name: 'CV' })
+    expect(linkedin).toHaveAttribute('target', '_blank')
+    const cv = screen.getByRole('link', { name: 'Download CV' })
     expect(cv).toHaveAttribute('href', CV_PDF_URL)
-    expect(cv).toHaveTextContent('')
+    expect(cv).toHaveAttribute('download')
   })
 
   it('has the credits and clock at the bottom, with no agent link or switches', () => {
