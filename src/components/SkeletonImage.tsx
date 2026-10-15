@@ -69,12 +69,12 @@ export default function SkeletonImage({
       />
       <span
         aria-hidden="true"
-        className={`absolute inset-0 bg-neutral-100 pointer-events-none transition-opacity duration-500 ${
+        className={`absolute inset-0 bg-muted pointer-events-none transition-opacity duration-(--duration-slow) ${
           currentState === 'loading' ? 'opacity-100 animate-pulse' : 'opacity-0'
         }`}
       />
       {currentState === 'error' && (
-        <span className="absolute inset-0 flex items-center justify-center bg-neutral-100 px-4 text-center text-caption font-mono uppercase tracking-[0.18em] text-foreground/30">
+        <span className="absolute inset-0 flex items-center justify-center bg-muted px-4 text-center text-caption text-muted-foreground">
           Image unavailable
         </span>
       )}

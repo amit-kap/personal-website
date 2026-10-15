@@ -41,16 +41,24 @@ export default function ProductVideo({
     // Autoplay is a motion effect like any other; leave it stopped if asked.
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) video.pause()
 
+    // A cached video can be ready before React attaches onCanPlay, so that
+    // event is missed: check the ready state now, and also clear the loader
+    // as soon as playback starts.
+    if (video.readyState >= HTMLMediaElement.HAVE_FUTURE_DATA) setLoading(false)
+
     const onTime = () => setProgress(video.duration ? video.currentTime / video.duration : 0)
     const onPlay = () => setPlaying(true)
     const onPause = () => setPlaying(false)
+    const onPlaying = () => setLoading(false)
     video.addEventListener('timeupdate', onTime)
     video.addEventListener('play', onPlay)
     video.addEventListener('pause', onPause)
+    video.addEventListener('playing', onPlaying)
     return () => {
       video.removeEventListener('timeupdate', onTime)
       video.removeEventListener('play', onPlay)
       video.removeEventListener('pause', onPause)
+      video.removeEventListener('playing', onPlaying)
     }
   }, [])
 
