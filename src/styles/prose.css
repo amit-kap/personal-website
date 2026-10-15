@@ -1,0 +1,28 @@
+/* ----------------------------------------------------------------------------
+   8 · ARTICLE PROSE — the blog article template
+---------------------------------------------------------------------------- */
+.prose-col {
+  width: 100%;
+  max-width: 680px;
+  margin-inline: auto;
+}
+.prose-col p {
+  font-size: var(--text-title);
+  line-height: 1.75;
+  color: var(--copy);
+}
+.prose-col p a {
+  color: var(--primary);
+  font-weight: 500;
+}
+.prose-col p a:hover { text-decoration: underline; text-underline-offset: 3px; }
+.prose-quote {
+  border-left: 2px solid var(--primary);
+  padding: 4px 0 4px 24px;
+  font-family: var(--font-heading);
+  font-weight: 500;
+  font-size: var(--text-stmt);
+  line-height: 1.5;
+  letter-spacing: -0.01em;
+  color: var(--foreground);
+}

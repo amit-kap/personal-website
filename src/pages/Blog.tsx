@@ -4,14 +4,7 @@ import Reveal from '@/components/Reveal'
 import RollingText from '@/components/RollingText'
 import Seo from '@/components/Seo'
 import { pillButton } from '@/components/pillButton'
-
-function ArrowIcon() {
-  return (
-    <svg className="size-3.5" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
-      <path d="M4 12 L12 4 M5.5 4 H12 V10.5" />
-    </svg>
-  )
-}
+import { ArrowUpRightIcon } from '@/components/icons'
 
 function metaFor(study: CaseStudy): string {
   // Display name only; "Check Point Software" reads as "Check Point" on cards.
@@ -66,7 +59,7 @@ export default function Blog() {
               </div>
               <Link to={`/case-studies/${featured.slug}`} className={pillButton('roll-host flex-none px-6 py-3 text-meta')}>
                 <RollingText text="Read Article" />
-                <ArrowIcon />
+                <ArrowUpRightIcon />
               </Link>
             </Reveal>
           </div>
@@ -96,7 +89,7 @@ export default function Blog() {
                 <p className="body-copy">{study.excerpt}</p>
                 <Link to={`/case-studies/${study.slug}`} className="text-link roll-host mt-1 self-start text-meta">
                   <RollingText text="Read Article" />
-                  <ArrowIcon />
+                  <ArrowUpRightIcon />
                 </Link>
               </Reveal>
             ))}

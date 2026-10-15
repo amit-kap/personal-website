@@ -1,13 +1,11 @@
 import { Link } from 'react-router-dom'
 import type { Work } from '@/lib/content'
 import Reveal from '@/components/Reveal'
-import {
-  BackToHome,
-  HeroBackdrop,
-  SplitSection,
-  TitleBlock,
-  WindowCard,
-} from '@/components/work/casePrimitives'
+import { BackToHome } from '@/components/work/ClosingButtons'
+import { HeroBackdrop } from '@/components/work/HeroBackdrop'
+import { SplitSection } from '@/components/work/SplitSection'
+import { TitleBlock } from '@/components/work/TitleBlock'
+import { WindowCard } from '@/components/work/WindowCard'
 import { imageFor } from '@/lib/workImages'
 
 const features = [

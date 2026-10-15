@@ -1,4 +1,7 @@
 import { useLayoutEffect, useRef } from 'react'
+import { WHITE, toRgb, type Rgb } from '@/lib/flow/color'
+import { DASH, drawDash } from '@/lib/flow/drawDash'
+import { length, polyline, type Pt, type Spec } from '@/lib/flow/geometry'
 
 /* The "flow" from the problem cards to the clients circle, drawn like a flow
    diagram. The problem cards are joined by curved connectors: from a dot at
@@ -13,58 +16,14 @@ import { useLayoutEffect, useRef } from 'react'
    Border: the trail is cut into ~2px steps that fade in and whiten toward the
    head, under a faint wide glow stroke, with a soft bloom at the head.
    Geometry is measured from [data-flow] elements (problem, step, final). */
-const DASH = 20
 const SPACING = 56 // px between dashes along a line
 const SPEED = 60 // px per second
-const GLOW = 0.5
-const THICKNESS = 1
 const BLEED = 48 // canvas overhang so the glow isn't clipped
 const LABEL_GAP = 8 // px between the trunk and the solution label
 const DOT = 3 // connector dot radius
 const DOT_GAP = 2 // px between a dot and its line, as in the step connectors
 
-type Pt = [number, number]
 type Box = { x: number; y: number; w: number; h: number }
-type Rgb = [number, number, number]
-/* A line of the flow; s is its phase at its start. */
-type Spec = { pts: Pt[]; cum: number[]; len: number; s: number }
-
-const WHITE: Rgb = [255, 255, 255]
-const mix = (a: Rgb, b: Rgb, t: number): Rgb => [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t]
-const rgba = (c: Rgb, alpha: number) => `rgba(${c.map(Math.round).join(', ')}, ${Math.min(1, Math.max(0, alpha)).toFixed(3)})`
-
-/* Any CSS colour to RGB, via a canvas context's colour parser. */
-function toRgb(ctx: CanvasRenderingContext2D, color: string): Rgb {
-  ctx.fillStyle = '#000'
-  ctx.fillStyle = color
-  const v = String(ctx.fillStyle)
-  if (v.startsWith('#')) {
-    const n = parseInt(v.slice(1, 7), 16)
-    return [(n >> 16) & 255, (n >> 8) & 255, n & 255]
-  }
-  const parts = v.match(/[\d.]+/g)?.map(Number) ?? WHITE
-  return [parts[0], parts[1], parts[2]]
-}
-
-/* Point at arc-length d along a measured polyline. */
-function pointAt({ pts, cum }: Spec, d: number): Pt {
-  let lo = 1
-  let hi = cum.length - 1
-  while (lo < hi) {
-    const mid = (lo + hi) >> 1
-    if (cum[mid] < d) lo = mid + 1
-    else hi = mid
-  }
-  const t = (d - cum[lo - 1]) / (cum[lo] - cum[lo - 1] || 1)
-  return [pts[lo - 1][0] + (pts[lo][0] - pts[lo - 1][0]) * t, pts[lo - 1][1] + (pts[lo][1] - pts[lo - 1][1]) * t]
-}
-
-const length = (pts: Pt[]) => pts.reduce((sum, p, i) => (i ? sum + Math.hypot(p[0] - pts[i - 1][0], p[1] - pts[i - 1][1]) : 0), 0)
-
-const polyline = (pts: Pt[], s = 0): Spec => {
-  const cum = pts.map((_, i) => length(pts.slice(0, i + 1)))
-  return { pts, cum, len: cum[cum.length - 1], s }
-}
 
 /* Render inside the positioned wrapper around the problem and solution
    sections: it measures from its own parent, since a parent's ref is not yet
@@ -94,44 +53,6 @@ export default function FlowOverlay({ animate }: { animate: boolean }) {
       return { x: r.left - wr.left, y: r.top - wr.top - ty, w: r.width, h: r.height }
     }
 
-    const stroke = (c: CanvasRenderingContext2D, a: Pt, b: Pt, width: number, style: string) => {
-      c.lineWidth = width
-      c.strokeStyle = style
-      c.beginPath()
-      c.moveTo(a[0], a[1])
-      c.lineTo(b[0], b[1])
-      c.stroke()
-    }
-    /* One dash with its head at t along the path: ~2px steps fading in from
-       the tail, whitening toward the head, over a faint wide glow. */
-    const dash = (c: CanvasRenderingContext2D, spec: Spec, t: number) => {
-      if (t <= 0 || t > spec.len + DASH) return
-      const n = Math.ceil(DASH / 2)
-      for (let i = 1; i <= n; i++) {
-        const from = Math.min(spec.len, t - (DASH * (i - 1)) / n)
-        const to = Math.max(0, t - (DASH * i) / n)
-        if (from <= to) continue
-        const u = 1 - (i - 0.5) / n
-        const fade = u * u
-        const tone = mix(color, WHITE, u ** 6 * 0.65)
-        const a = pointAt(spec, from)
-        const b = pointAt(spec, to)
-        stroke(c, a, b, 2 + 6 * GLOW, rgba(tone, fade * 0.2 * GLOW))
-        stroke(c, a, b, THICKNESS, rgba(tone, fade))
-      }
-      if (t > spec.len) return
-      const [x, y] = pointAt(spec, t)
-      const reach = 12 + 40 * GLOW
-      const strength = 0.4 * GLOW
-      const bloom = c.createRadialGradient(x, y, 0, x, y, reach)
-      bloom.addColorStop(0, rgba(color, strength))
-      bloom.addColorStop(0.2, rgba(color, strength * 0.4))
-      bloom.addColorStop(0.5, rgba(color, strength * 0.1))
-      bloom.addColorStop(1, rgba(color, 0))
-      c.fillStyle = bloom
-      c.fillRect(x - reach, y - reach, reach * 2, reach * 2)
-    }
-
     const draw = (now = performance.now()) => {
       if (!ctx || !canvasEl) return
       ctx.setTransform(1, 0, 0, 1, 0, 0)
@@ -143,7 +64,7 @@ export default function FlowOverlay({ animate }: { animate: boolean }) {
       for (const spec of specs) {
         // Heads sit wherever the phase is a whole number of SPACINGs behind d.
         const first = (((d - spec.s) % SPACING) + SPACING) % SPACING
-        for (let t = first; t <= spec.len + DASH; t += SPACING) dash(ctx, spec, t)
+        for (let t = first; t <= spec.len + DASH; t += SPACING) drawDash(ctx, spec, t, color)
       }
     }
     const loop = (now: number) => {

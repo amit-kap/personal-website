@@ -1,0 +1,63 @@
+/* ----------------------------------------------------------------------------
+   1 · FONTS  — Inter (variable) for headings and body alike
+---------------------------------------------------------------------------- */
+@import '@fontsource-variable/inter/opsz.css';
+
+/* ----------------------------------------------------------------------------
+   2 · SITE EXTENSIONS TO GLAZE
+   Everything here has no Glaze token (verified against dark mode): the
+   extended type scale, three Paper inks, and the primary hover shade. Colour,
+   shape, base type (caption/body/title/heading/display) and elevation come
+   from the Glaze theme "personal-website"; orange is Glaze's `primary`.
+   Panels, white text and soft inks use Glaze's card / foreground /
+   secondary-foreground directly.
+---------------------------------------------------------------------------- */
+/* Type scale: generates text-* utilities. Max values are the design's (Paper)
+   sizes; the clamps step down on phones. */
+@theme {
+  --text-meta: 0.875rem;                               /* 14px — nav, secondary UI */
+  --text-meta--line-height: 1.286;                     /* 18px */
+  --text-stmt: clamp(1.25rem, 1.55vw, 1.375rem);       /* 20→22px / 28 — section statements */
+  --text-stmt--line-height: 1.273;
+  --text-title-sm: clamp(1.375rem, 1.85vw, 1.625rem);  /* 22→26px / 32 — card titles */
+  --text-title-sm--line-height: 1.231;
+  --text-section: clamp(1.75rem, 2.4vw, 2.125rem);     /* 28→34px — centered section heads */
+  --text-section--line-height: 1.1;
+  --text-feature: clamp(2rem, 3.2vw, 2.875rem);        /* 32→46px / 56 — page titles, CTA headline */
+  --text-feature--line-height: 1.217;
+  --text-hero: clamp(2.5rem, 4.1vw, 3.6875rem);        /* 40→59px / 72 — home hero only */
+  --text-hero--line-height: 1.22;
+}
+
+/* Inks and shades: long-form body ink (Glaze's muted-foreground is too dim
+   for paragraphs), the dim meta ink (between Glaze's muted- and
+   subtle-foreground), the availability pill's outline, and the darker
+   primary the header switch thumb uses. */
+:root {
+  --copy: #454542;
+  --dim: #70706d;
+  --copy-border: #454542;
+  --primary-hover: #d63e00;
+}
+.dark {
+  --copy: #b8b8b2;
+}
+
+@theme inline {
+  --color-copy: var(--copy);
+  --color-dim: var(--dim);
+  --color-copy-border: var(--copy-border);
+  --color-primary-hover: var(--primary-hover);
+}
+
+/* Glaze derives these fills from ink; the site's are slightly warmer. Also
+   the window-chrome title bar (.winbar) fill. */
+[data-theme='personal-website'] {
+  --secondary: #f4f4f2;
+  --muted: #f4f4f2;
+}
+[data-theme='personal-website'].dark {
+  --secondary: #1d1d1b;
+  --muted: #1d1d1b;
+}
+
