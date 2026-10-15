@@ -30,14 +30,24 @@ const PUSH_EASE = 'cubic-bezier(0.22, 1, 0.36, 1)'
 const clipFor: Record<Push, string> = { up: 'inset(0 -100vw)', down: 'inset(0 -100vw)', right: 'inset(-100vh 0)' }
 
 /* Counts rotations. Stays at 0 (the first word of each slot) when motion is
-   not allowed. The interval is one full cycle: the last slot's start offset
-   (2 staggers), its push, then the hold. */
+   not allowed. The page opens on "Senior Product Designer" and holds it for
+   HOLD_MS; then it rotates once per full cycle: the last slot's start offset
+   (2 staggers), its push, then the hold. The interval starts with the first
+   rotation so the cycles never overlap. */
 function usePulse(enabled: boolean) {
   const [pulse, setPulse] = useState(0)
   useEffect(() => {
     if (!enabled) return
-    const id = window.setInterval(() => setPulse((count) => count + 1), PUSH_MS + 2 * STAGGER_MS + HOLD_MS)
-    return () => window.clearInterval(id)
+    const advance = () => setPulse((count) => count + 1)
+    let interval = 0
+    const first = window.setTimeout(() => {
+      advance()
+      interval = window.setInterval(advance, PUSH_MS + 2 * STAGGER_MS + HOLD_MS)
+    }, HOLD_MS)
+    return () => {
+      window.clearTimeout(first)
+      window.clearInterval(interval)
+    }
   }, [enabled])
   return enabled ? pulse : 0
 }
