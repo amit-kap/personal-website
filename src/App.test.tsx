@@ -29,6 +29,7 @@ const routes: [path: string, title: RegExp][] = [
   ...works.map((w): [string, RegExp] => [`/work/${w.slug}`, new RegExp(`^${w.company} \\| ${w.role} \\| Amit Kaplinsky$`)]),
   ...studies.map((s): [string, RegExp] => [`/case-studies/${s.slug}`, /\| Amit Kaplinsky$/]),
   ['/no/such/page', /^Page not found \| Amit Kaplinsky$/],
+  ['/work/no-such-work', /^Page not found \| Amit Kaplinsky$/],
 ]
 
 describe('App routes', () => {
@@ -77,5 +78,4 @@ describe('App routes', () => {
 
   // Real gap: an unknown /work/<slug> renders a bare div, so the page has no main
   // landmark and never sets a title (the previous route's title lingers).
-  it.todo('an unknown /work/<slug> renders a main landmark and a not-found title')
 })
