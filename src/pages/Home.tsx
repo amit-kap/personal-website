@@ -354,7 +354,7 @@ function Problem() {
             <span className="text-primary-foreground">{problemPayoff}</span>
           </Reveal>
         </div>
-        <Reveal as="ol" className="grid grid-cols-1 items-start gap-8 pt-4 md:grid-cols-2">
+        <Reveal as="ol" className="grid grid-cols-1 items-start gap-8 pt-4 md:grid-cols-2 md:gap-15">
           {problem.items.map((item, index) => (
             <li
               key={index}
@@ -415,9 +415,7 @@ const stepIcons = [
   </>,
 ]
 
-/* data-flow-on is set by the flow while a card is turned on and in view. */
-const stepCardClass =
-  'flex flex-col items-center gap-4 border border-border p-6 transition-colors duration-500 data-[flow-on]:border-primary/40'
+const stepCardClass = 'flex flex-col items-center gap-4 border border-border p-6'
 
 function Solution() {
   const { solution } = homeCopy
@@ -447,9 +445,7 @@ function Solution() {
           {/* Runs through the (hidden) halo to the solid circle, which sits 114px below Build. */}
           <Connector className="relative z-10 -mt-[3px] -mb-6 h-[120px]" />
           <Reveal className="-mt-[3px] flex w-full flex-col items-center">
-            <div data-flow="final" className="relative flex items-center rounded-pill p-6">
-              {/* The halo: hidden at rest, it grows out of the circle when a dash lands. */}
-              <span data-flow-pulse aria-hidden="true" className="pointer-events-none absolute inset-0 rounded-pill bg-primary/15 opacity-0" />
+            <div data-flow="final" className="flex items-center rounded-pill p-6">
               <div className="flex items-center rounded-pill bg-primary p-6">
                 <svg className="size-8 shrink-0 text-foreground" width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                   <path d="M22.667 28a6.667 6.667 0 0 0-13.334 0" />
