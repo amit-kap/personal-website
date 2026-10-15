@@ -1,7 +1,8 @@
 import { useLayoutEffect, useRef } from 'react'
 
-/* The "flow" from the problem cards to the solution. Clicking a problem card
-   presses it like a button and fires one wave: a dash runs round that card's border both ways to its inner
+/* The "flow" from the problem cards to the solution. A problem card fires one
+   wave as it scrolls into view (so the top pair, then the bottom pair), and
+   again when clicked, which also presses it like a button. A wave: a dash runs round that card's border both ways to its inner
    corner while a wide light sweeps across the card the same way, the dashes
    meet in the ring, which pulses, and a new dash leaves the ring, runs round
    each step card and slides into the final circle, whose halo grows out and
@@ -12,7 +13,7 @@ import { useLayoutEffect, useRef } from 'react'
    soft bloom at the head. Geometry is measured from [data-flow] elements
    (problem, step, final). */
 const DASH = 56
-const SPEED = 150 // px per second
+const SPEED = 400 // px per second
 const PULSE = 60 // px of travel the ring stays lit after an arrival
 const GLOW = 0.8
 const THICKNESS = 1
@@ -331,8 +332,14 @@ export default function FlowOverlay({ animate }: { animate: boolean }) {
       draw()
     }
 
-    /* Clicking a card presses it (scale down, then back up) and fires one wave
-       from it, unless its last one is still on the card. */
+    /* One wave from card i, unless its last one is still on the card. */
+    const fire = (i: number) => {
+      const now = performance.now()
+      if (waves.some((w) => w.card === i && ((now - w.t0) / 1000) * SPEED < cards[i].border)) return
+      waves.push({ card: i, t0: now, landed: false })
+      if (!frame) frame = requestAnimationFrame(loop)
+    }
+    /* Clicking a card presses it (scale down, then back up) and fires a wave. */
     const onClick = (event: Event) => {
       const i = cards.findIndex((c) => c.el === event.currentTarget)
       if (i < 0) return
@@ -341,15 +348,35 @@ export default function FlowOverlay({ animate }: { animate: boolean }) {
         duration: 260,
         easing: 'cubic-bezier(0.3, 0, 0.2, 1)',
       })
-      const now = performance.now()
-      if (waves.some((w) => w.card === i && ((now - w.t0) / 1000) * SPEED < cards[i].border)) return
-      waves.push({ card: i, t0: now, landed: false })
-      if (!frame) frame = requestAnimationFrame(loop)
+      fire(i)
     }
+    /* Each card fires as it comes well into view, and re-arms once it has
+       scrolled fully out. */
+    const armed = new Set<Element>()
+    const seen =
+      animate && typeof IntersectionObserver === 'function'
+        ? new IntersectionObserver(
+            (entries) => {
+              for (const entry of entries) {
+                if (!entry.isIntersecting) armed.add(entry.target)
+                else if (entry.intersectionRatio >= 0.6 && armed.delete(entry.target)) {
+                  const i = cards.findIndex((c) => c.el === entry.target)
+                  if (i >= 0) fire(i)
+                }
+              }
+            },
+            { threshold: [0, 0.6] },
+          )
+        : undefined
 
     measure()
     const problemEls = [...wrap.querySelectorAll('[data-flow="problem"]')]
-    if (animate) problemEls.forEach((el) => el.addEventListener('click', onClick))
+    if (animate)
+      problemEls.forEach((el) => {
+        armed.add(el)
+        el.addEventListener('click', onClick)
+        seen?.observe(el)
+      })
     let observer: ResizeObserver | undefined
     if (typeof ResizeObserver === 'function') {
       observer = new ResizeObserver(measure)
@@ -360,6 +387,7 @@ export default function FlowOverlay({ animate }: { animate: boolean }) {
     return () => {
       cancelAnimationFrame(frame)
       problemEls.forEach((el) => el.removeEventListener('click', onClick))
+      seen?.disconnect()
       observer?.disconnect()
     }
   }, [animate])
@@ -378,7 +406,7 @@ export default function FlowOverlay({ animate }: { animate: boolean }) {
         <canvas
           ref={canvas}
           aria-hidden="true"
-          className="pointer-events-none absolute top-[-48px] left-[-48px] h-[calc(100%+96px)] w-[calc(100%+96px)]"
+          className="pointer-events-none absolute top-[-48px] left-[-48px] z-20 h-[calc(100%+96px)] w-[calc(100%+96px)]"
         />
       )}
     </>
