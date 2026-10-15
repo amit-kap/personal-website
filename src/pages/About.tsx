@@ -109,7 +109,7 @@ export default function About() {
                 <Link
                   to={`/work/${entry.slug}`}
                   aria-label={`View the ${entry.company} work`}
-                  className={buttonVariants({ variant: 'ghost', size: 'sm', className: '-ms-2.5 text-primary' })}
+                  className={buttonVariants({ variant: 'ghost', size: 'sm', className: '-ms-2.5 text-muted-foreground' })}
                 >
                   View
                   <svg viewBox="0 0 33 33" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
