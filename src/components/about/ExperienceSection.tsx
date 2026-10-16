@@ -1,53 +1,46 @@
-/* About page experience rows (see CvSection for the row layout). */
+/* About page experience entries (see CvSection for the entry layout). */
 import { Link } from 'react-router-dom'
-import { buttonVariants } from '@amit-kap/glaze/components/button'
 import type { CVExperience } from '@/lib/content'
 import { logoFor } from '@/lib/workLogos'
-import { CvRow, CvSection } from './CvSection'
+import { CvEntryHeader, CvRow, CvSection } from './CvSection'
 import { formatPeriod } from './cvFormat'
 
-/* Experience in a compact hairline grid. */
+/* Each job: the period in the left column; on the right, company and role on
+   one line, then the description, ending with a View link. */
 export function ExperienceSection({ experience }: { experience: CVExperience[] }) {
   return (
     <CvSection title="Experience">
-      {experience.map((entry, i) => (
-        <CvRow key={entry.slug} index={i} count={experience.length}>
-          <p className="text-body text-muted-foreground">{formatPeriod(entry.period)}</p>
-          <div className="flex flex-col items-start gap-2">
-            <h2 className="font-heading text-stmt font-medium">
-              {/* The mark sits centred on the company line. */}
-              <span className="flex items-center gap-2.5">
-                {logoFor(entry.slug) && (
-                  <img src={logoFor(entry.slug)} alt="" width={24} height={24} className="size-6 shrink-0" />
-                )}
-                {entry.company}
-              </span>
-              {/* The role on its own line; founding roles shimmer. */}
-              <span className={`mt-1 block text-body font-normal text-copy ${/founding designer/i.test(entry.role) ? 'shimmer-text' : ''}`}>
-                {entry.role}
-              </span>
-            </h2>
-            {/* Glaze's ghost button, nudged left by its own padding so its
-                label lines up with the text above. */}
+      {experience.map((entry, i) => {
+        const logo = logoFor(entry.slug)
+        return (
+          <CvRow key={entry.slug} index={i} count={experience.length} date={formatPeriod(entry.period)}>
+            <CvEntryHeader
+              title={entry.company}
+              subtitle={entry.role}
+              logo={logo}
+              // Founding roles shimmer.
+              subtitleClassName={/founding designer/i.test(entry.role) ? 'shimmer-text' : ''}
+            />
+            <ul className="flex flex-col gap-2 text-body text-copy">
+              {entry.bullets.map((bullet) => (
+                <li key={bullet}>{bullet}</li>
+              ))}
+            </ul>
+            {/* A plain text link in the same 16px body type as the entry. */}
             <Link
               to={`/work/${entry.slug}`}
               aria-label={`View the ${entry.company} work`}
-              className={buttonVariants({ variant: 'ghost', size: 'sm', className: '-ms-2.5 text-muted-foreground' })}
+              className="inline-flex items-center gap-1.5 text-body text-muted-foreground transition-colors hover:text-foreground"
             >
               View
-              <svg viewBox="0 0 33 33" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <svg className="size-4" viewBox="0 0 33 33" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                 <path d="M6.875 16.5h19.25" />
                 <path d="M16.5 6.875l9.625 9.625-9.625 9.625" />
               </svg>
             </Link>
-          </div>
-          <ul className="flex flex-col gap-2 text-body text-copy">
-            {entry.bullets.map((bullet) => (
-              <li key={bullet}>{bullet}</li>
-            ))}
-          </ul>
-        </CvRow>
-      ))}
+          </CvRow>
+        )
+      })}
     </CvSection>
   )
 }

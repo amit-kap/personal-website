@@ -9,10 +9,14 @@ function renderAbout() {
   return render(<About />, { wrapper: MemoryRouter })
 }
 
-/* The row for a company: its heading's grid cell. */
+/* The whole CV entry (date column and content) a heading belongs to. */
+function entryOf(heading: HTMLElement) {
+  return heading.closest<HTMLElement>('.grid')!
+}
+
 function rowOf(company: string) {
   const heading = screen.getAllByRole('heading', { level: 2 }).find((h) => h.textContent?.startsWith(company))
-  return heading!.parentElement!.parentElement!
+  return entryOf(heading!)
 }
 
 describe('About experience', () => {
@@ -68,7 +72,7 @@ describe('About certificates and education', () => {
     for (const entry of [...cv.certificates, ...cv.education]) {
       expect(screen.getByRole('heading', { name: entry.title })).toBeInTheDocument()
     }
-    const degree = screen.getByRole('heading', { name: 'B.A. Economics' }).parentElement!
+    const degree = entryOf(screen.getByRole('heading', { name: 'B.A. Economics' }))
     expect(within(degree).getByText('Tel Aviv University')).toBeInTheDocument()
     expect(within(degree).getByText('1994–1996')).toBeInTheDocument()
   })

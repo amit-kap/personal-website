@@ -38,7 +38,6 @@ export default function About() {
           {/* Centred under the centred portrait, like the home section heads;
               the headline balances its two lines so no word hangs alone. */}
           <div className="flex flex-col items-center gap-5 text-center">
-            <Reveal as="p" className="eyebrow" delay={0.15}>About</Reveal>
             <Reveal as="h1" className="text-balance font-heading text-feature font-medium" delay={0.22}>
               I like figuring things out and seeing where they can go.
             </Reveal>
