@@ -24,6 +24,7 @@ const studies = getAllCaseStudies()
 const routes: [path: string, title: RegExp][] = [
   ['/', /^Amit Kaplinsky \| Senior Product Designer$/],
   ['/about', /^About \| Amit Kaplinsky$/],
+  ['/work-with-me', /^Work with me \| Amit Kaplinsky$/],
   ['/agent', /^Agent view \| Amit Kaplinsky$/],
   ...works.map((w): [string, RegExp] => [`/work/${w.slug}`, new RegExp(`^${w.company} \\| ${w.role} \\| Amit Kaplinsky$`)]),
   ...studies.map((s): [string, RegExp] => [`/case-studies/${s.slug}`, /\| Amit Kaplinsky$/]),

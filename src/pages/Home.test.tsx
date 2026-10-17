@@ -1,4 +1,4 @@
-import { render, screen, within } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 import { getAllWorks } from '@/lib/content'
 import Home from './Home'
@@ -45,19 +45,12 @@ describe('Home', () => {
     }
   })
 
-  it('lists the four problems and three solution steps as designed', () => {
+  it('teases Work with me and links to its page, without the founder pitch', () => {
     render(<Home />, { wrapper: MemoryRouter })
 
-    const problems = within(screen.getByText('The Problem').closest('section')!).getAllByRole('listitem')
-    expect(problems.map((item) => item.querySelector('h3')?.textContent?.trim())).toEqual([
-      'Your product is hard to explain',
-      'Your demo needs narration',
-      'Your AI feels powerful but unclear',
-      'Your product undersells your company.',
-    ])
-
-    const steps = within(screen.getByText('Proposed Solution').closest('section')!).getAllByRole('heading', { level: 3 })
-    expect(steps.map((s) => s.textContent)).toEqual(['Diagnose', 'Plan', 'Build'])
-    expect(screen.getByText("I'll Design and work with engineering until the fixes are live.")).toBeInTheDocument()
+    expect(screen.getByRole('heading', { level: 2, name: 'Work with me' })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: /work with me: see how i help founders/i })).toHaveAttribute('href', '/work-with-me')
+    expect(screen.queryByText('Sound familiar?')).not.toBeInTheDocument()
+    expect(screen.queryByText('How I can help')).not.toBeInTheDocument()
   })
 })

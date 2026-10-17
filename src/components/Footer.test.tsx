@@ -15,7 +15,7 @@ describe('Footer', () => {
   afterEach(cleanup)
 
   it('offers the contact CTA with its analytics attributes', () => {
-    renderFooter()
+    renderFooter('/work-with-me')
 
     expect(screen.getByRole('heading', { name: /Building a new product\?\s*Let's see if it's a fit\./ })).toBeInTheDocument()
     const talk = screen.getByRole('link', { name: "Let's talk" })
@@ -51,7 +51,7 @@ describe('Footer', () => {
   })
 
   it('offers exactly three reveal links with their names, targets and analytics events', () => {
-    renderFooter()
+    renderFooter('/work-with-me')
     const links = within(screen.getByRole('contentinfo')).getAllByRole('link')
     expect(links.map((l) => l.getAttribute('aria-label') ?? l.textContent)).toHaveLength(3)
 
@@ -66,14 +66,29 @@ describe('Footer', () => {
     expect(cv).not.toHaveAttribute('target')
   })
 
-  it('leaves extra room for the package circle on the home page only', () => {
-    const { container, unmount } = renderFooter('/')
+  it('leaves extra room for the package circle on Work with me only', () => {
+    const { container, unmount } = renderFooter('/work-with-me')
     expect(container.querySelector('.bg-primary\\/90')).toHaveClass('pt-30')
     expect(container.querySelector('.bg-primary\\/90')).not.toHaveClass('pt-20')
     unmount()
 
-    const other = renderFooter('/about')
+    const other = renderFooter('/')
     expect(other.container.querySelector('.bg-primary\\/90')).toHaveClass('pt-20')
     expect(other.container.querySelector('.bg-primary\\/90')).not.toHaveClass('pt-30')
+  })
+
+  it('speaks to founders on Work with me, with no link back to it', () => {
+    renderFooter('/work-with-me')
+
+    expect(screen.getByText("Tell me what you're building and where it feels stuck.")).toBeInTheDocument()
+    expect(screen.queryByRole('link', { name: 'Work with me' })).not.toBeInTheDocument()
+  })
+
+  it('speaks generally elsewhere, with a credits link to Work with me', () => {
+    renderFooter('/about')
+
+    expect(screen.getByRole('heading', { name: /Hiring, or building something\?\s*Let's talk\./ })).toBeInTheDocument()
+    expect(screen.getByText(/Open to senior product design roles/)).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'Work with me' })).toHaveAttribute('href', '/work-with-me')
   })
 })

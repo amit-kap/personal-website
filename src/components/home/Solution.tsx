@@ -1,7 +1,7 @@
-/* Home "Proposed Solution": Diagnose, Plan and Build cards joined by connector
+/* Work with me "How I can help": Diagnose, Plan and Build cards joined by connector
    lines down to the package circle. FlowOverlay animates the lines, measuring
    them from the data-flow attributes here. */
-import homeCopy from '@/content/home.json'
+import workCopy from '@/content/workWithMe.json'
 import Reveal from '@/components/Reveal'
 import { innerClass, labelClass } from './layout'
 
@@ -50,7 +50,7 @@ const stepIcons = [
 const stepCardClass = 'flex flex-col items-center gap-4 border border-border p-6'
 
 export function Solution() {
-  const { solution } = homeCopy
+  const { solution } = workCopy
   return (
     /* 78px top: with the label (20px) and its gap (16px), the problem cards sit
        114px above Diagnose, the same as Build to the final circle. */

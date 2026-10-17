@@ -1,11 +1,11 @@
-/* Home "The Problem": a two-line headline and four numbered problem cards
+/* Work with me "Sound familiar?": a two-line headline and four numbered problem cards
    (the data-flow="problem" cards are where FlowOverlay's connectors start). */
-import homeCopy from '@/content/home.json'
+import workCopy from '@/content/workWithMe.json'
 import Reveal from '@/components/Reveal'
 import { bandClass, innerClass, labelClass } from './layout'
 
 export function Problem() {
-  const { problem } = homeCopy
+  const { problem } = workCopy
   // The second sentence of the headline takes the foreground colour.
   const breakAt = problem.headline.indexOf('. ') + 2
   const problemLead = problem.headline.slice(0, breakAt)

@@ -12,6 +12,7 @@ import { useSmoothScroll } from '@/lib/useSmoothScroll'
 const WorkItem = lazy(() => import('@/pages/WorkItem'))
 const CaseStudyPage = lazy(() => import('@/pages/CaseStudyPage'))
 const About = lazy(() => import('@/pages/About'))
+const WorkWithMe = lazy(() => import('@/pages/WorkWithMe'))
 const Agent = lazy(() => import('@/pages/Agent'))
 const NotFound = lazy(() => import('@/pages/NotFound'))
 
@@ -60,6 +61,7 @@ export default function App() {
                 <Route path="/work/:slug" element={<WorkItem />} />
                 <Route path="/case-studies/:slug" element={<CaseStudyPage />} />
                 <Route path="/about" element={<About />} />
+                <Route path="/work-with-me" element={<WorkWithMe />} />
                 <Route path="/agent" element={<Agent />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>

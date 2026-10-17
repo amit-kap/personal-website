@@ -1,6 +1,7 @@
 import { render, screen, within } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 import homeCopy from '@/content/home.json'
+import workCopy from '@/content/workWithMe.json'
 import { getAllWorks } from '@/lib/content'
 import { Featured } from './Featured'
 import { Problem } from './Problem'
@@ -15,7 +16,7 @@ describe('Problem', () => {
     expect(cards).toHaveLength(4)
     expect([...cards].map((card) => card.querySelector('span')?.textContent)).toEqual(['01', '02', '03', '04'])
     expect(screen.getAllByRole('listitem')).toHaveLength(4)
-    expect(screen.getByRole('heading', { level: 2 })).toHaveTextContent(homeCopy.problem.label)
+    expect(screen.getByRole('heading', { level: 2 })).toHaveTextContent(workCopy.problem.label)
   })
 })
 

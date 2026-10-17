@@ -23,6 +23,13 @@ const staticRoutes = [
     type: 'website',
     priority: '0.8',
   },
+  {
+    path: '/work-with-me',
+    title: 'Work with me',
+    description: "Senior product design for founders of complex B2B, AI and dev-tool products: diagnose what's unclear, plan the fixes, and build them with your team.",
+    type: 'website',
+    priority: '0.8',
+  },
   // /blog is hidden for now (it redirects home); restore its entry with the route.
   {
     path: '/agent',
