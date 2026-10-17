@@ -19,7 +19,7 @@ export function Problem() {
           </Reveal>
           {/* Two lines on desktop: the lead (816px at 46px) runs a little past
               the 800px column, so the headline reaches 32px out on each side. */}
-          <Reveal as="p" delay={0.08} className="text-center font-heading text-feature text-primary md:-mx-8">
+          <Reveal as="p" delay={0.08} className="text-center font-heading text-feature font-normal text-primary md:-mx-8">
             {problemLead.trim()}
             <span className="block text-primary-foreground">{problemPayoff}</span>
           </Reveal>
@@ -34,7 +34,7 @@ export function Problem() {
               <span className="self-stretch text-meta text-muted-foreground">
                 {String(index + 1).padStart(2, '0')}
               </span>
-              <h3 className="self-stretch font-heading text-stmt text-foreground">{item.title}</h3>
+              <h3 className="self-stretch font-heading text-stmt font-normal text-foreground">{item.title}</h3>
               <p className="self-stretch text-body leading-5 text-muted-foreground">{item.body}</p>
             </li>
           ))}

@@ -50,7 +50,7 @@ export function Featured() {
               <div className="flex flex-col gap-2">
                 {/* Name and what it is read as one title line; the tagline
                     wraps under the name on narrow screens. */}
-                <p className="flex flex-wrap items-center gap-x-3 gap-y-1 text-stmt">
+                <p className="flex flex-wrap items-center gap-x-3 gap-y-1 text-stmt font-normal">
                   <span className="flex items-center gap-2 text-foreground">
                     <ShiftMark />
                     Shift

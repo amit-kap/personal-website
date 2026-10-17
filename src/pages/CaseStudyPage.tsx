@@ -40,7 +40,7 @@ export default function CaseStudyPage() {
             {caseStudy.title}
           </Reveal>
           {caseStudy.excerpt && (
-            <Reveal as="p" className="max-w-[640px] text-title font-light text-muted-foreground" delay={0.24}>
+            <Reveal as="p" className="max-w-[640px] text-title text-muted-foreground" delay={0.24}>
               {caseStudy.excerpt}
             </Reveal>
           )}

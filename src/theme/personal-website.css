@@ -28,6 +28,8 @@
   --typeface-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
   --typeface-heading: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
   --typeface-mono: ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --type-micro: 0.625rem;
+  --type-micro-leading: 1.2;
   --type-caption: 0.75rem;
   --type-caption-leading: 1.4;
   --type-body: 1rem;
@@ -48,6 +50,7 @@
   --motion-base: 150ms;
   --motion-moderate: 200ms;
   --motion-slow: 300ms;
+  --motion-ease-linear: linear;
   --motion-ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
   --motion-ease-emphasized: cubic-bezier(0.34, 1.56, 0.64, 1);
   --motion-ease-exit: cubic-bezier(0.4, 0, 1, 1);

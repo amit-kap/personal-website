@@ -13,14 +13,14 @@
 }
 .prose-col p a {
   color: var(--primary);
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
 }
 .prose-col p a:hover { text-decoration: underline; text-underline-offset: 3px; }
 .prose-quote {
   border-left: 2px solid var(--primary);
   padding: 4px 0 4px 24px;
   font-family: var(--font-heading);
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
   font-size: var(--text-stmt);
   line-height: 1.5;
   letter-spacing: -0.01em;
