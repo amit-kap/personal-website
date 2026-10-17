@@ -1,9 +1,11 @@
 /* Shared inline icons. */
 
-export function ArrowUpRightIcon() {
+/* Lucide "arrow-right" at 16px, the trailing icon of a Glaze Button. */
+export function ArrowRightIcon() {
   return (
-    <svg className="size-3.5" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
-      <path d="M4 12 L12 4 M5.5 4 H12 V10.5" />
+    <svg data-icon="inline-end" className="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M5 12h14" />
+      <path d="m12 5 7 7-7 7" />
     </svg>
   )
 }
@@ -33,14 +35,6 @@ export function ReadIcon() {
     <svg className="size-5.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
       <path d="M12 7v14" />
       <path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z" />
-    </svg>
-  )
-}
-
-export function ArrowBackIcon() {
-  return (
-    <svg className="size-4" width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
-      <path d="M12 4 L4 12 M10.5 12 H4 V5.5" />
     </svg>
   )
 }

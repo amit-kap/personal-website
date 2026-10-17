@@ -35,7 +35,7 @@ describe('About experience', () => {
 
     const row = rowOf('Shift')
     const role = within(row).getByText('Founding Designer')
-    expect(role.tagName).toBe('SPAN')
+    expect(role.tagName).toBe('P')
     expect(role).not.toHaveTextContent('Shift')
     expect(within(row).getByText('10/2024–Now')).toBeInTheDocument()
   })

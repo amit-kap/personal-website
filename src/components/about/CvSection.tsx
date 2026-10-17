@@ -38,10 +38,9 @@ export function CvRow({
   )
 }
 
-/* The entry's title line: an optional mark, the title and a subtitle. All the
-   same 16px body type, centred on one line (it wraps on narrow screens);
-   weight and colour carry the hierarchy, title medium foreground and subtitle
-   copy, so no separators are needed. */
+/* The entry's head: an optional mark and the title in the Glaze heading
+   size, with the subtitle muted on its own line below; a little extra room
+   under it sets the head apart from the description. */
 export function CvEntryHeader({
   title,
   subtitle,
@@ -54,10 +53,12 @@ export function CvEntryHeader({
   subtitleClassName?: string
 }) {
   return (
-    <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-body">
-      {logo && <img src={logo} alt="" width={24} height={24} className="-me-0.5 size-6 shrink-0" />}
-      <h2 className="font-medium text-foreground">{title}</h2>
-      {subtitle && <span className={`text-copy ${subtitleClassName}`}>{subtitle}</span>}
+    <div className="mb-1 flex flex-col items-start gap-1">
+      <div className="flex items-center gap-3">
+        {logo && <img src={logo} alt="" width={24} height={24} className="size-6 shrink-0" />}
+        <h2 className="font-heading text-heading font-medium text-foreground">{title}</h2>
+      </div>
+      {subtitle && <p className={`text-body text-muted-foreground ${subtitleClassName}`}>{subtitle}</p>}
     </div>
   )
 }

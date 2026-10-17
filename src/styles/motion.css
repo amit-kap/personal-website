@@ -173,7 +173,7 @@
    band) that slides through it on a loop. */
 @keyframes shimmer-text { to { background-position: -100% 0; } }
 .shimmer-text {
-  background: linear-gradient(100deg, var(--copy) 40%, var(--foreground) 50%, var(--copy) 60%) 100% 0 / 200% 100%;
+  background: linear-gradient(100deg, var(--muted-foreground) 40%, var(--foreground) 50%, var(--muted-foreground) 60%) 100% 0 / 200% 100%;
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -185,7 +185,7 @@
    its end position without animating there. */
 @media (prefers-reduced-motion: reduce) {
   .roll-ch { transition: none; }
-  .shimmer-text { animation: none; color: var(--copy); background: none; }
+  .shimmer-text { animation: none; color: var(--muted-foreground); background: none; }
   .roll-host:hover .roll-ch { transform: none; }
   .reveal, .reveal-scale { opacity: 1; transform: none; transition: none; }
   .tilt, .tilt-content { transform: none; }
