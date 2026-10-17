@@ -26,4 +26,10 @@ describe('ClosingActions', () => {
     expect(screen.queryAllByRole('button')).toHaveLength(0)
     for (const link of screen.getAllByRole('link')) expect(link.tagName).toBe('A')
   })
+
+  it('takes a custom back link', () => {
+    render(<ClosingActions back={{ to: '/work/shift', label: 'Back to Shift' }} />, { wrapper: MemoryRouter })
+
+    expect(screen.getByRole('link', { name: 'Back to Shift' })).toHaveAttribute('href', '/work/shift')
+  })
 })

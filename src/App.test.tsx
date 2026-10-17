@@ -23,7 +23,6 @@ const studies = getAllCaseStudies()
 /* Every route, with the title its page sets (Seo appends the site name except on /). */
 const routes: [path: string, title: RegExp][] = [
   ['/', /^Amit Kaplinsky \| Senior Product Designer$/],
-  ['/blog', /^Blog \| Amit Kaplinsky$/],
   ['/about', /^About \| Amit Kaplinsky$/],
   ['/agent', /^Agent view \| Amit Kaplinsky$/],
   ...works.map((w): [string, RegExp] => [`/work/${w.slug}`, new RegExp(`^${w.company} \\| ${w.role} \\| Amit Kaplinsky$`)]),
@@ -51,11 +50,11 @@ describe('App routes', () => {
     expect(screen.getByRole('contentinfo')).toBeInTheDocument()
   })
 
-  it('redirects the old /writing path to /blog', async () => {
-    renderAt('/writing')
+  it.each(['/blog', '/writing'])('redirects the hidden %s index home', async (path) => {
+    renderAt(path)
 
     await screen.findByRole('main')
-    expect(screen.getByTestId('where')).toHaveTextContent('/blog')
+    expect(screen.getByTestId('where')).toHaveTextContent(/^\/$/)
   })
 
   it('hides the primary navigation on the agent view only', async () => {

@@ -50,8 +50,7 @@
   --color-primary-hover: var(--primary-hover);
 }
 
-/* Glaze derives these fills from ink; the site's are slightly warmer. Also
-   the window-chrome title bar (.winbar) fill. */
+/* Glaze derives these fills from ink; the site's are slightly warmer. */
 [data-theme='personal-website'] {
   --secondary: #f4f4f2;
   --muted: #f4f4f2;

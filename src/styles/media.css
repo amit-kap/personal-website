@@ -169,8 +169,7 @@
   gap: 5px;
   height: 18px;
   padding: 0 9px;
-  background: var(--muted);
-  border-bottom: 1px solid var(--border);
+  background: var(--secondary-foreground);
   flex: none;
 }
 .windot { width: 6px; height: 6px; border-radius: 999px; display: inline-block; }

@@ -12,7 +12,6 @@ import { useSmoothScroll } from '@/lib/useSmoothScroll'
 const WorkItem = lazy(() => import('@/pages/WorkItem'))
 const CaseStudyPage = lazy(() => import('@/pages/CaseStudyPage'))
 const About = lazy(() => import('@/pages/About'))
-const Blog = lazy(() => import('@/pages/Blog'))
 const Agent = lazy(() => import('@/pages/Agent'))
 const NotFound = lazy(() => import('@/pages/NotFound'))
 
@@ -55,8 +54,9 @@ export default function App() {
             <Suspense fallback={null}>
               <Routes>
                 <Route path="/" element={<Home />} />
-                <Route path="/blog" element={<Blog />} />
-                <Route path="/writing" element={<Navigate to="/blog" replace />} />
+                {/* The blog index (pages/Blog) is hidden for now. */}
+                <Route path="/blog" element={<Navigate to="/" replace />} />
+                <Route path="/writing" element={<Navigate to="/" replace />} />
                 <Route path="/work/:slug" element={<WorkItem />} />
                 <Route path="/case-studies/:slug" element={<CaseStudyPage />} />
                 <Route path="/about" element={<About />} />

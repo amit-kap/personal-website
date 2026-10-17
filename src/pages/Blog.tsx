@@ -1,10 +1,8 @@
 import { Link } from 'react-router-dom'
 import { getAllCaseStudies, getWorkBySlug, type CaseStudy } from '@/lib/content'
 import Reveal from '@/components/Reveal'
-import RollingText from '@/components/RollingText'
 import Seo from '@/components/Seo'
-import { pillLink } from '@/components/actionButtons'
-import { ArrowUpRightIcon } from '@/components/icons'
+import { ReadLink } from '@/components/work/ClosingActions'
 
 function metaFor(study: CaseStudy): string {
   // Display name only; "Check Point Software" reads as "Check Point" on cards.
@@ -57,10 +55,7 @@ export default function Blog() {
                 <h2 className="font-heading text-section font-medium">{featured.title}</h2>
                 <p className="body-copy max-w-[640px]">{featured.excerpt}</p>
               </div>
-              <Link to={`/case-studies/${featured.slug}`} className={pillLink('roll-host flex-none px-6 py-3 text-meta')}>
-                <RollingText text="Read Article" />
-                <ArrowUpRightIcon />
-              </Link>
+              <ReadLink to={`/case-studies/${featured.slug}`} label="Read Article" className="flex-none" />
             </Reveal>
           </div>
         </section>
@@ -87,10 +82,7 @@ export default function Blog() {
                 <p className="meta-line pt-1.5">{metaFor(study)}</p>
                 <h2 className="font-heading text-heading font-medium">{study.title}</h2>
                 <p className="body-copy">{study.excerpt}</p>
-                <Link to={`/case-studies/${study.slug}`} className="text-link roll-host mt-1 self-start text-meta">
-                  <RollingText text="Read Article" />
-                  <ArrowUpRightIcon />
-                </Link>
+                <ReadLink to={`/case-studies/${study.slug}`} label="Read Article" className="mt-1 self-start" />
               </Reveal>
             ))}
           </div>

@@ -65,7 +65,7 @@ describe('Header', () => {
     expect(screen.getByRole('link', { name: 'Amit Kaplinsky' })).toHaveAttribute('href', '/')
 
     cleanup()
-    renderAt('/blog')
+    renderAt('/case-studies/designing-for-the-supervisor')
     expect(screen.getByRole('link', { name: 'Work' })).not.toHaveAttribute('aria-current')
     expect(screen.getByRole('link', { name: 'About' })).not.toHaveAttribute('aria-current')
   })

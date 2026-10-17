@@ -1,14 +1,12 @@
-import { Link, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import { getCaseStudyBySlug, getWorkBySlug } from '@/lib/content'
 import Reveal from '@/components/Reveal'
-import RollingText from '@/components/RollingText'
 import Seo from '@/components/Seo'
 import SkeletonImage from '@/components/SkeletonImage'
 import { markdownComponents } from '@/components/caseStudy/markdownComponents'
-import { ArrowBackIcon } from '@/components/icons'
-import { pillLink } from '@/components/actionButtons'
+import { ClosingActions } from '@/components/work/ClosingActions'
 
 export default function CaseStudyPage() {
   const { slug } = useParams<{ slug: string }>()
@@ -22,7 +20,8 @@ export default function CaseStudyPage() {
     )
   }
 
-  const company = getWorkBySlug(caseStudy.workSlug)?.company ?? 'Security'
+  const work = getWorkBySlug(caseStudy.workSlug)
+  const company = work?.company ?? 'Security'
   const meta = caseStudy.featured ? `${company}  ·  Featured` : company
 
   return (
@@ -80,15 +79,8 @@ export default function CaseStudyPage() {
         </div>
       </section>
 
-      {/* Back to Blog */}
-      <section className="relative border-t border-border">
-        <div className="inner-col flex justify-center pb-16 pt-14">
-          <Link to="/blog" className={pillLink('roll-host px-7.5 py-3.5 text-meta')}>
-            <RollingText text="Back to Blog" />
-            <ArrowBackIcon />
-          </Link>
-        </div>
-      </section>
+      {/* Back to the work page this article belongs to. */}
+      <ClosingActions back={work ? { to: `/work/${work.slug}`, label: `Back to ${company.replace(/ Software$/, '')}` } : undefined} />
     </main>
   )
 }

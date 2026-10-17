@@ -1,6 +1,7 @@
 /* Element overrides for rendering case-study markdown (react-markdown):
    headings, lists and quotes in the site's type, and images routed through
-   the content image map, with window chrome for wide product screenshots. */
+   the content image map; wide product screenshots break out of the text
+   column and enlarge on click, without a window bar. */
 import { Children, isValidElement } from 'react'
 import type { ContentImage } from '@/lib/content'
 import SkeletonImage from '@/components/SkeletonImage'
@@ -93,13 +94,13 @@ export const markdownComponents = (images: Record<string, ContentImage>) => ({
         : undefined
     const width = 'width' in (resolved ?? {}) ? resolved?.width : undefined
     const height = 'height' in (resolved ?? {}) ? resolved?.height : undefined
-    // Product-UI screenshots get browser-window chrome and break out wider
-    // than the text column; small assets (logos, crops) stay plain.
+    // Product-UI screenshots break out wider than the text column and enlarge
+    // on click; small assets (logos, crops) stay plain.
     const isProductUI = typeof width === 'number' && width >= 1200
     if (isProductUI) {
       return (
         <figure className="my-3.5 lg:-mx-[90px]">
-          <ZoomableWindow src={resolved?.src ?? ''} alt={alt ?? ''}>
+          <ZoomableWindow src={resolved?.src ?? ''} alt={alt ?? ''} chrome={false}>
             <SkeletonImage
               src={resolved?.src ?? ''}
               alt={alt ?? ''}
