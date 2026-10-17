@@ -62,12 +62,12 @@ export default function Footer() {
     <footer className="text-primary-foreground">
       <div className={`flex flex-col items-center gap-10 bg-primary/90 px-4 ${founders ? 'pt-30' : 'pt-20'}`}>
         <h2 className="whitespace-pre-line text-center text-feature font-medium text-primary-foreground">
-          {founders ? "Building a new product?\nLet's see if it's a fit." : "Hiring, or building something?\nLet's talk."}
+          {founders ? "Building a new product?\nLet's see if it's a fit." : "Got something worth\nfiguring out?"}
         </h2>
         <p className="w-full max-w-[586px] text-center text-body leading-5 text-secondary-foreground">
           {founders
             ? "Tell me what you're building and where it feels stuck."
-            : 'Open to senior product design roles and to founders who need product clarity without a full-time hire.'}
+            : "A role, a product, or a problem nobody's cracked yet. Let's talk."}
         </p>
         {/* RevealButton is a Base UI <button> that renders these anchors
             (nativeButton={false}); role="link" keeps them announced as links.

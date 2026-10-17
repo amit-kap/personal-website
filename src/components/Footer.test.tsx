@@ -87,8 +87,8 @@ describe('Footer', () => {
   it('speaks generally elsewhere, with a credits link to Work with me', () => {
     renderFooter('/about')
 
-    expect(screen.getByRole('heading', { name: /Hiring, or building something\?\s*Let's talk\./ })).toBeInTheDocument()
-    expect(screen.getByText(/Open to senior product design roles/)).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: /Got something worth\s*figuring out\?/ })).toBeInTheDocument()
+    expect(screen.getByText(/A role, a product, or a problem nobody's cracked yet\. Let's talk\./)).toBeInTheDocument()
     expect(screen.getByRole('link', { name: 'Work with me' })).toHaveAttribute('href', '/work-with-me')
   })
 })
