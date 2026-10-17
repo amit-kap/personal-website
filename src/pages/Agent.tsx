@@ -61,7 +61,9 @@ export default function Agent() {
                   ol: ({ children }) => <ol className="list-decimal space-y-2 pl-6 text-body text-muted-foreground">{children}</ol>,
                   blockquote: ({ children }) => <blockquote className="border-l-2 border-primary pl-5 text-title italic text-muted-foreground">{children}</blockquote>,
                   hr: () => <hr className="my-5 border-border" />,
-                  img: ({ alt }) => <p className="text-meta text-muted-foreground">Image: {alt}</p>,
+                  // Markdown images sit inside a paragraph, so the label is a
+                  // block span: a <p> here would nest one <p> in another.
+                  img: ({ alt }) => <span className="block text-meta text-muted-foreground">Image: {alt}</span>,
                 }}
               >
                 {markdown}
