@@ -6,4 +6,4 @@ hero: 01-shift-dashboard
 tileImage: 01-shift-dashboard
 ---
 
-I joined Shift as its first designer. I helped define the human-agent operating model, then built the design system, onboarding, and core workflows connecting vendor evidence, access, exposure, and risk decisions. Shift is now publicly available.
+I joined Shift as its first designer. I helped define the human-agent operating model, then built the design system, onboarding, and core workflows connecting vendor evidence, access, exposure, and risk decisions.

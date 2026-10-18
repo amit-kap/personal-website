@@ -47,7 +47,7 @@ export default function ShiftWorkPage({ work }: { work: Work }) {
       <TitleBlock
         meta="Third-Party Risk  ·  Founding Designer  ·  2024–2026"
         title="Designing Shift's agent-led third-party security platform from product model to shipped system."
-        intro="I joined Shift as its first designer. I helped define the human-agent operating model, then built the design system, onboarding, and core workflows connecting vendor evidence, access, exposure, and risk decisions. Shift is now publicly available."
+        intro="I joined Shift as its first designer. I helped define the human-agent operating model, then built the design system, onboarding, and core workflows connecting vendor evidence, access, exposure, and risk decisions."
       />
       <HeroMedia
         image={imageFor(work, '01-shift-dashboard')}
@@ -104,9 +104,9 @@ export default function ShiftWorkPage({ work }: { work: Work }) {
         </section>
       ))}
 
-      <SplitSection eyebrow="Results" stmt="A public product built on these foundations">
+      <SplitSection eyebrow="Results" stmt="The foundations the product is built on">
         <p className="body-copy">
-          Shift is now publicly available. Its product foundation includes the design system, onboarding, vendor inventory, access graph, operating console, and assessment workflows shown here.
+          The product foundation includes the design system, onboarding, vendor inventory, access graph, operating console, and assessment workflows shown here.
         </p>
         <p className="text-meta text-muted-foreground">Note: adoption and usage details can be shared in a private setting.</p>
       </SplitSection>

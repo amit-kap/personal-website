@@ -28,23 +28,22 @@ export default function About() {
               height={1270}
               className="block w-full"
               style={{
-                WebkitMaskImage: 'linear-gradient(180deg, #000 34%, rgba(0,0,0,0.38) 58%, transparent 86%)',
-                maskImage: 'linear-gradient(180deg, #000 34%, rgba(0,0,0,0.38) 58%, transparent 86%)',
+                WebkitMaskImage: 'linear-gradient(180deg, #000 30%, rgba(0,0,0,0.3) 48%, transparent 62%)',
+                maskImage: 'linear-gradient(180deg, #000 30%, rgba(0,0,0,0.3) 48%, transparent 62%)',
               }}
             />
           </Reveal>
         </Parallax>
         <div className="inner-col relative grid items-end gap-10 pb-16 pt-[clamp(260px,29vw,420px)]">
-          {/* Centred under the centred portrait, like the home section heads;
-              the headline balances its two lines so no word hangs alone. */}
-          <div className="flex flex-col items-center gap-5 text-center">
-            <Reveal as="h1" className="text-balance font-heading text-feature font-medium" delay={0.22}>
+          {/* Centred under the portrait and set like the home hero: the
+              headline on two balanced lines, then the intro in the home
+              hero's supporting style. */}
+          <div className="flex flex-col items-center gap-6 text-center">
+            <Reveal as="h1" className="max-w-[640px] text-balance font-heading text-feature font-medium" delay={0.22}>
               I like figuring things out and seeing where they can go.
             </Reveal>
-            <Reveal className="flex max-w-[640px] flex-col gap-3" delay={0.3}>
-              <p className="body-copy text-pretty">
-                {cv.header.intro}
-              </p>
+            <Reveal as="p" className="w-full max-w-[568px] text-balance text-stmt text-muted-foreground" delay={0.3}>
+              {cv.header.intro}
             </Reveal>
           </div>
         </div>
