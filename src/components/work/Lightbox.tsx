@@ -39,7 +39,7 @@ export default function Lightbox({
       >
         <DialogTitle className="sr-only">{alt}</DialogTitle>
         <DialogClose className="lightbox-close" aria-label="Close" onClick={(event) => event.stopPropagation()}>
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
             <path d="M3.5 3.5 12.5 12.5M12.5 3.5 3.5 12.5" />
           </svg>
         </DialogClose>

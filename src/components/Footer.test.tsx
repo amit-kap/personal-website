@@ -51,15 +51,18 @@ describe('Footer', () => {
     expect(screen.getByText(/^Tel Aviv · \d{2}:\d{2}:\d{2}$/)).toBeInTheDocument()
   })
 
-  it('offers exactly three reveal links with their names, targets and analytics events', () => {
+  it('offers exactly four reveal links with their names, targets and analytics events', () => {
     renderFooter('/work-with-me')
     // The contact links, apart from the footer navigation.
     const nav = screen.getByRole('navigation', { name: 'Footer navigation' })
     const links = within(screen.getByRole('contentinfo')).getAllByRole('link').filter((l) => !nav.contains(l))
-    expect(links).toHaveLength(3)
+    expect(links).toHaveLength(4)
 
-    const [talk, linkedin, cv] = ['Let\'s talk', 'View profile', 'Download CV'].map((name) => screen.getByRole('link', { name }))
-    expect(links).toEqual([talk, linkedin, cv])
+    const [talk, linkedin, github, cv] = ['Let\'s talk', 'View profile', 'View GitHub', 'Download CV'].map((name) => screen.getByRole('link', { name }))
+    expect(links).toEqual([talk, linkedin, github, cv])
+    expect(github).toHaveAttribute('href', 'https://github.com/amit-kap')
+    expect(github).toHaveAttribute('rel', 'noopener noreferrer')
+    expect(github).toHaveAttribute('data-umami-event', 'contact-github')
 
     expect(talk).not.toHaveAttribute('target')
     expect(linkedin).toHaveAttribute('rel', 'noopener noreferrer')
@@ -90,7 +93,7 @@ describe('Footer', () => {
     renderFooter('/about')
 
     expect(screen.getByRole('heading', { name: /Bring me the\s*complicated one\./ })).toBeInTheDocument()
-    expect(screen.getByText('Email, LinkedIn or my CV below.')).toBeInTheDocument()
+    expect(screen.getByText('Email, LinkedIn, GitHub or my CV below.')).toBeInTheDocument()
   })
 
   it('links every page in one row, marking the current one', () => {

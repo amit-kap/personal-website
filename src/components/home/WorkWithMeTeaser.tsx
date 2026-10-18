@@ -15,7 +15,7 @@ export function WorkWithMeTeaser() {
         <Reveal as="h2" className={`${labelClass} text-center`}>
           {workWithMe.label}
         </Reveal>
-        <Reveal as="p" delay={0.08} className="max-w-[560px] text-center text-stmt font-normal text-balance text-foreground">
+        <Reveal as="p" delay={0.08} className="max-w-[640px] text-center font-heading text-section font-normal text-balance text-foreground">
           {workWithMe.text}
         </Reveal>
         <Reveal delay={0.16} className="pt-4">

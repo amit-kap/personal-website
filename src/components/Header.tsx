@@ -6,7 +6,7 @@ import { headerNav, isActive } from '@/components/siteNav'
 /* Paper's 18px user and bot icons for the human / agent switch. */
 function HumanIcon() {
   return (
-    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
       <circle cx="9" cy="6" r="2.222" />
       <path d="M15 15.75a6 6 0 0 0-12 0" />
     </svg>
@@ -15,7 +15,7 @@ function HumanIcon() {
 
 function AgentIcon() {
   return (
-    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
       <path d="M9 6V3H6" />
       <rect width="12" height="9" x="3" y="6" rx="2" />
       <path d="M1.5 10.5h1.5" />

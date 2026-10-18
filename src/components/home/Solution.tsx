@@ -65,7 +65,7 @@ export function Solution() {
               {/* 80px connectors between cards; -mt-[3px] tucks the end dots over the card borders. */}
               {index > 0 && <Connector className="-mt-[3px] h-20" />}
               <div data-flow="step" className={`${stepCardClass} rounded-container ${index > 0 ? '-mt-[3px]' : ''}`}>
-                <svg className="size-8 shrink-0 text-primary" width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <svg className="size-8 shrink-0 text-primary" width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                   {stepIcons[index]}
                 </svg>
                 <h3 className="font-heading text-stmt font-medium text-foreground">{step.title}</h3>
@@ -85,8 +85,8 @@ export function Solution() {
             <div data-flow="final" className="relative flex items-center rounded-pill p-6">
               <div className="relative z-[1] flex items-center rounded-pill bg-primary p-8 ring-6 ring-background">
                 {/* Lucide "package": the finished product. Drawn on a 24 grid at
-                    48px, so a 1 stroke matches the 2px strokes of the step icons. */}
-                <svg className="size-12 shrink-0 text-primary-foreground" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    48px, so a 0.75 stroke is the site's 1.5px line. */}
+                <svg className="size-12 shrink-0 text-primary-foreground" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="0.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                   <path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z" />
                   <path d="M12 22V12" />
                   <polyline points="3.29 7 12 12 20.71 7" />
