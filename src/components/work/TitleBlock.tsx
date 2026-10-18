@@ -1,7 +1,18 @@
 import Reveal from '@/components/Reveal'
 
-/* Page title block: meta line, title, intro paragraph. */
-export function TitleBlock({ meta, title, intro }: { meta: string; title: string; intro: string }) {
+/* Page title block: meta line, title, intro paragraph, and an optional row
+   under the intro (children). */
+export function TitleBlock({
+  meta,
+  title,
+  intro,
+  children,
+}: {
+  meta: string
+  title: string
+  intro: string
+  children?: React.ReactNode
+}) {
   return (
     <div className="relative">
       <div className="inner-col flex flex-col gap-5 pb-10 pt-16">
@@ -10,6 +21,7 @@ export function TitleBlock({ meta, title, intro }: { meta: string; title: string
           {title}
         </Reveal>
         <Reveal as="p" className="body-copy max-w-[720px]" delay={0.2}>{intro}</Reveal>
+        {children && <Reveal delay={0.28}>{children}</Reveal>}
       </div>
     </div>
   )

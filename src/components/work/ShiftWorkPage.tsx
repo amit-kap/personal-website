@@ -3,12 +3,16 @@
 import { Link } from 'react-router-dom'
 import type { Work } from '@/lib/content'
 import Reveal from '@/components/Reveal'
+import { Button } from '@amit-kap/glaze/components/button'
+import { ArrowRightIcon } from '@/components/icons'
 import { ClosingActions } from '@/components/work/ClosingActions'
 import { HeroMedia } from '@/components/work/HeroMedia'
 import { SplitSection } from '@/components/work/SplitSection'
 import { TitleBlock } from '@/components/work/TitleBlock'
 import { WindowCard } from '@/components/work/WindowCard'
 import { imageFor } from '@/lib/workImages'
+
+const STRATEGY_STORY = '/case-studies/designing-for-the-supervisor'
 
 const features = [
   {
@@ -48,7 +52,21 @@ export default function ShiftWorkPage({ work }: { work: Work }) {
         meta="Third-Party Risk  ·  Founding Designer  ·  2024–2026"
         title="Designing Shift's agent-led third-party security platform from product model to shipped system."
         intro="I joined Shift as its first designer. I helped define the human-agent operating model, then built the design system, onboarding, and core workflows connecting vendor evidence, access, exposure, and risk decisions."
-      />
+      >
+        {/* The strategy write-up, linked up top as well as at the end: Glaze's
+            link Button, pulled left and in by its own padding so its label
+            lines up with the intro and sits the block's 20px below it. */}
+        <Button
+          render={<Link to={STRATEGY_STORY} />}
+          nativeButton={false}
+          role="link"
+          variant="link"
+          className="-my-1.5 -ms-2.5"
+        >
+          Read: Designing for the Supervisor
+          <ArrowRightIcon />
+        </Button>
+      </TitleBlock>
       <HeroMedia
         image={imageFor(work, '01-shift-dashboard')}
         video={`${import.meta.env.BASE_URL}shift-walk.mp4`}
@@ -61,7 +79,7 @@ export default function ShiftWorkPage({ work }: { work: Work }) {
         </p>
         <p className="body-copy">
           The product is built around an agent that performs assessment work while a person supervises it. The market scan, operating-model decision, and product strategy behind that structure are documented in{' '}
-          <Link to="/case-studies/designing-for-the-supervisor" className="border-b border-border text-foreground transition-colors hover:text-primary">
+          <Link to={STRATEGY_STORY} className="border-b border-border text-foreground transition-colors hover:text-primary">
             Designing for the Supervisor
           </Link>
           . This page focuses on how that direction became a working system.
@@ -117,7 +135,7 @@ export default function ShiftWorkPage({ work }: { work: Work }) {
         </p>
       </SplitSection>
 
-      <ClosingActions read={{ to: '/case-studies/designing-for-the-supervisor', label: 'Read: Designing for the Supervisor' }} />
+      <ClosingActions read={{ to: STRATEGY_STORY, label: 'Read: Designing for the Supervisor' }} />
     </main>
   )
 }
