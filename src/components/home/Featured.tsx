@@ -1,4 +1,4 @@
-/* Home featured work: the Shift walkthrough in a frame, with a title line and
+/* Home featured work: the Shift motion film in a frame, with a title line and
    a link into its case study. */
 import { Link } from 'react-router-dom'
 import homeCopy from '@/content/home.json'
@@ -34,16 +34,16 @@ export function Featured() {
                   loop
                   playsInline
                   preload="metadata"
-                  width={2144}
+                  width={1920}
                   height={1080}
-                  poster="/featured-shift.webp"
+                  poster="/shift-motion-poster.webp"
                   aria-hidden="true"
                   className={featuredMedia}
                 >
-                  <source src="/shift-walk.mp4" type="video/mp4" />
+                  <source src="/shift-motion.mp4" type="video/mp4" />
                 </video>
               ) : (
-                <img src="/featured-shift.webp" alt="" width={2880} height={1453} className={featuredMedia} />
+                <img src="/shift-motion-poster.webp" alt="" width={1920} height={1080} className={featuredMedia} />
               )}
             </div>
             <div className="flex items-center justify-between gap-2 py-4">
