@@ -29,6 +29,19 @@
   --text-hero--line-height: 1.22;
 }
 
+/* Phones read closer and smaller: below the sm breakpoint every running size
+   steps up (body 16→18, meta 14→15, statements and card titles a notch). The
+   body sizes set their line heights as ratios, so they scale along. */
+@media (max-width: 639.98px) {
+  [data-theme='personal-website'] {
+    --type-body: 1.125rem;
+    --type-title: 1.25rem;
+    --text-meta: 0.9375rem;
+    --text-stmt: 1.375rem;
+    --text-title-sm: 1.5rem;
+  }
+}
+
 /* Inks and shades: long-form body ink (Glaze's muted-foreground is too dim
    for paragraphs), the dim meta ink (between Glaze's muted- and
    subtle-foreground), the availability pill's outline, and the darker

@@ -23,8 +23,8 @@ export function RecentWork({ works }: { works: Work[] }) {
         <Reveal as="h2" className={`${labelClass} text-center`}>
           {recentWork.label}
         </Reveal>
-        {/* Two columns of 120px tiles on phones; one 180px row from md up. */}
-        <Reveal className="grid grid-cols-2 gap-4 md:flex md:h-45">
+        {/* Square tiles: two columns on phones, one row from md up. */}
+        <Reveal className="grid grid-cols-2 gap-4 md:flex">
           {tiles.map((work) => {
             const company = work.company.replace(/ Software$/, '')
             const logo = logoFor(work.slug)
@@ -43,14 +43,14 @@ export function RecentWork({ works }: { works: Work[] }) {
                       } as CSSProperties)
                     : undefined
                 }
-                className="tilt group relative flex h-30 items-center justify-center rounded-container border border-border bg-background md:h-auto md:flex-1"
+                className="tilt group relative flex aspect-square items-center justify-center rounded-container border border-border bg-background md:flex-1"
               >
                 {/* Logo and name sit as one group: at rest it is offset so
                     the logo alone is centred; on hover the logo rises, the
                     name drops in below, and the pair ends up centred. */}
                 <span className="tilt-content tilt-reveal flex flex-col items-center gap-4">
                   {logo && <img src={logo} alt="" width={40} height={40} className="size-10" />}
-                  <span aria-hidden="true" className="tilt-reveal-label text-body leading-5 text-foreground">
+                  <span aria-hidden="true" className="tilt-reveal-label text-body leading-[1.25] text-foreground">
                     {company}
                   </span>
                 </span>

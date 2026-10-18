@@ -7,7 +7,9 @@ import { length, polyline, type Pt, type FlowLine } from '@/lib/flow/geometry'
    diagram. The problem cards are joined by curved connectors: from a dot at
    the middle of each card's inner side, a quarter circle bends down into one
    trunk between the columns, which stops just above the centred Proposed
-   Solution label. A constant stream of short glowing dashes runs from each
+   Solution label. On phones, where the cards stack, a straight centre line
+   instead runs dot to dot down the gaps between them and on into the trunk,
+   like the connectors between the step cards. A constant stream of short glowing dashes runs from each
    dot along its curve and down the trunk, and on down the connectors between
    the step cards to the clients circle.
    Each line carries a phase ("distance along the flow", which is simply y on
@@ -17,8 +19,8 @@ import { length, polyline, type Pt, type FlowLine } from '@/lib/flow/geometry'
    head, under a faint wide glow stroke, with a soft bloom at the head.
    Geometry is measured from [data-flow] elements (problem, step, final), so
    the layout in Problem.tsx and Solution.tsx drives it; nothing is hard-coded.
-   The static connector lines are an SVG (desktop only); the dashes are a
-   canvas, skipped entirely under reduced motion. */
+   The static connector lines are an SVG; the dashes are a canvas, skipped
+   entirely under reduced motion. */
 const SPACING = 56 // px between dashes along a line
 const SPEED = 60 // px per second
 const BLEED = 48 // canvas overhang so the glow isn't clipped
@@ -97,6 +99,7 @@ export default function FlowOverlay({ animate }: { animate: boolean }) {
       const trunkStop = stepBoxes[0].y - (labelEl ? labelEl.offsetHeight + labelGap : 0) - LABEL_GAP
 
       const twoColumns = wide && problemBoxes.length === 4
+      const stacked = !twoColumns && problemBoxes.length > 0
       // The trunk runs down the gutter between the columns, or, stacked, down the step cards' centre.
       const trunkX = twoColumns ? (problemBoxes[0].x + problemBoxes[0].w + problemBoxes[1].x) / 2 : stepBoxes[0].x + stepBoxes[0].w / 2
 
@@ -115,7 +118,19 @@ export default function FlowOverlay({ animate }: { animate: boolean }) {
       const trunkTop = Math.min(...connectors.map((c) => c.curveEndY))
       // The line stops a dot's diameter plus DOT_GAP short of the trunk's end dot.
       const trunkLineEnd = trunkStop - DOT * 2 - DOT_GAP
-      connectorSvg.innerHTML = twoColumns
+      // Stacked: the centre line's dots sit on each card's bottom and top border.
+      const stackedRuns = stacked
+        ? problemBoxes.map((box, i) => ({
+            top: box.y + box.h - 0.5,
+            bottom: i + 1 < problemBoxes.length ? problemBoxes[i + 1].y + 0.5 : trunkStop - DOT,
+          }))
+        : []
+      const dot = (y: number) => `<circle cx="${trunkX}" cy="${y}" r="${DOT}" class="fill-border stroke-none" />`
+      connectorSvg.innerHTML = stacked
+        ? stackedRuns
+            .map((run) => dot(run.top) + `<path d="M${trunkX} ${run.top + DOT + DOT_GAP} V${run.bottom - DOT - DOT_GAP}" />` + dot(run.bottom))
+            .join('')
+        : twoColumns
         ? [
             ...connectors.map(
               (c) =>
@@ -150,6 +165,7 @@ export default function FlowOverlay({ animate }: { animate: boolean }) {
         }
         flowLines.push(vertical(trunkTop, trunkStop - DOT))
       }
+      for (const run of stackedRuns) flowLines.push(vertical(run.top, run.bottom))
       // Down the connectors between the step cards, and to the circle.
       stepBoxes.forEach((box, i) => {
         const nextTop = i + 1 < stepBoxes.length ? stepBoxes[i + 1].y + 0.5 : circleBox.y
@@ -185,8 +201,8 @@ export default function FlowOverlay({ animate }: { animate: boolean }) {
 
   return (
     <>
-      {/* Decorative: the connector lines are for the eye only, and md and up only. */}
-      <svg ref={connectorsRef} aria-hidden="true" className="pointer-events-none absolute inset-0 hidden size-full overflow-visible fill-none stroke-border md:block" />
+      {/* Decorative: the connector lines are for the eye only. */}
+      <svg ref={connectorsRef} aria-hidden="true" className="pointer-events-none absolute inset-0 size-full overflow-visible fill-none stroke-border" />
       {animate && (
         <canvas
           ref={canvasRef}

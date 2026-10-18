@@ -1,5 +1,6 @@
 /* Work with me "Sound familiar?": a two-line headline and four numbered problem cards
-   (the data-flow="problem" cards are where FlowOverlay's connectors start). */
+   (the data-flow="problem" cards are where FlowOverlay's connectors start;
+   stacked on phones, its centre line runs down the 40px gaps between them). */
 import workCopy from '@/content/workWithMe.json'
 import Reveal from '@/components/Reveal'
 import { bandClass, innerClass, labelClass } from './layout'
@@ -24,7 +25,7 @@ export function Problem() {
             <span className="block text-primary-foreground">{problemPayoff}</span>
           </Reveal>
         </div>
-        <Reveal as="ol" className="grid grid-cols-1 items-start gap-8 pt-4 md:grid-cols-2 md:gap-15">
+        <Reveal as="ol" className="grid grid-cols-1 items-start gap-10 pt-4 md:grid-cols-2 md:gap-15">
           {problem.items.map((item, index) => (
             <li
               key={index}
@@ -35,7 +36,7 @@ export function Problem() {
                 {String(index + 1).padStart(2, '0')}
               </span>
               <h3 className="self-stretch font-heading text-stmt font-normal text-foreground">{item.title}</h3>
-              <p className="self-stretch text-body leading-5 text-muted-foreground">{item.body}</p>
+              <p className="self-stretch text-body leading-[1.25] text-muted-foreground">{item.body}</p>
             </li>
           ))}
         </Reveal>

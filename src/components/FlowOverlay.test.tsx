@@ -91,11 +91,17 @@ describe('FlowOverlay', () => {
     expect(svg.querySelectorAll('path')).toHaveLength(5)
   })
 
-  it('draws no connectors on narrow screens, where the problem cards are stacked', () => {
+  it('runs a dot-to-dot centre line down the stacked cards on narrow screens', () => {
     mockWide(false)
     const { container } = render(<Fixture animate={false} />)
 
-    expect(container.querySelector('svg')!.innerHTML).toBe('')
+    const svg = container.querySelector('svg')!
+    // One run below each of the four cards (the last into the trunk), a dot at each end.
+    expect(svg.querySelectorAll('path')).toHaveLength(4)
+    expect(svg.querySelectorAll('circle')).toHaveLength(8)
+    // Straight down one x: no quarter-circle arcs.
+    expect(svg.innerHTML).not.toContain(' A')
+    expect(new Set([...svg.querySelectorAll('circle')].map((c) => c.getAttribute('cx'))).size).toBe(1)
   })
 
   it('places each card dot on the card edge facing the trunk', () => {

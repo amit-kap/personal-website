@@ -68,7 +68,7 @@ export function Featured() {
                   </span>
                   <span className="text-copy">{featured.tagline}</span>
                 </p>
-                <p className="flex items-center gap-2 text-body leading-5 text-copy">
+                <p className="flex items-center gap-2 text-body leading-[1.25] text-copy">
                   <span>{featured.role}</span>
                   <span aria-hidden="true" className="text-dim">/</span>
                   <span>{featured.years}</span>
