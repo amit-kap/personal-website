@@ -70,7 +70,7 @@ export function Solution() {
                   {stepIcons[index]}
                 </svg>
                 <h3 className="font-heading text-stmt font-medium text-foreground">{step.title}</h3>
-                <p className="text-body leading-5 text-muted-foreground">{step.body}</p>
+                <p className="text-body leading-[1.25] text-muted-foreground">{step.body}</p>
               </div>
             </li>
           ))}

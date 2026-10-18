@@ -21,13 +21,13 @@ body {
 .eyebrow {
   /* The home page's section label: body size, sentence case, muted. */
   font-size: var(--text-body);
-  line-height: 1.25rem;
+  line-height: 1.25;
   color: var(--muted-foreground);
 }
 .meta-line {
   /* Same as the section label: body size, sentence case, muted. */
   font-size: var(--text-body);
-  line-height: 1.25rem;
+  line-height: 1.25;
   color: var(--muted-foreground);
 }
 .stmt {

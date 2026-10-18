@@ -48,8 +48,9 @@ export default function App() {
         <DotWaves speed={1.5} gap={16} maxRadius={6} />
       </div>
       <div className="relative z-10 flex min-h-screen flex-col">
-        {/* The 960px centre column. Pages render into it. */}
-        <div className="mx-auto w-full max-w-[960px] flex-1 px-4 sm:px-0">
+        {/* The 960px centre column, edge to edge on phones, where it clips the
+            hero word's sideways push so the page never scrolls across. */}
+        <div className="mx-auto w-full max-w-[960px] flex-1 max-sm:overflow-x-clip">
           <Header />
           <div className="bg-card/90">
             <Suspense fallback={null}>

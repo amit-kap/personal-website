@@ -86,7 +86,7 @@ export default function Footer() {
         <h2 className="whitespace-pre-line text-center text-feature font-medium text-primary-foreground">
           {workWithMe ? "Building a new product?\nLet's see if it's a fit." : 'Bring me the\ncomplicated one.'}
         </h2>
-        <p className="w-full max-w-[586px] text-center text-body leading-5 text-secondary-foreground">
+        <p className="w-full max-w-[586px] text-center text-body leading-[1.25] text-secondary-foreground">
           {workWithMe
             ? 'For founders of complex B2B, AI and dev-tool products who need senior product judgment without a full-time hire.'
             : 'Email, LinkedIn, GitHub or my CV below.'}

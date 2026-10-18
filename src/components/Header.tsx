@@ -1,7 +1,9 @@
-/* Sticky site header: name, Home / About nav, and the human / agent view switch. */
+/* Sticky site header: name, Home / About nav, and the human / agent view switch.
+   On phones the nav folds into a dropdown menu beside the switch. */
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { IconSwitch } from '@amit-kap/glaze/components/icon-switch'
-import { headerNav, isActive } from '@/components/siteNav'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@amit-kap/glaze/components/dropdown-menu'
+import { footerNav, headerNav, isActive } from '@/components/siteNav'
 
 /* Paper's 18px user and bot icons for the human / agent switch. */
 function HumanIcon() {
@@ -26,6 +28,17 @@ function AgentIcon() {
   )
 }
 
+/* Lucide's "menu" (three lines), at the switch icons' 18px. */
+function MenuIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M4 6h16" />
+      <path d="M4 12h16" />
+      <path d="M4 18h16" />
+    </svg>
+  )
+}
+
 /* Glaze's IconSwitch, set to Paper: item radius instead of a pill, a 4px gap
    between the cells (so the thumb travels 28px), and a primary-hover thumb. */
 const viewSwitchClass =
@@ -46,7 +59,7 @@ export default function Header() {
         </Link>
         {/* The agent view is plain text; Home and About belong to the human view. */}
         {!agent && (
-          <nav aria-label="Primary navigation" className="flex items-start gap-1">
+          <nav aria-label="Primary navigation" className="hidden items-start gap-1 sm:flex">
             {headerNav.map((item, i) => (
               <span key={item.label} className="flex gap-1">
                 {i > 0 && (
@@ -65,14 +78,38 @@ export default function Header() {
             ))}
           </nav>
         )}
-        <IconSwitch
-          aria-label="Agent view"
-          checked={agent}
-          onCheckedChange={(checked) => navigate(checked ? '/agent' : '/')}
-          icon={<HumanIcon />}
-          checkedIcon={<AgentIcon />}
-          className={viewSwitchClass}
-        />
+        <div className="flex items-center gap-2">
+          <IconSwitch
+            aria-label="Agent view"
+            checked={agent}
+            onCheckedChange={(checked) => navigate(checked ? '/agent' : '/')}
+            icon={<HumanIcon />}
+            checkedIcon={<AgentIcon />}
+            className={viewSwitchClass}
+          />
+          {/* Phones: every page, folded into a menu. */}
+          {!agent && (
+            <DropdownMenu>
+              <DropdownMenuTrigger
+                aria-label="Menu"
+                className="flex size-9 items-center justify-center rounded-item text-dim transition-colors hover:text-secondary-foreground data-popup-open:text-foreground sm:hidden"
+              >
+                <MenuIcon />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" sideOffset={8} className="w-48 p-1.5">
+                {footerNav.map((item) => (
+                  <DropdownMenuItem
+                    key={item.label}
+                    render={<Link to={item.to} aria-current={isActive(item.to, pathname) ? 'page' : undefined} />}
+                    className="px-3 py-2.5 text-meta font-medium text-secondary-foreground aria-[current=page]:text-primary"
+                  >
+                    {item.label}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
+        </div>
       </div>
     </header>
   )
