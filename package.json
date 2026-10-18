@@ -12,6 +12,7 @@
     "test:watch": "vitest",
     "sitemap": "node scripts/generate-sitemap.mjs",
     "llms": "node scripts/generate-llms.mjs",
+    "cv:pdf": "node scripts/build-cv-pdf.mjs",
     "prerender": "node scripts/prerender.mjs"
   },
   "dependencies": {
