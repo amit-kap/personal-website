@@ -25,7 +25,7 @@ describe('getCV', () => {
   })
 
   it('lists Shift first', () => {
-    expect(cv.experience[0]).toMatchObject({ slug: 'shift', company: 'Shift', period: '10/2024 to now' })
+    expect(cv.experience[0]).toMatchObject({ slug: 'shift', company: 'Shift', period: '10/2024 to 10/2026' })
   })
 })
 

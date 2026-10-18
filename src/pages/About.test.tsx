@@ -37,7 +37,7 @@ describe('About experience', () => {
     const role = within(row).getByText('Founding Designer')
     expect(role.tagName).toBe('P')
     expect(role).not.toHaveTextContent('Shift')
-    expect(within(row).getByText('10/2024–Now')).toBeInTheDocument()
+    expect(within(row).getByText('10/2024–10/2026')).toBeInTheDocument()
   })
 
   it('shimmers Founding Designer roles only', () => {

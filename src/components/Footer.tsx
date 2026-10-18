@@ -53,21 +53,21 @@ function CvIcon() {
 export default function Footer() {
   const clock = useTelAvivClock()
   // On Work with me the package circle hangs 56px into the band, so the
-  // heading starts lower to keep 64px clear below it; that page also speaks
-  // to founders, while the others stay general.
-  const founders = useLocation().pathname === '/work-with-me'
+  // heading starts lower to keep 64px clear below it. That page keeps the
+  // founder pitch and leaves out the credits' link to itself.
+  const workWithMe = useLocation().pathname === '/work-with-me'
 
   /* As in Paper: one orange band, from the CTA down to the credits and clock. */
   return (
     <footer className="text-primary-foreground">
-      <div className={`flex flex-col items-center gap-10 bg-primary/90 px-4 ${founders ? 'pt-30' : 'pt-20'}`}>
+      <div className={`flex flex-col items-center gap-10 bg-primary/90 px-4 ${workWithMe ? 'pt-30' : 'pt-20'}`}>
         <h2 className="whitespace-pre-line text-center text-feature font-medium text-primary-foreground">
-          {founders ? "Building a new product?\nLet's see if it's a fit." : "Got something worth\nfiguring out?"}
+          {workWithMe ? "Building a new product?\nLet's see if it's a fit." : 'Bring me the\ncomplicated one.'}
         </h2>
         <p className="w-full max-w-[586px] text-center text-body leading-5 text-secondary-foreground">
-          {founders
-            ? "Tell me what you're building and where it feels stuck."
-            : "A role, a product, or a problem nobody's cracked yet. Let's talk."}
+          {workWithMe
+            ? 'For founders of complex B2B, AI and dev-tool products who need senior product judgment without a full-time hire.'
+            : 'Email, LinkedIn or my CV below.'}
         </p>
         {/* RevealButton is a Base UI <button> that renders these anchors
             (nativeButton={false}); role="link" keeps them announced as links.
@@ -102,7 +102,7 @@ export default function Footer() {
           </RevealButton>
         </div>
         <div className="flex flex-col items-center gap-2 self-stretch py-5 text-center text-caption leading-4 text-copy">
-          {!founders && (
+          {!workWithMe && (
             <Link to="/work-with-me" className="font-medium underline underline-offset-3">
               Work with me
             </Link>

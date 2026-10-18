@@ -8,7 +8,7 @@ describe('WorkWithMe', () => {
 
     expect(screen.getByRole('heading', { level: 1 })).toHaveAccessibleName('Your product, made clear.')
     expect(screen.getByText('Available for new projects')).toBeInTheDocument()
-    expect(screen.getByText(/^For founders of complex B2B, AI and dev-tool products/)).toBeInTheDocument()
+    expect(screen.getByText(/^I've defined how humans and AI agents share the work/)).toBeInTheDocument()
   })
 
   it('lists the four problems and three solution steps', () => {

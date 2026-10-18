@@ -10,7 +10,7 @@ More than a decade in cybersecurity, where dense data and high stakes taught me 
 
 ### [Shift](/experience/shift)
 
-**Founding Designer** · 10/2024 to now · AI-native third-party risk platform
+**Founding Designer** · 10/2024 to 10/2026 · AI-native third-party risk platform
 
 - Joined as the first designer and defined the human-agent operating model: where agents act on their own and where people decide. The resulting workflow cut manual hours and raised vendor onboarding completion rates.
 - Built the design system, onboarding, and core workflows connecting vendor evidence, access, exposure, and risk decisions, through to public launch.

@@ -77,18 +77,18 @@ describe('Footer', () => {
     expect(other.container.querySelector('.bg-primary\\/90')).not.toHaveClass('pt-30')
   })
 
-  it('speaks to founders on Work with me, with no link back to it', () => {
+  it('pitches founders on Work with me, with no credits link to itself', () => {
     renderFooter('/work-with-me')
 
-    expect(screen.getByText("Tell me what you're building and where it feels stuck.")).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: /Building a new product\?\s*Let's see if it's a fit\./ })).toBeInTheDocument()
     expect(screen.queryByRole('link', { name: 'Work with me' })).not.toBeInTheDocument()
   })
 
-  it('speaks generally elsewhere, with a credits link to Work with me', () => {
+  it('invites plainly elsewhere, with a credits link to Work with me', () => {
     renderFooter('/about')
 
-    expect(screen.getByRole('heading', { name: /Got something worth\s*figuring out\?/ })).toBeInTheDocument()
-    expect(screen.getByText(/A role, a product, or a problem nobody's cracked yet\. Let's talk\./)).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: /Bring me the\s*complicated one\./ })).toBeInTheDocument()
+    expect(screen.getByText('Email, LinkedIn or my CV below.')).toBeInTheDocument()
     expect(screen.getByRole('link', { name: 'Work with me' })).toHaveAttribute('href', '/work-with-me')
   })
 })

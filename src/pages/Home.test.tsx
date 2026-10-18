@@ -20,7 +20,7 @@ describe('Home', () => {
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(/Senior\s*Product Designer/)
     expect(screen.getByText('Available for new projects')).toBeInTheDocument()
     expect(
-      screen.getByText('More than a decade designing cybersecurity products, from product direction and design systems to AI-assisted builds that ship.'),
+      screen.getByText('Founding designer at Shift and Veriti. Twelve years designing security products, from Check Point to AI-native startups.'),
     ).toBeInTheDocument()
     expect(screen.queryByRole('link', { name: /let's talk/i })).not.toBeInTheDocument()
     expect(screen.queryByRole('link', { name: /mailto/i })).not.toBeInTheDocument()
