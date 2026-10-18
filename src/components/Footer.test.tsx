@@ -38,7 +38,8 @@ describe('Footer', () => {
   it('has the credits and clock at the bottom, with no agent link or switches', () => {
     renderFooter()
 
-    expect(screen.getByText('Built using Claude Code, Devin AI')).toBeInTheDocument()
+    expect(screen.getByText(/^I\s*Claude$/)).toBeInTheDocument()
+    expect(screen.getByRole('img', { name: 'love' })).toBeInTheDocument()
     expect(screen.queryByRole('link', { name: 'Agent view' })).not.toBeInTheDocument()
     expect(screen.queryByRole('navigation', { name: 'View mode' })).not.toBeInTheDocument()
     expect(screen.queryByRole('button', { name: /theme/i })).not.toBeInTheDocument()
@@ -52,8 +53,10 @@ describe('Footer', () => {
 
   it('offers exactly three reveal links with their names, targets and analytics events', () => {
     renderFooter('/work-with-me')
-    const links = within(screen.getByRole('contentinfo')).getAllByRole('link')
-    expect(links.map((l) => l.getAttribute('aria-label') ?? l.textContent)).toHaveLength(3)
+    // The contact links, apart from the footer navigation.
+    const nav = screen.getByRole('navigation', { name: 'Footer navigation' })
+    const links = within(screen.getByRole('contentinfo')).getAllByRole('link').filter((l) => !nav.contains(l))
+    expect(links).toHaveLength(3)
 
     const [talk, linkedin, cv] = ['Let\'s talk', 'View profile', 'Download CV'].map((name) => screen.getByRole('link', { name }))
     expect(links).toEqual([talk, linkedin, cv])
@@ -77,18 +80,30 @@ describe('Footer', () => {
     expect(other.container.querySelector('.bg-primary\\/90')).not.toHaveClass('pt-30')
   })
 
-  it('pitches founders on Work with me, with no credits link to itself', () => {
+  it('pitches founders on Work with me', () => {
     renderFooter('/work-with-me')
 
     expect(screen.getByRole('heading', { name: /Building a new product\?\s*Let's see if it's a fit\./ })).toBeInTheDocument()
-    expect(screen.queryByRole('link', { name: 'Work with me' })).not.toBeInTheDocument()
   })
 
-  it('invites plainly elsewhere, with a credits link to Work with me', () => {
+  it('invites plainly elsewhere', () => {
     renderFooter('/about')
 
     expect(screen.getByRole('heading', { name: /Bring me the\s*complicated one\./ })).toBeInTheDocument()
     expect(screen.getByText('Email, LinkedIn or my CV below.')).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: 'Work with me' })).toHaveAttribute('href', '/work-with-me')
+  })
+
+  it('links every page in one row, marking the current one', () => {
+    renderFooter('/work-with-me')
+
+    const nav = screen.getByRole('navigation', { name: 'Footer navigation' })
+    const links = within(nav).getAllByRole('link')
+    expect(links.map((l) => [l.textContent, l.getAttribute('href')])).toEqual([
+      ['Home', '/'],
+      ['Work with me', '/work-with-me'],
+      ['About', '/about'],
+    ])
+    expect(within(nav).getByRole('link', { name: 'Work with me' })).toHaveAttribute('aria-current', 'page')
+    expect(within(nav).getByRole('link', { name: 'Home' })).not.toHaveAttribute('aria-current')
   })
 })

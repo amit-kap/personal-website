@@ -18,22 +18,22 @@ function renderAt(path: string) {
 describe('Header', () => {
   afterEach(cleanup)
 
-  it('links the name home and offers Work and About', () => {
+  it('links the name home and offers Home and About', () => {
     renderAt('/')
 
     expect(screen.getByRole('link', { name: 'Amit Kaplinsky' })).toHaveAttribute('href', '/')
-    expect(screen.getByRole('link', { name: 'Work' })).toHaveAttribute('href', '/')
+    expect(screen.getByRole('link', { name: 'Home' })).toHaveAttribute('href', '/')
     expect(screen.getByRole('link', { name: 'About' })).toHaveAttribute('href', '/about')
   })
 
   it('marks the current section', () => {
     renderAt('/about')
     expect(screen.getByRole('link', { name: 'About' })).toHaveAttribute('aria-current', 'page')
-    expect(screen.getByRole('link', { name: 'Work' })).not.toHaveAttribute('aria-current')
+    expect(screen.getByRole('link', { name: 'Home' })).not.toHaveAttribute('aria-current')
 
     cleanup()
     renderAt('/work/shift')
-    expect(screen.getByRole('link', { name: 'Work' })).toHaveAttribute('aria-current', 'page')
+    expect(screen.getByRole('link', { name: 'Home' })).toHaveAttribute('aria-current', 'page')
   })
 
   it('switches between the human and agent views', () => {
@@ -66,7 +66,7 @@ describe('Header', () => {
 
     cleanup()
     renderAt('/case-studies/designing-for-the-supervisor')
-    expect(screen.getByRole('link', { name: 'Work' })).not.toHaveAttribute('aria-current')
+    expect(screen.getByRole('link', { name: 'Home' })).not.toHaveAttribute('aria-current')
     expect(screen.getByRole('link', { name: 'About' })).not.toHaveAttribute('aria-current')
   })
 })
