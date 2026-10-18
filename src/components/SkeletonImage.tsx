@@ -1,3 +1,5 @@
+/* An <img> with a pulsing placeholder until it loads, and an "Image
+   unavailable" message if it fails. */
 import { useCallback, useRef, useState, type ImgHTMLAttributes } from 'react'
 
 type ImageLoadState = 'loading' | 'loaded' | 'error'
@@ -60,19 +62,19 @@ export default function SkeletonImage({
           updateLoadState('error')
           onError?.(event)
         }}
-        className={`${className} transition-opacity duration-300 ${
+        className={`${className} transition-opacity duration-(--duration-slow) ${
           currentState === 'loaded' ? 'opacity-100' : 'opacity-0'
         }`}
         {...rest}
       />
       <span
         aria-hidden="true"
-        className={`absolute inset-0 bg-neutral-100 pointer-events-none transition-opacity duration-500 ${
+        className={`absolute inset-0 bg-muted pointer-events-none transition-opacity duration-(--duration-slow) ${
           currentState === 'loading' ? 'opacity-100 animate-pulse' : 'opacity-0'
         }`}
       />
       {currentState === 'error' && (
-        <span className="absolute inset-0 flex items-center justify-center bg-neutral-100 px-4 text-center text-caption font-mono uppercase tracking-[0.18em] text-foreground/30">
+        <span className="absolute inset-0 flex items-center justify-center bg-muted px-4 text-center text-caption text-muted-foreground">
           Image unavailable
         </span>
       )}

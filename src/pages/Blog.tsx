@@ -1,17 +1,8 @@
 import { Link } from 'react-router-dom'
 import { getAllCaseStudies, getWorkBySlug, type CaseStudy } from '@/lib/content'
 import Reveal from '@/components/Reveal'
-import RollingText from '@/components/RollingText'
 import Seo from '@/components/Seo'
-import { pillButton } from '@/components/pillButton'
-
-function ArrowIcon() {
-  return (
-    <svg className="size-[14px]" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
-      <path d="M4 12 L12 4 M5.5 4 H12 V10.5" />
-    </svg>
-  )
-}
+import { ReadLink } from '@/components/work/ClosingActions'
 
 function metaFor(study: CaseStudy): string {
   // Display name only; "Check Point Software" reads as "Check Point" on cards.
@@ -35,7 +26,7 @@ export default function Blog() {
       <section className="relative">
         <div className="inner-col flex flex-col items-center gap-4 pb-14 pt-16 text-center">
           <Reveal as="p" className="eyebrow" delay={0.1}>Blog</Reveal>
-          <Reveal as="h1" className="font-heading text-feature font-medium tracking-[-0.02em]" delay={0.18}>
+          <Reveal as="h1" className="font-heading text-feature font-medium" delay={0.18}>
             Notes from the work
           </Reveal>
         </div>
@@ -44,7 +35,7 @@ export default function Blog() {
       {/* Featured post, dominant full-column cover. */}
       {featured && (
         <section className="relative border-t border-border">
-          <div className="inner-col flex flex-col gap-[18px] pb-14 pt-10">
+          <div className="inner-col flex flex-col gap-4.5 pb-14 pt-10">
             <Reveal>
               <Link to={`/case-studies/${featured.slug}`} className="group block overflow-hidden rounded-lg border border-border">
                 {featured.coverImage && (
@@ -61,13 +52,10 @@ export default function Blog() {
             <Reveal as="p" className="meta-line pt-1.5">{metaFor(featured)}</Reveal>
             <Reveal className="flex flex-wrap items-center justify-between gap-x-10 gap-y-4">
               <div className="flex max-w-[720px] flex-col gap-2.5">
-                <h2 className="font-heading text-section font-medium tracking-[-0.02em]">{featured.title}</h2>
+                <h2 className="font-heading text-section font-medium">{featured.title}</h2>
                 <p className="body-copy max-w-[640px]">{featured.excerpt}</p>
               </div>
-              <Link to={`/case-studies/${featured.slug}`} className={pillButton('roll-host flex-none px-6 py-3 text-[0.875rem]/[1.45]')}>
-                <RollingText text="Read Article" />
-                <ArrowIcon />
-              </Link>
+              <ReadLink to={`/case-studies/${featured.slug}`} label="Read Article" className="flex-none" />
             </Reveal>
           </div>
         </section>
@@ -92,12 +80,9 @@ export default function Blog() {
                   )}
                 </Link>
                 <p className="meta-line pt-1.5">{metaFor(study)}</p>
-                <h2 className="font-heading text-[22px] font-medium leading-tight tracking-[-0.015em]">{study.title}</h2>
-                <p className="body-copy text-[15px]">{study.excerpt}</p>
-                <Link to={`/case-studies/${study.slug}`} className="text-link roll-host mt-1 self-start text-[14.5px]">
-                  <RollingText text="Read Article" />
-                  <ArrowIcon />
-                </Link>
+                <h2 className="font-heading text-heading font-medium">{study.title}</h2>
+                <p className="body-copy">{study.excerpt}</p>
+                <ReadLink to={`/case-studies/${study.slug}`} label="Read Article" className="mt-1 self-start" />
               </Reveal>
             ))}
           </div>

@@ -1,0 +1,61 @@
+/* ----------------------------------------------------------------------------
+   3 · STRUCTURE — the content column
+---------------------------------------------------------------------------- */
+/* The content column, inside the 960px page column's panel: the same as the
+   home sections, 800px of content with a 16px gutter on narrow screens. */
+.inner-col {
+  width: 100%;
+  max-width: 832px;
+  margin-inline: auto;
+  padding-inline: 16px;
+}
+
+/* ----------------------------------------------------------------------------
+   4 · LABELS & COPY
+---------------------------------------------------------------------------- */
+/* Running text is light (300). Headings and labels set their own weight:
+   medium, or normal (400) for the large display lines. */
+body {
+  font-weight: var(--font-weight-light);
+}
+.eyebrow {
+  /* The home page's section label: body size, sentence case, muted. */
+  font-size: var(--text-body);
+  line-height: 1.25rem;
+  color: var(--muted-foreground);
+}
+.meta-line {
+  /* Same as the section label: body size, sentence case, muted. */
+  font-size: var(--text-body);
+  line-height: 1.25rem;
+  color: var(--muted-foreground);
+}
+.stmt {
+  font-family: var(--font-heading);
+  font-weight: var(--font-weight-medium);
+  font-size: var(--text-stmt);
+  line-height: var(--text-stmt--line-height);
+  letter-spacing: -0.01em;
+  color: var(--foreground);
+}
+.body-copy {
+  font-size: var(--text-body);
+  line-height: 1.65;
+  color: var(--copy);
+}
+
+/* ----------------------------------------------------------------------------
+   5 · ACTIONS — orange pills (Glaze Button) and quiet text links
+---------------------------------------------------------------------------- */
+/* The pill itself is Glaze's Button (components/actionButtons.ts). */
+.text-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: var(--font-weight-medium);
+  color: var(--foreground);
+  transition: color 160ms ease;
+}
+.text-link:hover,
+.text-link:focus-visible { color: var(--primary); }
+

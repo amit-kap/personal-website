@@ -160,7 +160,7 @@ export interface Work {
   blurb: string;                 // tile copy (work.md `blurb`, falls back to CV summary)
   order: number;                 // ascending sort key
   heroImage?: ContentImage;      // top of work page
-  tileImage?: ContentImage;      // Recent Work tile (first frame of cycle)
+  tileImage?: ContentImage;      // work.md `tileImage`; falls back to heroImage
   bodyImages: Record<string, ContentImage>; // keyed by filename, for inline image refs
 }
 
@@ -226,7 +226,7 @@ export interface CaseStudy {
   slug: string;                    // writing folder name
   workSlug: string;                // links to a Work
   title: string;                   // parsed from the first H1 in body
-  excerpt: string;                 // 1–2 sentence narrative summary for Home Hero
+  excerpt: string;                 // 1–2 sentence summary for blog cards and SEO
   featured: boolean;
   coverImage?: ContentImage;
   body: string;                    // markdown body (includes H1)

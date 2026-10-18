@@ -24,3 +24,6 @@ if (!window.ResizeObserver) {
 }
 
 Object.defineProperty(window, 'scrollTo', { value: () => {}, writable: true })
+
+// DotWaves draws on a canvas; jsdom has none, so it should bail quietly.
+HTMLCanvasElement.prototype.getContext = (() => null) as unknown as HTMLCanvasElement['getContext']

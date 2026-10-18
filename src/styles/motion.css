@@ -1,0 +1,202 @@
+/* ----------------------------------------------------------------------------
+   7 · MOTION — rolling-letter hover, entrances, scroll reveals
+---------------------------------------------------------------------------- */
+/* Rolling text: each character is a column of two stacked copies inside an
+   overflow-hidden line; hover on the host rolls the columns up in a stagger. */
+.roll {
+  display: inline-flex;
+  align-items: flex-start; /* columns keep their 2-line height; stretch would halve the roll distance */
+  overflow: hidden;
+  line-height: 1.3;
+  height: 1.3em;
+  vertical-align: bottom;
+}
+.roll-ch {
+  display: inline-block;
+  white-space: pre;
+  transition: transform 0.4s cubic-bezier(0.76, 0, 0.24, 1);
+}
+.roll-host:hover .roll-ch,
+.roll-host:focus-visible .roll-ch { transition-delay: var(--roll-d, 0s); }
+.roll-ch > span { display: block; }
+.roll-host:hover .roll-ch,
+.roll-host:focus-visible .roll-ch { transform: translateY(-50%); }
+
+/* Load entrance + scroll reveal share one contract: .reveal starts hidden,
+   .is-in shows it. Stagger with --reveal-delay. */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity 0.6s ease var(--reveal-delay, 0s),
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1) var(--reveal-delay, 0s);
+}
+.reveal.is-in { opacity: 1; transform: translateY(0); }
+.reveal-scale { transform: translateY(50px) scale(1.08); }
+.reveal-scale.is-in { transform: translateY(0) scale(1); }
+
+/* Tilt card (useTilt, the Recent Work tiles): tilts toward the cursor in 3D,
+   lifts its content a little off the surface, and shows a glare where the
+   cursor is. */
+.tilt {
+  transform: perspective(700px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));
+  transform-style: preserve-3d;
+  transition:
+    transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.2s ease;
+  will-change: transform;
+}
+.tilt:hover { transition-duration: 0.12s, 0.2s; }
+.tilt-content { transform: translateZ(24px); }
+/* Hover reveal inside a tilt card: the group starts offset by half of
+   (gap + label height) so the logo alone is centred, then settles centred
+   as the label fades and drops in. */
+.tilt-reveal {
+  --reveal-offset: 18px; /* (16px gap + 20px label line) / 2 */
+  transform: translateZ(24px) translateY(var(--reveal-offset));
+  transition: transform 0.35s cubic-bezier(0.33, 1, 0.68, 1);
+}
+/* The label starts tucked up behind the logo and drops into place once the
+   logo has started to rise. */
+.tilt-reveal-label {
+  opacity: 0;
+  transform: translateY(-20px);
+  transition:
+    opacity 0.15s ease,
+    transform 0.35s cubic-bezier(0.33, 1, 0.68, 1);
+}
+.tilt:hover .tilt-reveal,
+.tilt:focus-visible .tilt-reveal { transform: translateZ(24px) translateY(0); }
+.tilt:hover .tilt-reveal-label,
+.tilt:focus-visible .tilt-reveal-label {
+  opacity: 1;
+  transform: translateY(0);
+  transition:
+    opacity 0.25s ease 0.06s,
+    transform 0.35s cubic-bezier(0.33, 1, 0.68, 1) 0.04s;
+}
+
+/* Pulsating border: three light spots (--spot-1..3, set per card from its
+   logo colours; site colours by default) orbit the card edge, over a blurred
+   copy that pulses as a glow. Shown on hover and keyboard focus. The ring
+   is a conic gradient masked to the border; the blur sits on a wrapper so
+   the mask does not clip the glow. --pulse-angle is registered with
+   @property so the browser can interpolate the angle for the orbit. */
+@property --pulse-angle {
+  syntax: '<angle>';
+  inherits: true;
+  initial-value: 0deg;
+}
+@keyframes pulse-orbit { to { --pulse-angle: 360deg; } }
+@keyframes pulse-breathe {
+  from { opacity: 0.45; }
+  to { opacity: 1; }
+}
+.pulse-border {
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  animation: pulse-orbit 4s linear infinite;
+  animation-play-state: paused;
+}
+.tilt:hover .pulse-border,
+.tilt:focus-visible .pulse-border {
+  opacity: 1;
+  animation-play-state: running;
+}
+.pulse-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1.5px;
+  background: conic-gradient(
+    from var(--pulse-angle),
+    transparent 0%,
+    var(--spot-1, var(--primary)) 9%,
+    transparent 22%,
+    transparent 33%,
+    var(--spot-2, var(--foreground)) 41%,
+    transparent 52%,
+    transparent 66%,
+    var(--spot-3, color-mix(in srgb, var(--primary) 65%, #3a0f00)) 75%,
+    transparent 88%
+  );
+  mask:
+    linear-gradient(#000 0 0) content-box exclude,
+    linear-gradient(#000 0 0);
+}
+.pulse-glow {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  filter: blur(8px);
+  animation: pulse-breathe 1.6s ease-in-out infinite alternate;
+}
+.pulse-glow .pulse-ring { padding: 4px; }
+.tilt-glare {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  background: radial-gradient(circle at var(--glare-x, 50%) var(--glare-y, 50%), rgb(255 255 255 / 0.12), transparent 60%);
+  opacity: var(--glare, 0);
+  transition: opacity 0.3s ease;
+}
+
+/* Hero word rotation: each slot pushes the old word out as the new one
+   enters from the opposite side. Duration, delay and easing are set inline
+   from the timing constants in components/home/Hero.tsx. */
+@keyframes push-in-up { from { transform: translateY(100%); } }
+@keyframes push-out-up { to { transform: translateY(-100%); } }
+@keyframes push-in-down { from { transform: translateY(-100%); } }
+@keyframes push-out-down { to { transform: translateY(100%); } }
+/* Sideways pushes travel --push-x (the slot's widest word), since a word
+   wider than its slot overflows it and one slot width would not clear it. */
+@keyframes push-in-right { from { transform: translateX(calc(-1 * var(--push-x, 100%))); } }
+@keyframes push-out-right { to { transform: translateX(var(--push-x, 100%)); } }
+.push-in-up, .push-out-up, .push-in-down, .push-out-down, .push-in-right, .push-out-right {
+  animation-fill-mode: both;
+}
+.push-in-up { animation-name: push-in-up; }
+.push-out-up { animation-name: push-out-up; }
+.push-in-down { animation-name: push-in-down; }
+.push-out-down { animation-name: push-out-down; }
+.push-in-right { animation-name: push-in-right; }
+.push-out-right { animation-name: push-out-right; }
+
+
+/* A soft light that sweeps across a line of text, for the founding roles on
+   the About page: the text is painted by a gradient (copy ink with a bright
+   band) that slides through it on a loop. */
+@keyframes shimmer-text { to { background-position: -100% 0; } }
+.shimmer-text {
+  background: linear-gradient(100deg, var(--muted-foreground) 40%, var(--foreground) 50%, var(--muted-foreground) 60%) 100% 0 / 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: shimmer-text 2.8s linear infinite;
+}
+
+/* Reduced motion switches every effect above to its resting state: rolls,
+   reveals, tilts and pulses stop, and the hover reveal in tilt cards keeps
+   its end position without animating there. */
+@media (prefers-reduced-motion: reduce) {
+  .roll-ch { transition: none; }
+  .shimmer-text { animation: none; color: var(--muted-foreground); background: none; }
+  .roll-host:hover .roll-ch { transform: none; }
+  .reveal, .reveal-scale { opacity: 1; transform: none; transition: none; }
+  .tilt, .tilt-content { transform: none; }
+  .tilt-reveal, .tilt-reveal-label { transition: none; }
+  .tilt .tilt-reveal { transform: translateY(var(--reveal-offset)); }
+  .tilt:hover .tilt-reveal,
+  .tilt:focus-visible .tilt-reveal { transform: none; }
+  .tilt-glare { display: none; }
+  .pulse-border, .pulse-glow { animation: none; }
+  .window-btn { transition: none; }
+  .window-btn:hover { transform: none; }
+  .text-link { transition: none; }
+}
+

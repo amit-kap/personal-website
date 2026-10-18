@@ -29,52 +29,63 @@ export default function ProductVideo({
   poster?: string
   label: string
 }) {
-  const video = useRef<HTMLVideoElement>(null)
+  const videoRef = useRef<HTMLVideoElement>(null)
   const [playing, setPlaying] = useState(true)
   const [progress, setProgress] = useState(0)
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const el = video.current
-    if (!el) return
+    const video = videoRef.current
+    if (!video) return
     // Autoplay is a motion effect like any other; leave it stopped if asked.
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) el.pause()
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) video.pause()
 
-    const onTime = () => setProgress(el.duration ? el.currentTime / el.duration : 0)
+    // A cached video can be ready before React attaches onCanPlay, so that
+    // event is missed: check the ready state now, and also clear the loader
+    // as soon as playback starts.
+    if (video.readyState >= HTMLMediaElement.HAVE_FUTURE_DATA) setLoading(false)
+
+    const onTime = () => setProgress(video.duration ? video.currentTime / video.duration : 0)
     const onPlay = () => setPlaying(true)
     const onPause = () => setPlaying(false)
-    el.addEventListener('timeupdate', onTime)
-    el.addEventListener('play', onPlay)
-    el.addEventListener('pause', onPause)
+    const onPlaying = () => setLoading(false)
+    video.addEventListener('timeupdate', onTime)
+    video.addEventListener('play', onPlay)
+    video.addEventListener('pause', onPause)
+    video.addEventListener('playing', onPlaying)
     return () => {
-      el.removeEventListener('timeupdate', onTime)
-      el.removeEventListener('play', onPlay)
-      el.removeEventListener('pause', onPause)
+      video.removeEventListener('timeupdate', onTime)
+      video.removeEventListener('play', onPlay)
+      video.removeEventListener('pause', onPause)
+      video.removeEventListener('playing', onPlaying)
     }
   }, [])
 
   const toggle = () => {
-    const el = video.current
-    if (!el) return
-    if (el.paused) el.play()
-    else el.pause()
+    const video = videoRef.current
+    if (!video) return
+    if (video.paused) video.play()
+    else video.pause()
   }
 
   const scrub = (event: React.MouseEvent<HTMLDivElement>) => {
-    const el = video.current
-    if (!el || !el.duration) return
+    const video = videoRef.current
+    if (!video || !video.duration) return
     const { left, width } = event.currentTarget.getBoundingClientRect()
-    el.currentTime = Math.min(Math.max((event.clientX - left) / width, 0), 1) * el.duration
+    video.currentTime = Math.min(Math.max((event.clientX - left) / width, 0), 1) * video.duration
   }
 
   const openFull = () => setOpen(true)
 
   return (
     <>
-      <div className="backdrop-media backdrop-media--fit vid" aria-busy={loading}>
+      <div className="product-media vid" aria-busy={loading}>
+        {/* The video opens the full-frame viewer, so it is exposed as a button
+            and handles Enter and Space itself. The play/pause control below
+            is separate, and stops the click reaching this one. */}
         <video
-          ref={video}
+          ref={videoRef}
           src={src}
           poster={poster}
           aria-label={label}
@@ -105,6 +116,7 @@ export default function ProductVideo({
         <button type="button" className="vid-btn" onClick={(event) => { event.stopPropagation(); toggle() }} aria-label={playing ? 'Pause video' : 'Play video'}>
           {playing ? <PauseIcon /> : <PlayIcon />}
         </button>
+        {/* Click-to-seek strip; keyboard users have the native controls in the viewer. */}
         <div className="vid-track" onClick={(event) => { event.stopPropagation(); scrub(event) }} role="presentation">
           <div className="vid-line">
             <div className="vid-fill" style={{ transform: `scaleX(${progress})` }} />

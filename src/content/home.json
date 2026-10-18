@@ -1,7 +1,40 @@
 {
+  "availability": "Available for new projects",
   "headlineLines": [
-    "Making complex products",
-    "clear enough to act on."
+    "Senior",
+    "Product Designer"
   ],
-  "supportingCopy": "More than a decade designing cybersecurity products, from product direction and design systems to AI-assisted builds that ship."
+  "headlineRotation": {
+    "Senior": ["Senior", "Solo", "Lead", "Principal", "Staff"],
+    "Product": ["Product", "AI", "Design", "Founding"],
+    "Designer": ["Designer", "Builder", "Engineer", "Manager"]
+  },
+  "supportingCopy": "Founding designer at Shift and Veriti. Twelve years designing security products, from Check Point to AI-native startups.",
+  "featured": {
+    "label": "Featured",
+    "slug": "shift",
+    "tagline": "AI-native third-party risk platform",
+    "role": "Founding Designer",
+    "years": "2024 - 2026"
+  },
+  "recentWork": {
+    "label": "Recent Work",
+    "outcomes": {
+      "onyxia-cyber": "CISO goals into owned, tracked tasks",
+      "veriti": "From known exposure to approved change",
+      "semperis": "A product language for prevention",
+      "checkpoint": "Twenty tabs into one security system"
+    },
+    "glow": {
+      "onyxia-cyber": ["#8a64c4", "#c9b3ef", "#6b4d96"],
+      "veriti": ["#fe596f", "#ffb0bb", "#7a3ef0"],
+      "semperis": ["#ef3842", "#f9a9ad", "#ea0182"],
+      "checkpoint": ["#ed0a5d", "#f89ab9", "#b3084a"]
+    }
+  },
+  "workWithMe": {
+    "label": "Work with me",
+    "text": "Building a complex B2B or AI product? This is how I'd work on it with your team.",
+    "cta": "See how"
+  }
 }

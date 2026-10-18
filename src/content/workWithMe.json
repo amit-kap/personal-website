@@ -1,0 +1,47 @@
+{
+  "headlineLines": ["Your product,", "made clear."],
+  "headlineRotation": {
+    "product": ["product", "AI product", "B2B product", "dev tool", "security product"],
+    "clear": ["clear", "credible", "obvious", "demo-ready", "easy to sell"]
+  },
+  "supportingCopy": "I've defined how humans and AI agents share the work, built design systems from zero, and taken products from the first screen to a working whole. I can do the same for yours.",
+  "problem": {
+    "label": "Sound familiar?",
+    "headline": "Startups don't need more design theatre. They need product clarity.",
+    "items": [
+      {
+        "title": "Your product is hard to explain",
+        "body": "It takes three paragraphs and a diagram before anyone gets it."
+      },
+      {
+        "title": "Your demo needs narration",
+        "body": "The product can't carry the story without a founder talking over it."
+      },
+      {
+        "title": "Your AI feels powerful but unclear",
+        "body": "The capability is real, but the experience doesn't make it obvious or trustworthy."
+      },
+      {
+        "title": "Your product undersells your company.",
+        "body": "The team is serious. The interface doesn't show it yet."
+      }
+    ]
+  },
+  "solution": {
+    "label": "How I can help",
+    "steps": [
+      {
+        "title": "Diagnose",
+        "body": "I'll review the product, demo, and onboarding to find what's unclear and why."
+      },
+      {
+        "title": "Plan",
+        "body": "I'll turn that into prioritized fixes your team can pick up next sprint."
+      },
+      {
+        "title": "Build",
+        "body": "I'll design and work with engineering until the fixes are live."
+      }
+    ]
+  }
+}

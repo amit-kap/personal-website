@@ -47,7 +47,7 @@ describe('route pages', () => {
 
   it('shows clear not-found states for missing content', () => {
     const work = renderAt('/work/not-a-product', '/work/:slug', <WorkItem />)
-    expect(screen.getByText('Work not found.')).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'This page does not exist.' })).toBeInTheDocument()
     work.unmount()
 
     renderAt('/case-studies/not-an-article', '/case-studies/:slug', <CaseStudyPage />)

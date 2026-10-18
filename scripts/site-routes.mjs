@@ -24,12 +24,13 @@ const staticRoutes = [
     priority: '0.8',
   },
   {
-    path: '/blog',
-    title: 'Blog',
-    description: 'Product strategy and design notes on AI-agent supervision, high-volume security data, and shipping a mobile app inside enterprise security.',
+    path: '/work-with-me',
+    title: 'Work with me',
+    description: "Senior product design for founders of complex B2B, AI and dev-tool products: diagnose what's unclear, plan the fixes, and build them with your team.",
     type: 'website',
     priority: '0.8',
   },
+  // /blog is hidden for now (it redirects home); restore its entry with the route.
   {
     path: '/agent',
     title: 'Agent view',

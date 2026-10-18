@@ -4,16 +4,16 @@
 
 Tel Aviv · [amitka111@gmail.com](mailto:amitka111@gmail.com) · [+972 54-4878882](https://wa.me/972544878882) · [LinkedIn](https://www.linkedin.com/in/amitkaplinsky) · [amitkap.com](https://amitkap.com)
 
-More than a decade in cybersecurity, where dense data and high stakes taught me to make complex products clear and trustworthy. I bring that clarity to any domain and own features end to end, from framing the problem to shipping in production, using AI to move faster.
+From design school to the advertising industry, then to high-tech cybersecurity, where I've spent the last twelve years helping companies ship complete product experiences to their users.
 
 ## Experience
 
 ### [Shift](/experience/shift)
 
-**Founding Designer** · 10/2024 to now · AI-native third-party risk platform
+**Founding Designer** · 10/2024 to 10/2026 · AI-native third-party risk platform
 
 - Joined as the first designer and defined the human-agent operating model: where agents act on their own and where people decide. The resulting workflow cut manual hours and raised vendor onboarding completion rates.
-- Built the design system, onboarding, and core workflows connecting vendor evidence, access, exposure, and risk decisions, through to public launch.
+- Built the design system, onboarding, and core workflows connecting vendor evidence, access, exposure, and risk decisions, through to a working product.
 
 ### [Onyxia](/experience/onyxia-cyber)
 

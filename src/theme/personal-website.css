@@ -3,7 +3,7 @@
  * Don't edit by hand: change the config and generate again.
  */
 
-/* glaze-config {"version":1,"name":"personal-website","extends":"nova","defaults":{"mode":"light","density":"comfortable"},"color":{"light":{"canvas":"#ffffff","surface":"#ffffff","ink":"#111111","ink-muted":"#70706d","line":"#ececec","brand":"#f04a00","brand-ink":"#ffffff"},"dark":{"canvas":"#0f0f0e","surface":"#0f0f0e","ink":"#f2f2ef","ink-muted":"#8f8f8a","line":"#262624","brand":"#f04a00","brand-ink":"#ffffff"}},"shape":{"radius":"0.625rem","shape-item":"0.5rem","shape-control":"0.75rem","shape-floating":"0.625rem","shape-container":"0.875rem"},"type":{"typeface-sans":"\"Plus Jakarta Sans\", ui-sans-serif, system-ui, sans-serif","typeface-heading":"\"Geist\", ui-sans-serif, system-ui, sans-serif","typeface-mono":"ui-monospace, \"SFMono-Regular\", Menlo, monospace","type-caption":"0.75rem","type-caption-leading":"1.4","type-body":"1rem","type-body-leading":"1.65","type-title":"1.125rem","type-title-leading":"1.5","type-heading":"1.375rem","type-heading-leading":"1.25","type-display":"1.75rem","type-display-leading":"1.2"},"elevation":{"elevation-raised":"0 1px 2px rgba(17, 17, 17, 0.04)","elevation-floating":"0 8px 24px rgba(17, 17, 17, 0.06)","elevation-modal":"0 24px 60px -12px rgba(17, 17, 17, 0.25)"}} */
+/* glaze-config {"version":1,"name":"personal-website","extends":"nova","defaults":{"mode":"dark","density":"comfortable"},"color":{"light":{"canvas":"#ffffff","surface":"#ffffff","ink":"#111111","ink-muted":"#70706d","line":"#ececec","brand":"#f04a00","brand-ink":"#ffffff"},"dark":{"canvas":"#0f0f0e","surface":"#111111","ink":"#f2f2ef","ink-muted":"#8f8f8a","line":"#262624","brand":"#f04a00","brand-ink":"#ffffff"}},"shape":{"radius":"0.625rem","shape-item":"0.5rem","shape-control":"0.75rem","shape-floating":"0.625rem","shape-container":"0.875rem"},"type":{"typeface-sans":"\"Inter Variable\", ui-sans-serif, system-ui, sans-serif","typeface-heading":"\"Inter Variable\", ui-sans-serif, system-ui, sans-serif","typeface-mono":"ui-monospace, \"SFMono-Regular\", Menlo, monospace","type-caption":"0.75rem","type-caption-leading":"1.4","type-body":"1rem","type-body-leading":"1.65","type-title":"1.125rem","type-title-leading":"1.5","type-heading":"1.375rem","type-heading-leading":"1.25","type-display":"1.75rem","type-display-leading":"1.2"},"elevation":{"elevation-raised":"0 1px 2px rgba(17, 17, 17, 0.04)","elevation-floating":"0 8px 24px rgba(17, 17, 17, 0.06)","elevation-modal":"0 24px 60px -12px rgba(17, 17, 17, 0.25)"}} */
 
 [data-theme="personal-website"] {
   --canvas: #ffffff;
@@ -25,9 +25,11 @@
   --overlay: rgb(0 0 0 / 0.1);
   --radius: 0.625rem;
   --space-base: 0.25rem;
-  --typeface-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
-  --typeface-heading: "Geist", ui-sans-serif, system-ui, sans-serif;
+  --typeface-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+  --typeface-heading: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
   --typeface-mono: ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --type-micro: 0.625rem;
+  --type-micro-leading: 1.2;
   --type-caption: 0.75rem;
   --type-caption-leading: 1.4;
   --type-body: 1rem;
@@ -48,6 +50,7 @@
   --motion-base: 150ms;
   --motion-moderate: 200ms;
   --motion-slow: 300ms;
+  --motion-ease-linear: linear;
   --motion-ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
   --motion-ease-emphasized: cubic-bezier(0.34, 1.56, 0.64, 1);
   --motion-ease-exit: cubic-bezier(0.4, 0, 1, 1);
@@ -66,7 +69,7 @@
 .dark [data-theme="personal-website"],
 [data-theme="personal-website"] .dark {
   --canvas: #0f0f0e;
-  --surface: #0f0f0e;
+  --surface: #111111;
   --ink: #f2f2ef;
   --ink-muted: #8f8f8a;
   --line: #262624;

@@ -1,10 +1,10 @@
 # Amit Kaplinsky
 
-> More than a decade designing cybersecurity products, from product direction and design systems to AI-assisted builds that ship.
+> Founding designer at Shift and Veriti. Twelve years designing security products, from Check Point to AI-native startups.
 
 ## Homepage
 
-- Headline: Making complex products clear enough to act on.
+- Headline: Senior Product Designer
 - URL: https://amitkap.com/
 
 ## Work
