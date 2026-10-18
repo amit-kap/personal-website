@@ -1,5 +1,5 @@
-import { render, screen, within } from '@testing-library/react'
-import { MemoryRouter } from 'react-router-dom'
+import { fireEvent, render, screen, within } from '@testing-library/react'
+import { MemoryRouter, Route, Routes } from 'react-router-dom'
 import homeCopy from '@/content/home.json'
 import workCopy from '@/content/workWithMe.json'
 import { getAllWorks } from '@/lib/content'
@@ -40,6 +40,20 @@ describe('Solution', () => {
 })
 
 describe('Featured', () => {
+  it('opens the case study from a click anywhere on the text under the media', () => {
+    render(
+      <MemoryRouter>
+        <Routes>
+          <Route path="/" element={<Featured />} />
+          <Route path="/work/:slug" element={<p>case study page</p>} />
+        </Routes>
+      </MemoryRouter>,
+    )
+
+    fireEvent.click(screen.getByText(homeCopy.featured.tagline))
+    expect(screen.getByText('case study page')).toBeInTheDocument()
+  })
+
   it('has exactly one link, the View button into the Shift case study', () => {
     render(<Featured />, { wrapper: MemoryRouter })
 

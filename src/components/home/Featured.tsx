@@ -1,6 +1,6 @@
 /* Home featured work: the Shift motion film in a frame, with a title line and
    a link into its case study. */
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import homeCopy from '@/content/home.json'
 import Reveal from '@/components/Reveal'
 import { RevealButton } from '@amit-kap/glaze/components/reveal-button'
@@ -18,6 +18,8 @@ const featuredMedia = 'block h-auto w-full rounded-item'
 export function Featured() {
   const { featured } = homeCopy
   const allowMotion = useAllowMotion()
+  const navigate = useNavigate()
+  const caseStudy = `/work/${featured.slug}`
   return (
     <section className={`${bandClass} py-10`}>
       <div className={innerClass}>
@@ -46,7 +48,16 @@ export function Featured() {
                 <img src="/shift-motion-poster.webp" alt="" width={1920} height={1080} className={featuredMedia} />
               )}
             </div>
-            <div className="flex items-center justify-between gap-2 py-4">
+            {/* The whole row is the button's reveal group: hovering the text
+                opens "View" too (Glaze styles its label off group/reveal), and
+                a click anywhere on it follows the link. The button stays the
+                one link for keyboards and screen readers. */}
+            <div
+              onClick={(event) => {
+                if (!(event.target as Element).closest('a')) navigate(caseStudy)
+              }}
+              className="group/reveal flex cursor-pointer items-center justify-between gap-2 py-4"
+            >
               <div className="flex flex-col gap-2">
                 {/* Name and what it is read as one title line; the tagline
                     wraps under the name on narrow screens. */}
@@ -66,13 +77,13 @@ export function Featured() {
               {/* The one way into the case study: Glaze's RevealButton as a link,
                   which opens to show its label on hover or keyboard focus. */}
               <RevealButton
-                render={<Link to={`/work/${featured.slug}`} />}
+                render={<Link to={caseStudy} />}
                 nativeButton={false}
                 role="link"
                 aria-label={`View the Shift case study: ${featured.tagline}`}
                 label="View"
                 iconSide="end"
-                className={accentRevealButton}
+                className={`${accentRevealButton} group-hover/reveal:px-5`}
               >
                 <RevealArrow />
               </RevealButton>

@@ -4,6 +4,7 @@
 import workCopy from '@/content/workWithMe.json'
 import Reveal from '@/components/Reveal'
 import { innerClass, labelClass } from './layout'
+import { PackageTurn } from './PackageTurn'
 
 /* dot - line - dot. Overlaps the neighbouring card borders by 3px (the dots'
    radius), exactly as in Paper. */
@@ -84,14 +85,9 @@ export function Solution() {
           <Reveal className="relative z-10 -mt-[3px] -mb-20 flex w-full flex-col items-center">
             <div data-flow="final" className="relative flex items-center rounded-pill p-6">
               <div className="relative z-[1] flex items-center rounded-pill bg-primary p-8 ring-6 ring-background">
-                {/* Lucide "package": the finished product. Drawn on a 24 grid at
-                    48px, so a 0.75 stroke is the site's 1.5px line. */}
-                <svg className="size-12 shrink-0 text-primary-foreground" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="0.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                  <path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z" />
-                  <path d="M12 22V12" />
-                  <polyline points="3.29 7 12 12 20.71 7" />
-                  <path d="m7.5 4.27 9 5.15" />
-                </svg>
+                {/* Lucide's "package", the finished product, as a real 3D box
+                    that turns now and then (PackageTurn). */}
+                <PackageTurn className="size-12 shrink-0 text-primary-foreground" />
               </div>
             </div>
           </Reveal>
