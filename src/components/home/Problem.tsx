@@ -25,7 +25,9 @@ export function Problem() {
             <span className="block text-primary-foreground">{problemPayoff}</span>
           </Reveal>
         </div>
-        <Reveal as="ol" className="grid grid-cols-1 items-start gap-10 pt-4 md:grid-cols-2 md:gap-15">
+        {/* Cards in a row stretch to the same height, so a wrapping title
+            doesn't leave its neighbour short. */}
+        <Reveal as="ol" className="grid grid-cols-1 items-stretch gap-10 pt-4 md:grid-cols-2 md:gap-15">
           {problem.items.map((item, index) => (
             <li
               key={index}

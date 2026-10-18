@@ -63,8 +63,10 @@ export function Solution() {
         <Reveal as="ol" className="flex flex-col items-stretch">
           {solution.steps.map((step, index) => (
             <li key={step.title} className="contents">
-              {/* 80px connectors between cards; -mt-[3px] tucks the end dots over the card borders. */}
-              {index > 0 && <Connector className="-mt-[3px] h-20" />}
+              {/* Connectors leave the same visible gap as the problem cards
+                  (40px phone, 60px desktop): the -mt-[3px] on it and on the
+                  next card tuck the end dots over the borders, eating 6px. */}
+              {index > 0 && <Connector className="-mt-[3px] h-[46px] md:h-[66px]" />}
               <div data-flow="step" className={`${stepCardClass} rounded-container ${index > 0 ? '-mt-[3px]' : ''}`}>
                 <svg className="size-8 shrink-0 text-primary" width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                   {stepIcons[index]}

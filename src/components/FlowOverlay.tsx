@@ -27,6 +27,10 @@ const BLEED = 48 // canvas overhang so the glow isn't clipped
 const LABEL_GAP = 8 // px between the trunk and the solution label
 const DOT = 3 // connector dot radius
 const DOT_GAP = 2 // px between a dot and its line, as in the step connectors
+/* Dash colour per stretch of the flow: the problem connectors and trunk,
+   the connectors between the step cards, and the last run into the product. */
+const SEGMENT_COLORS = { problem: '#ef4444', solution: '#3b82f6', product: '#22c55e' } as const
+type Segment = keyof typeof SEGMENT_COLORS
 
 type Box = { x: number; y: number; w: number; h: number }
 
@@ -44,8 +48,8 @@ export default function FlowOverlay({ animate }: { animate: boolean }) {
     const wrapper = connectorSvg?.parentElement
     if (!wrapper || !connectorSvg) return
 
-    let flowLines: FlowLine[] = []
-    let color: Rgb = WHITE
+    let flowLines: { line: FlowLine; segment: Segment }[] = []
+    let colors: Record<Segment, Rgb> = { problem: WHITE, solution: WHITE, product: WHITE }
     let dpr = 1
     let frame = 0
     let visible = false
@@ -69,10 +73,10 @@ export default function FlowOverlay({ animate }: { animate: boolean }) {
       ctx.globalCompositeOperation = 'lighter'
       ctx.lineCap = 'butt'
       const flowDistance = ((now - startTime) / 1000) * SPEED
-      for (const line of flowLines) {
+      for (const { line, segment } of flowLines) {
         // Heads sit wherever the phase is a whole number of SPACINGs behind flowDistance.
         const firstHead = (((flowDistance - line.phase) % SPACING) + SPACING) % SPACING
-        for (let head = firstHead; head <= line.len + DASH; head += SPACING) drawDash(ctx, line, head, color)
+        for (let head = firstHead; head <= line.len + DASH; head += SPACING) drawDash(ctx, line, head, colors[segment])
       }
     }
     const loop = (now: number) => {
@@ -147,7 +151,11 @@ export default function FlowOverlay({ animate }: { animate: boolean }) {
       dpr = Math.min(window.devicePixelRatio || 1, 2)
       canvas.width = Math.round((wrapperRect.width + BLEED * 2) * dpr)
       canvas.height = Math.round((wrapperRect.height + BLEED * 2) * dpr)
-      color = toRgb(ctx, getComputedStyle(wrapper).getPropertyValue('--color-primary').trim() || '#f04a00')
+      colors = {
+        problem: toRgb(ctx, SEGMENT_COLORS.problem),
+        solution: toRgb(ctx, SEGMENT_COLORS.solution),
+        product: toRgb(ctx, SEGMENT_COLORS.product),
+      }
 
       // On the vertical lines the phase is y; each curve's phase counts back
       // from where it meets the trunk.
@@ -161,15 +169,16 @@ export default function FlowOverlay({ animate }: { animate: boolean }) {
             return [c.curveStartX + c.radius * Math.cos(angle), c.dotY + c.radius + c.radius * Math.sin(angle)]
           })
           const pts: Pt[] = [[c.edgeX, c.dotY], ...curve]
-          flowLines.push(polyline(pts, c.curveEndY - length(pts)))
+          flowLines.push({ line: polyline(pts, c.curveEndY - length(pts)), segment: 'problem' })
         }
-        flowLines.push(vertical(trunkTop, trunkStop - DOT))
+        flowLines.push({ line: vertical(trunkTop, trunkStop - DOT), segment: 'problem' })
       }
-      for (const run of stackedRuns) flowLines.push(vertical(run.top, run.bottom))
-      // Down the connectors between the step cards, and to the circle.
+      for (const run of stackedRuns) flowLines.push({ line: vertical(run.top, run.bottom), segment: 'problem' })
+      // Down the connectors between the step cards, and from Build to the circle.
       stepBoxes.forEach((box, i) => {
-        const nextTop = i + 1 < stepBoxes.length ? stepBoxes[i + 1].y + 0.5 : circleBox.y
-        flowLines.push(vertical(box.y + box.h - 0.5, nextTop))
+        const last = i + 1 === stepBoxes.length
+        const nextTop = last ? circleBox.y : stepBoxes[i + 1].y + 0.5
+        flowLines.push({ line: vertical(box.y + box.h - 0.5, nextTop), segment: last ? 'product' : 'solution' })
       })
       draw()
     }
