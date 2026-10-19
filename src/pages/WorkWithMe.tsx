@@ -1,11 +1,10 @@
 import homeCopy from '@/content/home.json'
 import workCopy from '@/content/workWithMe.json'
 import Seo from '@/components/Seo'
-import TimelineRoute from '@/components/TimelineRoute'
 import { RotatingHero, type Slot } from '@/components/RotatingHeadline'
-import { useAllowMotion } from '@/lib/useAllowMotion'
 import { Problem } from '@/components/home/Problem'
 import { Solution } from '@/components/home/Solution'
+import { JourneyMotion } from '@/components/home/JourneyMotion'
 
 /* "product" pushes up first, then "clear" pushes down. */
 const slots: Record<string, Slot> = {
@@ -14,8 +13,6 @@ const slots: Record<string, Slot> = {
 }
 
 export default function WorkWithMe() {
-  const allowMotion = useAllowMotion()
-
   return (
     <main>
       <Seo
@@ -30,11 +27,10 @@ export default function WorkWithMe() {
         slots={slots}
         supportingCopy={workCopy.supportingCopy}
       />
-      <div className="relative">
+      <JourneyMotion>
         <Problem />
         <Solution />
-        <TimelineRoute animate={allowMotion} />
-      </div>
+      </JourneyMotion>
     </main>
   )
 }
