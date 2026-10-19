@@ -1,6 +1,7 @@
 /* The Work with me flow's final package: Lucide's "package" icon, except it is
    a real 3D box, turning slowly and constantly on its vertical axis like a
-   turntable. It starts (and, without motion, stays) exactly as the flat icon.
+   turntable (unless a data-idle ancestor holds it). It starts (and, without
+   motion, stays) exactly as the flat icon.
    Each frame draws only the edges that face the viewer, so it stays a clean
    line icon. */
 import { useEffect, useRef } from 'react'
@@ -19,11 +20,17 @@ export function PackageTurn({ className = '' }: { className?: string }) {
     if (!el) return
     el.setAttribute('d', packagePath(REST_TURN))
     if (!allowMotion) return
+    // It holds still while an ancestor is marked data-idle (the Work with me
+    // journey, until the package ignites), and turns on from where it was.
     let frame = 0
-    const start = performance.now()
+    let last = performance.now()
+    let turned = 0
     const tick = (now: number) => {
-      const progress = ((now - start) % TURN_MS) / TURN_MS
-      el.setAttribute('d', packagePath(REST_TURN + progress * 2 * Math.PI))
+      if (!el.closest('[data-idle]')) {
+        turned = (turned + (now - last) / TURN_MS) % 1
+        el.setAttribute('d', packagePath(REST_TURN + turned * 2 * Math.PI))
+      }
+      last = now
       frame = requestAnimationFrame(tick)
     }
     frame = requestAnimationFrame(tick)

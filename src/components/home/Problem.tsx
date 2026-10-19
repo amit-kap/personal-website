@@ -24,6 +24,9 @@ const p5 = p4 + lane
    end ring; the journey ends at the ring's edge, the label 40px below it. */
 const endY = p5 + 40 + 207
 const height = endY + 8
+/* A stop ring beside each problem, on the lane's side line level with its
+   text (right, left, right, left), then the end ring. */
+const stopPoints = [...passes.map((y, i) => [i % 2 ? 40 : 760, y + lane / 2]), [400, endY]]
 const routePath = [
   `M400 12V${p1 - 40}A40 40 0 0 0 440 ${p1}H720A40 40 0 0 1 760 ${p1 + 40}V${p2 - 40}A40 40 0 0 1 720 ${p2}`,
   `H80A40 40 0 0 0 40 ${p2 + 40}V${p3 - 40}A40 40 0 0 0 80 ${p3}`,
@@ -63,10 +66,28 @@ export function Problem() {
             <path data-journey="path" d={routePath} fill="none" className="stroke-border" strokeWidth="2" />
             {/* The origin ring, then the stops the disc pauses on (JourneyMotion). */}
             <circle cx="400" cy="12" r="7" className="fill-background stroke-muted-foreground" strokeWidth="1.5" />
-            {/* A stop ring beside each problem, on the lane's side line level
-                with its text (right, left, right, left), then the end ring. */}
-            {[...passes.map((y, i) => [i % 2 ? 40 : 760, y + lane / 2]), [400, endY]].map(([x, y]) => (
+            {stopPoints.map(([x, y]) => (
               <circle key={y} data-journey="stop" cx={x} cy={y} r="7" className="fill-background stroke-muted-foreground" strokeWidth="1.5" />
+            ))}
+            {/* Each stop's arrival blip (Paper "detail / a — Gate blip"): a
+                soft glow, a faint ring and a swelling core. Hidden until
+                JourneyMotion plays it. */}
+            <defs>
+              <filter id="journey-blip-blur" x="-1" y="-1" width="3" height="3">
+                <feGaussianBlur stdDeviation="7" />
+              </filter>
+            </defs>
+            {stopPoints.map(([x, y]) => (
+              <g key={y} data-journey="blip" opacity="0">
+                <circle cx={x} cy={y} r="28" className="fill-primary" opacity="0.45" filter="url(#journey-blip-blur)" />
+                <circle data-blip="ring" cx={x} cy={y} r="24" fill="none" className="stroke-primary" strokeWidth="1" opacity="0.4" />
+                <circle data-blip="core" cx={x} cy={y} r="8.5" className="fill-primary" />
+              </g>
+            ))}
+            {/* Sparks the disc sheds as it moves, a short fading trail (after
+                Paper "detail / c — Disc in motion"); JourneyMotion places them. */}
+            {Array.from({ length: 32 }, (_, i) => (
+              <circle key={i} data-journey="spark" cx="400" cy="12" r="0" className="fill-primary" opacity="0" />
             ))}
             {/* The disc rests on the origin ring (Paper "disc" in timeline / 1). */}
             <g data-journey="disc">
@@ -76,14 +97,14 @@ export function Problem() {
           </svg>
           {/* The disc's glow, centred on the origin. */}
           <span data-journey="glow" aria-hidden="true" className="pointer-events-none absolute top-[-18px] left-[370px] hidden size-[60px] rounded-pill bg-primary/35 blur-[24px] md:block" />
-          {/* Zero state, as in Paper "timeline / 1": each problem at 40% until
-              the disc reaches its lane (data-lit, set by JourneyMotion). */}
+          {/* JourneyMotion dims each problem to 40% (Paper "timeline / 1") and
+              lights it as the disc arrives beside it. */}
           <ol className="flex flex-col gap-10 md:block">
             {problem.items.map((item, index) => (
               <li
                 key={index}
                 data-journey="problem"
-                className="flex flex-col items-center gap-2 text-center opacity-40 transition-opacity duration-500 data-lit:opacity-100 md:absolute md:left-20 md:w-[640px]"
+                className="flex flex-col items-center gap-2 text-center md:absolute md:left-20 md:w-[640px]"
                 style={{ top: passes[index] + textTop }}
               >
                 <h3 className="font-heading text-title-sm font-normal tracking-[-0.01em] text-foreground">{item.title}</h3>
