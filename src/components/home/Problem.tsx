@@ -1,7 +1,7 @@
 /* Work with me "Sound familiar?": a two-line headline, then the four problems
    on a serpentine route (Paper "work-with-me / timeline v5"). On desktop the
-   route is a fixed 800 × 1227 journey: an origin ring 160px above the route,
-   a straight drop into it, then four 200px lanes between x 40 and 760,
+   route is a fixed 800 × 1627 journey: an origin ring 160px above the route,
+   a straight drop into it, then four 300px lanes between x 40 and 760,
    turned with 40px rounded corners, a stop ring on the side beside each problem.
    After problem 04 it returns to the centre and runs straight down to a ring
    just above "How I can help". Phones get the problems as a plain list. */
@@ -11,10 +11,10 @@ import { bandClass, innerClass, labelClass } from './layout'
 
 /* The origin ring sits at y 12 and the line drops 160px, turning into the
    first pass with a rounded corner instead of a ring (Amit's addition to
-   Paper v5, which starts the route at the first pass). Lanes are 200px
+   Paper v5, which starts the route at the first pass). Lanes are 300px
    (Paper: 160; Amit asked for more room between the problems). */
 const drop = 160
-const lane = 200
+const lane = 300
 /* The passes sit a lane apart from y 172; each lane's text (62px) is centred between two. */
 const passes = [0, 1, 2, 3].map((i) => 12 + drop + i * lane)
 const textTop = (lane - 62) / 2
