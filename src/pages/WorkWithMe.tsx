@@ -1,7 +1,7 @@
 import homeCopy from '@/content/home.json'
 import workCopy from '@/content/workWithMe.json'
 import Seo from '@/components/Seo'
-import FlowOverlay from '@/components/FlowOverlay'
+import TimelineRoute from '@/components/TimelineRoute'
 import { RotatingHero, type Slot } from '@/components/RotatingHeadline'
 import { useAllowMotion } from '@/lib/useAllowMotion'
 import { Problem } from '@/components/home/Problem'
@@ -33,7 +33,7 @@ export default function WorkWithMe() {
       <div className="relative">
         <Problem />
         <Solution />
-        <FlowOverlay animate={allowMotion} />
+        <TimelineRoute animate={allowMotion} />
       </div>
     </main>
   )

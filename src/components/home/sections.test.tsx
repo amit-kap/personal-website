@@ -9,32 +9,36 @@ import { RecentWork } from './RecentWork'
 import { Solution } from './Solution'
 
 describe('Problem', () => {
-  it('renders four numbered cards that FlowOverlay can measure', () => {
+  it('renders four numbered items that TimelineRoute can measure', () => {
     const { container } = render(<Problem />)
 
-    const cards = container.querySelectorAll('[data-flow="problem"]')
-    expect(cards).toHaveLength(4)
-    expect([...cards].map((card) => card.querySelector('span')?.textContent)).toEqual(['01', '02', '03', '04'])
+    const items = container.querySelectorAll('[data-route="item"]')
+    expect(items).toHaveLength(4)
+    expect([...items].map((item) => item.querySelector('span:not([data-route])')?.textContent)).toEqual(['01', '02', '03', '04'])
+    // Each sits on a rail node, under the origin.
+    expect(container.querySelectorAll('[data-route="node"]')).toHaveLength(4)
+    expect(container.querySelector('[data-route="origin"]')).toBeInTheDocument()
     expect(screen.getAllByRole('listitem')).toHaveLength(4)
     expect(screen.getByRole('heading', { level: 2 })).toHaveTextContent(workCopy.problem.label)
   })
 })
 
 describe('Solution', () => {
-  it('renders three steps and a final circle, all measurable by FlowOverlay', () => {
+  it('renders three numbered steps and a final circle, all measurable by TimelineRoute', () => {
     const { container } = render(<Solution />)
 
-    const steps = container.querySelectorAll('[data-flow="step"]')
+    const steps = container.querySelectorAll('[data-route="step"]')
     expect(steps).toHaveLength(3)
-    expect([...steps].map((s) => s.querySelector('h3')?.textContent)).toEqual(['Diagnose', 'Plan', 'Build'])
-    expect(container.querySelectorAll('[data-flow="final"]')).toHaveLength(1)
-    // FlowOverlay measures the circle through the final element's first child.
-    expect(container.querySelector('[data-flow="final"]')?.firstElementChild).toBeInTheDocument()
+    expect([...steps].map((s) => s.querySelector('h3')?.textContent)).toEqual(['1. Diagnose', '2. Plan', '3. Build'])
+    expect(container.querySelectorAll('[data-route="final"]')).toHaveLength(1)
+    // TimelineRoute measures the circle through the final element's first child.
+    expect(container.querySelector('[data-route="final"]')?.firstElementChild).toBeInTheDocument()
   })
 
-  it('keeps the connectors out of the accessibility tree', () => {
+  it('keeps the bloom out of the accessibility tree and the steps an ordered list', () => {
     const { container } = render(<Solution />)
-    expect(container.querySelectorAll('[aria-hidden="true"]').length).toBeGreaterThan(0)
+    expect(container.querySelector('[data-route="bloom"]')).toHaveAttribute('aria-hidden', 'true')
+    expect(container.querySelector('ol')?.querySelectorAll(':scope > li')).toHaveLength(3)
     expect(screen.queryAllByRole('link')).toHaveLength(0)
   })
 })
