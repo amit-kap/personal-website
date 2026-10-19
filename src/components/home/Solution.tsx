@@ -48,7 +48,7 @@ export function Solution() {
                 aria-hidden="true"
                 className="pointer-events-none absolute top-1/2 left-1/2 size-[150px] -translate-x-1/2 -translate-y-1/2 rounded-pill bg-primary/45 opacity-0 blur-[40px]"
               />
-              <div data-journey="package" className="relative flex items-center rounded-pill bg-primary p-8 text-primary-foreground ring-6 ring-background">
+              <div data-journey="package" className="relative flex items-center rounded-pill bg-primary p-8 text-primary-foreground ring-6 ring-card/90">
                 {/* The primary fill JourneyMotion grows from the centre. */}
                 <span data-journey="package-fill" aria-hidden="true" className="absolute inset-0 rounded-pill bg-primary" />
                 {/* Lucide's "package", the finished product, as a real 3D box

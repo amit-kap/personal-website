@@ -61,7 +61,7 @@ export function Problem() {
             width="800"
             height={height}
             viewBox={`0 0 800 ${height}`}
-            className="absolute inset-0 hidden overflow-visible md:block"
+            className="pointer-events-none absolute inset-0 z-1 hidden overflow-visible md:block"
           >
             <path data-journey="path" d={routePath} fill="none" className="stroke-border" strokeWidth="2" />
             {/* The origin ring, then the stops the disc pauses on (JourneyMotion). */}

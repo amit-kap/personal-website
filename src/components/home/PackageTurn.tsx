@@ -25,11 +25,16 @@ export function PackageTurn({ className = '' }: { className?: string }) {
     let frame = 0
     let last = performance.now()
     let turned = 0
+    let speed = 0
     const tick = (now: number) => {
+      // A soft start after ignition; returning from a background tab cannot
+      // jump the package through several seconds of rotation.
+      const elapsed = Math.min(48, now - last)
       if (!el.closest('[data-idle]')) {
-        turned = (turned + (now - last) / TURN_MS) % 1
+        speed += (1 - speed) * (1 - Math.exp(-elapsed / 380))
+        turned = (turned + elapsed * speed / TURN_MS) % 1
         el.setAttribute('d', packagePath(REST_TURN + turned * 2 * Math.PI))
-      }
+      } else speed = 0
       last = now
       frame = requestAnimationFrame(tick)
     }
