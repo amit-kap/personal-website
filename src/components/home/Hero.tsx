@@ -14,6 +14,7 @@ export function Hero() {
   return (
     <RotatingHero
       availability={homeCopy.availability}
+      availabilityLink={{ to: '/work-with-me' }}
       lines={homeCopy.headlineLines}
       rotation={homeCopy.headlineRotation}
       slots={slots}

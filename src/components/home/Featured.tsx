@@ -13,7 +13,7 @@ import { RestartIcon, RevealArrow } from '@/components/icons'
 import { ShiftMark } from './ShiftMark'
 import { bandClass, innerClass, labelClass } from './layout'
 
-/* The Shift capture sits whole inside the frame with an even 1% border
+/* The Shift capture sits whole inside the frame with an even 0.6% border
    (percentage padding is relative to width on every side), and the frame
    takes the capture's own ~2:1 shape instead of cropping it to 16:9. */
 const featuredMedia = 'block h-auto w-full rounded-item'
@@ -21,7 +21,10 @@ const featuredMedia = 'block h-auto w-full rounded-item'
 /* The film with its own controls over the bottom edge: a restart button and
    a progress line. They show while the pointer moves over the film (or a
    tap, or keyboard focus) and fade out 3s after it stops. Progress is read
-   every frame, not on timeupdate (~4 a second), so the line runs smooth. */
+   every frame, not on timeupdate (~4 a second), so the line runs smooth.
+   The film plays only while half of it is on screen: it starts from its
+   first frame when first scrolled to, pauses when it leaves and resumes
+   when it comes back. Nothing but the poster loads before that. */
 const CONTROLS_IDLE_MS = 3000
 
 function FeaturedFilm() {
@@ -44,6 +47,20 @@ function FeaturedFilm() {
   useEffect(() => () => window.clearTimeout(hideTimer.current), [])
 
   useEffect(() => {
+    const video = videoRef.current
+    if (!video || typeof IntersectionObserver === 'undefined') return
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) void video.play().catch(() => {})
+        else video.pause()
+      },
+      { threshold: 0.5 },
+    )
+    observer.observe(video)
+    return () => observer.disconnect()
+  }, [])
+
+  useEffect(() => {
     let frame = 0
     const tick = () => {
       const video = videoRef.current
@@ -58,7 +75,7 @@ function FeaturedFilm() {
     const video = videoRef.current
     if (!video) return
     video.currentTime = 0
-    void video.play()
+    void video.play().catch(() => {})
   }
 
   return (
@@ -82,11 +99,10 @@ function FeaturedFilm() {
     >
       <video
         ref={videoRef}
-        autoPlay
         muted
         loop
         playsInline
-        preload="metadata"
+        preload="none"
         width={1920}
         height={1080}
         poster="/shift-motion-poster.webp"
@@ -135,7 +151,7 @@ export function Featured() {
         </Reveal>
         <Reveal>
           <div className="flex flex-col gap-4">
-            <div className="overflow-hidden rounded-container bg-dim p-[1%]">
+            <div className="overflow-hidden rounded-container bg-dim p-[0.6%]">
               {allowMotion ? (
                 <FeaturedFilm />
               ) : (
