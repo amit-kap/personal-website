@@ -59,7 +59,7 @@ describe('App routes', () => {
     const scrollTo = vi.spyOn(getLenis()!, 'scrollTo')
 
     try {
-      expect(screen.getByRole('status')).toHaveTextContent('Loading page')
+      expect(screen.getByText('Loading page…')).toBeInTheDocument()
       expect(screen.getByRole('navigation', { name: 'Primary navigation' })).toBeInTheDocument()
       expect(screen.getByRole('contentinfo')).toBeInTheDocument()
       expect(screen.queryByRole('main')).not.toBeInTheDocument()
@@ -70,7 +70,7 @@ describe('App routes', () => {
     }
 
     await screen.findByRole('main')
-    expect(screen.queryByRole('status')).not.toBeInTheDocument()
+    expect(screen.queryByText('Loading page…')).not.toBeInTheDocument()
     await waitFor(() => expect(scrollTo).toHaveBeenCalledWith(0, { immediate: true }))
   })
 
