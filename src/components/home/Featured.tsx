@@ -1,12 +1,15 @@
 /* Home featured work: the Shift motion film in a frame, with a title line and
    a link into its case study. */
+import { useEffect, useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import homeCopy from '@/content/home.json'
 import Reveal from '@/components/Reveal'
 import { RevealButton } from '@amit-kap/glaze/components/reveal-button'
+import { Button } from '@amit-kap/glaze/components/button'
+import { Progress } from '@amit-kap/glaze/components/progress'
 import { accentRevealButton } from '@/components/actionButtons'
 import { useAllowMotion } from '@/lib/useAllowMotion'
-import { RevealArrow } from '@/components/icons'
+import { RestartIcon, RevealArrow } from '@/components/icons'
 import { ShiftMark } from './ShiftMark'
 import { bandClass, innerClass, labelClass } from './layout'
 
@@ -14,6 +17,107 @@ import { bandClass, innerClass, labelClass } from './layout'
    (percentage padding is relative to width on every side), and the frame
    takes the capture's own ~2:1 shape instead of cropping it to 16:9. */
 const featuredMedia = 'block h-auto w-full rounded-item'
+
+/* The film with its own controls over the bottom edge: a restart button and
+   a progress line. They show while the pointer moves over the film (or a
+   tap, or keyboard focus) and fade out 3s after it stops. Progress is read
+   every frame, not on timeupdate (~4 a second), so the line runs smooth. */
+const CONTROLS_IDLE_MS = 3000
+
+function FeaturedFilm() {
+  const videoRef = useRef<HTMLVideoElement>(null)
+  const [progress, setProgress] = useState(0)
+  const [controlsShown, setControlsShown] = useState(false)
+  const [focused, setFocused] = useState(false)
+  const hideTimer = useRef<number | undefined>(undefined)
+  const lastPointer = useRef({ x: -1, y: -1 })
+
+  const showControls = () => {
+    setControlsShown(true)
+    window.clearTimeout(hideTimer.current)
+    hideTimer.current = window.setTimeout(() => setControlsShown(false), CONTROLS_IDLE_MS)
+  }
+  const hideControls = () => {
+    window.clearTimeout(hideTimer.current)
+    setControlsShown(false)
+  }
+  useEffect(() => () => window.clearTimeout(hideTimer.current), [])
+
+  useEffect(() => {
+    let frame = 0
+    const tick = () => {
+      const video = videoRef.current
+      if (video?.duration) setProgress((video.currentTime / video.duration) * 100)
+      frame = requestAnimationFrame(tick)
+    }
+    frame = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(frame)
+  }, [])
+
+  const restart = () => {
+    const video = videoRef.current
+    if (!video) return
+    video.currentTime = 0
+    void video.play()
+  }
+
+  return (
+    <div
+      className="relative"
+      onPointerEnter={showControls}
+      onPointerMove={(event) => {
+        // The browser also sends moves while the pointer rests and the page
+        // repaints under it; only a real move keeps the controls up.
+        const { x, y } = lastPointer.current
+        if (event.clientX === x && event.clientY === y) return
+        lastPointer.current = { x: event.clientX, y: event.clientY }
+        showControls()
+      }}
+      onPointerDown={showControls}
+      onPointerLeave={(event) => {
+        if (event.pointerType === 'mouse') hideControls()
+      }}
+      onFocus={(event) => setFocused(event.target.matches(':focus-visible'))}
+      onBlur={() => setFocused(false)}
+    >
+      <video
+        ref={videoRef}
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="metadata"
+        width={1920}
+        height={1080}
+        poster="/shift-motion-poster.webp"
+        aria-hidden="true"
+        className={featuredMedia}
+      >
+        <source src="/shift-motion.mp4" type="video/mp4" />
+      </video>
+      <div
+        className={`absolute inset-x-3 bottom-3 flex items-center gap-3 transition-opacity duration-(--duration-moderate) ease-standard ${
+          controlsShown || focused ? 'opacity-100' : 'pointer-events-none opacity-0'
+        }`}
+      >
+        <Button
+          variant="secondary"
+          size="icon-sm"
+          onClick={restart}
+          aria-label="Restart the Shift film"
+          className="rounded-pill"
+        >
+          <RestartIcon />
+        </Button>
+        <Progress
+          value={progress}
+          aria-label="Film progress"
+          className="flex-1 [&_[data-slot=progress-indicator]]:transition-none [&_[data-slot=progress-track]]:bg-background/50"
+        />
+      </div>
+    </div>
+  )
+}
 
 export function Featured() {
   const { featured } = homeCopy
@@ -23,27 +127,17 @@ export function Featured() {
   return (
     <section className={`${bandClass} py-10`}>
       <div className={innerClass}>
+        {/* The site's shimmer (the About founding roles'), in orange ink. */}
         <Reveal as="h2" className={`${labelClass} text-center`}>
-          {featured.label}
+          <span className="shimmer-text [--shimmer-ink:var(--primary)]">
+            {featured.label}
+          </span>
         </Reveal>
         <Reveal>
           <div className="flex flex-col gap-4">
             <div className="overflow-hidden rounded-container bg-dim p-[1%]">
               {allowMotion ? (
-                <video
-                  autoPlay
-                  muted
-                  loop
-                  playsInline
-                  preload="metadata"
-                  width={1920}
-                  height={1080}
-                  poster="/shift-motion-poster.webp"
-                  aria-hidden="true"
-                  className={featuredMedia}
-                >
-                  <source src="/shift-motion.mp4" type="video/mp4" />
-                </video>
+                <FeaturedFilm />
               ) : (
                 <img src="/shift-motion-poster.webp" alt="" width={1920} height={1080} className={featuredMedia} />
               )}

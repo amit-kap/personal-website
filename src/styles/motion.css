@@ -168,12 +168,17 @@
 .push-out-right { animation-name: push-out-right; }
 
 
-/* A soft light that sweeps across a line of text, for the founding roles on
-   the About page: the text is painted by a gradient (copy ink with a bright
-   band) that slides through it on a loop. */
-@keyframes shimmer-text { to { background-position: -100% 0; } }
+/* The site's one shimmer: a soft light that sweeps across a line of text
+   (the founding roles on About, the Featured label on Home). The text is
+   painted by a repeating gradient (its ink with a bright band) that slides
+   through it. The gradient is a fixed 280px long, so the band's width
+   (56px), speed (100px/s) and rhythm (one pass per 2.8s) are the same on any
+   text, short or long — tuned on About's "Founding Designer" (~140px).
+   --shimmer-ink sets the ink; muted copy by default. */
+@keyframes shimmer-text { to { background-position: 280px 0; } }
 .shimmer-text {
-  background: linear-gradient(100deg, var(--muted-foreground) 40%, var(--foreground) 50%, var(--muted-foreground) 60%) 100% 0 / 200% 100%;
+  --_ink: var(--shimmer-ink, var(--muted-foreground));
+  background: linear-gradient(100deg, var(--_ink) 40%, var(--foreground) 50%, var(--_ink) 60%) 0 0 / 280px 100% repeat-x;
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -185,7 +190,7 @@
    its end position without animating there. */
 @media (prefers-reduced-motion: reduce) {
   .roll-ch { transition: none; }
-  .shimmer-text { animation: none; color: var(--muted-foreground); background: none; }
+  .shimmer-text { animation: none; color: var(--shimmer-ink, var(--muted-foreground)); background: none; }
   .roll-host:hover .roll-ch { transform: none; }
   .reveal, .reveal-scale { opacity: 1; transform: none; transition: none; }
   .tilt, .tilt-content { transform: none; }
