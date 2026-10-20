@@ -185,11 +185,16 @@
   animation: shimmer-text 2.8s linear infinite;
 }
 
+/* The availability pill's dot: a slow blink, like a status light. */
+@keyframes status-blink { 50% { opacity: 0.25; } }
+.status-dot { animation: status-blink 1.6s ease-in-out infinite; }
+
 /* Reduced motion switches every effect above to its resting state: rolls,
    reveals, tilts and pulses stop, and the hover reveal in tilt cards keeps
    its end position without animating there. */
 @media (prefers-reduced-motion: reduce) {
   .roll-ch { transition: none; }
+  .status-dot { animation: none; }
   .shimmer-text { animation: none; color: var(--shimmer-ink, var(--muted-foreground)); background: none; }
   .roll-host:hover .roll-ch { transform: none; }
   .reveal, .reveal-scale { opacity: 1; transform: none; transition: none; }

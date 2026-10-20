@@ -1,7 +1,8 @@
 import { Fragment, useEffect, useLayoutEffect, useRef, useState } from 'react'
 /* The hero shared by the home and Work with me pages: availability pill, a
    title whose chosen words rotate, and the supporting line. Each page passes
-   its title lines and which words rotate (and how). */
+   its title lines, which words rotate (and how), and where the pill leads. */
+import { Link } from 'react-router-dom'
 import Reveal from '@/components/Reveal'
 import StarBorder from '@/components/react-bits/StarBorder'
 import { useAllowMotion } from '@/lib/useAllowMotion'
@@ -119,14 +120,21 @@ const splitPunctuation = (token: string) => {
   return { word, punctuation }
 }
 
+/* Where the availability pill leads: a page on the site, or an outside link
+   such as mailto (Router's Link renders that as a plain anchor), optionally
+   with its own accessible name and analytics event. */
+export type PillLink = { to: string; label?: string; event?: string }
+
 export function RotatingHero({
   availability,
+  availabilityLink,
   lines,
   rotation,
   slots,
   supportingCopy,
 }: {
   availability: string
+  availabilityLink: PillLink
   /* The title, one string per line. */
   lines: string[]
   /* Each rotating word maps to the words it rotates through. */
@@ -141,21 +149,31 @@ export function RotatingHero({
   return (
     <section className="flex flex-col items-center px-6 py-20 text-center">
       <Reveal>
-        {/* React Bits Star Border (Ember trail and glow): one star lapping the pill outline. */}
+        {/* React Bits Star Border (Ember trail and glow): two stars lap the
+            pill outline on hover. The pill is a link. */}
         <StarBorder
-          as="div"
+          as={Link}
+          to={availabilityLink.to}
+          aria-label={availabilityLink.label}
+          data-umami-event={availabilityLink.event}
+          data-umami-event-location={availabilityLink.event && 'hero'}
           color={starColor}
-          duration={4.8}
+          stars={2}
+          duration={3}
           trailLength={0.45}
           glow={0.8}
-          hover="brighten"
+          hover="reveal"
           radius={9999}
-          backgroundColor="transparent"
+          backgroundColor="var(--secondary)"
           textColor="inherit"
-          borderColor="var(--copy-border)"
-          className="gap-4! px-6! py-2.25! font-normal! leading-normal!"
+          borderColor="transparent"
+          className="gap-4! px-4! py-2! font-normal! leading-normal!"
         >
-          <span className="text-meta text-foreground">{availability}</span>
+          {/* A primary dot that blinks, as a live "available" signal. */}
+          <span className="flex items-center gap-2">
+            <span aria-hidden="true" className="status-dot size-2 shrink-0 rounded-pill bg-primary" />
+            <span className="text-meta text-foreground">{availability}</span>
+          </span>
         </StarBorder>
       </Reveal>
       <Reveal as="h1" delay={0.08} className="mt-10 font-heading text-hero font-medium text-foreground">

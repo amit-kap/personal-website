@@ -22,6 +22,11 @@ export default function WorkWithMe() {
       />
       <RotatingHero
         availability={homeCopy.availability}
+        availabilityLink={{
+          to: 'mailto:amitka111@gmail.com',
+          label: `${homeCopy.availability}: email Amit`,
+          event: 'contact-email',
+        }}
         lines={workCopy.headlineLines}
         rotation={workCopy.headlineRotation}
         slots={slots}

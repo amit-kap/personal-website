@@ -2,13 +2,13 @@
    6 · MEDIA SURFACES — hero media frame, video controls, window chrome
 ---------------------------------------------------------------------------- */
 /* The hero product media, shown whole at its own ratio in the home page's
-   Featured frame: an even 1% border of the dim ink (percentage padding is
+   Featured frame: an even 0.6% border of the dim ink (percentage padding is
    relative to the width on every side). */
 .hero-media-frame {
   overflow: hidden;
   border-radius: var(--radius-container);
   background: var(--dim);
-  padding: 1%;
+  padding: 0.6%;
 }
 /* The image or ProductVideo inside: full width, natural height, rounded to
    sit inside the frame's own radius. */
