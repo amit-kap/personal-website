@@ -16,7 +16,9 @@ const VOLUME: Record<Sound, number> = { dock: 0.35, ignite: 0.6, do: 0.3, re: 0.
 /* The ignite file swells for this long before its chord, so the journey
    starts it early to land the chord on the package filling. */
 export const IGNITE_LEAD = 0.3
-const SWOOSH_VOLUME = 0.22
+const SWOOSH_VOLUME = 0.3
+const SWOOSH_CLOSED = 250 // Hz: the low-pass at rest
+const SWOOSH_OPEN = 1000 // Hz: and at a fast fling
 // A fast fling crosses several stops at once; one blip covers them.
 const MIN_GAP_MS = 120
 
@@ -25,7 +27,7 @@ let context: AudioContext | null = null
 const buffers = new Map<Sound, Promise<AudioBuffer | null>>()
 const lastPlayed = new Map<Sound, number>()
 const listeners = new Set<() => void>()
-let swoosh: { gain: GainNode; filter: BiquadFilterNode; level: number } | null = null
+let swoosh: { gain: GainNode; filters: BiquadFilterNode[]; level: number } | null = null
 
 function load(ctx: AudioContext, name: Sound) {
   let buffer = buffers.get(name)
@@ -78,37 +80,59 @@ export function useSoundEnabled() {
   )
 }
 
-/* The disc's travel noise: looping noise through a band-pass, generated
-   here rather than loaded. Louder and brighter the faster the disc moves. */
+/* The disc's travel noise: looping brown noise (soft, airy, no hiss)
+   through two gentle low-passes, generated here rather than loaded. It
+   swells and opens a little as the disc speeds up, and breathes out slowly. */
 function startSwoosh(ctx: AudioContext) {
-  const buffer = ctx.createBuffer(1, ctx.sampleRate * 2, ctx.sampleRate)
+  const buffer = ctx.createBuffer(1, ctx.sampleRate * 4, ctx.sampleRate)
   const data = buffer.getChannelData(0)
-  for (let i = 0; i < data.length; i++) data[i] = Math.random() * 2 - 1
+  let brown = 0
+  for (let i = 0; i < data.length; i++) {
+    brown = (brown + 0.02 * (Math.random() * 2 - 1)) / 1.02
+    data[i] = brown
+  }
+  // Take out the drift so the loop's end meets its start without a click.
+  const first = data[0]
+  const drift = data[data.length - 1] - first
+  let peak = 0
+  for (let i = 0; i < data.length; i++) {
+    data[i] -= first + drift * (i / (data.length - 1))
+    peak = Math.max(peak, Math.abs(data[i]))
+  }
+  for (let i = 0; i < data.length; i++) data[i] /= peak || 1
   const source = ctx.createBufferSource()
   source.buffer = buffer
   source.loop = true
-  const filter = ctx.createBiquadFilter()
-  filter.type = 'bandpass'
-  filter.Q.value = 0.8
-  filter.frequency.value = 400
+  const filters = [0, 1].map(() => {
+    const filter = ctx.createBiquadFilter()
+    filter.type = 'lowpass'
+    filter.Q.value = 0.5
+    filter.frequency.value = SWOOSH_CLOSED
+    return filter
+  })
   const gain = ctx.createGain()
   gain.gain.value = 0
-  source.connect(filter).connect(gain).connect(ctx.destination)
+  source.connect(filters[0]).connect(filters[1]).connect(gain).connect(ctx.destination)
   source.start()
-  return { gain, filter, level: 0 }
+  return { gain, filters, level: 0 }
 }
 
-/* level: 0 (still) to 1 (a fast fling). */
+/* level: 0 (still) to 1 (a fast fling). Rises a touch faster than it
+   falls, so a scroll swells in and the air settles after it. */
 export function setSwoosh(level: number) {
   const ctx = context
   const target = enabled ? Math.max(0, Math.min(1, level)) : 0
   if (!ctx || (!swoosh && target === 0)) return
   swoosh ??= startSwoosh(ctx)
   if (Math.abs(target - swoosh.level) < 0.01) return
+  const rising = target > swoosh.level
   swoosh.level = target
   const now = ctx.currentTime
+  const smoothing = rising ? 0.12 : 0.3
   swoosh.gain.gain.cancelScheduledValues(now)
-  swoosh.gain.gain.setTargetAtTime(target ** 1.5 * SWOOSH_VOLUME, now, 0.06)
-  swoosh.filter.frequency.cancelScheduledValues(now)
-  swoosh.filter.frequency.setTargetAtTime(400 + target * 1600, now, 0.08)
+  swoosh.gain.gain.setTargetAtTime(target ** 2 * SWOOSH_VOLUME, now, smoothing)
+  for (const filter of swoosh.filters) {
+    filter.frequency.cancelScheduledValues(now)
+    filter.frequency.setTargetAtTime(SWOOSH_CLOSED + target * (SWOOSH_OPEN - SWOOSH_CLOSED), now, smoothing)
+  }
 }
