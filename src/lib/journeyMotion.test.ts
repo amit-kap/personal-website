@@ -1,4 +1,4 @@
-import { journeyEase, journeyFrame, magneticProgress, settle } from './journeyMotion'
+import { cameraOffset, dockingEase, journeyEase, journeyFrame, journeyPhase, magneticProgress, settle } from './journeyMotion'
 
 describe('journey motion', () => {
   const route = { x: 400, y: 1600 }
@@ -36,6 +36,45 @@ describe('journey motion', () => {
     expect(at60Hz).toBeLessThan(0.001)
   })
 
+  it('carries the incoming speed into docking and finishes without overshoot', () => {
+    const duration = 0.3
+    const distance = 80
+    const ease = dockingEase(120, distance, duration)
+    const step = 0.00001
+    expect((ease(step) - ease(0)) / step * distance / duration).toBeCloseTo(120, 1)
+    expect((ease(1) - ease(1 - step)) / step).toBeCloseTo(0, 3)
+    for (const speed of [0, 120, 8000]) {
+      const curve = dockingEase(speed, distance, duration)
+      let previous = 0
+      for (let i = 0; i <= 100; i++) {
+        const current = curve(i / 100)
+        expect(current).toBeGreaterThanOrEqual(previous)
+        expect(current).toBeLessThanOrEqual(1)
+        previous = current
+      }
+      expect(curve(1)).toBe(1)
+    }
+  })
+
+  it('eases the camera into its bounds while preserving the reading positions', () => {
+    expect(cameraOffset(-100, 1000)).toBe(0)
+    expect(cameraOffset(1100, 1000)).toBe(1000)
+    expect(cameraOffset(500, 1000)).toBe(500)
+    const step = 0.001
+    expect(cameraOffset(step, 1000) / step).toBeLessThan(0.001)
+    expect((1000 - cameraOffset(1000 - step, 1000)) / step).toBeLessThan(0.001)
+    expect((cameraOffset(48 + step, 1000) - cameraOffset(48 - step, 1000)) / (2 * step)).toBeCloseTo(1, 3)
+    for (const maximum of [0, 20, 1000]) {
+      let previous = 0
+      for (let y = 0; y <= maximum; y++) {
+        const offset = cameraOffset(y, maximum)
+        expect(offset).toBeGreaterThanOrEqual(previous)
+        expect(offset).toBeLessThanOrEqual(maximum)
+        previous = offset
+      }
+    }
+  })
+
   const docks = [
     { from: 0, to: 500, start: 0, arrival: 400, settled: 480 },
     { from: 500, to: 1500, start: 1080, arrival: 1880, settled: 1960 },
@@ -69,11 +108,21 @@ describe('journey motion', () => {
       .toEqual(journeyFrame('package', route, dot, pkg, reveal, tail))
   })
 
-  it('gives scrolling ownership immediately when reversing or skipping the reveal', () => {
-    const unfinished = { handoff: 0, camera: 0.25, opacity: 0 }
-    expect(journeyFrame('package', route, dot, pkg, unfinished, { progress: 0.5, opacity: 1 }))
-      .toEqual({ x: 400, y: 2100, cameraY: 2100, opacity: 1 })
-    expect(journeyFrame('route', route, dot, pkg, unfinished, { progress: 1, opacity: 0 }))
-      .toEqual({ ...route, cameraY: route.y, opacity: 1 })
+  it('keeps the visible handoff when a fast swipe changes or reverses its destination', () => {
+    const cardsReady = 1.85
+    expect(journeyPhase('package', 0.5, cardsReady)).toBe('cards')
+    expect(journeyPhase('route', 2.5, cardsReady)).toBe('package')
+    expect(journeyPhase('route', cardsReady, cardsReady)).toBe('cards')
+    expect(journeyPhase('route', 0.5, cardsReady)).toBe('cards')
+    expect(journeyPhase('route', 0, cardsReady)).toBe('route')
+    expect(journeyPhase('cards', 0, cardsReady)).toBe('cards')
+  })
+
+  it('returns continuously to the live route position after the reverse handoff', () => {
+    const liveRoute = { x: 750, y: 1200 }
+    const reveal = { handoff: 0, camera: 0, opacity: 1 }
+    const tail = { progress: 0, opacity: 1 }
+    expect(journeyFrame('cards', liveRoute, dot, pkg, reveal, tail))
+      .toEqual(journeyFrame('route', liveRoute, dot, pkg, reveal, tail))
   })
 })

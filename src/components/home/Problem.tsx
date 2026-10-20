@@ -4,10 +4,11 @@
    a straight drop into it, then four 300px lanes between x 40 and 760,
    turned with 40px rounded corners, a stop ring on the side beside each problem.
    After problem 04 it returns to the centre and runs straight down to a ring
-   just above "How I can help". Phones get the problems as a plain list. */
+   just above "How I can help". Smaller screens use a static vertical route. */
 import workCopy from '@/content/workWithMe.json'
 import Reveal from '@/components/Reveal'
 import { bandClass, innerClass, labelClass } from './layout'
+import './journey.css'
 
 /* The origin ring sits at y 12 and the line drops 160px, turning into the
    first pass with a rounded corner instead of a ring (Amit's addition to
@@ -50,18 +51,19 @@ export function Problem() {
           </Reveal>
           {/* Two lines on desktop: the lead (816px at 46px) runs a little past
               the 800px column, so the headline reaches 32px out on each side. */}
-          <Reveal as="p" delay={0.08} className="text-center font-heading text-feature font-normal text-primary md:-mx-8">
+          <Reveal as="p" delay={0.08} className="text-center font-heading text-feature font-normal text-primary min-[900px]:-mx-8">
             {problemLead.trim()}
             <span className="block text-foreground">{problemPayoff}</span>
           </Reveal>
         </div>
-        <div data-journey="box" className="relative md:h-(--journey-h)" style={{ '--journey-h': `${height}px` } as React.CSSProperties}>
+        <div data-journey="box" className="relative min-[900px]:h-(--journey-h)" style={{ '--journey-h': `${height}px` } as React.CSSProperties}>
+          <span aria-hidden="true" className="journey-mobile-connector journey-mobile-origin" />
           <svg
             aria-hidden="true"
             width="800"
             height={height}
             viewBox={`0 0 800 ${height}`}
-            className="pointer-events-none absolute inset-0 z-1 hidden overflow-visible md:block"
+            className="pointer-events-none absolute inset-0 z-1 hidden overflow-visible min-[900px]:block"
           >
             <path data-journey="path" d={routePath} fill="none" className="stroke-border" strokeWidth="2" />
             {/* The origin ring, then the stops the disc pauses on (JourneyMotion). */}
@@ -96,19 +98,20 @@ export function Problem() {
             </g>
           </svg>
           {/* The disc's glow, centred on the origin. */}
-          <span data-journey="glow" aria-hidden="true" className="pointer-events-none absolute top-[-18px] left-[370px] hidden size-[60px] rounded-pill bg-primary/35 blur-[24px] md:block" />
+          <span data-journey="glow" aria-hidden="true" className="pointer-events-none absolute top-[-18px] left-[370px] hidden size-[60px] rounded-pill bg-primary/35 blur-[24px] min-[900px]:block" />
           {/* JourneyMotion dims each problem to 40% (Paper "timeline / 1") and
               lights it as the disc arrives beside it. */}
-          <ol className="flex flex-col gap-10 md:block">
+          <ol className="flex flex-col min-[900px]:block">
             {problem.items.map((item, index) => (
               <li
                 key={index}
                 data-journey="problem"
-                className="flex flex-col items-center gap-2 text-center md:absolute md:left-20 md:w-[640px]"
+                className="flex flex-col items-center gap-2 text-center min-[900px]:absolute min-[900px]:left-20 min-[900px]:w-[640px]"
                 style={{ top: passes[index] + textTop }}
               >
                 <h3 className="font-heading text-title-sm font-normal tracking-[-0.01em] text-foreground">{item.title}</h3>
                 <p className="text-body leading-[1.375] text-muted-foreground">{item.body}</p>
+                <span aria-hidden="true" className="journey-mobile-connector" />
               </li>
             ))}
           </ol>

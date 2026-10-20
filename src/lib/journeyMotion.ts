@@ -13,6 +13,41 @@ export function settle(current: number, target: number, elapsed: number, duratio
   return current + (target - current) * (1 - Math.exp(-elapsed / duration))
 }
 
+/* Match the incoming scroll speed, then settle at the dock with no overshoot.
+   The limited initial slope keeps the curve monotonic even after a fling. */
+export function dockingEase(speed: number, distance: number, duration: number) {
+  const slope = Math.max(0, Math.min(2, speed * duration / Math.max(1, distance)))
+  return (progress: number) => {
+    const p = Math.max(0, Math.min(1, progress))
+    return (slope - 2) * p ** 3 + (3 - 2 * slope) * p ** 2 + slope * p
+  }
+}
+
+/* Round only the camera's start/end of travel. Reading positions and the
+   middle of its range stay exact, without another layer of time-based lag. */
+export function cameraOffset(position: number, maximum: number, softness = 48) {
+  const limit = Math.max(0, maximum)
+  const y = Math.max(0, Math.min(limit, position))
+  const edge = Math.min(softness, limit / 2)
+  if (edge <= 0) return y
+  const round = (value: number) => {
+    const p = value / edge
+    return edge * (2 * p ** 2 - p ** 3)
+  }
+  if (y < edge) return round(y)
+  if (y > limit - edge) return limit - round(limit - y)
+  return y
+}
+
+export type JourneyPhase = 'route' | 'cards' | 'package'
+
+/* A destination may change mid-gesture; ownership follows the visible
+   playhead until its hidden handoff has completed, in either direction. */
+export function journeyPhase(requested: JourneyPhase, time: number, cardsReady: number): JourneyPhase {
+  if (time > cardsReady) return 'package'
+  return time > 0 || requested !== 'route' ? 'cards' : 'route'
+}
+
 export type JourneyDock = {
   from: number
   to: number
@@ -41,7 +76,7 @@ type Point = { x: number; y: number }
 /* The reveal can run on its own clock, but it never competes with scrolling
    for the disc. A single frame chooses its position and the camera target. */
 export function journeyFrame(
-  phase: 'route' | 'cards' | 'package',
+  phase: JourneyPhase,
   route: Point,
   dot: Point,
   pkg: Point,
@@ -59,3 +94,5 @@ export function journeyFrame(
   const y = dot.y + (pkg.y - dot.y) * tail.progress
   return { x: dot.x, y, cameraY: y, opacity: tail.opacity }
 }
+export const JOURNEY_MEDIA_QUERY = '(min-width: 900px) and (prefers-reduced-motion: no-preference)'
+

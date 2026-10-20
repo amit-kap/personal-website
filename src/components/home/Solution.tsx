@@ -6,23 +6,25 @@ import workCopy from '@/content/workWithMe.json'
 import Reveal from '@/components/Reveal'
 import { labelClass } from './layout'
 import { PackageTurn } from './PackageTurn'
+import './journey.css'
 
 export function Solution() {
   const { solution } = workCopy
   return (
-    <section className="flex flex-col items-center px-4 pt-10">
-      <div className="flex w-full max-w-[800px] flex-col gap-10">
+    <section className="flex flex-col items-center px-4 min-[900px]:pt-10">
+      <div className="flex w-full max-w-[800px] flex-col min-[900px]:gap-10">
         <Reveal as="h2" className={`${labelClass} text-center`}>
           {solution.label}
         </Reveal>
+        <span aria-hidden="true" className="journey-mobile-connector" />
         <div className="flex flex-col">
-          {/* JourneyMotion dims each card to 40% (Paper "timeline / 1"). */}
-          <ol className="flex flex-col gap-5 md:flex-row">
+          {/* On desktop JourneyMotion reveals the cards after the final stop. */}
+          <ol className="journey-solution-cards flex flex-col gap-14 min-[900px]:flex-row min-[900px]:gap-5">
             {solution.steps.map((step, index) => (
               <li
                 key={step.title}
                 data-journey="step"
-                className="flex flex-col items-center gap-4 rounded-container border border-border px-6 py-10 text-center md:h-[232px] md:flex-1 md:basis-0"
+                className="relative flex flex-col items-center gap-4 rounded-container border border-border px-6 py-10 text-center min-[900px]:h-[232px] min-[900px]:flex-1 min-[900px]:basis-0"
               >
                 <h3 className="font-heading text-stmt font-medium text-foreground">
                   {index + 1}. {step.title}
@@ -32,15 +34,15 @@ export function Solution() {
             ))}
           </ol>
           {/* 320px under the row to the footer (Paper: 240; Amit asked for
-              more room): a dot 17px down, the line to 259px, then the
+              more room): a dot 49px down, the line to 259px, then the
               package (112px circle in a 6px background ring) centred on the
               section's bottom edge; z-10 keeps it above the footer, which
               comes later. JourneyMotion draws the line and ignites the
               package (Paper "detail / d — Package ignites"). */}
           <div className="relative h-[320px]">
-            <svg aria-hidden="true" width="800" height="320" viewBox="0 0 800 320" className="absolute top-0 left-1/2 -translate-x-1/2 overflow-visible">
-              <circle data-journey="dot" cx="400" cy="17" r="3" className="fill-border" />
-              <path data-journey="line" d="M400 17V259" fill="none" className="stroke-border" strokeWidth="2" />
+            <svg aria-hidden="true" width="100%" height="320" viewBox="0 0 800 320" preserveAspectRatio="xMidYMin slice" className="absolute inset-0 h-full w-full overflow-visible">
+              <circle data-journey="dot" cx="400" cy="49" r="3" className="fill-border" />
+              <path data-journey="line" d="M400 49V259" fill="none" className="stroke-border" strokeWidth="2" />
             </svg>
             <div className="absolute top-full left-1/2 z-10 -translate-x-1/2 -translate-y-1/2">
               <span

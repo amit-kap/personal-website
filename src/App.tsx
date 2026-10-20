@@ -1,14 +1,15 @@
 /* App shell: page field, header, routed page and footer, plus scroll
-   restoration on navigation. Only Home loads eagerly; the other routes are
-   split into their own chunks. */
+   restoration on navigation. Each page loads separately so visiting one
+   route does not download the other pages' content. */
 import { lazy, Suspense, useEffect } from 'react'
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import DotWaves from '@/components/DotWaves'
 import Footer from '@/components/Footer'
 import Header from '@/components/Header'
-import Home from '@/pages/Home'
+import RouteLoading from '@/components/RouteLoading'
 import { useSmoothScroll } from '@/lib/useSmoothScroll'
 
+const Home = lazy(() => import('@/pages/Home'))
 const WorkItem = lazy(() => import('@/pages/WorkItem'))
 const CaseStudyPage = lazy(() => import('@/pages/CaseStudyPage'))
 const About = lazy(() => import('@/pages/About'))
@@ -16,9 +17,10 @@ const WorkWithMe = lazy(() => import('@/pages/WorkWithMe'))
 const Agent = lazy(() => import('@/pages/Agent'))
 const NotFound = lazy(() => import('@/pages/NotFound'))
 
-export default function App() {
+/* Inside Suspense so the page's DOM is ready before restoring its position,
+   including a hash target on a route whose chunk was not cached yet. */
+function RouteScrollRestoration({ lenis }: { lenis: ReturnType<typeof useSmoothScroll> }) {
   const location = useLocation()
-  const lenis = useSmoothScroll()
 
   /* On every navigation: scroll to the #hash target if there is one, else to
      the top. Goes through Lenis when smooth scroll is on, since native
@@ -41,6 +43,12 @@ export default function App() {
     return () => cancelAnimationFrame(raf)
   }, [location.pathname, location.hash, lenis])
 
+  return null
+}
+
+export default function App() {
+  const lenis = useSmoothScroll()
+
   return (
     <div className="relative min-h-screen bg-background">
       {/* The page field: fixed behind everything. */}
@@ -53,7 +61,8 @@ export default function App() {
         <div className="mx-auto w-full max-w-[960px] flex-1 max-sm:overflow-x-clip">
           <Header />
           <div className="bg-card/90">
-            <Suspense fallback={null}>
+            <Suspense fallback={<RouteLoading />}>
+              <RouteScrollRestoration lenis={lenis} />
               <Routes>
                 <Route path="/" element={<Home />} />
                 {/* The blog index (pages/Blog) is hidden for now. */}
