@@ -1,6 +1,7 @@
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { cameraOffset, dockingEase, journeyEase, journeyFrame, journeyPhase, magneticProgress, JOURNEY_MEDIA_QUERY, type JourneyDock, type JourneyPhase } from '@/lib/journeyMotion'
+import { IGNITE_LEAD, playSound, setSwoosh, type Sound } from '@/lib/sfx'
 import { getLenis } from '@/lib/useSmoothScroll'
 import { measureJourneyPath } from './path'
 import { startJourneyParticles } from './particles'
@@ -18,6 +19,9 @@ const DIM = 0.4 // the zero state's opacity (Paper "timeline / 1")
 const WAVE_NOTE = 0.3 // s between one card's flash and the next
 const WAVE_REST = 0.8 // s of quiet before the 1, 2, 3 repeats
 const WAVE_LEAVE = 40 // px of scroll on from the cards that ends the wave
+const NOTES: Sound[] = ['do', 're', 'mi']
+const SWOOSH_FULL = 1600 // px/s of disc travel that plays the swoosh at full
+const REARM = 60 // px of route back before a stop that lets it sound again
 
 /* Desktop enhancement. The static page remains the baseline on phones and
    under reduced motion; the React wrapper loads this module only when needed. */
@@ -141,7 +145,15 @@ export function createJourneyMotion(root: HTMLElement, stage: HTMLElement, inner
     const contactPulse = gsap.timeline({ paused: true })
       .to(contact, { pressure: 1, duration: 0.12, ease: 'power2.out' })
       .to(contact, { pressure: 0, duration: 0.36, ease: 'sine.out' })
+    // Only forward scrolling arrives: tween onStart never fires in reverse.
+    // A docking snap-back can re-arrive at the same stop, so a stop's sound
+    // re-arms only once the disc is well back before it.
+    let sounded = -1
     const arriveAt = (index: number) => {
+      if (index > sounded) {
+        sounded = index
+        playSound('dock')
+      }
       contactPulse.restart()
       blipTimelines[index]?.restart()
       problemPulses[index]?.restart()
@@ -158,6 +170,8 @@ export function createJourneyMotion(root: HTMLElement, stage: HTMLElement, inner
     steps.forEach((step, i) => {
       const at = 0.18 + i * 0.16
       finale.fromTo(step, { opacity: 0, y: 60 }, { opacity: 1, y: 0, duration: 0.85, ease: 'power2.out' }, at)
+      // Do, re, mi as the cards rise, once. Not when the reveal rewinds.
+      finale.call(() => { if (requestedPhase !== 'route') playSound(NOTES[i]) }, undefined, at)
       finale.fromTo(step, { backgroundColor: flash }, { backgroundColor: clear, duration: 0.8, ease: 'sine.inOut' }, at + 0.18)
     })
     // Gently bring the cards into the reading area while they appear, even
@@ -179,11 +193,14 @@ export function createJourneyMotion(root: HTMLElement, stage: HTMLElement, inner
     finale.to(pkg, { scale: 1.025, duration: 0.18, ease: 'power2.out' }, igniteAt)
     finale.to(pkg, { scale: 1, duration: 0.46, ease: 'sine.out' }, igniteAt + 0.18)
     finale.to(pkgGlow, { opacity: 1, duration: 0.65, ease: 'sine.inOut' }, igniteAt)
+    // Callbacks fire in both directions; only heading to the package ignites.
+    // The sound starts early so its chord lands as the fill grows.
+    finale.call(() => { if (requestedPhase === 'package') playSound('ignite') }, undefined, igniteAt - IGNITE_LEAD)
     const packageArrival = cardsReady + 1.05
     const finaleEnd = finale.duration()
 
     // While the visitor rests on the cards, the flash keeps playing across
-    // them 1, 2, 3 (do, re, mi) and repeats. Scrolling on fades it out.
+    // them 1, 2, 3 and repeats, silently. Scrolling on fades it out.
     const wave = gsap.timeline({ paused: true, repeat: -1, repeatDelay: WAVE_REST })
     steps.forEach((step, i) => {
       wave.fromTo(step, { backgroundColor: clear }, { backgroundColor: flash, duration: 0.35, ease: 'sine.out' }, i * WAVE_NOTE)
@@ -191,7 +208,10 @@ export function createJourneyMotion(root: HTMLElement, stage: HTMLElement, inner
     })
     // It starts wherever the scroll settled on the cards, and once scrolling
     // moves on it stays off until the visitor leaves the cards and returns.
+    // The glide still easing out of the gesture that arrived doesn't count:
+    // only movement after a new input does.
     let waveFrom: number | null = null
+    let waveStartedAt = 0
     let waveSpent = false
     const stopWave = () => {
       if (waveFrom === null) return
@@ -205,7 +225,10 @@ export function createJourneyMotion(root: HTMLElement, stage: HTMLElement, inner
         stopWave()
       } else if (waveFrom === null && !waveSpent) {
         waveFrom = tl.time()
+        waveStartedAt = performance.now()
         wave.restart()
+      } else if (waveFrom !== null && lastInputAt < waveStartedAt) {
+        waveFrom = tl.time()
       } else if (waveFrom !== null && Math.abs(tl.time() - waveFrom) > WAVE_LEAVE) {
         waveSpent = true
         stopWave()
@@ -308,6 +331,7 @@ export function createJourneyMotion(root: HTMLElement, stage: HTMLElement, inner
         if (next !== 'package') footerRevealed = false
         driveFinale(next)
       }
+      while (sounded >= 0 && route.distance < stops[sounded] - REARM) sounded--
       syncWave()
       phase = journeyPhase(requestedPhase, finale.time(), cardsReady)
       renderFrame()
@@ -349,6 +373,16 @@ export function createJourneyMotion(root: HTMLElement, stage: HTMLElement, inner
       scrollTo(target, duration, dockingEase(speed, distance, duration))
     }
     gsap.ticker.add(dockOnSettle)
+
+    // The swoosh follows the disc's own speed, so it swells with a scroll
+    // and dies away as the disc docks or fades.
+    let heard = point
+    const swooshWithDisc = (_time: number, deltaMs: number) => {
+      const moved = Math.hypot(point.x - heard.x, point.y - heard.y)
+      heard = point
+      setSwoosh(moved * 1000 / Math.max(1, deltaMs) / SWOOSH_FULL * point.opacity)
+    }
+    gsap.ticker.add(swooshWithDisc)
 
     // User input always takes over from an automatic scroll, particularly
     // an upward gesture during the footer reveal. Never lock the trackpad.
@@ -394,6 +428,8 @@ export function createJourneyMotion(root: HTMLElement, stage: HTMLElement, inner
       problemPulses.forEach((pulse) => pulse.kill())
       stopParticles()
       gsap.ticker.remove(dockOnSettle)
+      gsap.ticker.remove(swooshWithDisc)
+      setSwoosh(0)
       gsap.set([disc, glow, inner, ...problems, ...steps, pkgFill, pkg], { clearProps: 'transform,transformOrigin' })
       gsap.set([disc, glow, ...problems, ...steps, ...blips, dot, pkgGlow], { clearProps: 'opacity,backgroundColor' })
       gsap.set(rings, { clearProps: 'fill,stroke' })

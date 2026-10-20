@@ -8,6 +8,7 @@
 import workCopy from '@/content/workWithMe.json'
 import Reveal from '@/components/Reveal'
 import { bandClass, innerClass, labelClass } from './layout'
+import { SoundToggle } from './SoundToggle'
 import './journey.css'
 
 /* The origin ring sits at y 12 and the line drops 160px, turning into the
@@ -46,9 +47,13 @@ export function Problem() {
     <section className={`${bandClass} pt-10`}>
       <div className={`${innerClass} gap-10!`}>
         <div className="flex flex-col gap-4">
-          <Reveal as="h2" className={`${labelClass} text-center`}>
-            {problem.label}
-          </Reveal>
+          {/* The label stays centred; the sound toggle sits at the row's right. */}
+          <div className="relative">
+            <Reveal as="h2" className={`${labelClass} text-center`}>
+              {problem.label}
+            </Reveal>
+            <SoundToggle className="absolute top-1/2 right-0 -translate-y-1/2" />
+          </div>
           {/* Two lines on desktop: the lead (816px at 46px) runs a little past
               the 800px column, so the headline reaches 32px out on each side. */}
           <Reveal as="p" delay={0.08} className="text-center font-heading text-feature font-normal text-primary min-[900px]:-mx-8">
