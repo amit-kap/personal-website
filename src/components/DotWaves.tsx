@@ -6,8 +6,8 @@ import { useEffect, useRef } from 'react'
 
    Two modes: fixed to the viewport (the page backdrop), or `contained`, which
    fills its positioned parent and follows its size (the footer band).
-   Colours are CSS custom properties, resolved at draw time, so a theme change
-   re-tints the field without remounting. */
+   Colours are CSS custom properties, cached until the colour or theme changes
+   so the draw loop never needs a style read. */
 
 /* Smallest dot radius in px: the pinprick at a wave trough. */
 const MIN_RADIUS = 0.6
@@ -35,10 +35,13 @@ export default function DotWaves({
   const ref = useRef<HTMLCanvasElement>(null)
   const live = useRef({ color, speed, gap, maxRadius })
   const relayout = useRef<(() => void) | null>(null)
+  const recolor = useRef<(() => void) | null>(null)
 
   useEffect(() => {
     const gapChanged = live.current.gap !== gap
+    const colorChanged = live.current.color !== color
     live.current = { color, speed, gap, maxRadius }
+    if (colorChanged) recolor.current?.()
     if (gapChanged) relayout.current?.()
   }, [color, speed, gap, maxRadius])
 
@@ -60,8 +63,8 @@ export default function DotWaves({
         ? { w: canvas.parentElement.clientWidth, h: canvas.parentElement.clientHeight }
         : { w: window.innerWidth, h: window.innerHeight }
 
-    /* Resolve var(--token) through a throwaway style read, since canvas
-       fillStyle does not understand custom properties. */
+    /* Canvas fillStyle cannot resolve CSS custom properties. Resolve only
+       when invalidated, away from the frame loop. */
     const resolveColor = () => {
       const probe = canvas.style
       probe.color = live.current.color
@@ -84,7 +87,6 @@ export default function DotWaves({
     const draw = (ms: number) => {
       const { speed: waveSpeed, gap: cell, maxRadius: crestRadius } = live.current
       const time = (ms / 1000) * waveSpeed
-      resolveColor()
       ctx.clearRect(0, 0, cols * cell, rows * cell)
       ctx.fillStyle = fill
       ctx.beginPath()
@@ -120,10 +122,12 @@ export default function DotWaves({
     const start = () => {
       cancelAnimationFrame(raf)
       raf = 0
+      if (!onScreen || document.hidden) return
       if (reduced.matches) draw(2000)
-      else if (onScreen && !document.hidden) raf = requestAnimationFrame(loop)
+      else raf = requestAnimationFrame(loop)
     }
     const onMove = (event: PointerEvent) => {
+      if (!onScreen || document.hidden || reduced.matches) return
       const rect = canvas.getBoundingClientRect()
       pointer.x = event.clientX - rect.left
       pointer.y = event.clientY - rect.top
@@ -136,11 +140,28 @@ export default function DotWaves({
       start()
     }
     const onVisibility = () => start()
+    const onColorChange = () => {
+      resolveColor()
+      if (reduced.matches && onScreen && !document.hidden) draw(2000)
+    }
 
     relayout.current = onResize
+    recolor.current = onColorChange
+    resolveColor()
     resize()
     start()
 
+    // Theme tokens may be scoped to a parent, the body, or the document root.
+    // Observe ancestors only: our own canvas style writes do not invalidate it.
+    const themeObserver = new MutationObserver(onColorChange)
+    for (let parent = canvas.parentElement; parent; parent = parent.parentElement) {
+      themeObserver.observe(parent, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme'],
+      })
+    }
+    const colorScheme = window.matchMedia('(prefers-color-scheme: dark)')
+    colorScheme.addEventListener('change', onColorChange)
     const visibilityObserver = new IntersectionObserver(([entry]) => {
       onScreen = entry.isIntersecting
       start()
@@ -160,7 +181,9 @@ export default function DotWaves({
     reduced.addEventListener('change', start)
     return () => {
       relayout.current = null
+      recolor.current = null
       cancelAnimationFrame(raf)
+      themeObserver.disconnect()
       visibilityObserver.disconnect()
       resizeObserver?.disconnect()
       window.removeEventListener('resize', onResize)
@@ -168,6 +191,7 @@ export default function DotWaves({
       document.removeEventListener('pointerleave', onLeave)
       document.removeEventListener('visibilitychange', onVisibility)
       reduced.removeEventListener('change', start)
+      colorScheme.removeEventListener('change', onColorChange)
     }
   }, [contained])
 

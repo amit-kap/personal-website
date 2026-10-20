@@ -19,11 +19,12 @@ describe('WorkWithMe', () => {
       'Your product is hard to explain',
       'Your demo needs narration',
       'Your AI feels powerful but unclear',
-      'Your product undersells your company.',
+      'Your product undersells your company',
     ])
 
-    const steps = within(screen.getByText('How I can help').closest('section')!).getAllByRole('heading', { level: 3 })
-    expect(steps.map((s) => s.textContent)).toEqual(['Diagnose', 'Plan', 'Build'])
+    const stepList = within(screen.getByText('How I can help').closest('section')!)
+    expect(stepList.getAllByRole('listitem')).toHaveLength(3)
+    expect(stepList.getAllByRole('heading', { level: 3 }).map((s) => s.textContent)).toEqual(['1. Diagnose', '2. Plan', '3. Build'])
     expect(screen.getByText("I'll design and work with engineering until the fixes are live.")).toBeInTheDocument()
   })
 })
