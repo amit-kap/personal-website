@@ -46,7 +46,6 @@
     border-color 0.2s ease;
   will-change: transform;
 }
-.tilt:hover { transition-duration: 0.12s, 0.2s; }
 .tilt-content { transform: translateZ(24px); }
 /* Hover reveal inside a tilt card: the group starts offset by half of
    (gap + label height) so the logo alone is centred, then settles centred
@@ -65,9 +64,7 @@
     opacity 0.15s ease,
     transform 0.35s cubic-bezier(0.33, 1, 0.68, 1);
 }
-.tilt:hover .tilt-reveal,
 .tilt:focus-visible .tilt-reveal { transform: translateZ(24px) translateY(0); }
-.tilt:hover .tilt-reveal-label,
 .tilt:focus-visible .tilt-reveal-label {
   opacity: 1;
   transform: translateY(0);
@@ -102,7 +99,6 @@
   animation: pulse-orbit 4s linear infinite;
   animation-play-state: paused;
 }
-.tilt:hover .pulse-border,
 .tilt:focus-visible .pulse-border {
   opacity: 1;
   animation-play-state: running;
@@ -134,7 +130,9 @@
   border-radius: inherit;
   filter: blur(8px);
   animation: pulse-breathe 1.6s ease-in-out infinite alternate;
+  animation-play-state: paused;
 }
+.tilt:focus-visible .pulse-glow { animation-play-state: running; }
 .pulse-glow .pulse-ring { padding: 4px; }
 .tilt-glare {
   position: absolute;
@@ -144,6 +142,26 @@
   background: radial-gradient(circle at var(--glare-x, 50%) var(--glare-y, 50%), rgb(255 255 255 / 0.12), transparent 60%);
   opacity: var(--glare, 0);
   transition: opacity 0.3s ease;
+}
+
+/* Hover motion is for a mouse or pen only: on touch a tap leaves :hover stuck
+   on, so the tilt card's reveal and border would stay lit after the tap.
+   Keyboard focus keeps its rules above. */
+@media (hover: hover) and (pointer: fine) {
+  .tilt:hover { transition-duration: 0.12s, 0.2s; }
+  .tilt:hover .tilt-reveal { transform: translateZ(24px) translateY(0); }
+  .tilt:hover .tilt-reveal-label {
+    opacity: 1;
+    transform: translateY(0);
+    transition:
+      opacity 0.25s ease 0.06s,
+      transform 0.35s cubic-bezier(0.33, 1, 0.68, 1) 0.04s;
+  }
+  .tilt:hover .pulse-border {
+    opacity: 1;
+    animation-play-state: running;
+  }
+  .tilt:hover .pulse-glow { animation-play-state: running; }
 }
 
 /* Hero word rotation: each slot pushes the old word out as the new one

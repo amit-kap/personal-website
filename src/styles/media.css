@@ -132,8 +132,10 @@
   border-radius: var(--radius);
   transition: transform 450ms cubic-bezier(0.22, 1, 0.36, 1);
 }
-.window-btn:hover {
-  transform: scale(1.02);
+@media (hover: hover) and (pointer: fine) {
+  .window-btn:hover {
+    transform: scale(1.02);
+  }
 }
 .window-btn:focus-visible {
   outline: 2px solid var(--primary);

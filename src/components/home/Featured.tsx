@@ -20,8 +20,9 @@ const featuredMedia = 'block h-auto w-full rounded-item'
 
 /* The film with its own controls over the bottom edge: a restart button and
    a progress line. They show while the pointer moves over the film (or a
-   tap, or keyboard focus) and fade out 3s after it stops. Progress is read
-   every frame, not on timeupdate (~4 a second), so the line runs smooth.
+   tap, or keyboard focus) and fade out 3s after it stops. While they show,
+   progress is read every frame, not on timeupdate (~4 a second), so the line
+   runs smooth.
    The film plays only while half of it is on screen: it starts from its
    first frame when first scrolled to, pauses when it leaves and resumes
    when it comes back. Nothing but the poster loads before that. */
@@ -60,16 +61,38 @@ function FeaturedFilm() {
     return () => observer.disconnect()
   }, [])
 
+  // The line is only read while it is on screen: the loop runs while the film
+  // plays and its controls show, and stops on pause.
+  const controlsVisible = controlsShown || focused
   useEffect(() => {
+    const video = videoRef.current
+    if (!video || !controlsVisible) return
     let frame = 0
+    const read = () => {
+      if (video.duration) setProgress((video.currentTime / video.duration) * 100)
+    }
     const tick = () => {
-      const video = videoRef.current
-      if (video?.duration) setProgress((video.currentTime / video.duration) * 100)
+      read()
       frame = requestAnimationFrame(tick)
     }
-    frame = requestAnimationFrame(tick)
-    return () => cancelAnimationFrame(frame)
-  }, [])
+    const start = () => {
+      cancelAnimationFrame(frame)
+      frame = requestAnimationFrame(tick)
+    }
+    const stop = () => {
+      cancelAnimationFrame(frame)
+      read()
+    }
+    read()
+    if (!video.paused) start()
+    video.addEventListener('play', start)
+    video.addEventListener('pause', stop)
+    return () => {
+      cancelAnimationFrame(frame)
+      video.removeEventListener('play', start)
+      video.removeEventListener('pause', stop)
+    }
+  }, [controlsVisible])
 
   const restart = () => {
     const video = videoRef.current
