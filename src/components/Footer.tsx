@@ -13,7 +13,7 @@ const GITHUB_URL = 'https://github.com/amit-kap'
    link, a 52px circle at rest (20px icon + 15px padding + 1px border) that
    opens to show its label on hover or keyboard focus. */
 const bandRevealButton =
-  'h-[52px] min-w-[52px] rounded-pill bg-card px-[15px] text-body font-medium text-foreground hover:bg-card hover:px-5 focus-visible:px-5 transition-[padding,background-color,transform] duration-(--duration-moderate) ease-standard active:scale-[0.97] motion-reduce:transition-none'
+  'h-[52px] min-w-[52px] rounded-pill bg-card px-[15px] text-body font-medium text-foreground hover:bg-card hover:px-5 focus-visible:px-5 transition-[padding,background-color,transform] duration-(--duration-moderate) ease-enter active:scale-[0.97] motion-reduce:transition-none'
 
 function SendIcon() {
   return (

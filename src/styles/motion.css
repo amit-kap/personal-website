@@ -1,27 +1,6 @@
 /* ----------------------------------------------------------------------------
-   7 · MOTION — rolling-letter hover, entrances, scroll reveals
+   7 · MOTION — entrances, scroll reveals, hovers
 ---------------------------------------------------------------------------- */
-/* Rolling text: each character is a column of two stacked copies inside an
-   overflow-hidden line; hover on the host rolls the columns up in a stagger. */
-.roll {
-  display: inline-flex;
-  align-items: flex-start; /* columns keep their 2-line height; stretch would halve the roll distance */
-  overflow: hidden;
-  line-height: 1.3;
-  height: 1.3em;
-  vertical-align: bottom;
-}
-.roll-ch {
-  display: inline-block;
-  white-space: pre;
-  transition: transform 0.4s cubic-bezier(0.76, 0, 0.24, 1);
-}
-.roll-host:hover .roll-ch,
-.roll-host:focus-visible .roll-ch { transition-delay: var(--roll-d, 0s); }
-.roll-ch > span { display: block; }
-.roll-host:hover .roll-ch,
-.roll-host:focus-visible .roll-ch { transform: translateY(-50%); }
-
 /* Load entrance + scroll reveal share one contract: .reveal starts hidden,
    .is-in shows it. Stagger with --reveal-delay. */
 .reveal {
@@ -207,14 +186,30 @@
 @keyframes status-blink { 50% { opacity: 0.25; } }
 .status-dot { animation: status-blink 1.6s ease-in-out infinite; }
 
-/* Reduced motion switches every effect above to its resting state: rolls,
-   reveals, tilts and pulses stop, and the hover reveal in tilt cards keeps
-   its end position without animating there. */
+/* Parallax (components/Parallax.tsx): the content drifts down by --parallax-ratio
+   of the scroll while the first screen scrolls away, then stays parked. Locked
+   to the scrollbar, so the timing is linear. Without scroll timelines the
+   component drives the same drift from a scroll listener. */
+@keyframes parallax-drift {
+  to { transform: translate3d(0, calc(100vh * var(--parallax-ratio, 0.3)), 0); }
+}
+@supports (animation-timeline: scroll()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .parallax {
+      animation: parallax-drift linear both;
+      animation-timeline: scroll(root);
+      animation-range: 0 100vh;
+    }
+  }
+}
+
+/* Reduced motion switches every effect above to its resting state: reveals,
+   tilts and pulses stop, and the hover reveal in tilt cards keeps its end
+   position without animating there. The parallax only runs under
+   no-preference, so it needs no rule here. */
 @media (prefers-reduced-motion: reduce) {
-  .roll-ch { transition: none; }
   .status-dot { animation: none; }
   .shimmer-text { animation: none; color: var(--shimmer-ink, var(--muted-foreground)); background: none; }
-  .roll-host:hover .roll-ch { transform: none; }
   .reveal, .reveal-scale { opacity: 1; transform: none; transition: none; }
   .tilt, .tilt-content { transform: none; }
   .tilt-reveal, .tilt-reveal-label { transition: none; }

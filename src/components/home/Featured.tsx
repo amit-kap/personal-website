@@ -135,7 +135,7 @@ function FeaturedFilm() {
         <source src="/shift-motion.mp4" type="video/mp4" />
       </video>
       <div
-        className={`absolute inset-x-3 bottom-3 flex items-center gap-3 transition-opacity duration-(--duration-moderate) ease-standard ${
+        className={`absolute inset-x-3 bottom-3 flex items-center gap-3 transition-opacity duration-(--duration-moderate) ease-enter ${
           controlsShown || focused ? 'opacity-100' : 'pointer-events-none opacity-0'
         }`}
       >

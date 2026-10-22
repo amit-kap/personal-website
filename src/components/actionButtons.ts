@@ -6,7 +6,7 @@ import { cn } from '@amit-kap/glaze/lib/utils'
    rest (22px icon + 11px padding + 1px border) that opens to its label on
    hover or keyboard focus. */
 export const accentRevealButton =
-  'h-[46px] min-w-[46px] shrink-0 rounded-pill px-[11px] text-body font-medium text-primary-foreground transition-[padding,background-color] duration-(--duration-moderate) ease-standard hover:px-5 focus-visible:px-5'
+  'h-[46px] min-w-[46px] shrink-0 rounded-pill px-[11px] text-body font-medium text-primary-foreground transition-[padding,background-color] duration-(--duration-moderate) ease-enter hover:px-5 focus-visible:px-5 motion-reduce:transition-none'
 
 /* Glaze's Button, shaped as a pill, for links (<a>, <Link>) rather than
    <button>, so navigation stays a real anchor. The hover darkens the brand
