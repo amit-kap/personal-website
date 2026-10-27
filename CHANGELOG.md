@@ -4,8 +4,14 @@ Changes to amitkap.com, including settings made outside the repo (Cloudflare, Um
 
 ## Pending
 
-- [ ] **Google Search Console.** Add `amitkap.com` as a Domain property, verify it with the TXT record in Cloudflare DNS (keep the record afterwards), and submit `sitemap.xml`.
-- [ ] **Weekly site-suggestion job.** Once there are a few weeks of Umami and Search Console data, add a scheduled GitHub Actions job that reads both and opens one data-backed suggestion as a GitHub issue.
+- [ ] **Weekly site-suggestion job.** Once there are a few weeks of Umami and Search Console data (from mid-November 2026), add a scheduled GitHub Actions job that reads both and opens one data-backed suggestion as a GitHub issue.
+
+## 2026-10-27 — Google Search Console
+
+### Configured outside the repo
+
+- **Google Search Console.** `amitkap.com` is a Domain property, verified by a `google-site-verification` TXT record on the root, which Google added to Cloudflare DNS automatically. Keep the record; removing it unverifies the property.
+- **Sitemap submitted** as `https://amitkap.com/sitemap.xml`. Status Success, 12 pages discovered.
 
 ## 2026-10-14 — Dark founder redesign (Home)
 
