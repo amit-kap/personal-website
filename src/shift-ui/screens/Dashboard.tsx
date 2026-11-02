@@ -36,11 +36,16 @@ export function Dashboard() {
     if (!m || !lit.scroll || lit.ids.length === 0) return
     const el = lit.ids.map((id) => m.querySelector<HTMLElement>(`[data-widget="${id}"]`)).find(Boolean)
     if (!el) return
+    /* The screen may be scaled down on the work page; work in its own pixels. */
     const box = m.getBoundingClientRect()
+    const k = box.width / m.offsetWidth || 1
     const r = el.getBoundingClientRect()
-    if (r.top >= box.top + 8 && r.bottom <= box.bottom - 90) return
+    const top = (r.top - box.top) / k
+    const bottom = (r.bottom - box.top) / k
+    const height = box.height / k
+    if (top >= 8 && bottom <= height - 90) return
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    m.scrollTo({ top: m.scrollTop + (r.top - box.top) - Math.max(16, (box.height - r.height) / 2 - 30), behavior: reduce ? 'auto' : 'smooth' })
+    m.scrollTo({ top: m.scrollTop + top - Math.max(16, (height - (bottom - top)) / 2 - 30), behavior: reduce ? 'auto' : 'smooth' })
   }, [lit])
   return (
     <>

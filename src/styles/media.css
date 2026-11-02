@@ -181,12 +181,46 @@
   max-width: 100%;
   box-shadow: 0 24px 80px rgba(0, 0, 0, 0.45);
 }
-.lightbox-window img {
+.lightbox-window > img {
   display: block;
   max-width: 100%;
   max-height: calc(100dvh - 2 * clamp(16px, 4vw, 56px) - 28px);
   width: auto;
   height: auto;
+}
+.proto-window {
+  position: relative;
+}
+/* Sits over the bottom-right of the live screen, outside its own scaled UI. */
+.proto-enlarge {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  z-index: 6;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 26px;
+  padding: 0 10px;
+  border-radius: 999px;
+  background: rgba(17, 17, 17, 0.82);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 500;
+  cursor: zoom-in;
+  transition: background-color 200ms ease;
+}
+.proto-enlarge:hover {
+  background: var(--primary);
+}
+.proto-enlarge:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+/* The enlarged live screen: as big as the viewport leaves room for, same ratio. */
+.proto-large {
+  width: min(100%, calc((100dvh - 2 * clamp(16px, 4vw, 56px) - 28px) * 2880 / 1452), 1720px);
+  cursor: default;
 }
 .winbar-lg { height: 28px; gap: 8px; padding: 0 14px; }
 .winbar-lg .windot { width: 10px; height: 10px; }

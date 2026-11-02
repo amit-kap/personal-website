@@ -12,8 +12,8 @@ export function AskFab({ open, onToggle }: { open: boolean; onToggle: () => void
   useLayoutEffect(() => {
     if (askRef.current && closeRef.current) {
       setWidths({
-        ask: Math.ceil(askRef.current.getBoundingClientRect().width),
-        close: Math.ceil(closeRef.current.getBoundingClientRect().width),
+        ask: Math.ceil(askRef.current.offsetWidth),
+        close: Math.ceil(closeRef.current.offsetWidth),
       })
     }
   }, [])

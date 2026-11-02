@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, type ReactNode } from 'react'
 import { Dialog, DialogClose, DialogContent, DialogTitle } from '@amit-kap/glaze/components/dialog'
 import { getLenis } from '@/lib/useSmoothScroll'
 
@@ -13,12 +13,15 @@ export default function Lightbox({
   onClose,
   video = false,
   chrome = false,
+  children,
 }: {
   src: string
   alt: string
   onClose: () => void
   video?: boolean
   chrome?: boolean
+  /* Replaces the image or video, for live content. It handles its own clicks. */
+  children?: ReactNode
 }) {
   useEffect(() => {
     const opener = document.activeElement as HTMLElement | null
@@ -43,7 +46,11 @@ export default function Lightbox({
             <path d="M3.5 3.5 12.5 12.5M12.5 3.5 3.5 12.5" />
           </svg>
         </DialogClose>
-        {video ? (
+        {children ? (
+          <span className="contents" onClick={(event) => event.stopPropagation()}>
+            {children}
+          </span>
+        ) : video ? (
           <video
             className="lightbox-media"
             src={src}

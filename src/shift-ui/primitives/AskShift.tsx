@@ -191,7 +191,7 @@ export function AskShift({
   /* Dragging the left edge sets the width from the pointer; the body's right
      edge is the anchor. Arrow keys nudge it. */
   const bounds = () => {
-    const body = panel.current?.parentElement?.getBoundingClientRect().width ?? 1000
+    const body = panel.current?.parentElement?.offsetWidth ?? 1000
     return { min: 300, max: Math.max(300, Math.min(640, body * 0.6)) }
   }
   const clamp = (w: number) => {
@@ -202,9 +202,11 @@ export function AskShift({
     e.preventDefault()
     const handle = e.currentTarget
     handle.setPointerCapture(e.pointerId)
-    const right = panel.current!.parentElement!.getBoundingClientRect().right
+    const parent = panel.current!.parentElement!
+    const rect = parent.getBoundingClientRect()
+    const k = rect.width / parent.offsetWidth || 1 // the screen may be scaled
     onDragging(true)
-    const move = (ev: PointerEvent) => onWidth(clamp(right - ev.clientX))
+    const move = (ev: PointerEvent) => onWidth(clamp((rect.right - ev.clientX) / k))
     const end = () => {
       onDragging(false)
       handle.removeEventListener('pointermove', move)
