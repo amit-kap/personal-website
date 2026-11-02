@@ -27,7 +27,21 @@ export const composerActions = [
 ]
 export const agents = ['Shift agent', 'Vendor Entity Resolution Agent']
 
-export const askGroups: { id: GroupId; label: string; questions: { q: string; sub: string; answer: string }[] }[] = [
+export interface AskGroup {
+  id: GroupId
+  label: string
+  questions: { q: string; sub: string; answer: string }[]
+}
+
+/* What the panel offers on a page: its questions, its scripted answers, and how
+   a typed question picks one. */
+export interface AskScript {
+  groups: AskGroup[]
+  answers: Record<string, Answer>
+  match: (text: string) => string
+}
+
+const askGroups: AskGroup[] = [
   {
     id: 'vendors',
     label: 'Vendors',
@@ -59,7 +73,7 @@ export const askGroups: { id: GroupId; label: string; questions: { q: string; su
    highlighted as soon as the answer lands. Widget ids: a panel's title, "tile-"
    + a tile's label, "finding-" or "assessment-" + a vendor, all lowercased with
    hyphens. */
-export const answers: Record<string, Answer> = {
+const answers: Record<string, Answer> = {
   trimbox: {
     text: 'Trimbox is an email productivity app connected through a Google Workspace OAuth grant with full mailbox access to a VP of Finance account. It surfaced as an ungoverned, unprocured shadow app and is open in [[Recent Findings|finding-trimbox]]. Rated D (38/100, high risk). Its [[assessment|assessment-trimbox]] is 3 of 23 questions in, and reply #2 (20 new answers, 5 attachments) is waiting for your review.',
     widgets: ['finding-trimbox', 'assessment-trimbox'],
@@ -106,7 +120,7 @@ export const answers: Record<string, Answer> = {
 }
 
 /* Typed questions: first keyword that matches picks the answer. */
-export function answerFor(text: string): string {
+function answerFor(text: string): string {
   const t = text.toLowerCase()
   if (t.includes('trimbox')) return 'trimbox'
   if (t.includes('shadow') || t.includes('discover')) return 'shadow'
@@ -115,4 +129,78 @@ export function answerFor(text: string): string {
   if (t.includes('vercel') || t.includes('threat')) return 'vercel'
   if (t.includes('decision') || t.includes('assess') || t.includes('review')) return 'decision'
   return 'fallback'
+}
+
+export const dashboardAsk: AskScript = { groups: askGroups, answers, match: answerFor }
+
+/* The Vendors page: four questions about what is on screen. Facts come from
+   the table and the summary cards. */
+const vendorAnswers: Record<string, Answer> = {
+  frated: {
+    text: 'Three vendors are rated F, the lowest grade, and all three hold data access: [[HackMD|vendor-hackmd]] and [[Demandbase|vendor-demandbase]] reach Customer Data, and [[MobiloCard|vendor-mobilocard]] reaches Employee PII. [[Unmanaged Vendors with Data Access|unmanaged-vendors-with-data-access]] counts the wider picture.',
+    widgets: ['vendor-hackmd', 'vendor-mobilocard', 'vendor-demandbase'],
+    items: [
+      { vendor: 'HackMD', note: 'Customer Data +2, no governance status' },
+      { vendor: 'MobiloCard', note: 'Employee PII +2, governance pending' },
+      { vendor: 'Demandbase', note: 'Customer Data +2, AI exposure Medium' },
+    ],
+  },
+  admin: {
+    text: 'Three vendors hold administrator access: [[Databricks|vendor-databricks]], [[Anodot|vendor-anodot]] and [[Talend|vendor-talend]]. Administrator is the widest access tier, and all three are rated B, so the grade alone hides how much they can reach.',
+    widgets: ['vendor-databricks', 'vendor-anodot', 'vendor-talend'],
+    items: [
+      { vendor: 'Databricks', note: 'Administrator +7' },
+      { vendor: 'Anodot', note: 'Administrator +4' },
+      { vendor: 'Talend', note: 'Administrator +3' },
+    ],
+  },
+  ai: {
+    text: '[[AI Exposure|ai-exposure]] shows 5 vendors at High and 1 at Critical. In this list, GitHub, IBM, Databricks and Anodot are High. Databricks and Anodot also hold administrator access, so they are the ones to look at first.',
+    widgets: ['ai-exposure', 'vendor-github', 'vendor-ibm', 'vendor-databricks', 'vendor-anodot'],
+    items: [
+      { vendor: 'Databricks', note: 'High, Administrator +7' },
+      { vendor: 'Anodot', note: 'High, Administrator +4' },
+      { vendor: 'GitHub', note: 'High, Source Code +1' },
+      { vendor: 'IBM', note: 'High, no detected access' },
+    ],
+  },
+  govern: {
+    text: 'Three vendors with data access have no governance status at all: [[HackMD|vendor-hackmd]], [[Trimbox|vendor-trimbox]] and [[Talend|vendor-talend]]. They are in use and can reach sensitive data, but nobody has taken them through the process yet.',
+    widgets: ['vendor-hackmd', 'vendor-trimbox', 'vendor-talend'],
+    items: [
+      { vendor: 'HackMD', note: 'Customer Data +2' },
+      { vendor: 'Trimbox', note: 'Customer Data +4' },
+      { vendor: 'Talend', note: 'Administrator +3' },
+    ],
+  },
+  fallback: {
+    text: 'On this page I can look at ratings, access levels, AI exposure and governance. Try one of the suggested questions.',
+    widgets: [],
+  },
+}
+
+function vendorMatch(text: string): string {
+  const t = text.toLowerCase()
+  if (/\b(f|d)[- ]?rated\b|\brated\b|\bworst\b|\blowest\b|\bgrade/.test(t)) return 'frated'
+  if (t.includes('admin')) return 'admin'
+  if (/\bai\b/.test(t) || t.includes('exposure')) return 'ai'
+  if (t.includes('govern') || t.includes('procure') || t.includes('unmanaged')) return 'govern'
+  return 'fallback'
+}
+
+export const vendorsAsk: AskScript = {
+  groups: [
+    {
+      id: 'vendors',
+      label: 'On this page',
+      questions: [
+        { q: 'Which F-rated vendors have data access?', sub: 'Lowest grades with sensitive reach', answer: 'frated' },
+        { q: 'Who has administrator access?', sub: 'The widest access tier', answer: 'admin' },
+        { q: 'Where is AI exposure highest?', sub: 'High-exposure vendors', answer: 'ai' },
+        { q: 'Who is missing governance?', sub: 'In use, never reviewed', answer: 'govern' },
+      ],
+    },
+  ],
+  answers: vendorAnswers,
+  match: vendorMatch,
 }

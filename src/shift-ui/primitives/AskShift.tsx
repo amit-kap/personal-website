@@ -1,5 +1,5 @@
 import { Fragment, useEffect, useRef, useState } from 'react'
-import { answerFor, answers, askGroups, type Answer } from '../fixtures/ask'
+import { type Answer, type AskScript } from '../fixtures/ask'
 import { AgentGlyph, Building, ClipboardCheck, Close, Menu, Radar, ShieldAlert } from '../icons'
 import { Composer } from './Composer'
 import { Menu as Popover } from './Menu'
@@ -137,6 +137,7 @@ export function AskShift({
   onDragging,
   onHighlight,
   onClose,
+  script,
 }: {
   open: boolean
   width: number
@@ -144,6 +145,7 @@ export function AskShift({
   onDragging: (dragging: boolean) => void
   onHighlight: (ids: string[], scroll: boolean) => void
   onClose: () => void
+  script: AskScript
 }) {
   const [messages, setMessages] = useState<Message[]>([])
   const panel = useRef<HTMLElement>(null)
@@ -180,12 +182,12 @@ export function AskShift({
     if (el) el.scrollTop = el.scrollHeight
   }
 
-  const ask = (text: string, key = answerFor(text)) => {
+  const ask = (text: string, key = script.match(text)) => {
     const t = text.trim()
     if (!t) return
     const id = nextId.current
     nextId.current += 2
-    setMessages((m) => [...m, { id, role: 'user', text: t }, { id: id + 1, role: 'agent', answer: answers[key] }])
+    setMessages((m) => [...m, { id, role: 'user', text: t }, { id: id + 1, role: 'agent', answer: script.answers[key] }])
   }
 
   /* Dragging the left edge sets the width from the pointer; the body's right
@@ -275,7 +277,7 @@ export function AskShift({
         <div ref={scroller} className="s-ask-body" data-lenis-prevent>
           {messages.length === 0 ? (
             <div className="s-sections">
-              {askGroups.map((g) => {
+              {script.groups.map((g) => {
                 const Icon = groupIcon[g.id]
                 return (
                   <section key={g.id} className="s-section">

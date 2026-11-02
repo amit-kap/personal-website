@@ -74,7 +74,7 @@ export default function App() {
                 <Route path="/about" element={<About />} />
                 <Route path="/work-with-me" element={<WorkWithMe />} />
                 <Route path="/agent" element={<Agent />} />
-                {ShiftDevStage && <Route path="/dev/shift-ui" element={<ShiftDevStage />} />}
+                {ShiftDevStage && <Route path="/dev/shift-ui/:screen?" element={<ShiftDevStage />} />}
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </Suspense>

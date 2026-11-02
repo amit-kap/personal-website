@@ -203,3 +203,25 @@ export function ShiftMark({ size = 24 }: { size?: number }) {
     </svg>
   )
 }
+
+export const Search = (p: P) => (
+  <Icon {...p}>
+    <path d="m21 21-4.34-4.34" />
+    <circle cx="11" cy="11" r="8" />
+  </Icon>
+)
+
+export const ChevronsUpDown = (p: P) => (
+  <Icon {...p}>
+    <path d="m7 15 5 5 5-5" />
+    <path d="m7 9 5-5 5 5" />
+  </Icon>
+)
+
+export const Columns = (p: P) => (
+  <Icon {...p}>
+    <rect width="18" height="18" x="3" y="3" rx="2" />
+    <path d="M9 3v18" />
+    <path d="M15 3v18" />
+  </Icon>
+)
