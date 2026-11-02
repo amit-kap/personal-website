@@ -730,6 +730,30 @@
 .shift-ui .s-fab-icon {
   color: var(--s-agent);
 }
+/* A soft purple highlight travels around the pill's border. */
+@property --s-spin {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+.shift-ui .s-fab::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  padding: 2px;
+  border-radius: inherit;
+  background: conic-gradient(from var(--s-spin), transparent 0 62%, color-mix(in srgb, var(--s-agent) 70%, transparent) 82%, transparent 100%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  pointer-events: none;
+  animation: s-spin 4.5s linear infinite;
+}
+@keyframes s-spin {
+  to {
+    --s-spin: 360deg;
+  }
+}
 /* The panel has its own close button, so the pill steps aside while it is open. */
 .shift-ui .s-fab[data-open='true'] {
   opacity: 0;
@@ -1213,6 +1237,10 @@
   .shift-ui .s-fab-icon > *,
   .shift-ui .s-fab-label > * {
     transition: none;
+  }
+  .shift-ui .s-fab::before {
+    animation: none;
+    opacity: 0;
   }
   .shift-ui .s-answer-items,
   .shift-ui .s-dots i {
