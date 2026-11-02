@@ -282,7 +282,7 @@ function Field({ label, info, children }: { label: string; info?: boolean; child
   )
 }
 
-function Rail({ detail }: { detail: Detail }) {
+export function Rail({ detail }: { detail: Detail }) {
   const [more, setMore] = useState(false)
   const { about, management, access, contact } = detail
   return (

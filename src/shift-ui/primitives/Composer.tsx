@@ -5,7 +5,7 @@ import { AgentGlyph, Check, ChevronDown, Plus, Send } from '../icons'
 
 /* The floating message box: two rows of text, with the custom-actions menu,
    the agent picker and the send button inside it. */
-export function Composer({ onSend }: { onSend: (text: string) => void }) {
+export function Composer({ onSend, placeholder = askIntro.placeholder }: { onSend: (text: string) => void; placeholder?: string }) {
   const [draft, setDraft] = useState('')
   const [agent, setAgent] = useState(agents[0])
   const field = useRef<HTMLTextAreaElement>(null)
@@ -38,7 +38,7 @@ export function Composer({ onSend }: { onSend: (text: string) => void }) {
           value={draft}
           onChange={(e) => setDraft(e.target.value)}
           onKeyDown={onKey}
-          placeholder={askIntro.placeholder}
+          placeholder={placeholder}
           aria-label="Message Ask Shift"
         />
         <div className="s-compose-bar">
