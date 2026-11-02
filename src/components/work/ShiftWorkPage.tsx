@@ -10,6 +10,7 @@ import { HeroMedia } from '@/components/work/HeroMedia'
 import { SplitSection } from '@/components/work/SplitSection'
 import { TitleBlock } from '@/components/work/TitleBlock'
 import { WindowCard } from '@/components/work/WindowCard'
+import { PrototypeWindow, type PrototypeName } from '@/components/work/PrototypeWindow'
 import { imageFor } from '@/lib/workImages'
 
 const STRATEGY_STORY = '/case-studies/designing-for-the-supervisor'
@@ -21,6 +22,7 @@ const features = [
     copy: 'The supervisor starts with one question: "What needs me today?" The home prioritizes counts, urgency, and in-flight work before drill-down. Status carries the hierarchy; decoration carries nothing.',
     image: '01-shift-dashboard',
     alt: 'Shift home dashboard',
+    prototype: 'dashboard' as PrototypeName,
   },
   {
     eyebrow: 'The Living Record',
@@ -116,7 +118,11 @@ export default function ShiftWorkPage({ work }: { work: Work }) {
             </Reveal>
             <Reveal as="p" className="body-copy max-w-[760px]" delay={0.12}>{feature.copy}</Reveal>
             <Reveal>
-              <WindowCard image={imageFor(work, feature.image)} alt={feature.alt} />
+              {'prototype' in feature && feature.prototype ? (
+                <PrototypeWindow name={feature.prototype} image={imageFor(work, feature.image)} alt={feature.alt} />
+              ) : (
+                <WindowCard image={imageFor(work, feature.image)} alt={feature.alt} />
+              )}
             </Reveal>
           </div>
         </section>

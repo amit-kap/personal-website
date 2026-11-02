@@ -1,0 +1,563 @@
+/* Shift product UI kit. Self-contained: every rule sits under .shift-ui, with
+   its own tokens (sampled from the Shift screenshots), so nothing leaks into
+   or out of the site theme. 1 stage px = 1 px of the 2000px-wide reference
+   screenshot (original ÷ 1.44). */
+@font-face {
+  font-family: 'Overused Grotesk';
+  src: url('./fonts/OverusedGrotesk-Roman.otf') format('opentype');
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Overused Grotesk';
+  src: url('./fonts/OverusedGrotesk-Medium.otf') format('opentype');
+  font-weight: 500;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Overused Grotesk';
+  src: url('./fonts/OverusedGrotesk-SemiBold.otf') format('opentype');
+  font-weight: 600;
+  font-display: swap;
+}
+
+.shift-ui {
+  --s-ink: #08080a;
+  --s-ink-2: #3a3a3f;
+  --s-muted: #7b7b82;
+  --s-faint: #a5a5ab;
+  --s-line: #e4e4e4;
+  --s-line-soft: #f0f0f0;
+  --s-bg: #fdfdfd;
+  --s-card: #ffffff;
+  --s-agent: #7c5cd6;
+  --s-agent-bg: #f4f3fe;
+  --s-critical: #dd514b;
+  --s-high: #ec964f;
+  --s-elevated: #debb3d;
+  --s-moderate: #b0e457;
+  --s-low: #4aa053;
+  --s-prev: #b7b7bc;
+
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  font-size: 11px;
+  line-height: 1.3;
+  color: var(--s-ink);
+  background: var(--s-bg);
+  text-align: left;
+  -webkit-font-smoothing: antialiased;
+  container: shift-page / inline-size;
+  width: 100%;
+  min-height: 100%;
+}
+.shift-ui *,
+.shift-ui *::before,
+.shift-ui *::after {
+  box-sizing: border-box;
+}
+.shift-ui .s-head {
+  font-family: 'Overused Grotesk', system-ui, sans-serif;
+}
+
+/* Nav */
+.shift-ui .s-nav {
+  height: 54px;
+  display: flex;
+  align-items: center;
+  padding: 0 20px 0 22px;
+  border-bottom: 1px solid var(--s-line-soft);
+}
+.shift-ui .s-logo {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+.shift-ui .s-nav-links {
+  display: flex;
+  align-items: center;
+  margin-left: 99px;
+  gap: 24px;
+}
+.shift-ui .s-nav-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  height: 27px;
+  padding: 0 13px;
+  font-size: 11.5px;
+  font-weight: 500;
+}
+.shift-ui .s-nav-link[data-active='true'] {
+  background: var(--s-ink);
+  color: #fff;
+  border-radius: 4px;
+}
+.shift-ui .s-nav-right {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 22px;
+}
+.shift-ui .s-avatar {
+  width: 27px;
+  height: 27px;
+  border-radius: 50%;
+  background: #b474ae;
+}
+
+/* Page */
+.shift-ui .s-page {
+  padding: 0 18px;
+}
+.shift-ui .s-title-row {
+  height: 70px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding-top: 33px;
+}
+.shift-ui .s-title {
+  font-size: 22px;
+  font-weight: 500;
+  line-height: 1;
+}
+.shift-ui .s-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--s-muted);
+  padding-top: 3px;
+}
+.shift-ui .s-group-label {
+  font-family: 'Overused Grotesk', system-ui, sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  height: 20px;
+  line-height: 20px;
+  margin-bottom: 11px;
+}
+
+/* Cards */
+.shift-ui .s-card {
+  background: var(--s-card);
+  border: 1px solid var(--s-line);
+  border-radius: 4px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+.shift-ui .s-tiles {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 11px;
+}
+.shift-ui .s-tile {
+  padding: 14px;
+}
+.shift-ui .s-tile-num {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 22px;
+  font-weight: 500;
+  line-height: 1;
+}
+.shift-ui .s-tile-label {
+  margin-top: 6px;
+  font-size: 12px;
+  font-weight: 500;
+}
+.shift-ui .s-tile-sub {
+  margin-top: 3px;
+  font-size: 10px;
+  color: var(--s-muted);
+}
+
+.shift-ui .s-panels {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-top: 13px;
+}
+.shift-ui .s-panel {
+  position: relative;
+  padding: 14px 13px 14px;
+  min-height: 233px;
+  min-width: 0;
+  container: panel / inline-size;
+}
+.shift-ui .s-panel-title {
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1;
+}
+.shift-ui .s-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 7px;
+  height: 20px;
+  padding: 0 6px 0 5px;
+  border-radius: 4px;
+  background: var(--s-agent-bg);
+  color: var(--s-agent);
+  font-size: 10px;
+}
+.shift-ui .s-chip {
+  max-width: 100%;
+}
+.shift-ui .s-chip-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.shift-ui .s-chip svg {
+  color: var(--s-agent);
+  flex: none;
+}
+
+/* Treemap */
+.shift-ui .s-treemap {
+  position: relative;
+  height: 154px;
+  margin: 14px 0 0 1px;
+}
+.shift-ui .s-tm {
+  position: absolute;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 0 11px 9px 11px;
+  color: #fff;
+  font-size: 8.5px;
+  line-height: 1.25;
+  overflow: hidden;
+  white-space: nowrap;
+}
+.shift-ui .s-tm b {
+  font-weight: 600;
+}
+.shift-ui .s-tm span {
+  opacity: 0.85;
+}
+
+/* Charts */
+.shift-ui .s-axis {
+  font-size: 8.5px;
+  fill: var(--s-faint);
+}
+
+/* Findings */
+.shift-ui .s-rows {
+  margin-top: 13px;
+}
+.shift-ui .s-row {
+  position: relative;
+  display: grid;
+  grid-template-columns: 10px minmax(120px, 160px) 118px minmax(0, 1fr) 48px 30px;
+  align-items: center;
+  height: 31.7px;
+  border-bottom: 1px solid var(--s-line-soft);
+  font-size: 10.5px;
+  padding-left: 6px;
+}
+.shift-ui .s-row:last-child {
+  border-bottom: 0;
+}
+.shift-ui .s-row-bar {
+  width: 3px;
+  height: 16px;
+  background: var(--s-critical);
+}
+.shift-ui .s-vendor {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.shift-ui .s-tag {
+  display: inline-block;
+  width: max-content;
+  padding: 1px 5px;
+  border-radius: 2px;
+  font-size: 9px;
+  font-weight: 500;
+}
+.shift-ui .s-tag[data-kind='fourth'] {
+  color: var(--s-agent);
+  background: #f1eafd;
+}
+.shift-ui .s-tag[data-kind='access'] {
+  color: #3b6fe0;
+  background: #e6efff;
+}
+.shift-ui .s-status {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--s-ink-2);
+}
+.shift-ui .s-logo-ph {
+  width: 14px;
+  height: 14px;
+  border-radius: 4px;
+  background: var(--s-line);
+  color: var(--s-muted);
+  display: grid;
+  place-items: center;
+  font-size: 8px;
+  font-weight: 600;
+  flex: none;
+}
+.shift-ui .s-chevron {
+  justify-self: end;
+  margin-right: 7px;
+  color: var(--s-faint);
+}
+.shift-ui .s-chart {
+  position: absolute;
+  left: 13px;
+  right: 13px;
+}
+.shift-ui .s-footline {
+  margin-top: 32px;
+  border-top: 1px solid var(--s-line-soft);
+}
+
+/* Hover states: every interactive-looking element answers the pointer. */
+.shift-ui .s-nav-link,
+.shift-ui .s-icon-btn,
+.shift-ui .s-tile,
+.shift-ui .s-panel,
+.shift-ui .s-row,
+.shift-ui .s-tm,
+.shift-ui .s-bar,
+.shift-ui .s-avatar {
+  transition: background-color 140ms ease, border-color 140ms ease, box-shadow 140ms ease, color 140ms ease,
+    filter 140ms ease, opacity 140ms ease;
+}
+.shift-ui .s-nav-link {
+  cursor: pointer;
+  border-radius: 4px;
+}
+.shift-ui .s-nav-link:hover:not([data-active='true']) {
+  background: #f1f1f3;
+}
+.shift-ui .s-nav-link[data-active='true']:hover {
+  background: #2a2a2f;
+}
+.shift-ui .s-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px;
+  margin: -4px;
+  border-radius: 4px;
+  color: inherit;
+  cursor: pointer;
+  background: none;
+  border: 0;
+  font: inherit;
+}
+.shift-ui .s-refresh {
+  margin-right: 4px;
+}
+.shift-ui .s-icon-btn:hover {
+  background: #f1f1f3;
+  color: var(--s-ink);
+}
+.shift-ui .s-avatar {
+  cursor: pointer;
+}
+.shift-ui .s-avatar:hover {
+  box-shadow: 0 0 0 3px #b474ae33;
+}
+.shift-ui .s-tile {
+  cursor: pointer;
+}
+.shift-ui .s-tile:hover {
+  border-color: #cfcfd5;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+.shift-ui .s-panel:hover {
+  border-color: #d6d6db;
+}
+.shift-ui .s-tm {
+  cursor: pointer;
+}
+.shift-ui .s-treemap:hover .s-tm:not(:hover) {
+  filter: saturate(0.7) brightness(1.04);
+}
+.shift-ui .s-tm:hover {
+  filter: brightness(1.06);
+}
+.shift-ui .s-chart:hover .s-bar:not(:hover) {
+  opacity: 0.55;
+}
+.shift-ui .s-bar {
+  cursor: pointer;
+}
+.shift-ui .s-row {
+  cursor: pointer;
+}
+.shift-ui .s-row:hover {
+  background: #f7f7f9;
+}
+.shift-ui .s-row:hover .s-chevron {
+  color: var(--s-ink);
+  transform: translateX(2px);
+}
+.shift-ui .s-chevron {
+  transition: color 140ms ease, transform 140ms ease;
+}
+
+/* Assessments */
+.shift-ui .s-row-bar[data-tone='agent'] {
+  background: var(--s-agent);
+}
+.shift-ui .s-row-bar[data-tone='idle'] {
+  background: var(--s-prev);
+}
+.shift-ui .s-tag[data-kind='idle'] {
+  color: var(--s-ink-2);
+  background: #efeff1;
+}
+.shift-ui .s-progress {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.shift-ui .s-progress-track {
+  flex: none;
+  width: 150px;
+  height: 4px;
+  border-radius: 2px;
+  background: #ececef;
+  overflow: hidden;
+}
+.shift-ui .s-progress-fill {
+  display: block;
+  height: 100%;
+  background: var(--s-low);
+}
+.shift-ui .s-progress-label {
+  white-space: nowrap;
+  color: var(--s-muted);
+  font-size: 10px;
+}
+
+/* Calendar */
+.shift-ui .s-cal {
+  margin-top: 10px;
+}
+.shift-ui .s-cal-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12px;
+  font-weight: 500;
+}
+.shift-ui .s-cal-nav {
+  display: flex;
+  gap: 8px;
+  color: var(--s-muted);
+}
+.shift-ui .s-cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+  margin-top: 8px;
+}
+.shift-ui .s-cal-dow {
+  height: 16px;
+  text-align: center;
+  font-size: 9.5px;
+  color: var(--s-faint);
+}
+.shift-ui .s-cal-day {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 26px;
+  padding: 0 6px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  background: none;
+  font: inherit;
+  font-size: 10.5px;
+  color: var(--s-ink);
+  cursor: default;
+  transition: background-color 140ms ease, border-color 140ms ease;
+}
+.shift-ui .s-cal-day[data-out='true'] {
+  color: var(--s-faint);
+}
+.shift-ui .s-cal-day[data-event='true'] {
+  cursor: pointer;
+  background: #f7f7f9;
+}
+.shift-ui .s-cal-day[data-event='true']:hover {
+  background: #efeff2;
+}
+.shift-ui .s-cal-day[data-selected='true'] {
+  background: var(--s-agent-bg);
+  border-color: var(--s-agent);
+}
+.shift-ui .s-cal-detail {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+  padding: 7px 9px;
+  border-radius: 4px;
+  background: var(--s-agent-bg);
+  font-size: 10px;
+  color: var(--s-agent);
+}
+.shift-ui .s-cal-detail b {
+  font-weight: 500;
+  color: var(--s-ink);
+}
+
+/* Responsive: the screen reflows with the width it is given. */
+.shift-ui .s-row > * {
+  min-width: 0;
+}
+@container shift-page (max-width: 900px) {
+  .shift-ui .s-panels {
+    grid-template-columns: 1fr;
+  }
+}
+@container shift-page (max-width: 700px) {
+  .shift-ui .s-tiles {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .shift-ui .s-nav-links {
+    margin-left: 40px;
+  }
+}
+@container shift-page (max-width: 600px) {
+  .shift-ui .s-nav-links {
+    display: none;
+  }
+}
+@container panel (max-width: 560px) {
+  .shift-ui .s-row {
+    grid-template-columns: 10px minmax(0, 140px) minmax(0, 1fr) 48px 24px;
+  }
+  .shift-ui .s-row .s-tag {
+    display: none;
+  }
+  .shift-ui .s-progress-track {
+    flex: 1;
+    width: auto;
+    min-width: 40px;
+  }
+}
+@container shift-page (max-width: 380px) {
+  .shift-ui .s-tiles {
+    grid-template-columns: 1fr;
+  }
+}
