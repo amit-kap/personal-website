@@ -2,7 +2,7 @@
    screenshot (03-inventory-vendors-card) and the walkthrough video. Rows that
    the screenshot cuts off, and the contact, are made up. Presentation-only. */
 
-import type { Grade, Tone } from './vendors'
+import { vendors, type Grade, type Tone, type VendorRow } from './vendors'
 
 export const gradeBands: { grade: Grade; range: string; color: string }[] = [
   { grade: 'F', range: '0–20', color: '#dd514b' },
@@ -103,5 +103,134 @@ export const databricks: VendorDetail = {
   contact: { role: 'Internal owner', name: 'Sarah Mitchell', email: 'sarah.mitchell@acme.com', phone: '+1 (415) 555-0193' },
 }
 
-/* Vendors that have a card in this prototype, by name. */
-export const vendorDetails: Record<string, VendorDetail> = { Databricks: databricks }
+/* Every other vendor's card is generated from its table row. The variations
+   are mock: they are seeded from the vendor's name, so each card is stable
+   between visits, and they follow the row (grade, access, AI exposure and
+   statuses) so the card never contradicts the table. */
+
+function seed(name: string) {
+  let h = 2166136261
+  for (const ch of name) h = Math.imul(h ^ ch.charCodeAt(0), 16777619)
+  return () => {
+    h = Math.imul(h ^ (h >>> 15), 2246822507)
+    h = Math.imul(h ^ (h >>> 13), 3266489909)
+    return ((h ^= h >>> 16) >>> 0) / 4294967296
+  }
+}
+
+const order: Grade[] = ['A', 'B', 'C', 'D', 'F']
+const shift = (g: Grade, by: number): Grade => order[Math.min(4, Math.max(0, order.indexOf(g) + by))]
+const bands: Record<Grade, [number, number]> = { A: [82, 97], B: [62, 78], C: [42, 58], D: [22, 38], F: [6, 18] }
+const risk: Record<Grade, string> = { A: 'Low risk', B: 'Moderate risk', C: 'Elevated risk', D: 'High risk', F: 'Critical risk' }
+const scoreNote: Record<Grade, string> = {
+  A: 'Strong security posture — low risk across all evaluated dimensions',
+  B: 'Generally sound practices — minor gaps in select areas',
+  C: 'Mixed security posture — several areas need attention',
+  D: 'Weak security posture — significant gaps in key areas',
+  F: 'Poor security posture — critical gaps across most areas',
+}
+const aiTone: Record<string, Tone> = { Low: 'green', Medium: 'yellow', High: 'orange', Critical: 'red' }
+const aiClass: Record<string, string> = { Low: 'AI Light', Medium: 'AI Assisted', High: 'AI Enhanced', Critical: 'AI Native' }
+const sourceName: Record<string, string> = { Google: 'Google Workspace', Entra: 'Microsoft Entra' }
+const tagPool: { label: string; tone: Tone }[] = [
+  { label: 'Source Code', tone: 'red' },
+  { label: 'Customer PII', tone: 'red' },
+  { label: 'Customer Data', tone: 'yellow' },
+  { label: 'Employee PII', tone: 'orange' },
+  { label: 'Financial Data', tone: 'orange' },
+  { label: 'Production', tone: 'orange' },
+  { label: 'Sensitive Data', tone: 'yellow' },
+  { label: 'Internal Docs', tone: 'yellow' },
+]
+const owners = ['Sarah Mitchell', 'Daniel Cohen', 'Maya Levin', 'Tom Alvarez', 'Priya Nair', 'Noam Shalev']
+const categories = ['External Exposure', 'Company Posture', 'Breaches History', 'Certificates', 'Supply Chain']
+
+function generate(v: VendorRow): VendorDetail {
+  const rnd = seed(v.name)
+  const pick = <T,>(xs: T[]) => xs[Math.floor(rnd() * xs.length)]
+  const [lo, hi] = bands[v.grade]
+  const value = Math.round(lo + rnd() * (hi - lo))
+
+  // Six months of grades that end on today's, drifting by at most one step.
+  const months: Grade[] = [v.grade]
+  for (let i = 0; i < 5; i++) {
+    const r = rnd()
+    months.unshift(r < 0.35 ? shift(months[0], -1) : r < 0.6 ? shift(months[0], 1) : months[0])
+  }
+  const steps = months.flatMap((g) => [g, g, g, g])
+  const avg = order[Math.round(months.reduce((n, g) => n + order.indexOf(g), 0) / months.length)]
+  const trend = order.indexOf(months[5]) - order.indexOf(months[0])
+  const historyNote =
+    trend < 0
+      ? `Improving over the last 6 months. Avg rating last 6 months: ${avg}`
+      : trend > 0
+        ? `Declining over the last 6 months. Avg rating last 6 months: ${avg}`
+        : `Stable performance with minor fluctuations. Avg rating last 6 months: ${avg}`
+
+  const ai = v.ai
+  const detected = v.access
+    ? [{ label: v.access.label, tone: v.access.tone }, ...tagPool.filter((t) => t.label !== v.access!.label).sort(() => rnd() - 0.5).slice(0, v.access.more ?? 0)]
+    : []
+  const domainBase = v.name.toLowerCase().replace(/[^a-z0-9 ]/g, '')
+  const domain = `${domainBase.length <= 14 ? domainBase.replace(/ /g, '') : domainBase.split(' ')[0]}.com`
+  const owner = pick(owners)
+  const [first, last] = owner.toLowerCase().split(' ')
+
+  return {
+    name: v.name,
+    grade: v.grade,
+    tabs: databricks.tabs,
+    score: {
+      value,
+      risk: risk[v.grade],
+      note: scoreNote[v.grade],
+      categories: categories.map((label) => ({ label, grade: shift(v.grade, Math.floor(rnd() * 3) - 1) })),
+    },
+    history: { note: historyNote, steps, months: databricks.history.months },
+    ai: {
+      exposure: ai ? { label: ai, tone: aiTone[ai] } : { label: 'None', tone: 'green' },
+      rows: [
+        [
+          { label: 'Classification', value: ai ? aiClass[ai] : 'No AI' },
+          { label: 'Identities', value: ai ? String(Math.floor(rnd() * 5)) : '0' },
+        ],
+        [
+          { label: 'AI features', value: ai ? String(1 + Math.floor(rnd() * 6)) : '0' },
+          { label: 'Trains on customer data', value: ai ? pick(['Opt-out available', 'No training', 'Not disclosed']) : 'Not applicable' },
+          { label: 'Last detected', value: ai ? pick(['Apr 28', 'Apr 14', 'Mar 30', 'Mar 12']) : '—' },
+        ],
+      ],
+    },
+    about: {
+      industry: v.industry,
+      domain,
+      description: `${v.name} provides ${v.industry.toLowerCase()} services to organizations worldwide. ${pick([
+        'It is used across several teams and connects to company systems through standard integrations.',
+        'It was added to the inventory after Shift detected it through the identity provider.',
+        'Its security documentation is available on request and has not yet been reviewed.',
+      ])} ${pick(['The company is privately held.', 'The company is publicly traded.', 'The company was founded over a decade ago.'])}`,
+    },
+    management: [
+      { label: 'Classification', value: v.access?.label === 'Administrator' ? 'Tier 1' : v.access ? 'Tier 2' : 'Tier 3' },
+      { label: 'Governance Status', value: v.governance ?? 'Not started' },
+      { label: 'Procurement Status', value: v.procurement ?? 'Inactive' },
+    ],
+    access: {
+      sources: v.identity.map((n) => ({ name: sourceName[n] ?? n, logo: n })),
+      detected,
+      approved: detected.length && rnd() < 0.6 ? [detected[detected.length - 1].label] : [],
+    },
+    contact: {
+      role: 'Internal owner',
+      name: owner,
+      email: `${first}.${last}@acme.com`,
+      phone: `+1 (415) 555-0${100 + Math.floor(rnd() * 900)}`,
+    },
+  }
+}
+
+/* The card for each vendor in the table, by name. Databricks is hand-built
+   from the reference screenshot; the rest are generated. */
+export const vendorDetails: Record<string, VendorDetail> = Object.fromEntries(
+  vendors.map((v) => [v.name, v.name === databricks.name ? databricks : generate(v)]),
+)

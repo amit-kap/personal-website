@@ -162,12 +162,15 @@ const levelOf = (g: Grade) => TOP + (g === 'F' ? 4 : 'ABCD'.indexOf(g)) * LEVEL
 
 function HistoryCard({ detail }: { detail: Detail }) {
   const { steps, months } = detail.history
-  const per = steps.length / months.length
   const bottom = 186
-  /* One continuous area under the stepped line, so a dip to B is a lower step,
-     not a gap. */
-  const area =
-    steps.map((g, i) => `${i === 0 ? 'M' : 'L'}${i} ${levelOf(g)}L${i + 1} ${levelOf(g)}`).join('') + `L${steps.length} ${bottom}L0 ${bottom}Z`
+  /* Steps of the same grade are one block, so a translucent fill never
+     overlaps itself and leaves a visible seam. */
+  const runs = steps.reduce<{ grade: Grade; from: number; to: number }[]>((acc, g, i) => {
+    const last = acc[acc.length - 1]
+    if (last && last.grade === g) last.to = i + 1
+    else acc.push({ grade: g, from: i, to: i + 1 })
+    return acc
+  }, [])
   return (
     <Card title="Score History" note={detail.history.note}>
       <div className="s-vd-hist">
@@ -182,24 +185,22 @@ function HistoryCard({ detail }: { detail: Detail }) {
           <svg viewBox={`0 0 ${steps.length} 190`} preserveAspectRatio="none" role="img" aria-label="Score history">
  
             <defs>
-              <linearGradient id="s-vd-fill" gradientUnits="userSpaceOnUse" x1="0" x2="0" y1={levelOf('A')} y2={bottom}>
-                <stop offset="0" stopColor="#b7e2bc" stopOpacity="1" />
-                <stop offset="1" stopColor="#b7e2bc" stopOpacity="0" />
-              </linearGradient>
+              {gradeBands.map((b) => (
+                <linearGradient key={b.grade} id={`s-vd-fill-${b.grade}`} x1="0" x2="0" y1="0" y2="1">
+                  <stop offset="0" stopColor={b.color} stopOpacity="0.25" />
+                  <stop offset="1" stopColor={b.color} stopOpacity="0" />
+                </linearGradient>
+              ))}
             </defs>
             {(['A', 'B', 'C', 'D', 'F'] as Grade[]).map((g) => (
               <line key={g} x1="0" x2={steps.length} y1={levelOf(g)} y2={levelOf(g)} stroke="#ececef" vectorEffect="non-scaling-stroke" />
             ))}
-            {months.map((_, i) => (
-              <line key={i} x1={i * per} x2={i * per} y1="0" y2={bottom} stroke="#f0f0f2" vectorEffect="non-scaling-stroke" />
-            ))}
             <line x1="0" x2={steps.length} y1={bottom} y2={bottom} stroke="#d4d4d8" vectorEffect="non-scaling-stroke" />
-            <path d={area} fill="url(#s-vd-fill)" />
+            {runs.map((r) => (
+              <rect key={r.from} x={r.from} width={r.to - r.from} y={levelOf(r.grade)} height={bottom - levelOf(r.grade)} fill={`url(#s-vd-fill-${r.grade})`} shapeRendering="crispEdges" />
+            ))}
             {steps.map((g, i) => (
               <g key={i}>
-                {i > 0 && steps[i - 1] !== g && (
-                  <line x1={i} x2={i} y1={levelOf(steps[i - 1])} y2={levelOf(g)} stroke="#b9c9b0" strokeWidth="1" vectorEffect="non-scaling-stroke" />
-                )}
                 <line x1={i} x2={i + 1} y1={levelOf(g)} y2={levelOf(g)} stroke={gradeColor[g]} strokeWidth="1.5" vectorEffect="non-scaling-stroke" />
               </g>
             ))}
@@ -311,32 +312,44 @@ function Rail({ detail }: { detail: Detail }) {
       </Section>
       <Section title="Access Scope">
         <Field label="Source/s">
-          <span className="s-vd-sources">
-            {access.sources.map((s) => (
-              <span key={s.name}>
-                <VendorLogo name={s.logo} size={14} />
-                {s.name}
-              </span>
-            ))}
-          </span>
+          {access.sources.length ? (
+            <span className="s-vd-sources">
+              {access.sources.map((s) => (
+                <span key={s.name}>
+                  <VendorLogo name={s.logo} size={14} />
+                  {s.name}
+                </span>
+              ))}
+            </span>
+          ) : (
+            <span className="s-dim">None detected</span>
+          )}
         </Field>
         <Field label="Detected Access" info>
-          <span className="s-vd-tags">
-            {access.detected.map((t) => (
-              <span key={t.label} className="s-badge" data-tone={t.tone}>
-                {t.label}
-              </span>
-            ))}
-          </span>
+          {access.detected.length ? (
+            <span className="s-vd-tags">
+              {access.detected.map((t) => (
+                <span key={t.label} className="s-badge" data-tone={t.tone}>
+                  {t.label}
+                </span>
+              ))}
+            </span>
+          ) : (
+            <span className="s-dim">None detected</span>
+          )}
         </Field>
         <Field label="Approved Access" info>
-          <span className="s-vd-tags">
-            {access.approved.map((t) => (
-              <span key={t} className="s-badge" data-tone="orange">
-                {t}
-              </span>
-            ))}
-          </span>
+          {access.approved.length ? (
+            <span className="s-vd-tags">
+              {access.approved.map((t) => (
+                <span key={t} className="s-badge" data-tone="orange">
+                  {t}
+                </span>
+              ))}
+            </span>
+          ) : (
+            <span className="s-dim">None approved</span>
+          )}
         </Field>
       </Section>
       <Section title="Contacts" action="Edit">
