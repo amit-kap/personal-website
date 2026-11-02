@@ -110,6 +110,82 @@ export const OpenDot = (p: P) => (
   </Icon>
 )
 
+export const Building = (p: P) => (
+  <Icon {...p}>
+    <path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z"/>
+      <path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"/>
+      <path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2"/>
+      <path d="M10 6h4"/>
+      <path d="M10 10h4"/>
+      <path d="M10 14h4"/>
+      <path d="M10 18h4"/>
+  </Icon>
+)
+
+export const ShieldAlert = (p: P) => (
+  <Icon {...p}>
+    <path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/>
+      <path d="M12 8v4"/>
+      <path d="M12 16h.01"/>
+  </Icon>
+)
+
+export const Radar = (p: P) => (
+  <Icon {...p}>
+    <path d="M19.07 4.93A10 10 0 0 0 6.99 3.34"/>
+      <path d="M4 6h.01"/>
+      <path d="M2.29 9.62A10 10 0 1 0 21.31 8.35"/>
+      <path d="M16.24 7.76A6 6 0 1 0 8.23 16.67"/>
+      <path d="M12 18h.01"/>
+      <path d="M17.99 11.66A6 6 0 0 1 15.77 16.67"/>
+      <circle cx="12" cy="12" r="2"/>
+      <path d="m13.41 10.59 5.66-5.66"/>
+  </Icon>
+)
+
+export const ClipboardCheck = (p: P) => (
+  <Icon {...p}>
+    <rect width="8" height="4" x="8" y="2" rx="1" ry="1"/>
+      <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
+      <path d="m9 14 2 2 4-4"/>
+  </Icon>
+)
+
+export const Send = (p: P) => (
+  <Icon {...p}>
+    <path d="m5 12 7-7 7 7"/>
+      <path d="M12 19V5"/>
+  </Icon>
+)
+
+export const Close = (p: P) => (
+  <Icon {...p}>
+    <path d="M18 6 6 18"/>
+      <path d="m6 6 12 12"/>
+  </Icon>
+)
+
+export const Plus = (p: P) => (
+  <Icon {...p}>
+    <path d="M5 12h14"/>
+      <path d="M12 5v14"/>
+  </Icon>
+)
+
+export const Check = (p: P) => (
+  <Icon {...p}>
+    <path d="M20 6 9 17l-5-5"/>
+  </Icon>
+)
+
+export const Menu = (p: P) => (
+  <Icon {...p}>
+    <line x1="4" x2="20" y1="12" y2="12"/>
+      <line x1="4" x2="20" y1="6" y2="6"/>
+      <line x1="4" x2="20" y1="18" y2="18"/>
+  </Icon>
+)
+
 /* The Shift mark (src/content/experience/shift/icon.svg). The file is
    off-white for dark surfaces, so it takes the surrounding text colour here. */
 export function ShiftMark({ size = 24 }: { size?: number }) {

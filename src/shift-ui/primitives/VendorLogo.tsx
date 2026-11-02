@@ -1,3 +1,5 @@
+import { slugify } from '../slug'
+
 /* Vendor logos are dropped into src/shift-ui/logos/ as <slug>.svg or .png
    (slug = lowercase name, non-letters to hyphens: "Brightwave Media Inc." →
    brightwave-media-inc). Without a file the vendor shows an initial tile. */
@@ -6,8 +8,6 @@ const files = import.meta.glob<string>('../logos/*.{svg,png,webp}', { eager: tru
 const bySlug = new Map(
   Object.entries(files).map(([path, url]) => [path.split('/').pop()!.replace(/\.[^.]+$/, ''), url]),
 )
-
-const slugify = (name: string) => name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
 
 export function VendorLogo({ name, size = 14 }: { name: string; size?: number }) {
   const url = bySlug.get(slugify(name))

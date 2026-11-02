@@ -7,9 +7,9 @@ const weekdays = ['S', 'M', 'T', 'W', 'T', 'F', 'S']
 const monthName = new Date(calendar.year, calendar.month, 1).toLocaleString('en-US', { month: 'long' })
 
 /* A month view of upcoming assessments: each day with one shows the vendor's
-   logo, and the selected day is spelled out underneath. */
+   logo, and a clicked day is spelled out underneath. */
 export function CalendarWidget() {
-  const [selected, setSelected] = useState(calendar.events[0].day)
+  const [selected, setSelected] = useState<number | null>(null)
   const first = new Date(calendar.year, calendar.month, 1)
   const daysInMonth = new Date(calendar.year, calendar.month + 1, 0).getDate()
   const lead = first.getDay()
@@ -51,7 +51,7 @@ export function CalendarWidget() {
               data-event={!!ev}
               data-selected={ev && ev.day === selected}
               disabled={!ev}
-              onClick={() => ev && setSelected(ev.day)}
+              onClick={() => ev && setSelected(selected === ev.day ? null : ev.day)}
               aria-label={ev ? `${monthName} ${day}: ${ev.vendor}, ${ev.label}` : undefined}
             >
               {label}

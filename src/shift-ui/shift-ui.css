@@ -46,9 +46,12 @@
   background: var(--s-bg);
   text-align: left;
   -webkit-font-smoothing: antialiased;
-  container: shift-page / inline-size;
+  container: shift / inline-size;
+  display: flex;
+  flex-direction: column;
   width: 100%;
-  min-height: 100%;
+  height: 100%;
+  min-height: 0;
 }
 .shift-ui *,
 .shift-ui *::before,
@@ -110,7 +113,7 @@
 
 /* Page */
 .shift-ui .s-page {
-  padding: 0 18px;
+  padding: 0 18px 100px;
 }
 .shift-ui .s-title-row {
   height: 70px;
@@ -538,7 +541,7 @@
     margin-left: 40px;
   }
 }
-@container shift-page (max-width: 600px) {
+@container shift (max-width: 600px) {
   .shift-ui .s-nav-links {
     display: none;
   }
@@ -560,4 +563,567 @@
   .shift-ui .s-tiles {
     grid-template-columns: 1fr;
   }
+}
+
+/* Body: nav stays, widgets scroll in .s-main, Ask Shift pushes in beside. */
+.shift-ui .s-body {
+  position: relative;
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+.shift-ui .s-main-wrap {
+  position: relative;
+  flex: 1 1 0;
+  min-width: 0;
+}
+.shift-ui .s-main {
+  container: shift-page / inline-size;
+  height: 100%;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+/* Floating button */
+.shift-ui .s-fab {
+  position: absolute;
+  bottom: 28px;
+  left: 50%;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  height: 44px;
+  padding: 0 20px;
+  border: 1px solid var(--s-line);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--s-ink);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transform: translateX(-50%);
+  box-shadow: 0 8px 24px rgba(8, 8, 10, 0.14), 0 1px 3px rgba(8, 8, 10, 0.1);
+  transition: bottom 360ms var(--s-ease), background-color 140ms ease, transform 200ms var(--s-ease),
+    box-shadow 200ms ease;
+}
+.shift-ui .s-fab-icon {
+  color: var(--s-agent);
+}
+.shift-ui .s-fab:hover {
+  background: #f7f7f9;
+  transform: translateX(-50%) translateY(-1px);
+  box-shadow: 0 12px 30px rgba(8, 8, 10, 0.18), 0 1px 3px rgba(8, 8, 10, 0.1);
+}
+.shift-ui .s-fab:focus-visible,
+.shift-ui .s-send:focus-visible,
+.shift-ui .s-pill:focus-visible {
+  outline: 2px solid var(--s-agent);
+  outline-offset: 2px;
+}
+.shift-ui .s-fab-icon,
+.shift-ui .s-fab-label {
+  display: grid;
+}
+/* The label slot is set in JS to the showing label's measured width, so the
+   pill's padding and icon gap never change between states. */
+.shift-ui .s-fab-label {
+  white-space: nowrap;
+  transition: width 380ms cubic-bezier(0.65, 0, 0.35, 1);
+}
+.shift-ui .s-fab-label > span {
+  justify-self: start;
+}
+.shift-ui .s-fab-icon > *,
+.shift-ui .s-fab-label > * {
+  grid-area: 1 / 1;
+  transition: opacity 160ms ease, transform 300ms var(--s-ease);
+}
+/* The old label clears first, the pill resizes, then the new label arrives. */
+.shift-ui .s-fab[data-open='false'] [data-label='ask'],
+.shift-ui .s-fab[data-open='true'] [data-label='close'],
+.shift-ui .s-fab[data-open='false'] [data-icon='ask'],
+.shift-ui .s-fab[data-open='true'] [data-icon='close'] {
+  transition-delay: 160ms;
+}
+.shift-ui .s-fab[data-open='false'] [data-icon='close'],
+.shift-ui .s-fab[data-open='false'] [data-label='close'] {
+  opacity: 0;
+  transform: scale(0.6) rotate(-45deg);
+}
+.shift-ui .s-fab[data-open='false'] [data-label='close'] {
+  transform: none;
+}
+.shift-ui .s-fab[data-open='true'] [data-icon='ask'],
+.shift-ui .s-fab[data-open='true'] [data-label='ask'] {
+  opacity: 0;
+  transform: scale(0.6) rotate(45deg);
+}
+.shift-ui .s-fab[data-open='true'] [data-label='ask'] {
+  transform: none;
+}
+
+/* The panel */
+.shift-ui {
+  --s-ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+.shift-ui .s-ask {
+  flex: none;
+  width: 0;
+  overflow: hidden;
+  border-left: 1px solid transparent;
+  background: #fafafc;
+  transition: width 360ms var(--s-ease), border-color 360ms ease;
+}
+.shift-ui .s-ask[data-open='true'] {
+  width: var(--s-ask-w, 360px);
+  border-left-color: var(--s-line);
+}
+.shift-ui .s-body[data-dragging='true'] .s-ask {
+  transition: none;
+  user-select: none;
+}
+.shift-ui .s-body[data-dragging='true'] {
+  cursor: col-resize;
+}
+.shift-ui .s-ask {
+  position: relative;
+}
+.shift-ui .s-ask-resize {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 3;
+  width: 8px;
+  cursor: col-resize;
+  touch-action: none;
+}
+.shift-ui .s-ask-resize::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 2px;
+  background: var(--s-agent);
+  opacity: 0;
+  transition: opacity 140ms ease;
+}
+.shift-ui .s-ask-resize:hover::after,
+.shift-ui .s-ask-resize:focus-visible::after,
+.shift-ui .s-body[data-dragging='true'] .s-ask-resize::after {
+  opacity: 1;
+}
+.shift-ui .s-ask-resize:focus-visible {
+  outline: none;
+}
+.shift-ui .s-ask-inner {
+  display: flex;
+  flex-direction: column;
+  width: var(--s-ask-w, 360px);
+  height: 100%;
+}
+.shift-ui .s-ask-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  height: 48px;
+  padding: 0 14px 0 14px;
+  flex: none;
+}
+.shift-ui .s-ask-title {
+  min-width: 0;
+  overflow: hidden;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 24px;
+  color: var(--s-ink);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.shift-ui .s-ask-body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 0 14px 14px;
+}
+.shift-ui .s-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding-top: 6px;
+}
+.shift-ui .s-section h4 {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0 0 8px;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--s-muted);
+}
+.shift-ui .s-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.shift-ui .s-pill {
+  padding: 7px 12px;
+  border: 1px solid var(--s-line);
+  border-radius: 999px;
+  background: #fff;
+  font: inherit;
+  font-size: 11.5px;
+  line-height: 1.3;
+  color: var(--s-ink);
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 140ms ease, border-color 140ms ease, color 140ms ease;
+}
+.shift-ui .s-pill:hover {
+  background: var(--s-agent-bg);
+  border-color: #cbbff0;
+  color: var(--s-agent);
+}
+.shift-ui .s-pill:focus-visible {
+  outline: 2px solid var(--s-agent);
+  outline-offset: 2px;
+}
+
+/* Conversation */
+.shift-ui .s-thread {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  padding-top: 4px;
+}
+.shift-ui .s-msg {
+  font-size: 12px;
+  line-height: 1.5;
+}
+.shift-ui .s-msg p {
+  margin: 0;
+}
+.shift-ui .s-msg-user {
+  align-self: flex-end;
+  max-width: 85%;
+  padding: 8px 12px;
+  border-radius: 14px 0 14px 14px;
+  background: var(--s-ink);
+  color: #fff;
+}
+.shift-ui .s-msg-agent {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.shift-ui .s-msg-who {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--s-agent);
+}
+.shift-ui .s-dots {
+  display: inline-flex;
+  gap: 4px;
+  height: 18px;
+  align-items: center;
+}
+.shift-ui .s-dots i {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--s-agent);
+  opacity: 0.35;
+  animation: s-dot 1s infinite ease-in-out;
+}
+.shift-ui .s-dots i:nth-child(2) {
+  animation-delay: 0.15s;
+}
+.shift-ui .s-dots i:nth-child(3) {
+  animation-delay: 0.3s;
+}
+@keyframes s-dot {
+  0%,
+  80%,
+  100% {
+    opacity: 0.35;
+  }
+  40% {
+    opacity: 1;
+  }
+}
+.shift-ui .s-answer-items {
+  display: flex;
+  flex-direction: column;
+  margin: 4px 0 0;
+  padding: 0;
+  list-style: none;
+  border: 1px solid var(--s-line);
+  border-radius: 4px;
+  background: #fff;
+  animation: s-fade 300ms var(--s-ease);
+}
+.shift-ui .s-answer-items li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  font-size: 11px;
+  border-bottom: 1px solid var(--s-line-soft);
+}
+.shift-ui .s-answer-items li:last-child {
+  border-bottom: 0;
+}
+.shift-ui .s-answer-items b {
+  font-weight: 500;
+  white-space: nowrap;
+}
+.shift-ui .s-answer-text {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+.shift-ui .s-answer-text span {
+  color: var(--s-muted);
+}
+@keyframes s-fade {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+}
+
+/* Composer: a floating card, two rows of text with its controls inside. */
+.shift-ui .s-composer {
+  padding: 0 14px 14px;
+}
+.shift-ui .s-compose-card {
+  border: 1px solid color-mix(in srgb, var(--s-agent) 32%, transparent);
+  border-radius: 4px;
+  background: #fff;
+}
+.shift-ui .s-compose-field {
+  display: block;
+  width: 100%;
+  padding: 11px 12px 4px;
+  border: 0;
+  background: none;
+  resize: none;
+  font: inherit;
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--s-ink);
+}
+.shift-ui .s-compose-field:focus {
+  outline: none;
+}
+.shift-ui .s-compose-field::placeholder {
+  color: var(--s-faint);
+}
+.shift-ui .s-compose-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px 8px;
+}
+.shift-ui .s-compose-bar .s-send {
+  margin-left: auto;
+}
+.shift-ui .s-tool {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  height: 24px;
+  min-width: 24px;
+  padding: 0 5px;
+  border: 0;
+  border-radius: 4px;
+  background: none;
+  font: inherit;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--s-muted);
+  cursor: pointer;
+  transition: background-color 140ms ease, color 140ms ease;
+}
+.shift-ui .s-tool:hover,
+.shift-ui .s-tool[aria-expanded='true'] {
+  background: #f1f1f4;
+  color: var(--s-ink);
+}
+.shift-ui .s-icon-only {
+  width: 28px;
+  height: 28px;
+  padding: 0;
+}
+.shift-ui .s-tool:focus-visible,
+.shift-ui .s-menu-item:focus-visible,
+.shift-ui .s-ask-resize:focus-visible {
+  outline: 2px solid var(--s-agent);
+  outline-offset: 2px;
+}
+.shift-ui .s-agent-pick {
+  padding: 0 6px;
+}
+.shift-ui .s-agent-pick svg:first-child {
+  color: var(--s-agent);
+}
+.shift-ui .s-agent-pick svg:last-child {
+  color: var(--s-muted);
+}
+.shift-ui .s-menu-root {
+  position: relative;
+}
+.shift-ui .s-menu {
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 0;
+  z-index: 8;
+  display: flex;
+  flex-direction: column;
+  min-width: 140px;
+  padding: 4px;
+  border: 1px solid var(--s-line);
+  border-radius: 4px;
+  background: #fff;
+  box-shadow: 0 10px 28px rgba(8, 8, 10, 0.14), 0 1px 3px rgba(8, 8, 10, 0.08);
+  animation: s-fade 160ms var(--s-ease);
+}
+.shift-ui .s-menu[data-below='true'] {
+  min-width: 0;
+  top: calc(100% + 6px);
+  bottom: auto;
+  right: 0;
+  left: auto;
+}
+.shift-ui .s-menu-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  height: 30px;
+  padding: 0 8px;
+  border: 0;
+  border-radius: 4px;
+  background: none;
+  font: inherit;
+  font-size: 11.5px;
+  color: var(--s-ink);
+  text-align: left;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color 140ms ease, color 140ms ease;
+}
+.shift-ui .s-menu-item:hover {
+  background: var(--s-agent-bg);
+  color: var(--s-agent);
+}
+.shift-ui .s-send {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border: 0;
+  border-radius: 4px;
+  background: var(--s-agent);
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 140ms ease, opacity 140ms ease;
+}
+.shift-ui .s-send:hover:not(:disabled) {
+  background: #6a49c7;
+}
+.shift-ui .s-send:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+/* Narrow: the panel becomes a sheet over the widgets instead of pushing. */
+@container shift (max-width: 700px) {
+  .shift-ui .s-ask {
+    position: absolute;
+    inset: auto 0 0 0;
+    z-index: 6;
+    width: auto;
+    height: 74%;
+    border-left: 0;
+    border-top: 1px solid var(--s-line);
+    box-shadow: 0 -10px 30px rgba(8, 8, 10, 0.12);
+    transform: translateY(105%);
+    transition: transform 360ms var(--s-ease);
+  }
+  .shift-ui .s-ask[data-open='true'] {
+    width: auto;
+    transform: none;
+  }
+  .shift-ui .s-ask-inner {
+    width: 100%;
+  }
+  .shift-ui .s-ask-resize {
+    display: none;
+  }
+  /* Close rides on top of the sheet instead of under it. */
+  .shift-ui .s-fab[data-open='true'] {
+    bottom: calc(74% + 12px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shift-ui .s-ask,
+  .shift-ui .s-fab,
+  .shift-ui .s-fab-label,
+  .shift-ui .s-fab-icon > *,
+  .shift-ui .s-fab-label > * {
+    transition: none;
+  }
+  .shift-ui .s-answer-items,
+  .shift-ui .s-dots i {
+    animation: none;
+  }
+}
+
+/* Answer links and the widgets they point at */
+.shift-ui .s-ref {
+  padding: 0 3px;
+  margin: 0 -1px;
+  border: 0;
+  border-radius: 3px;
+  background: var(--s-agent-bg);
+  font: inherit;
+  color: var(--s-agent);
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-underline-offset: 3px;
+  cursor: pointer;
+  transition: background-color 140ms ease;
+}
+.shift-ui .s-ref:hover {
+  background: #e7e2fb;
+}
+.shift-ui .s-ref:focus-visible {
+  outline: 2px solid var(--s-agent);
+  outline-offset: 1px;
+}
+.shift-ui [data-widget] {
+  transition: border-color 160ms ease;
+}
+.shift-ui .s-card[data-highlight='true'] {
+  border-color: var(--s-agent);
+}
+.shift-ui .s-row[data-highlight='true'] {
+  box-sizing: border-box;
+  border: 1px solid var(--s-agent);
+  border-radius: 4px;
+  padding-left: 5px;
 }
