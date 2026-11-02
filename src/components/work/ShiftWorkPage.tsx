@@ -30,6 +30,7 @@ const features = [
     copy: "The inventory treats every vendor as a continuously maintained record of evidence, access, exposure, and decisions in one place, so any assessment starts from what's already known instead of a blank questionnaire.",
     image: '02-inventory-vendors-page',
     alt: 'Shift vendor inventory',
+    prototype: 'vendors' as PrototypeName,
   },
   {
     eyebrow: 'Who Connects to What',

@@ -8,7 +8,9 @@ import Lightbox from '@/components/work/Lightbox'
 
 const ShiftDashboard = lazy(() => import('@/shift-ui/prototypes/DashboardPrototype'))
 
-const screens = { dashboard: ShiftDashboard } as const
+const ShiftVendors = lazy(() => import('@/shift-ui/prototypes/VendorsPrototype'))
+
+const screens = { dashboard: ShiftDashboard, vendors: ShiftVendors } as const
 export type PrototypeName = keyof typeof screens
 
 export function PrototypeWindow({ name, image, alt }: { name: PrototypeName; image?: ContentImage; alt: string }) {

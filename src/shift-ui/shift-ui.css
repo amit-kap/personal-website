@@ -636,6 +636,7 @@
   margin-top: 4px;
 }
 .shift-ui .s-sum {
+  container: sumcard / inline-size;
   min-width: 0;
   min-height: 140px;
   padding: 14px 13px;
@@ -812,7 +813,7 @@
   background: #fff;
 }
 .shift-ui .s-table {
-  min-width: 1040px;
+  min-width: 0;
   font-size: 12px;
 }
 .shift-ui .s-thead,
@@ -832,6 +833,8 @@
   font-weight: 500;
 }
 .shift-ui .s-th {
+  overflow: hidden;
+  white-space: nowrap;
   display: flex;
   align-items: center;
   height: 100%;
@@ -879,6 +882,8 @@
   align-items: center;
   gap: 6px;
   min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
   padding: 0 18px;
 }
 .shift-ui .s-tcell-grade {
@@ -1048,17 +1053,53 @@
     grid-template-columns: 1fr;
   }
 }
-@container shift-page (max-width: 1100px) {
-  .shift-ui .s-sum-grid {
-    grid-template-columns: 1fr 1fr;
+/* Vendors: nothing wraps, so elements drop out as the page narrows. The
+   summary cards lose their count pills when a card is too narrow for them. */
+@container sumcard (max-width: 270px) {
+  .shift-ui .s-counts {
+    display: none;
+  }
+  .shift-ui .s-sum-body {
+    justify-content: center;
+  }
+}
+/* The table drops Procurement, then Governance, then Identity Source. */
+@container shift-page (max-width: 1080px) {
+  .shift-ui .s-thead,
+  .shift-ui .s-trow {
+    grid-template-columns: 78px repeat(6, minmax(0, 1fr));
+  }
+  .shift-ui .s-thead > :nth-child(8),
+  .shift-ui .s-trow > :nth-child(8) {
+    display: none;
+  }
+}
+@container shift-page (max-width: 900px) {
+  .shift-ui .s-thead,
+  .shift-ui .s-trow {
+    grid-template-columns: 78px repeat(5, minmax(0, 1fr));
+  }
+  .shift-ui .s-thead > :nth-child(7),
+  .shift-ui .s-trow > :nth-child(7) {
+    display: none;
+  }
+}
+@container shift-page (max-width: 740px) {
+  .shift-ui .s-thead,
+  .shift-ui .s-trow {
+    grid-template-columns: 78px repeat(4, minmax(0, 1fr));
+  }
+  .shift-ui .s-thead > :nth-child(4),
+  .shift-ui .s-trow > :nth-child(4) {
+    display: none;
+  }
+  .shift-ui .s-rowcount {
+    display: none;
   }
 }
 @container shift-page (max-width: 640px) {
   .shift-ui .s-sum-grid {
-    grid-template-columns: 1fr;
-  }
-  .shift-ui .s-toolbar {
-    flex-wrap: wrap;
+    grid-template-columns: 1fr 1fr;
   }
 }
 @container shift-page (max-width: 700px) {
