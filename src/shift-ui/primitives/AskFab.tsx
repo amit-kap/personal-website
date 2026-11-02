@@ -28,8 +28,8 @@ export function AskFab({ open, onToggle }: { open: boolean; onToggle: () => void
       onClick={onToggle}
     >
       <span className="s-fab-icon">
-        <AgentGlyph size={20} data-icon="ask" />
-        <Close size={20} data-icon="close" />
+        <AgentGlyph size={16} data-icon="ask" />
+        <Close size={16} data-icon="close" />
       </span>
       <span className="s-fab-label" style={widths ? { width: open ? widths.close : widths.ask } : undefined}>
         <span ref={askRef} data-label="ask">

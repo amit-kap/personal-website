@@ -239,7 +239,7 @@ export function AskShift({
       />
       <div className="s-ask-inner">
         <div className="s-ask-top">
-          <span className="s-ask-title">{title ?? 'Ask Shift'}</span>
+          <span className="s-ask-title">{title ?? 'New session'}</span>
           <div className="s-ask-actions">
           <Popover
             below
