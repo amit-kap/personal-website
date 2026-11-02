@@ -2,7 +2,9 @@ import { useMemo, useState } from 'react'
 import { PAGE_SIZE, TOTAL_ROWS, vendors, type Grade, type VendorRow } from '../fixtures/vendors'
 import { useHighlighted } from '../highlight'
 import { ArrowDown, ChevronDown, ChevronLeft, ChevronRight, ChevronsUpDown, Columns, Plus, Search, ShiftMark } from '../icons'
+import { vendorDetails } from '../fixtures/vendorDetail'
 import { slugify } from '../slug'
+import { VendorDetail } from './VendorDetail'
 import { VendorLogo } from './VendorLogo'
 
 type SortKey = 'grade' | 'name' | 'industry' | 'ai' | 'governance' | 'procurement'
@@ -32,11 +34,21 @@ const columns: { key: SortKey | null; label: string }[] = [
 
 const dash = <span className="s-dim">-</span>
 
-function Row({ v }: { v: VendorRow }) {
+function Row({ v, onOpen }: { v: VendorRow; onOpen?: (anchor: HTMLElement) => void }) {
   const id = `vendor-${slugify(v.name)}`
   const lit = useHighlighted(id)
   return (
-    <div className="s-trow" role="row" data-widget={id} data-highlight={lit}>
+    <div
+      className="s-trow"
+      role="row"
+      data-widget={id}
+      data-highlight={lit}
+      data-detail={!!onOpen}
+      tabIndex={onOpen ? 0 : undefined}
+      aria-haspopup={onOpen ? 'dialog' : undefined}
+      onClick={onOpen && ((e) => onOpen(e.currentTarget))}
+      onKeyDown={onOpen && ((e) => (e.key === 'Enter' || e.key === ' ') && (e.preventDefault(), onOpen(e.currentTarget)))}
+    >
       <span className="s-tcell s-tcell-grade">
         <span className="s-grade" data-grade={v.grade}>
           {v.grade}
@@ -93,6 +105,11 @@ function Row({ v }: { v: VendorRow }) {
 export function VendorsTable() {
   const [query, setQuery] = useState('')
   const [page, setPage] = useState(1)
+  const [open, setOpen] = useState<{ name: string; root: HTMLElement; from: HTMLElement } | null>(null)
+  const closeDetail = () => {
+    open?.from.focus({ preventScroll: true })
+    setOpen(null)
+  }
   const [sort, setSort] = useState<{ key: SortKey; dir: 1 | -1 }>({ key: 'grade', dir: 1 })
 
   const rows = useMemo(() => {
@@ -154,11 +171,17 @@ export function VendorsTable() {
             ))}
           </div>
           {rows.map((v) => (
-            <Row key={v.name} v={v} />
+            <Row
+              key={v.name}
+              v={v}
+              onOpen={vendorDetails[v.name] ? (from) => setOpen({ name: v.name, root: from.closest<HTMLElement>('.shift-ui')!, from }) : undefined}
+            />
           ))}
           {rows.length === 0 && <div className="s-empty">No vendors match “{query}”.</div>}
         </div>
       </div>
+
+      {open && <VendorDetail detail={vendorDetails[open.name]} root={open.root} onClose={closeDetail} />}
 
       <div className="s-pager">
         <span className="s-pager-left">
