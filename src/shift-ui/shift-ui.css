@@ -2341,7 +2341,7 @@
   background: none;
 }
 .shift-ui .s-ac-item[data-selected='true'] {
-  background: var(--s-agent-bg);
+  background: #e6e6ea;
 }
 .shift-ui .s-ac-item:focus-visible {
   outline: 2px solid var(--s-agent);
