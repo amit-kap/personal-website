@@ -229,8 +229,40 @@ function generate(v: VendorRow): VendorDetail {
   }
 }
 
-/* The card for each vendor in the table, by name. Databricks is hand-built
-   from the reference screenshot; the rest are generated. */
-export const vendorDetails: Record<string, VendorDetail> = Object.fromEntries(
-  vendors.map((v) => [v.name, v.name === databricks.name ? databricks : generate(v)]),
-)
+/* The card for each vendor in the table, by name. Databricks and Trimbox are
+   hand-built from their reference screenshots; the rest are generated. */
+const handBuilt = (v: VendorRow): VendorDetail => {
+  if (v.name === databricks.name) return databricks
+  const base = generate(v)
+  if (v.name !== 'Trimbox') return base
+  // Read off the Trimbox assessment screenshot.
+  return {
+    ...base,
+    score: {
+      ...base.score,
+      value: 38,
+      risk: 'High risk',
+      categories: [
+        { label: 'External Exposure', grade: 'D' },
+        { label: 'Company Posture', grade: 'D' },
+        { label: 'Breaches History', grade: 'A' },
+        { label: 'Certificates', grade: 'F' },
+        { label: 'Supply Chain', grade: 'A' },
+      ],
+    },
+    about: {
+      industry: 'Email Management',
+      domain: 'trimbox.io',
+      description:
+        'Email productivity SaaS connected through a Google Workspace OAuth grant with full mailbox access to a VP of Finance account. Surfaced as an ungoverned, unprocured shadow app.',
+    },
+    management: [
+      { label: 'Classification', value: 'Tier 3' },
+      { label: 'Governance Status', value: 'Not started' },
+      { label: 'Procurement Status', value: 'Inactive' },
+    ],
+    contact: { role: 'Primary contact', name: 'Dan Mercer', email: 'dan@trimbox.io', phone: '+1-617-555-0113' },
+  }
+}
+
+export const vendorDetails: Record<string, VendorDetail> = Object.fromEntries(vendors.map((v) => [v.name, handBuilt(v)]))

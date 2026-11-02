@@ -36,11 +36,9 @@ export function Assessments() {
           <ResizeHandle edge="right" width={listW} initial={LIST.initial} clamp={clampList} onWidth={setListW} onDragging={setDragging} label="Resize assessments" />
         </AssessmentList>
         <AssessmentChat key={current.vendor} assessment={current} panelOpen={panel} onTogglePanel={() => setPanel(!panel)} />
-        {panel && (
-          <VendorInfoPanel vendor={current.vendor} width={panelW} onClose={() => setPanel(false)}>
-            <ResizeHandle edge="left" width={panelW} initial={PANEL.initial} clamp={clampPanel} onWidth={setPanelW} onDragging={setDragging} label="Resize vendor information" />
-          </VendorInfoPanel>
-        )}
+        <VendorInfoPanel vendor={current.vendor} open={panel} width={panelW} onClose={() => setPanel(false)}>
+          <ResizeHandle edge="left" width={panelW} initial={PANEL.initial} clamp={clampPanel} onWidth={setPanelW} onDragging={setDragging} label="Resize vendor information" />
+        </VendorInfoPanel>
       </div>
     </>
   )
