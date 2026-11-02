@@ -2235,7 +2235,8 @@
   flex: none;
   align-items: center;
   gap: 8px;
-  padding: 10px 12px 0;
+  padding: 10px 12px 12px;
+  border-bottom: 1px solid var(--s-line);
 }
 .shift-ui .s-ac-filter .s-search {
   flex: 1;
@@ -2255,7 +2256,7 @@
 .shift-ui .s-ac-scroll {
   flex: 1;
   min-height: 0;
-  padding: 8px 8px 16px;
+  padding: 8px 12px 16px;
   overflow-y: auto;
   overscroll-behavior: contain;
 }
