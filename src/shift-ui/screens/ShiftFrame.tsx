@@ -10,7 +10,7 @@ import { Nav } from '../primitives/Nav'
    inside this, so the nav, the panel and the highlighting behave the same. */
 export function ShiftFrame({ active, script = dashboardAsk, children }: { active: string; script?: AskScript; children: ReactNode }) {
   const [askOpen, setAskOpen] = useState(false)
-  const [askWidth, setAskWidth] = useState(360)
+  const [askWidth, setAskWidth] = useState(420)
   const [dragging, setDragging] = useState(false)
   const [lit, setLit] = useState<{ ids: string[]; scroll: boolean }>({ ids: [], scroll: false })
   const main = useRef<HTMLDivElement>(null)

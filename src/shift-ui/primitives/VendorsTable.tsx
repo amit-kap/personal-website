@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { vendors, type Grade, type VendorRow } from '../fixtures/vendors'
+import { PAGE_SIZE, TOTAL_ROWS, vendors, type Grade, type VendorRow } from '../fixtures/vendors'
 import { useHighlighted } from '../highlight'
 import { ArrowDown, ChevronDown, ChevronLeft, ChevronRight, ChevronsUpDown, Columns, Plus, Search, ShiftMark } from '../icons'
 import { slugify } from '../slug'
@@ -43,14 +43,14 @@ function Row({ v }: { v: VendorRow }) {
         </span>
       </span>
       <span className="s-tcell s-vendor">
-        <VendorLogo name={v.name} size={16} />
+        <VendorLogo name={v.name} size={20} />
         <span className="s-tcell-text">{v.name}</span>
       </span>
       <span className="s-tcell">
         <span className="s-tcell-text">{v.industry}</span>
       </span>
       <span className="s-tcell s-ids">
-        {v.identity.length ? v.identity.map((s) => <VendorLogo key={s} name={s} size={16} />) : dash}
+        {v.identity.length ? v.identity.map((s) => <VendorLogo key={s} name={s} size={18} />) : dash}
       </span>
       <span className="s-tcell">
         {v.access ? (
@@ -92,6 +92,7 @@ function Row({ v }: { v: VendorRow }) {
 /* Search, the vendor table with sortable headers, and the paging footer. */
 export function VendorsTable() {
   const [query, setQuery] = useState('')
+  const [page, setPage] = useState(1)
   const [sort, setSort] = useState<{ key: SortKey; dir: 1 | -1 }>({ key: 'grade', dir: 1 })
 
   const rows = useMemo(() => {
@@ -101,6 +102,11 @@ export function VendorsTable() {
       .slice()
       .sort((a, b) => compare[sort.key](a, b) * sort.dir)
   }, [query, sort])
+
+  const pages = Math.ceil(TOTAL_ROWS / PAGE_SIZE)
+  const count = query.trim() ? rows.length : TOTAL_ROWS
+  /* Pages after the first are mock: the control moves, the rows stay. */
+  const shown = [1, 2, 3, pages].filter((n, i, all) => all.indexOf(n) === i)
 
   const toggle = (key: SortKey) => setSort((s) => (s.key === key ? { key, dir: s.dir === 1 ? -1 : 1 } : { key, dir: 1 }))
 
@@ -123,7 +129,7 @@ export function VendorsTable() {
           <button type="button" className="s-icon-btn" aria-label="Columns">
             <Columns size={16} />
           </button>
-          <span className="s-rowcount">{rows.length} {rows.length === 1 ? 'row' : 'rows'}</span>
+          <span className="s-rowcount">{count} {count === 1 ? 'row' : 'rows'}</span>
         </span>
       </div>
 
@@ -163,15 +169,22 @@ export function VendorsTable() {
           </span>
         </span>
         <span className="s-pager-right">
-          <span className="s-pager-btn" data-disabled="true">
+          <button type="button" className="s-pager-btn" disabled={page === 1} onClick={() => setPage(page - 1)}>
             <ChevronLeft size={12} />
             Prev
-          </span>
-          <span className="s-page-num">1</span>
-          <span className="s-pager-btn" data-disabled="true">
+          </button>
+          {shown.map((n, i) => (
+            <span key={n} className="s-pager-nums">
+              {i > 0 && n - shown[i - 1] > 1 && <span className="s-dim">…</span>}
+              <button type="button" className="s-page-num" data-active={n === page} aria-current={n === page ? 'page' : undefined} onClick={() => setPage(n)}>
+                {n}
+              </button>
+            </span>
+          ))}
+          <button type="button" className="s-pager-btn" disabled={page === pages} onClick={() => setPage(page + 1)}>
             Next
             <ChevronRight size={12} />
-          </span>
+          </button>
         </span>
       </div>
     </>

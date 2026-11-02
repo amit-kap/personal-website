@@ -1,6 +1,6 @@
 import { Fragment, useEffect, useRef, useState } from 'react'
 import { type Answer, type AskScript } from '../fixtures/ask'
-import { AgentGlyph, Building, ClipboardCheck, Close, Menu, Radar, ShieldAlert } from '../icons'
+import { AgentGlyph, Building, Check, ClipboardCheck, Close, Menu, Radar, ShieldAlert } from '../icons'
 import { Composer } from './Composer'
 import { Menu as Popover } from './Menu'
 import { VendorLogo } from './VendorLogo'
@@ -46,6 +46,7 @@ function AgentMessage({
   const [shown, setShown] = useState(0)
   const [thinking, setThinking] = useState(true)
   const total = tokens.length
+  const [started, setStarted] = useState(false)
 
   useEffect(() => {
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -124,6 +125,25 @@ function AgentMessage({
           ))}
         </ul>
       )}
+      {done && answer.action && (
+        <p className="s-answer-reco">
+          {answer.action.why.split(/(?<=\.)\s+/).map((line) => {
+            const m = line.match(/^(Recommended:)\s*(.*)$/)
+            return (
+              <span key={line}>
+                {m ? <b>{m[1]}</b> : null}
+                {m ? ` ${m[2]}` : line}
+              </span>
+            )
+          })}
+        </p>
+      )}
+      {done && answer.action && (
+        <button type="button" className="s-solid s-answer-action" data-done={started} disabled={started} onClick={() => setStarted(true)}>
+          {started ? <Check size={14} /> : <ClipboardCheck size={14} />}
+          {started ? answer.action.done : answer.action.label}
+        </button>
+      )}
     </div>
   )
 }
@@ -187,7 +207,7 @@ export function AskShift({
     if (!t) return
     const id = nextId.current
     nextId.current += 2
-    setMessages((m) => [...m, { id, role: 'user', text: t }, { id: id + 1, role: 'agent', answer: script.answers[key] }])
+    setMessages((m) => [...m, { id, role: 'user', text: t }, { id: id + 1, role: 'agent', answer: script.resolve?.(t) ?? script.answers[key] }])
   }
 
   /* Dragging the left edge sets the width from the pointer; the body's right
@@ -239,7 +259,7 @@ export function AskShift({
         tabIndex={0}
         onPointerDown={startDrag}
         onKeyDown={nudge}
-        onDoubleClick={() => onWidth(360)}
+        onDoubleClick={() => onWidth(420)}
       />
       <div className="s-ask-inner">
         <div className="s-ask-top">
@@ -281,10 +301,12 @@ export function AskShift({
                 const Icon = groupIcon[g.id]
                 return (
                   <section key={g.id} className="s-section">
-                    <h4>
-                      <Icon size={13} />
-                      {g.label}
-                    </h4>
+                    {g.label && (
+                      <h4>
+                        <Icon size={13} />
+                        {g.label}
+                      </h4>
+                    )}
                     <div className="s-pills">
                       {g.questions.map((q) => (
                         <button key={q.q} type="button" className="s-pill" onClick={() => ask(q.q, q.answer)}>

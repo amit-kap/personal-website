@@ -14,7 +14,7 @@ import { ShiftFrame } from './ShiftFrame'
 export function Vendors() {
   return (
     <ShiftFrame active="Inventory" script={vendorsAsk}>
-      <div className="s-page">
+      <div className="s-page s-page-fill">
         <div className="s-title-row">
           <h2 className="s-title s-head">Vendors</h2>
           <div className="s-meta">
