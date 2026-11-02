@@ -1,6 +1,6 @@
 import { Fragment, useEffect, useRef, useState } from 'react'
 import { answerFor, answers, askGroups, type Answer } from '../fixtures/ask'
-import { AgentGlyph, Building, ClipboardCheck, Menu, Radar, ShieldAlert } from '../icons'
+import { AgentGlyph, Building, ClipboardCheck, Close, Menu, Radar, ShieldAlert } from '../icons'
 import { Composer } from './Composer'
 import { Menu as Popover } from './Menu'
 import { VendorLogo } from './VendorLogo'
@@ -136,12 +136,14 @@ export function AskShift({
   onWidth,
   onDragging,
   onHighlight,
+  onClose,
 }: {
   open: boolean
   width: number
   onWidth: (w: number) => void
   onDragging: (dragging: boolean) => void
   onHighlight: (ids: string[], scroll: boolean) => void
+  onClose: () => void
 }) {
   const [messages, setMessages] = useState<Message[]>([])
   const panel = useRef<HTMLElement>(null)
@@ -237,7 +239,8 @@ export function AskShift({
       />
       <div className="s-ask-inner">
         <div className="s-ask-top">
-          <span className="s-ask-title">{title}</span>
+          <span className="s-ask-title">{title ?? 'Ask Shift'}</span>
+          <div className="s-ask-actions">
           <Popover
             below
             label="Session"
@@ -261,6 +264,10 @@ export function AskShift({
               </button>
             )}
           </Popover>
+          <button type="button" className="s-tool s-icon-only" aria-label="Close Ask Shift" onClick={onClose}>
+            <Close size={16} />
+          </button>
+          </div>
         </div>
 
         <div ref={scroller} className="s-ask-body" data-lenis-prevent>

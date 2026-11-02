@@ -25,7 +25,7 @@ export function AreaChart() {
               <stop offset="1" stopColor="#f5b45a" stopOpacity="0" />
             </linearGradient>
             <linearGradient id="s-area-b" x1="0" x2="0" y1="0" y2="1">
-              <stop offset="0" stopColor="#7c5cd6" stopOpacity="0.18" />
+              <stop offset="0" stopColor="#8a8f9c" stopOpacity="0.16" />
               <stop offset="1" stopColor="#7c5cd6" stopOpacity="0" />
             </linearGradient>
           </defs>
@@ -40,7 +40,7 @@ export function AreaChart() {
           <path d={`${a} L${xs[3]} ${BASE} L${xs[0]} ${BASE}Z`} fill="url(#s-area-a)" />
           <path d={`${b} L${xs[3]} ${BASE} L${xs[0]} ${BASE}Z`} fill="url(#s-area-b)" />
           <path d={a} fill="none" stroke="#e7a64c" strokeWidth="1.2" />
-          <path d={b} fill="none" stroke="#7c5cd6" strokeWidth="1.2" />
+          <path d={b} fill="none" stroke="#8a8f9c" strokeWidth="1.2" />
           {threatSeries.xLabels.map((l, i) => (
             <text key={l} className="s-axis" x={i === 3 ? W - 7 : xs[i]} y={146} textAnchor={anchors[i]}>
               {l}

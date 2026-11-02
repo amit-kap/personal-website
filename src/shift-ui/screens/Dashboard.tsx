@@ -10,6 +10,7 @@ import { BarChart } from '../primitives/BarChart'
 import { CalendarWidget } from '../primitives/CalendarWidget'
 import { FindingRow } from '../primitives/FindingRow'
 import { Nav } from '../primitives/Nav'
+import { ChartLegend } from '../primitives/ChartLegend'
 import { Panel } from '../primitives/Panel'
 import { StatTile } from '../primitives/StatTile'
 import { Treemap } from '../primitives/Treemap'
@@ -47,6 +48,7 @@ export function Dashboard() {
       <div
         className="s-body"
         data-dragging={dragging}
+        data-ask={askOpen}
         style={{ '--s-ask-w': `${askWidth}px` } as React.CSSProperties}
         onKeyDown={(e) => e.key === 'Escape' && askOpen && toggleAsk()}>
         <div className="s-main-wrap">
@@ -75,44 +77,60 @@ export function Dashboard() {
                 <Panel title="Data Access" insight="8 access categories detected across 19 vendors — 13 with critical-tier access">
                   <Treemap />
                 </Panel>
-                <Panel title="Vendor Rating Trend" insight="5 low-risk vendors vs 3 critical-risk vendors in current portfolio">
+                <Panel
+                  title="Vendor Rating Trend"
+                  action={
+                    <ChartLegend
+                      items={[
+                        { label: 'Previous', swatch: 'var(--s-prev)' },
+                        { label: 'Current', swatch: 'linear-gradient(90deg, var(--s-critical), var(--s-elevated), var(--s-low))' },
+                      ]}
+                    />
+                  }
+                  insight="5 low-risk vendors vs 3 critical-risk vendors in current portfolio">
                   <BarChart />
                 </Panel>
               </div>
 
-              <div className="s-group-label" style={{ marginTop: 28 }}>
-                Findings
-              </div>
+              <div className="s-group-label">Findings</div>
               <div className="s-tiles">
                 {findingTiles.map((t) => (
                   <StatTile key={t.label} {...t} />
                 ))}
               </div>
               <div className="s-panels">
-                <Panel title="Recent Findings" insight="5 critical findings — review immediately">
+                <Panel title="Recent Findings" action={<button type="button" className="s-link">View all</button>} insight="5 critical findings — review immediately">
                   <div className="s-rows">
                     {findings.map((f) => (
                       <FindingRow key={f.vendor} {...f} />
                     ))}
                   </div>
                 </Panel>
-                <Panel title="Threat Detection" insight="Alert volume up 2x over the last 8 weeks — spike driven by new shadow vendor detections">
+                <Panel
+                  title="Threat Detection"
+                  action={
+                    <ChartLegend
+                      items={[
+                        { label: 'New vendors', swatch: '#e7a64c' },
+                        { label: 'Other', swatch: '#8a8f9c' },
+                      ]}
+                    />
+                  }
+                  insight="Alert volume up 2x over the last 8 weeks — spike driven by new shadow vendor detections">
                   <AreaChart />
                 </Panel>
               </div>
 
-              <div className="s-group-label" style={{ marginTop: 28 }}>
-                Assessments
-              </div>
+              <div className="s-group-label">Assessments</div>
               <div className="s-tiles">
                 {assessmentTiles.map((t) => (
                   <StatTile key={t.label} {...t} />
                 ))}
               </div>
               <div className="s-panels">
-                <Panel title="Active Assessments" insight="1 vendor reply needs your review">
+                <Panel title="Active Assessments" action={<button type="button" className="s-link">View all</button>} insight="1 vendor reply needs your review">
                   <div className="s-rows">
-                    {assessments.map((a) => (
+                    {assessments.slice(0, 5).map((a) => (
                       <AssessmentRow key={a.vendor} {...a} />
                     ))}
                   </div>
@@ -121,13 +139,12 @@ export function Dashboard() {
                   <CalendarWidget />
                 </Panel>
               </div>
-              <div className="s-footline" />
             </div>
             </HighlightContext>
           </div>
           <AskFab open={askOpen} onToggle={toggleAsk} />
         </div>
-        <AskShift open={askOpen} width={askWidth} onWidth={setAskWidth} onDragging={setDragging} onHighlight={(ids, scroll) => setLit({ ids, scroll })} />
+        <AskShift open={askOpen} onClose={toggleAsk} width={askWidth} onWidth={setAskWidth} onDragging={setDragging} onHighlight={(ids, scroll) => setLit({ ids, scroll })} />
       </div>
     </>
   )

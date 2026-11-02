@@ -6,20 +6,23 @@ export interface StatTileData {
   trend: 'up' | 'down'
   label: string
   sub: string
+  delta: string
+  /* good = better for the user, bad = worse; colours the delta. */
+  tone: 'good' | 'bad' | 'neutral'
 }
 
 export const inventoryTiles: StatTileData[] = [
-  { value: 19, trend: 'up', label: 'Total Vendors', sub: 'Complete third-party inventory' },
-  { value: 4, trend: 'up', label: 'Newly Discovered', sub: 'Discovered this month' },
-  { value: 6, trend: 'up', label: 'Shadow Vendors', sub: 'Operating without approval' },
-  { value: 7, trend: 'up', label: 'AI Tools', sub: 'Third-party AI services' },
+  { value: 19, trend: 'up', label: 'Total Vendors', sub: 'Complete third-party inventory', delta: '+2 vs last month', tone: 'neutral' },
+  { value: 4, trend: 'up', label: 'Newly Discovered', sub: 'Discovered this month', delta: '+1 vs last month', tone: 'neutral' },
+  { value: 6, trend: 'up', label: 'Shadow Vendors', sub: 'Operating without approval', delta: '+2 vs last month', tone: 'bad' },
+  { value: 7, trend: 'up', label: 'AI Tools', sub: 'Third-party AI services', delta: '+1 vs last month', tone: 'neutral' },
 ]
 
 export const findingTiles: StatTileData[] = [
-  { value: 8, trend: 'up', label: 'Open Threats', sub: 'Unresolved threat alerts' },
-  { value: 6, trend: 'up', label: 'Critical Threats', sub: 'Priority third- and fourth-party threats' },
-  { value: 7, trend: 'down', label: 'Open Access Paths', sub: 'Unresolved access paths' },
-  { value: 6, trend: 'up', label: 'Critical Access Paths', sub: 'Priority third-party access paths' },
+  { value: 8, trend: 'up', label: 'Open Threats', sub: 'Unresolved threat alerts', delta: '+3 vs last week', tone: 'bad' },
+  { value: 6, trend: 'up', label: 'Critical Threats', sub: 'Priority third- and fourth-party threats', delta: '+2 vs last week', tone: 'bad' },
+  { value: 7, trend: 'down', label: 'Open Access Paths', sub: 'Unresolved access paths', delta: '-2 vs last week', tone: 'good' },
+  { value: 6, trend: 'up', label: 'Critical Access Paths', sub: 'Priority third-party access paths', delta: '+1 vs last week', tone: 'bad' },
 ]
 
 export type Severity = 'critical' | 'high' | 'elevated' | 'moderate' | 'low'
@@ -82,10 +85,10 @@ export const threatSeries = {
    reply #2 with 20 answers and 5 attachments) come from the assessment
    screenshot; the rest is placeholder to confirm. */
 export const assessmentTiles: StatTileData[] = [
-  { value: 6, trend: 'up', label: 'In Progress', sub: 'Assessments currently running' },
-  { value: 2, trend: 'up', label: 'Awaiting Vendor', sub: 'Inquiries sent, no reply yet' },
-  { value: 1, trend: 'up', label: 'Needs Your Decision', sub: 'Agent recommendation ready' },
-  { value: 3, trend: 'down', label: 'Completed', sub: 'Decided this month' },
+  { value: 6, trend: 'up', label: 'In Progress', sub: 'Assessments currently running', delta: '+2 vs last week', tone: 'neutral' },
+  { value: 2, trend: 'up', label: 'Awaiting Vendor', sub: 'Inquiries sent, no reply yet', delta: '+1 vs last week', tone: 'neutral' },
+  { value: 1, trend: 'up', label: 'Needs Your Decision', sub: 'Agent recommendation ready', delta: '+1 vs last week', tone: 'bad' },
+  { value: 3, trend: 'down', label: 'Completed', sub: 'Decided this month', delta: '-1 vs last month', tone: 'neutral' },
 ]
 
 export interface AssessmentItem {

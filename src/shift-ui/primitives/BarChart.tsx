@@ -25,7 +25,7 @@ export function BarChart() {
         <svg width={w} height={156} role="img" aria-label="Vendor rating trend">
           {[0, 2, 4, 6, 8].map((v) => (
             <g key={v}>
-              <line x1={LEFT} x2={w} y1={BASE - v * UNIT} y2={BASE - v * UNIT} stroke="var(--s-line-soft)" strokeDasharray={v === 0 ? undefined : '2 3'} />
+              {v > 0 && <line x1={LEFT} x2={w} y1={BASE - v * UNIT} y2={BASE - v * UNIT} stroke="var(--s-line-soft)" strokeDasharray="2 3" />}
               <text className="s-axis" x={3} y={BASE - v * UNIT + 3}>
                 {v}
               </text>
@@ -39,7 +39,7 @@ export function BarChart() {
               <g key={d.label}>
                 {!single && <rect className="s-bar" x={c - bar} y={BASE - d.prev * UNIT} width={bar} height={d.prev * UNIT} fill="var(--s-prev)" />}
                 <rect className="s-bar" x={nowX} y={BASE - d.now * UNIT} width={bar} height={d.now * UNIT} fill={color[d.severity]} />
-                <text className="s-axis" x={c} y={151} textAnchor="middle" style={{ fill: color[d.severity] }}>
+                <text className="s-axis" x={c} y={151} textAnchor="middle">
                   {d.label}
                 </text>
               </g>

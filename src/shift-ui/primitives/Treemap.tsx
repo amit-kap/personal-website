@@ -1,3 +1,4 @@
+import { useWidth } from '../useWidth'
 import { treemap, type TreemapTile } from '../fixtures/dashboard'
 
 const fill: Record<TreemapTile['severity'], string> = {
@@ -6,13 +7,19 @@ const fill: Record<TreemapTile['severity'], string> = {
   elevated: 'var(--s-elevated)',
 }
 
+/* Tiles narrower than this keep their label for hover. */
+const MIN_LABEL = 70
+
 export function Treemap() {
+  const [ref, w] = useWidth<HTMLDivElement>()
   return (
-    <div className="s-treemap">
+    <div ref={ref} className="s-treemap">
       {treemap.map((t) => (
         <div
           key={t.name}
           className="s-tm"
+          data-compact={w > 0 && (t.w / 696) * w < MIN_LABEL}
+          data-label={`${t.name} · ${t.vendors} vendors (${t.pct}%)`}
           style={{
             left: `${(t.x / 696) * 100}%`,
             top: t.y,

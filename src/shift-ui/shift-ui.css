@@ -90,7 +90,7 @@
   gap: 10px;
   height: 27px;
   padding: 0 13px;
-  font-size: 11.5px;
+  font-size: 12px;
   font-weight: 500;
 }
 .shift-ui .s-nav-link[data-active='true'] {
@@ -114,6 +114,11 @@
 /* Page */
 .shift-ui .s-page {
   padding: 0 18px 100px;
+  transition: padding-bottom 360ms var(--s-ease);
+}
+/* The floating button is hidden while the panel is open, so its room goes too. */
+.shift-ui .s-body[data-ask='true'] .s-page {
+  padding-bottom: 24px;
 }
 .shift-ui .s-title-row {
   height: 70px;
@@ -123,8 +128,8 @@
   padding-top: 33px;
 }
 .shift-ui .s-title {
-  font-size: 22px;
-  font-weight: 500;
+  font-size: 24px;
+  font-weight: 600;
   line-height: 1;
 }
 .shift-ui .s-meta {
@@ -138,10 +143,13 @@
 .shift-ui .s-group-label {
   font-family: 'Overused Grotesk', system-ui, sans-serif;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
   height: 20px;
   line-height: 20px;
-  margin-bottom: 11px;
+  margin-bottom: 12px;
+}
+.shift-ui .s-panels + .s-group-label {
+  margin-top: 40px;
 }
 
 /* Cards */
@@ -154,7 +162,7 @@
 .shift-ui .s-tiles {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 11px;
+  gap: 12px;
 }
 .shift-ui .s-tile {
   padding: 14px;
@@ -163,9 +171,44 @@
   display: flex;
   align-items: center;
   gap: 7px;
-  font-size: 22px;
+  font-size: 20px;
   font-weight: 500;
   line-height: 1;
+}
+.shift-ui .s-delta {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  min-width: 0;
+  color: var(--s-muted);
+}
+.shift-ui .s-delta[data-tone='bad'] {
+  color: var(--s-critical);
+}
+.shift-ui .s-delta[data-tone='good'] {
+  color: var(--s-low);
+}
+.shift-ui .s-delta {
+  position: relative;
+}
+.shift-ui .s-delta:hover::after,
+.shift-ui .s-delta:focus-visible::after {
+  content: attr(data-tip);
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  z-index: 4;
+  padding: 4px 6px;
+  border-radius: 4px;
+  background: var(--s-ink);
+  color: #fff;
+  font: 500 10px/1 system-ui, sans-serif;
+  white-space: nowrap;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+.shift-ui .s-delta:focus-visible {
+  outline: none;
 }
 .shift-ui .s-tile-label {
   margin-top: 6px;
@@ -181,8 +224,8 @@
 .shift-ui .s-panels {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 14px;
-  margin-top: 13px;
+  gap: 12px;
+  margin-top: 12px;
 }
 .shift-ui .s-panel {
   position: relative;
@@ -207,6 +250,37 @@
   line-height: 1;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+.shift-ui .s-link {
+  flex: none;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--s-muted);
+  cursor: pointer;
+  transition: color 140ms ease;
+}
+.shift-ui .s-link:hover {
+  color: var(--s-ink);
+}
+.shift-ui .s-legend {
+  display: flex;
+  gap: 12px;
+  font-size: 10px;
+  color: var(--s-muted);
+}
+.shift-ui .s-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.shift-ui .s-legend-item i {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
 }
 .shift-ui .s-panel-body {
   padding: 10px 13px 14px;
@@ -249,7 +323,7 @@
   justify-content: flex-end;
   padding: 0 11px 9px 11px;
   color: #fff;
-  font-size: 8.5px;
+  font-size: 10px;
   line-height: 1.25;
   overflow: hidden;
   white-space: nowrap;
@@ -260,11 +334,35 @@
 .shift-ui .s-tm span {
   opacity: 0.85;
 }
+.shift-ui .s-tm[data-compact='true'] {
+  overflow: visible;
+}
+.shift-ui .s-tm[data-compact='true'] > * {
+  display: none;
+}
+.shift-ui .s-tm[data-compact='true']:hover::after {
+  content: attr(data-label);
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 4px);
+  z-index: 4;
+  padding: 4px 6px;
+  border-radius: 4px;
+  background: var(--s-ink);
+  color: #fff;
+  font-size: 10px;
+  white-space: nowrap;
+  pointer-events: none;
+}
 
 /* Charts */
 .shift-ui .s-axis {
-  font-size: 8.5px;
-  fill: var(--s-faint);
+  font-size: 10px;
+  fill: var(--s-muted);
+}
+.shift-ui .s-end-label {
+  font-size: 10px;
+  font-weight: 500;
 }
 
 /* Findings */
@@ -274,12 +372,12 @@
 .shift-ui .s-row {
   position: relative;
   display: grid;
-  grid-template-columns: 10px minmax(120px, 160px) 118px minmax(0, 1fr) 48px 30px;
+  grid-template-columns: 10px minmax(120px, 160px) 120px minmax(0, 1fr) 48px 30px;
   align-items: center;
-  height: 31.7px;
+  height: 32px;
   border-bottom: 1px solid var(--s-line-soft);
-  font-size: 10.5px;
-  padding-left: 6px;
+  font-size: 12px;
+  padding: 0 6px;
 }
 .shift-ui .s-row:last-child {
   border-bottom: 0;
@@ -290,25 +388,27 @@
   background: var(--s-critical);
 }
 .shift-ui .s-vendor {
+  min-width: 0;
+  white-space: nowrap;
+  font-weight: 500;
   display: flex;
   align-items: center;
   gap: 6px;
 }
 .shift-ui .s-tag {
   display: inline-block;
+  justify-self: start;
   width: max-content;
-  padding: 1px 5px;
-  border-radius: 2px;
-  font-size: 9px;
+  max-width: 100%;
+  overflow: hidden;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: #eef0f4;
+  color: var(--s-ink-2);
+  font-size: 10px;
   font-weight: 500;
-}
-.shift-ui .s-tag[data-kind='fourth'] {
-  color: var(--s-agent);
-  background: #f1eafd;
-}
-.shift-ui .s-tag[data-kind='access'] {
-  color: #3b6fe0;
-  background: #e6efff;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .shift-ui .s-status {
   display: flex;
@@ -332,14 +432,15 @@
   justify-self: end;
   margin-right: 7px;
   color: var(--s-faint);
+  transition: color 140ms ease, transform 140ms ease;
+}
+.shift-ui .s-row:hover .s-chevron {
+  color: var(--s-ink);
+  transform: translateX(2px);
 }
 .shift-ui .s-chart {
   position: relative;
   margin-top: 12px;
-}
-.shift-ui .s-footline {
-  margin-top: 32px;
-  border-top: 1px solid var(--s-line-soft);
 }
 
 /* Hover states: every interactive-looking element answers the pointer. */
@@ -421,13 +522,6 @@
 .shift-ui .s-row:hover {
   background: #f7f7f9;
 }
-.shift-ui .s-row:hover .s-chevron {
-  color: var(--s-ink);
-  transform: translateX(2px);
-}
-.shift-ui .s-chevron {
-  transition: color 140ms ease, transform 140ms ease;
-}
 
 /* Assessments */
 .shift-ui .s-row-bar[data-tone='agent'] {
@@ -435,10 +529,6 @@
 }
 .shift-ui .s-row-bar[data-tone='idle'] {
   background: var(--s-prev);
-}
-.shift-ui .s-tag[data-kind='idle'] {
-  color: var(--s-ink-2);
-  background: #efeff1;
 }
 .shift-ui .s-progress {
   display: flex;
@@ -489,8 +579,9 @@
 .shift-ui .s-cal-dow {
   height: 16px;
   text-align: center;
-  font-size: 9.5px;
-  color: var(--s-faint);
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--s-muted);
 }
 .shift-ui .s-cal-day {
   display: flex;
@@ -502,7 +593,7 @@
   border-radius: 4px;
   background: none;
   font: inherit;
-  font-size: 10.5px;
+  font-size: 12px;
   color: var(--s-ink);
   cursor: default;
   transition: background-color 140ms ease, border-color 140ms ease;
@@ -512,14 +603,13 @@
 }
 .shift-ui .s-cal-day[data-event='true'] {
   cursor: pointer;
-  background: #f7f7f9;
 }
 .shift-ui .s-cal-day[data-event='true']:hover {
-  background: #efeff2;
+  background: #f4f4f6;
 }
 .shift-ui .s-cal-day[data-selected='true'] {
-  background: var(--s-agent-bg);
-  border-color: var(--s-agent);
+  background: #f4f4f6;
+  border-color: var(--s-ink);
 }
 .shift-ui .s-cal-detail {
   display: flex;
@@ -528,9 +618,9 @@
   margin-top: 8px;
   padding: 7px 9px;
   border-radius: 4px;
-  background: var(--s-agent-bg);
+  background: #f4f4f6;
   font-size: 10px;
-  color: var(--s-agent);
+  color: var(--s-muted);
 }
 .shift-ui .s-cal-detail b {
   font-weight: 500;
@@ -575,9 +665,9 @@
 }
 @container panel (max-width: 560px) {
   .shift-ui .s-row {
-    grid-template-columns: 10px minmax(0, 140px) minmax(0, 1fr) 48px 24px;
+    grid-template-columns: 10px minmax(0, 120px) 120px minmax(0, 1fr) 24px;
   }
-  .shift-ui .s-row .s-tag {
+  .shift-ui .s-row > :nth-last-child(2) {
     display: none;
   }
   .shift-ui .s-progress-track {
@@ -615,7 +705,7 @@
 /* Floating button */
 .shift-ui .s-fab {
   position: absolute;
-  bottom: 28px;
+  bottom: 24px;
   left: 50%;
   z-index: 5;
   display: flex;
@@ -639,6 +729,13 @@
 }
 .shift-ui .s-fab-icon {
   color: var(--s-agent);
+}
+/* The panel has its own close button, so the pill steps aside while it is open. */
+.shift-ui .s-fab[data-open='true'] {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 160ms ease, visibility 0s 160ms, bottom 360ms var(--s-ease);
 }
 .shift-ui .s-fab:hover {
   background: #f7f7f9;
@@ -759,9 +856,15 @@
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  height: 48px;
-  padding: 0 14px 0 14px;
+  height: 44px;
+  padding: 0 16px;
+  border-bottom: 1px solid var(--s-line-soft);
   flex: none;
+}
+.shift-ui .s-ask-actions {
+  display: flex;
+  flex: none;
+  gap: 4px;
 }
 .shift-ui .s-ask-title {
   min-width: 0;
@@ -778,13 +881,13 @@
   min-height: 0;
   overflow-y: auto;
   overscroll-behavior: contain;
-  padding: 0 14px 14px;
+  padding: 12px 16px 16px;
 }
 .shift-ui .s-sections {
   display: flex;
   flex-direction: column;
-  gap: 18px;
-  padding-top: 6px;
+  gap: 16px;
+  padding-top: 0;
 }
 .shift-ui .s-section h4 {
   display: flex;
@@ -806,7 +909,7 @@
   border-radius: 999px;
   background: #fff;
   font: inherit;
-  font-size: 11.5px;
+  font-size: 12px;
   line-height: 1.3;
   color: var(--s-ink);
   text-align: left;
@@ -932,7 +1035,7 @@
 
 /* Composer: a floating card, two rows of text with its controls inside. */
 .shift-ui .s-composer {
-  padding: 0 14px 14px;
+  padding: 0 16px 16px;
 }
 .shift-ui .s-compose-card {
   border: 1px solid color-mix(in srgb, var(--s-agent) 32%, transparent);
@@ -1045,7 +1148,7 @@
   border-radius: 4px;
   background: none;
   font: inherit;
-  font-size: 11.5px;
+  font-size: 12px;
   color: var(--s-ink);
   text-align: left;
   white-space: nowrap;
@@ -1100,14 +1203,11 @@
   .shift-ui .s-ask-resize {
     display: none;
   }
-  /* Close rides on top of the sheet instead of under it. */
-  .shift-ui .s-fab[data-open='true'] {
-    bottom: calc(74% + 12px);
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .shift-ui .s-ask,
+  .shift-ui .s-page,
   .shift-ui .s-fab,
   .shift-ui .s-fab-label,
   .shift-ui .s-fab-icon > *,
