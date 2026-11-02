@@ -16,7 +16,7 @@ export function AreaChart() {
   const b = line(threatSeries.other)
   const anchors = ['start', 'middle', 'middle', 'end'] as const
   return (
-    <div ref={ref} className="s-chart" style={{ top: 68, height: 156 }}>
+    <div ref={ref} className="s-chart" style={{ height: 156 }}>
       {W > 0 && (
         <svg width={W} height={156} role="img" aria-label="Threat detection">
           <defs>

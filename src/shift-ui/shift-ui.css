@@ -186,21 +186,35 @@
 }
 .shift-ui .s-panel {
   position: relative;
-  padding: 14px 13px 14px;
-  min-height: 233px;
+  padding: 0;
+  min-height: 245px;
   min-width: 0;
   container: panel / inline-size;
 }
+.shift-ui .s-panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 36px;
+  padding: 0 13px;
+  border-bottom: 1px solid var(--s-line-soft);
+}
 .shift-ui .s-panel-title {
+  min-width: 0;
+  overflow: hidden;
   font-size: 12px;
   font-weight: 500;
   line-height: 1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.shift-ui .s-panel-body {
+  padding: 10px 13px 14px;
 }
 .shift-ui .s-chip {
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  margin-top: 7px;
   height: 20px;
   padding: 0 6px 0 5px;
   border-radius: 4px;
@@ -225,7 +239,7 @@
 .shift-ui .s-treemap {
   position: relative;
   height: 154px;
-  margin: 14px 0 0 1px;
+  margin: 12px 0 0 1px;
 }
 .shift-ui .s-tm {
   position: absolute;
@@ -255,7 +269,7 @@
 
 /* Findings */
 .shift-ui .s-rows {
-  margin-top: 13px;
+  margin-top: 12px;
 }
 .shift-ui .s-row {
   position: relative;
@@ -320,9 +334,8 @@
   color: var(--s-faint);
 }
 .shift-ui .s-chart {
-  position: absolute;
-  left: 13px;
-  right: 13px;
+  position: relative;
+  margin-top: 12px;
 }
 .shift-ui .s-footline {
   margin-top: 32px;
@@ -453,7 +466,7 @@
 
 /* Calendar */
 .shift-ui .s-cal {
-  margin-top: 10px;
+  margin-top: 12px;
 }
 .shift-ui .s-cal-head {
   display: flex;
@@ -544,6 +557,20 @@
 @container shift (max-width: 600px) {
   .shift-ui .s-nav-links {
     display: none;
+  }
+}
+@container panel (max-width: 420px) {
+  .shift-ui .s-chip {
+    align-items: flex-start;
+    height: auto;
+    padding: 3px 6px 3px 5px;
+    line-height: 14px;
+  }
+  .shift-ui .s-chip-text {
+    white-space: normal;
+  }
+  .shift-ui .s-chip svg {
+    margin-top: -1px;
   }
 }
 @container panel (max-width: 560px) {

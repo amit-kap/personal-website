@@ -20,7 +20,7 @@ export function BarChart() {
   const slot = (w - LEFT) / ratingTrend.length
   const bar = Math.max(14, Math.min(40, slot / 3.4))
   return (
-    <div ref={ref} className="s-chart" style={{ top: 63, height: 156 }}>
+    <div ref={ref} className="s-chart" style={{ height: 156 }}>
       {w > 0 && (
         <svg width={w} height={156} role="img" aria-label="Vendor rating trend">
           {[0, 2, 4, 6, 8].map((v) => (
