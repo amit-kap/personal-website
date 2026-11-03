@@ -1,0 +1,314 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<!-- Offline storyboard: the story as held 2D stills with hard cuts — timing and inner-animation slots, no card/flips.
+     Each screenshot is the AFTER state of its moment; the BEFORE state is derived from it (element removed / covered).
+     Served from the repo root (launch.json "shift-motion-preview"): /scripts/shift-motion/offline.html?play -->
+<style>
+  @font-face { font-family: Geist; font-weight: 400; src: url(/scripts/shift-motion/fonts/geist-sans-latin-400-normal.woff2) format('woff2'); }
+  @font-face { font-family: Geist; font-weight: 500; src: url(/scripts/shift-motion/fonts/geist-sans-latin-500-normal.woff2) format('woff2'); }
+  @font-face { font-family: Geist; font-weight: 600; src: url(/scripts/shift-motion/fonts/geist-sans-latin-600-normal.woff2) format('woff2'); }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1920px; height: 1080px; overflow: hidden; background: #e9e9ec; }
+  #frame { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; overflow: hidden; background: #e9e9ec; }
+  #page { position: absolute; left: 0; top: 0; transform-origin: 0 0; background-repeat: no-repeat; box-shadow: 0 0 0 1px rgba(0,0,0,.06), 0 30px 80px -30px rgba(0,0,0,.25); }
+  #page > * { position: absolute; }
+  .slice { background-repeat: no-repeat; }
+  #cap { position: absolute; left: 24px; bottom: 20px; padding: 8px 14px; border-radius: 8px; background: rgba(17,17,20,.82); color: #fff;
+    font: 500 22px/1.2 Geist, sans-serif; letter-spacing: -.01em; }
+  #cap b { color: #9cf; font-weight: 600; margin-right: 10px; }
+  #end { position: absolute; inset: 0; display: none; align-items: center; justify-content: center; gap: 30px; background: #fff; }
+  #end img { width: 150px; height: 150px; }
+  #end span { font: 600 168px/1 Geist, sans-serif; color: #09090b; letter-spacing: -.045em; margin-top: -10px; }
+  /* ?card — the same shots on the glass card (flips instead of cuts, the card pushes in instead of a 2D camera) */
+  body.card #frame { background: radial-gradient(ellipse 1250px 860px at 50% 40%, #ffffff 0%, #f7f7f8 30%, #ebebee 62%, #d9dade 100%); }
+  #floor { position: absolute; left: 50%; width: 1600px; height: 80px; margin-left: -800px; border-radius: 50%; display: none;
+    background: radial-gradient(closest-side, rgba(30,32,40,.30), rgba(30,32,40,0)); filter: blur(12px); }
+  #stage { position: absolute; left: 0; top: 0; width: 1920px; height: 932px; perspective: 2600px; }
+  body.card #stage { -webkit-box-reflect: below 0 linear-gradient(transparent 72%, rgba(0,0,0,.16)); }
+  body:not(.card) #stage { height: 1080px; }
+  body.card #floor { display: block; }
+  body.card #card { position: absolute; border-radius: 26px; transform-origin: 50% 50%;
+    background: linear-gradient(165deg, rgba(255,255,255,.92) 0%, rgba(250,250,252,.62) 38%, rgba(232,233,238,.72) 100%);
+    box-shadow: inset 0 1.5px 0 #fff, inset 0 -1px 0 rgba(170,172,182,.35), inset 0 0 0 1px rgba(255,255,255,.55),
+      0 0 0 1px rgba(20,22,30,.07), 0 70px 110px -40px rgba(25,28,40,.38), 0 24px 46px -22px rgba(25,28,40,.22); }
+  body.card #screen { position: absolute; left: 12px; top: 12px; border-radius: 16px; overflow: hidden; background: #fff; box-shadow: 0 0 0 1px rgba(20,22,30,.09); }
+  body.card #page { box-shadow: none; }
+  /* browser title bar — the site's .winbar (#fbfbfa, hairline border, red/yellow/green dots), scaled to the card */
+  #winbar { display: none; position: absolute; left: 0; top: 0; right: 0; height: 40px; padding: 0 20px; gap: 11px; align-items: center;
+    background: #fbfbfa; border-bottom: 1px solid rgba(17,17,17,.08); }
+  body.card #winbar { display: flex; }
+  #winbar i { width: 13px; height: 13px; border-radius: 999px; }
+  #winbar i:nth-child(1) { background: #f0685e; } #winbar i:nth-child(2) { background: #f6bf4f; } #winbar i:nth-child(3) { background: #5fc454; }
+  body.card #end img { width: 120px; height: 120px; }
+  body.card #end span { font-size: 134px; }
+</style>
+</head>
+<body>
+<div id="frame"><div id="floor"></div><div id="stage"><div id="card"><div id="screen"><div id="winbar"><i></i><i></i><i></i></div><div id="page"></div><div id="end"><img src="/src/content/experience/shift/icon.svg"><span>Shift</span></div></div></div></div><div id="cap"></div></div>
+<script>
+const IMG = '/src/content/experience/shift/';
+const SCREENS = {
+  '01': ['01-shift-dashboard.webp', 706.3], '02': ['02-inventory-vendors-page.webp', 701.5], '03': ['03-inventory-vendors-card.png', 704.6],
+  '04': ['04-vendor-access-graph.webp', 705.8], '05': ['05-threat-center.webp', 705.8], '06': ['06-integrations-grid.jpg', 700],
+  '07': ['07-assessment-flow-1.webp', 705.8],
+};
+const BASE = 1728 / 1400;          // px per preview unit in the wide shot (page at 90% of the frame width)
+const RED = '#ef4444', GREEN = '#22c55e', ACCENT = '#7c3aed';
+
+// ---------------------------------------------------------------- overlays (page units, 1400 wide)
+// before-states: the screenshot is the AFTER state, so BEFORE removes/covers the element that the moment adds
+const before01 = [
+  ['patch', [532, 113, 20, 22], { text: '5', font: '500 17.5px Geist', pad: [3, 1] }],          // Shadow Vendors 5 (→ 6)
+  ['move', [16, 548, 504, 89], 0, -22.2], ['patch', [16, 614.6, 504, 23]],                    // Recent Findings without the top row
+];
+const before05 = [['move', [12, 296, 270, 410], 0, -63], ['patch', [12, 643, 270, 63], { bg: '#fff' }]];   // list without the new top threat
+const before07 = [['patch', [347, 549.5, 21, 16], { text: '4', font: '500 14.5px Geist', pad: [1, 0.5] }]];  // New answers 4 (→ 20)
+const ring = (r, color = ACCENT, rad = 6) => ['ring', r, { color, rad }];
+
+// ---------------------------------------------------------------- shot list
+// [screen, seconds, view, overlays, caption, kind, opts]
+// view: W (whole page) or V(cx, cy, s). A 'move' shot animates the camera from the previous shot's view to its own
+// (opts.hop: the zoom it eases out to mid-move, so a long travel reads as one camera following on the same page).
+// kind: build | hold | move | moment — build/moment are the slots the real animation will fill.
+const W = 'wide', V = (cx, cy, s) => ({ cx, cy, s });
+const STAT = V(654, 138, 2.6), FIND = V(268, 560, 2.4), ROW = V(330, 521, 2.3), SCORE = V(600, 230, 2.3);
+const NODE = V(724.5, 212, 3.0), LIST = V(330, 330, 2.0), JIRA = V(801, 457, 2.6), BOXV = V(420, 535, 2.6);
+const jiraOn = [['copy', [1288, 405, 90, 26], -471.6, 0], ['copy', [1165.5, 486.5, 215.3, 35], -471.6, 0]];
+const SHOTS = [
+  ['blank', 0.5, W, [], 'Intro — card arrives', 'hold'],
+
+  ['01', 1.2, W, [...before01, ['wave', 0.55]], 'Dashboard builds (wave top → bottom)', 'build'],
+  ['01', 0.4, W, before01, 'Dashboard — settled', 'hold'],
+  ['01', 0.5, STAT, before01, 'Push in: Shadow Vendors', 'move'],
+  ['01', 0.6, STAT, [...before01.slice(1), ring([526, 106, 255, 64])], 'Shadow Vendors ticks 5 → 6', 'moment'],
+  ['01', 0.8, FIND, before01.slice(1), 'Camera follows the alert down to Recent Findings', 'move', { hop: 1.45 }],
+  ['01', 1.4, FIND, [ring([16, 525, 504, 23], RED, 3)], 'New critical finding lands on top — rows shift down', 'moment'],
+  ['01', 0.4, FIND, [], 'Hold', 'hold'],
+
+  ['02', 1.1, W, [['wave', 0.55]], 'Vendors table builds', 'build'],
+  ['02', 0.3, W, [], 'Vendors — settled', 'hold'],
+  ['02', 0.5, ROW, [], 'Push in: the vendor row', 'move'],
+  ['02', 0.6, ROW, [['tint', [13, 506, 1366, 32], 'rgba(124,58,237,.07)'], ring([13, 506, 1366, 32], ACCENT, 4)], 'Row is selected', 'moment'],
+  ['02', 0.4, W, [['tint', [13, 506, 1366, 32], 'rgba(124,58,237,.07)']], 'Pull back', 'move'],
+  ['02', 0.8, W, [['tint', [13, 506, 1366, 32], 'rgba(124,58,237,.07)'], ['drawer', '03']], 'Vendor card slides in over the table', 'moment'],
+  ['03', 0.5, SCORE, [['annulus', 554.6, 237, 52.5, 6.5]], 'Push in: Security Score', 'move'],
+  ['03', 1.3, SCORE, [], 'Score ring sweeps in → B · 74, grades land', 'moment'],
+  ['03', 0.4, SCORE, [], 'Hold', 'hold'],
+
+  ['04', 1.2, W, [['wave', 0.55]], 'Access graph builds', 'build'],
+  ['04', 0.3, W, [], 'Access graph — settled', 'hold'],
+  ['04', 0.6, NODE, [], 'Push in: the Sites resource node', 'move'],
+  ['04', 1.2, NODE, [ring([649, 169, 151, 86], RED, 5), ring([715, 204.5, 58, 13.5], RED, 7)], 'Sites highlights — Customer PII is reachable', 'moment'],
+  ['04', 0.5, NODE, [ring([649, 169, 151, 86], RED, 5)], 'Hold', 'hold'],
+
+  ['05', 1.1, W, [...before05, ['wave', 0.55]], 'Threat center builds', 'build'],
+  ['05', 0.3, W, before05, 'Threat center — settled', 'hold'],
+  ['05', 0.5, LIST, before05, 'Push in: the threat list', 'move'],
+  ['05', 1.4, LIST, [ring([13, 233, 268, 58], RED, 5)], 'Critical threat slides in on top, pulses red', 'moment'],
+  ['05', 0.4, LIST, [], 'Hold', 'hold'],
+
+  ['06', 1.1, W, [['wave', 0.55]], 'Integrations build', 'build'],
+  ['06', 0.3, W, [], 'Integrations — settled', 'hold'],
+  ['06', 0.5, JIRA, [], 'Push in: Jira (Available)', 'move'],
+  ['06', 0.5, JIRA, [['tint', [694, 487, 214.5, 34.5], 'rgba(24,24,27,.07)'], ['cursor', 812, 506]], '"Add Connection" clicked — connecting', 'moment'],
+  ['06', 1.2, JIRA, [...jiraOn, ring([693.4, 392.6, 216.4, 130], GREEN, 3)], 'Connected — Manage / Disconnect', 'moment'],
+  ['06', 0.4, JIRA, jiraOn, 'Hold', 'hold'],
+
+  ['07', 1.1, W, [...before07, ['wave', 0.55]], 'Assessment builds', 'build'],
+  ['07', 0.3, W, before07, 'Assessment — settled', 'hold'],
+  ['07', 0.5, BOXV, before07, 'Push in: the vendor reply', 'move'],
+  ['07', 0.9, BOXV, [ring([330, 545, 40, 24], ACCENT, 5)], 'New answers 4 → 20', 'moment'],
+  ['07', 0.5, BOXV, [['cursor', 318, 620]], 'Cursor moves to "Review reply"', 'moment'],
+  ['07', 0.5, BOXV, [['tint', [262.5, 599.4, 77.9, 20.1], 'rgba(255,255,255,.22)'], ['cursor', 302, 611]], 'Click', 'moment'],
+  ['07', 0.4, BOXV, [['cursor', 302, 611]], 'Hold', 'hold'],
+
+  ['end', 2.5, W, [], 'End — Shift mark (loops)', 'hold'],
+];
+
+// ---------------------------------------------------------------- render
+const page = document.getElementById('page'), cap = document.getElementById('cap'), end = document.getElementById('end');
+const capOn = new URLSearchParams(location.search).get('captions') !== '0';
+let at = 0; const starts = SHOTS.map(s => { const a = at; at += s[1]; return a; });
+const DURATION = at;
+const inOut = x => x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+const viewOf = i => { const [scr, , v] = SHOTS[i]; const H = (SCREENS[scr] || [0, 706])[1]; return v === W ? { cx: 700, cy: H / 2, s: 1 } : v; };
+const el = (css = {}) => { const e = document.createElement('div'); Object.assign(e.style, css); page.append(e); return e; };
+const rectCss = ([x, y, w, h]) => ({ left: x + 'px', top: y + 'px', width: w + 'px', height: h + 'px' });
+const sliceCss = (file, H, [x, y, w, h]) => ({ ...rectCss([x, y, w, h]), backgroundImage: `url(${IMG}${file})`, backgroundSize: `1400px ${H}px`, backgroundPosition: `${-x}px ${-y}px`, backgroundRepeat: 'no-repeat' });
+const CURSOR = '<svg viewBox="0 0 12 18" width="12" height="18" style="overflow:visible"><path d="M0 0 L0 14 L3.6 10.8 L6.2 16.6 L8.4 15.6 L5.9 9.9 L10.8 9.9 Z" fill="#111" stroke="#fff" stroke-width="1.1" stroke-linejoin="round"/></svg>';
+let shown = -1, anims = [];   // anims: per-frame updates for the current shot's animated overlays
+function show(i) {
+  if (i === shown) return; shown = i;
+  const [scr, , , ovs, caption, kind] = SHOTS[i];
+  page.innerHTML = ''; page.style.webkitMaskImage = ''; anims = [];
+  end.style.display = scr === 'end' ? 'flex' : 'none';
+  page.style.display = scr in SCREENS ? 'block' : 'none';
+  cap.style.display = capOn ? 'block' : 'none';
+  cap.innerHTML = `<b>${scr === 'blank' || scr === 'end' ? '' : scr} ${kind.toUpperCase()} · ${SHOTS[i][1].toFixed(1)}s</b>${caption}`;
+  if (!(scr in SCREENS)) return;
+  const [file, H] = SCREENS[scr];
+  Object.assign(page.style, { width: '1400px', height: H + 'px', backgroundImage: `url(${IMG}${file})`, backgroundSize: `1400px ${H}px` });
+  for (const [type, ...a] of ovs) {
+    if (type === 'patch') { const [r, o = {}] = a; const e = el({ ...rectCss(r), background: o.bg || '#fff' });
+      if (o.text) Object.assign(e.style, { font: o.font, color: '#09090b', padding: `${o.pad[1]}px ${o.pad[0]}px`, lineHeight: '1' }), e.textContent = o.text; }
+    if (type === 'move' || type === 'copy') { const [r, dx, dy] = a; const e = el(sliceCss(file, H, r)); e.style.left = r[0] + dx + 'px'; e.style.top = r[1] + dy + 'px'; }
+    if (type === 'tint') { const [r, c] = a; el({ ...rectCss(r), background: c }); }
+    if (type === 'ring') { const [r, o] = a; el({ ...rectCss(r), borderRadius: o.rad + 'px', boxShadow: `0 0 0 1.6px ${o.color}, 0 0 0 5px ${o.color}22, 0 0 18px ${o.color}55` }); }
+    if (type === 'annulus') { const [cx, cy, R, t] = a; el({ ...rectCss([cx - R - 0.5, cy - R - 0.5, 2 * R + 1, 2 * R + 1]), borderRadius: '50%', border: `${t}px solid #fff` }); }
+    if (type === 'cursor') { const [x, y] = a; el({ left: x + 'px', top: y + 'px', width: '12px', height: '18px', filter: 'drop-shadow(0 1px 1.5px rgba(0,0,0,.3))' }).innerHTML = CURSOR; }
+    if (type === 'path') { const [d, c] = a; const s = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      s.setAttribute('viewBox', `0 0 1400 ${H}`); s.setAttribute('width', 1400); s.setAttribute('height', H); s.style.cssText = 'position:absolute;left:0;top:0;overflow:visible';
+      s.innerHTML = `<path d="${d}" fill="none" stroke="${c}" stroke-opacity=".25" stroke-width="5" stroke-linecap="round"/><path d="${d}" fill="none" stroke="${c}" stroke-width="1.8" stroke-linecap="round"/>`; page.append(s); }
+    if (type === 'drawer') {   // the next screen's side panel slides in from the right over a scrim (02 → 03)
+      const [f2, H2] = SCREENS[a[0]];
+      const scrim = el({ left: 0, top: 0, width: '1400px', height: H + 'px', background: 'rgba(40,40,46,.42)' });
+      const left = el(sliceCss(f2, H2, [0, 0, 350, H2]));
+      const wrap = el({ left: 0, top: 0, width: '1400px', height: H2 + 'px' });
+      const pan = document.createElement('div'); wrap.append(pan);
+      Object.assign(pan.style, { position: 'absolute', ...sliceCss(f2, H2, [350, 0, 1050, H2]), boxShadow: '-30px 0 60px rgba(0,0,0,.12)' });
+      const ann = document.createElement('div'); wrap.append(ann);   // score ring not drawn yet
+      Object.assign(ann.style, { position: 'absolute', ...rectCss([554.6 - 53, 237 - 53, 106, 106]), borderRadius: '50%', border: '6.5px solid #fff' });
+      const c = x => Math.min(1, Math.max(0, x));
+      anims.push(u => {
+        scrim.style.opacity = c(u / 0.4);
+        left.style.opacity = 1 - Math.pow(1 - c((u - 0.1) / 0.5), 3);
+        wrap.style.transform = `translateX(${Math.pow(1 - c(u / 0.6), 5) * 1060}px)`;
+      });
+    }
+    if (type === 'wave') { const [q] = a; const e = q * 100; page.style.webkitMaskImage = `linear-gradient(180deg, #000 ${e}%, transparent ${e + 12}%)`; }
+  }
+}
+// camera: held per shot; a 'move' shot eases from the previous shot's view (zoom interpolated in log space,
+// optionally easing out to opts.hop mid-move)
+function camera(i, u) {
+  let v = viewOf(i);
+  const [scr, dur, , , , kind, o = {}] = SHOTS[i];
+  if (kind === 'move' && i > 0) {
+    const a = viewOf(i - 1), e = inOut(Math.min(1, u / dur));
+    let ls = Math.log(a.s) + (Math.log(v.s) - Math.log(a.s)) * e;
+    if (o.hop) ls -= (Math.min(Math.log(a.s), Math.log(v.s)) - Math.log(o.hop)) * Math.sin(Math.PI * e);
+    v = { cx: a.cx + (v.cx - a.cx) * e, cy: a.cy + (v.cy - a.cy) * e, s: Math.exp(ls) };
+  }
+  const k = BASE * v.s;
+  page.style.transform = `translate(${960 - v.cx * k}px, ${540 - v.cy * k}px) scale(${k})`;
+}
+window.DURATION = DURATION;
+const CARD = new URLSearchParams(location.search).has('card');
+const shotAt = t => { let i = 0; while (i < SHOTS.length - 1 && t >= starts[i + 1]) i++; return i; };
+window.render = t => { const i = shotAt(t); show(i); if (CARD) cardAt(t, i); else camera(i, t - starts[i]); anims.forEach(f => f(t - starts[shown])); };
+
+// ---------------------------------------------------------------- card mode
+// The page sits flat on the card's screen; the shot's camera view becomes a push of the whole card (the view's
+// target point is pivoted to the frame centre). A screen change flips the card instead of cutting (02 → 03 is the
+// drawer, so it just swaps); the card tumbles in from behind the camera and back out at the end, so it loops.
+const KB = 1560 / 1400, BAR = 40, PADC = 12, BOTTOM = 908, FLIP = 0.75, INTRO = 1.4, OUTRO = 0.9;
+const cardEl = document.getElementById('card'), screenEl = document.getElementById('screen'), floorEl = document.getElementById('floor');
+const grp = i => { const s = SHOTS[i][0]; return s === '03' ? '02' : s; };
+const FLIPS = [];  // [time, axis]
+for (let i = 1; i < SHOTS.length; i++) if (grp(i) !== grp(i - 1) && grp(i - 1) !== 'blank') FLIPS.push([starts[i], FLIPS.length % 2 ? 'x' : 'y']);
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x)), Pq = (t, a, b) => clamp((t - a) / (b - a)), lerp = (a, b, x) => a + (b - a) * x;
+const out = x => 1 - Math.pow(1 - x, 3), in3 = x => x * x * x, sine = x => (1 - Math.cos(Math.PI * x)) / 2;
+const inOut5 = x => x < .5 ? 16 * x ** 5 : 1 - Math.pow(-2 * x + 2, 5) / 2;
+const hOf = i => (SCREENS[SHOTS[i][0]] || SCREENS['01'])[1];
+function viewAt(i, u) {   // the 2D camera view of shot i at local time u (same maths as camera())
+  let v = viewOf(i);
+  const [, dur, , , , kind, o = {}] = SHOTS[i];
+  if (kind === 'move' && i > 0) {
+    const a = viewOf(i - 1), e = inOut(Math.min(1, u / dur));
+    let ls = Math.log(a.s) + (Math.log(v.s) - Math.log(a.s)) * e;
+    if (o.hop) ls -= (Math.min(Math.log(a.s), Math.log(v.s)) - Math.log(o.hop)) * Math.sin(Math.PI * e);
+    v = { cx: a.cx + (v.cx - a.cx) * e, cy: a.cy + (v.cy - a.cy) * e, s: Math.exp(ls) };
+  }
+  if (SHOTS[i][0] === 'blank' || SHOTS[i][0] === 'end') v = { cx: 700, cy: 353, s: 1 };
+  return v;
+}
+function cardAt(t, i) {
+  let face = i, v = viewAt(i, t - starts[i]), ang = 0, axis = 'y';
+  const f = FLIPS.find(([T]) => Math.abs(t - T) < FLIP / 2);
+  if (f) {
+    const [T, ax] = f, q = inOut5(Pq(t, T - FLIP / 2, T + FLIP / 2));
+    axis = ax; ang = 180 * q;
+    if (ang < 90) { face = shotAt(T - 0.001); const vA = viewAt(face, SHOTS[face][1]), k = clamp(2 * q);   // release the zoom while turning away
+      v = { cx: lerp(vA.cx, 700, k), cy: lerp(vA.cy, hOf(face) / 2, k), s: Math.exp(lerp(Math.log(vA.s), 0, k)) }; }
+    else { face = shotAt(T + 0.001); v = viewAt(face, 0); ang -= 180; }
+    show(face);
+  }
+  const h = hOf(face), W = 1560 + 2 * PADC, H = h * KB + BAR + 2 * PADC;
+  // gentle pose drift per screen, calmer while pushed in
+  const g0 = starts[SHOTS.findIndex((_, k) => grp(k) === grp(face))], pu = Pq(t, g0, g0 + 5);
+  const zk = clamp((v.s - 1) / 0.8), calm = 1 - 0.75 * zk;
+  let RX = (6 - 2 * sine(pu)) * calm, RY = (-10 + 13 * sine(pu)) * calm;
+  if (axis === 'x') RX += ang; else RY += ang;
+  const lift = Math.sin(Math.PI * Math.abs(ang) / 180);
+  let s = v.s * (1 - 0.08 * lift * (1 - zk)), z = -200 * lift * (1 - 0.8 * zk);
+  const cy0 = BOTTOM - H / 2, qx = (v.cx - 700) * KB * s, qy = ((v.cy - h / 2) * KB + BAR / 2) * s;
+  let dx = -qx, dy = -qy + (540 - cy0) * zk;
+  // intro: tumble in from behind the camera; outro: tumble back out the same way (loops)
+  const from = { RX: RX + 180, RY: RY - 24, z: 1900, dy: -120 };
+  if (t < INTRO) { const r = 1 - out(Pq(t, 0, INTRO)); RX = lerp(RX, from.RX, r); RY = lerp(RY, from.RY, r); z = lerp(z, from.z, r); dy = lerp(dy, from.dy, r); }
+  if (t > DURATION - OUTRO) { const r = in3(Pq(t, DURATION - OUTRO, DURATION)); RX = lerp(RX, from.RX - 360, r); RY = lerp(RY, from.RY, r); z = lerp(z, from.z, r); dy = lerp(dy, from.dy, r); }
+  const back = Math.cos(RX * Math.PI / 180) * Math.cos(RY * Math.PI / 180) < 0;
+  page.style.visibility = end.style.visibility = back ? 'hidden' : 'visible';
+  window.cardState = { W, H, RX, RY, z, s, dx, dy, px: qx, py: qy, screen: [1560, h * KB + BAR] };   // read by blender/export-offline.mjs
+  Object.assign(cardEl.style, { width: W + 'px', height: H + 'px', left: 960 - W / 2 + 'px', top: cy0 - H / 2 + 'px',
+    transform: `translate3d(${dx}px,${dy}px,${z}px) translate(${qx}px,${qy}px) rotateX(${RX}deg) rotateY(${RY}deg) translate(${-qx}px,${-qy}px) scale(${s})` });
+  Object.assign(screenEl.style, { width: 1560 + 'px', height: h * KB + BAR + 'px' });
+  page.style.top = end.style.top = BAR + 'px';
+  page.style.transform = `scale(${KB})`;
+  const wx = Math.abs(Math.cos(RY * Math.PI / 180));
+  floorEl.style.top = BOTTOM - 26 + 'px';
+  floorEl.style.transform = `scale(${(W / 1600) * Math.min(s, 1.2) * Math.max(wx, 0.06)}, ${0.8 + 0.2 * Math.abs(Math.cos(RX * Math.PI / 180))})`;
+  floorEl.style.opacity = (1 - zk) * (0.6 + 0.4 * wx) * (1 - Math.min(1, Math.abs(z) / 1400) * 0.85);
+  document.getElementById('stage').style.webkitBoxReflect = `below 0 linear-gradient(transparent 72%, rgba(0,0,0,${(0.16 * (1 - zk)).toFixed(3)}))`;
+}
+// ?bg=<image url> — try a background plate behind the card (cover-fit)
+const BG = new URLSearchParams(location.search).get('bg');
+if (CARD && BG) Object.assign(document.getElementById('frame').style, { background: `url(${BG}) center / cover no-repeat` });
+if (CARD) { document.body.classList.add('card'); if (new URLSearchParams(location.search).get('captions') !== '1') cap.style.visibility = 'hidden'; }
+const group = s => s[0] === '03' ? '02' : s[0];
+window.BEATS = SHOTS.map((s, i) => ({ name: s[0] === 'blank' ? 'Intro' : s[0] === 'end' ? 'End' : group(s), start: starts[i] }))
+  .filter((b, i, arr) => i === 0 || b.name !== arr[i - 1].name).map(b => ({ ...b, start: +b.start.toFixed(2) }));
+window.ready = (async () => {
+  await Promise.all(Object.values(SCREENS).map(([f]) => { const i = new Image(); i.src = IMG + f; return i.decode(); }));
+  await Promise.all(['400', '500', '600'].map(w => document.fonts.load(`${w} 100px Geist`)));
+  window.render(parseFloat(new URLSearchParams(location.search).get('t') || '0'));
+  return true;
+})();
+
+// ?play — the same review player as scene.html (space, scrub, ←/→ frame step)
+if (new URLSearchParams(location.search).has('play')) window.ready.then(() => {
+  const fr = document.getElementById('frame');
+  document.documentElement.style.cssText = document.body.style.cssText = 'width:100%;height:100%;overflow:hidden;background:#1b1b1f';
+  const bar = document.createElement('div'); document.body.append(bar);
+  bar.style.cssText = 'position:fixed;left:0;right:0;bottom:0;height:64px;padding:8px 16px;font:12px/1.2 ui-monospace,monospace;color:#ddd;background:#111;z-index:9;user-select:none';
+  bar.innerHTML = '<div style="display:flex;gap:12px;align-items:center;height:20px"><button id="pp" style="font:inherit;width:64px">pause</button><span id="tc"></span></div><div id="tl" style="position:relative;height:24px;margin-top:6px;background:#222;cursor:pointer"><div id="hd" style="position:absolute;top:0;bottom:0;width:2px;background:#fff;z-index:2"></div></div>';
+  const tl = bar.querySelector('#tl'), hd = bar.querySelector('#hd'), tc = bar.querySelector('#tc'), pp = bar.querySelector('#pp');
+  const X = s => (s / DURATION * 100) + '%';
+  const KC = { build: '#3a3a44', hold: '#2a2a30', move: '#4b6a9b', moment: '#c96' };
+  SHOTS.forEach((s, i) => { const m = document.createElement('div'); tl.append(m);
+    m.style.cssText = `position:absolute;bottom:0;height:6px;left:${X(starts[i])};width:calc(${X(s[1])} - 1px);background:${KC[s[5]]}`; });
+  for (const b of BEATS) { const m = document.createElement('div'); tl.append(m);
+    m.style.cssText = `position:absolute;top:0;bottom:6px;left:${X(b.start)};border-left:1px solid #9cf;padding-left:3px;color:#9cf;font-size:10px;white-space:nowrap`; m.textContent = b.name; }
+  const fit = () => { const k = Math.min(innerWidth / 1920, (innerHeight - 64) / 1080);
+    fr.style.cssText = `width:1920px;height:1080px;transform-origin:0 0;transform:translate(${(innerWidth - 1920 * k) / 2}px,0) scale(${k})`; };
+  fit(); addEventListener('resize', fit);
+  let t = 0, playing = true, last = performance.now();
+  const upd = () => { window.render(t); hd.style.left = X(t); tc.textContent = `${t.toFixed(2)}s / ${DURATION.toFixed(1)}s  ·  shot ${shown + 1}/${SHOTS.length}`; pp.textContent = playing ? 'pause' : 'play'; };
+  const loop = now => { if (playing) { t = (t + (now - last) / 1000) % DURATION; upd(); } last = now; requestAnimationFrame(loop); };
+  requestAnimationFrame(loop);
+  const seek = e => { const r = tl.getBoundingClientRect(); t = Math.min(1, Math.max(0, (e.clientX - r.left) / r.width)) * DURATION; upd(); };
+  tl.addEventListener('pointerdown', e => { seek(e); tl.setPointerCapture(e.pointerId); tl.onpointermove = seek; });
+  tl.addEventListener('pointerup', () => { tl.onpointermove = null; });
+  pp.onclick = () => { playing = !playing; upd(); };
+  addEventListener('keydown', e => {
+    if (e.code === 'Space') { e.preventDefault(); playing = !playing; }
+    // ←/→ jump shot to shot
+    if (e.code === 'ArrowRight' || e.code === 'ArrowLeft') { playing = false; const i = Math.max(0, Math.min(SHOTS.length - 1, shown + (e.code === 'ArrowRight' ? 1 : -1))); t = starts[i] + 0.001; }
+    upd();
+  });
+});
+</script>
+</body>
+</html>

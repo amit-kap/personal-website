@@ -1,0 +1,366 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1920px; height: 1080px; overflow: hidden; }
+  #frame { position: absolute; inset: 0; overflow: hidden; perspective: 2400px;
+    background:
+      radial-gradient(ellipse 1300px 900px at 50% 42%, #ffffff 0%, #f6f6f7 38%, #e7e7ea 72%, #d6d7db 100%); }
+  #floor { position: absolute; left: 50%; top: 1000px; width: 1500px; height: 90px; margin-left: -750px; border-radius: 50%;
+    background: radial-gradient(closest-side, rgba(30,32,40,.28), rgba(30,32,40,0)); filter: blur(10px); }
+  .rig { position: absolute; left: 210px; top: 98px; width: 1500px; height: 843.75px; border-radius: 18px; overflow: hidden;
+    background: #fff; transform-origin: 50% 50%; display: none; will-change: transform;
+    box-shadow: 0 50px 90px -20px rgba(25,28,40,.30), 0 18px 36px -12px rgba(25,28,40,.18), 0 0 0 1px rgba(20,22,30,.07); }
+  .layer { position: absolute; inset: 0; perspective: 1600px; }
+  .base, .slice, .stretch { position: absolute; background-repeat: no-repeat; }
+  .base { left: 0; top: 0; width: 100%; opacity: 0; }
+  .stretch { left: 0; width: 100%; transform-origin: 0 0; opacity: 0; }
+  .slice { border-radius: 7px; transform-origin: 50% 50%; opacity: 0; will-change: transform, opacity; }
+  .box { position: absolute; background: #fff; border: 1px solid #e3e3e7; border-radius: 7px; opacity: 0; }
+  .scrim { position: absolute; inset: 0; background: rgba(40,40,46,.42); opacity: 0; }
+  .drawer { position: absolute; top: 0; bottom: 0; background: #fff; box-shadow: -30px 0 60px rgba(0,0,0,.12); }
+  .overlay { position: absolute; left: 0; top: 0; overflow: visible; pointer-events: none; }
+</style>
+</head>
+<body>
+<div id="frame">
+  <div id="floor"></div>
+</div>
+<script>
+const IMG = 'IMGDIR/';
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const P = (t, a, b) => clamp((t - a) / (b - a));
+const lerp = (a, b, x) => a + (b - a) * x;
+const E = {
+  out: x => 1 - Math.pow(1 - x, 3),
+  out5: x => 1 - Math.pow(1 - x, 5),
+  inOut: x => x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2,
+  inOut5: x => x < .5 ? 16 * x ** 5 : 1 - Math.pow(-2 * x + 2, 5) / 2,
+  back: x => { const c1 = 1.4, c3 = c1 + 1; return 1 + c3 * Math.pow(x - 1, 3) + c1 * Math.pow(x - 1, 2); },
+  sine: x => (1 - Math.cos(Math.PI * x)) / 2,
+};
+const $ = (tag, cls, parent) => { const e = document.createElement(tag); if (cls) e.className = cls; if (parent) parent.append(e); return e; };
+const SVGNS = 'http://www.w3.org/2000/svg';
+const S = (tag, attrs, parent) => { const e = document.createElementNS(SVGNS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); if (parent) parent.append(e); return e; };
+const xf = (el, { x = 0, y = 0, s = 1, rx = 0, ry = 0 } = {}) =>
+  el.style.transform = `translate3d(${x}px,${y}px,0) rotateX(${rx}deg) rotateY(${ry}deg) scale(${s})`;
+
+const frame = document.getElementById('frame');
+const floor = document.getElementById('floor');
+const RW = 1500, RH = 843.75, K = RW / 1400, UH = 787.5; // rig size, px per preview unit, rig height in units
+
+// One screenshot, laid out in 1400-wide preview units, top-aligned in the 16:9 rig.
+function layer(rig, file, ph) {
+  const el = $('div', 'layer', rig);
+  const H = ph * K;
+  const base = $('div', 'base', el);
+  Object.assign(base.style, { height: H + 'px', backgroundImage: `url(${IMG}${file})`, backgroundSize: `${RW}px ${H}px` });
+  // stretch the last rows of the screenshot to fill the 16:9 frame
+  const st = $('div', 'stretch', el);
+  Object.assign(st.style, { top: H - 1 + 'px', height: '3px', backgroundImage: `url(${IMG}${file})`, backgroundSize: `${RW}px ${H}px`,
+    backgroundPosition: `0 ${-(H - 4)}px`, transform: `scaleY(${(RH - H + 2) / 3})` });
+  const L = { el, base, st, file, ph, H, items: [] };
+  L.slice = (x, y, w, h, rad) => {
+    const s = $('div', 'slice', el);
+    Object.assign(s.style, { left: x * K + 'px', top: y * K + 'px', width: w * K + 'px', height: h * K + 'px',
+      backgroundImage: `url(${IMG}${file})`, backgroundSize: `${RW}px ${H}px`, backgroundPosition: `${-x * K}px ${-y * K}px` });
+    if (rad != null) s.style.borderRadius = rad + 'px';
+    return s;
+  };
+  L.box = ([x, y, w, h]) => {
+    const b = $('div', 'box', el);
+    Object.assign(b.style, { left: x * K + 'px', top: y * K + 'px', width: w * K + 'px', height: h * K + 'px' });
+    return b;
+  };
+  // spec: [kind, t, [x,y,w,h], opts]
+  L.add = specs => specs.forEach(([kind, t, r, o = {}]) => {
+    const box = o.box ? L.box(r) : null;
+    const el = L.slice(...r, o.rad);
+    if (kind === 'flip') el.style.transformOrigin = '50% 0%';
+    L.items.push({ kind, t, r, d: o.d ?? 0.7, el, box });
+  });
+  L.render = (u, baseAt) => {
+    for (const it of L.items) {
+      const { kind, t, d, el, box } = it;
+      const q = P(u, t, t + d), e = E.out5(q), vis = u >= t;
+      if (box) {
+        const bq = E.out5(P(u, t - 0.28, t + 0.25));
+        box.style.opacity = bq; box.style.transform = `scale(${lerp(0.94, 1, bq)})`;
+      }
+      el.style.opacity = vis ? 1 : 0;
+      el.style.clipPath = ''; el.style.webkitMaskImage = '';
+      switch (kind) {
+        case 'fade': el.style.opacity = E.out(q); xf(el); break;
+        case 'pop': el.style.opacity = P(u, t, t + d * 0.35); xf(el, { y: (1 - e) * 26, s: lerp(0.95, 1, e) }); break;
+        case 'scale': { const b = E.back(q); el.style.opacity = P(u, t, t + 0.12); xf(el, { s: lerp(0.3, 1, b) }); break; }
+        case 'flip': el.style.opacity = P(u, t, t + 0.18); xf(el, { rx: -82 * (1 - e) }); break;
+        case 'card': { const b = E.back(q); el.style.opacity = P(u, t, t + 0.15); xf(el, { rx: 70 * (1 - b), y: 40 * (1 - b), s: lerp(0.86, 1, b) }); break; }
+        case 'slideL': el.style.opacity = P(u, t, t + d * 0.4); xf(el, { x: -50 * (1 - e) }); break;
+        case 'slideR': el.style.opacity = P(u, t, t + d * 0.4); xf(el, { x: 70 * (1 - e) }); break;
+        case 'slideU': el.style.opacity = P(u, t, t + d * 0.4); xf(el, { y: 22 * (1 - e) }); break;
+        case 'slideD': el.style.opacity = P(u, t, t + d * 0.4); xf(el, { y: -30 * (1 - e) }); break;
+        case 'wipeL': el.style.clipPath = `inset(0 ${(1 - E.inOut(q)) * 100}% 0 0)`; xf(el); break;
+        case 'wipeU': el.style.clipPath = `inset(${(1 - E.inOut(q)) * 100}% 0 0 0)`; xf(el); break;
+        case 'wipeD': el.style.clipPath = `inset(0 0 ${(1 - E.inOut(q)) * 100}% 0)`; xf(el); break;
+        case 'conic': {
+          const a = 360 * E.inOut(q);
+          el.style.webkitMaskImage = `conic-gradient(from 0deg, #000 ${a}deg, transparent ${a + 0.5}deg)`;
+          xf(el, { s: lerp(0.85, 1, E.out5(q)) }); break;
+        }
+      }
+    }
+    const bq = P(u, baseAt, baseAt + 0.35);
+    L.base.style.opacity = bq; L.st.style.opacity = bq;
+  };
+  return L;
+}
+
+// =====================================================================
+// pages
+// =====================================================================
+const pages = [];
+const page = (life, axis, build) => {
+  const rig = $('div', 'rig', frame);
+  const render = build ? build(rig) : () => {};
+  pages.push({ rig, life, axis, render });
+};
+const rows = (n, x, y0, pitch, w, h, t0, dt, kind = 'slideU') =>
+  Array.from({ length: n }, (_, i) => [kind, t0 + i * dt, [x, y0 + i * pitch, w, h ?? pitch], { rad: 0, d: 0.55 }]);
+
+// 01 — Home dashboard
+page(4.3, 'y', rig => {
+  const L = layer(rig, '01-shift-dashboard.webp', 706.3);
+  L.add([
+    ['slideD', 0.15, [0, 0, 1400, 38], { rad: 0 }],
+    ['fade', 0.3, [0, 44, 1046, 60], { rad: 0 }],
+    ['slideR', 0.35, [1050, 40, 350, 666], { rad: 0, d: 0.8 }],
+    ...[13, 271, 528, 786].map((x, i) => ['pop', 0.45 + i * 0.07, [x, 108, 251, 60], { box: true }]),
+    ['fade', 0.75, [13, 178, 508, 44], { box: true }],
+    ['scale', 0.95, [23, 222, 94, 72], { rad: 3 }],
+    ['scale', 1.02, [23, 296, 94, 35], { rad: 3 }],
+    ['scale', 1.07, [119, 222, 83, 54], { rad: 3 }],
+    ['scale', 1.12, [119, 278, 83, 53], { rad: 3 }],
+    ['scale', 1.17, [204, 222, 157, 41], { rad: 3 }],
+    ['scale', 1.22, [204, 265, 157, 66], { rad: 3 }],
+    ['scale', 1.27, [363, 222, 94, 109], { rad: 3 }],
+    ['scale', 1.32, [459, 222, 52, 109], { rad: 3 }],
+    ['fade', 0.82, [528, 178, 509, 44], { box: true }],
+    ...[[588, 640], [655, 727], [750, 822], [845, 917], [942, 1012]].map(([a, b], i) => ['wipeU', 1.0 + i * 0.08, [a, 226, b - a, 93], { rad: 0, d: 0.65 }]),
+    ['fade', 1.3, [540, 318, 490, 18], { rad: 0 }],
+    ['pop', 1.0, [1063, 109, 323, 245], {}],
+    ['fade', 1.15, [0, 388, 1046, 22], { rad: 0 }],
+    ...[13, 271, 528, 786].map((x, i) => ['pop', 1.2 + i * 0.07, [x, 413, 251, 60], { box: true }]),
+    ['fade', 1.4, [13, 483, 508, 44], { box: true }],
+    ...rows(5, 20, 526, 22.2, 498, 22, 1.5, 0.07, 'slideL'),
+    ['fade', 1.45, [528, 483, 509, 44], { box: true }],
+    ['wipeL', 1.6, [536, 525, 495, 115], { rad: 0, d: 1.1 }],
+  ]);
+  return u => L.render(u, 2.85);
+});
+
+// 02 — Vendors table, then 03 — the vendor card drawer slides over it
+page(7.4, 'x', rig => {
+  const A = layer(rig, '02-inventory-vendors-page.webp', 701.5);
+  A.add([
+    ['slideD', 0.15, [0, 0, 1400, 38], { rad: 0 }],
+    ['fade', 0.3, [0, 55, 1400, 30], { rad: 0 }],
+    ...[[13, 335], [357, 335], [701, 334], [1044, 335]].map(([x, w], i) => ['fade', 0.4 + i * 0.07, [x, 87, w, 22], { box: true }]),
+    ['conic', 0.65, [19, 111, 70, 70], { rad: 35, d: 0.9 }],
+    ['slideL', 0.85, [95, 134, 250, 24], { rad: 0 }],
+    ...[0, 1, 2, 3, 4].map(i => ['wipeL', 0.75 + i * 0.06, [368, 116 + i * 9.4, 320, 9.4], { rad: 0, d: 0.7 }]),
+    ['fade', 1.05, [365, 163, 320, 16], { rad: 0 }],
+    ['conic', 0.8, [706, 111, 70, 70], { rad: 35, d: 0.9 }],
+    ['slideL', 1.0, [780, 134, 215, 24], { rad: 0 }],
+    ...[[1072, 1112], [1134, 1173], [1195, 1234], [1256, 1296], [1317, 1356]].map(([a, b], i) => ['wipeU', 0.85 + i * 0.07, [a, 115, b - a, 50], { rad: 0, d: 0.6 }]),
+    ['fade', 1.15, [1050, 165, 325, 16], { rad: 0 }],
+    ['fade', 1.0, [0, 191, 1400, 26], { rad: 0 }],
+    ['wipeL', 1.1, [13, 222, 1366, 23], { rad: 0, d: 0.7 }],
+    ...rows(13, 13, 245, 32.6, 1366, 32.6, 1.2, 0.045),
+    ['fade', 1.85, [0, 666, 1400, 30], { rad: 0 }],
+  ]);
+  const scrim = $('div', 'scrim', A.el);
+
+  const B = layer(rig, '03-inventory-vendors-card.png', 704.6);
+  const left = B.slice(0, 0, 350, 704.6, 0);
+  const drawer = $('div', 'drawer', B.el);
+  Object.assign(drawer.style, { left: 350 * K + 'px', width: 1050 * K + 'px' });
+  const DT = 3.3;
+  B.add([
+    ['fade', DT + 0.45, [350, 0, 1050, 70], { rad: 0 }],
+    ['slideL', DT + 0.55, [368, 82, 470, 26], { rad: 0 }],
+    ['fade', DT + 0.62, [372, 122, 738, 40], { box: true }],
+    ['conic', DT + 0.8, [498, 181, 116, 116], { rad: 58, d: 1.0 }],
+    ['fade', DT + 1.1, [478, 298, 160, 18], { rad: 0 }],
+    ...rows(5, 752, 186, 24.8, 352, 24.8, DT + 0.85, 0.07, 'slideR'),
+    ['fade', DT + 0.8, [372, 350, 738, 42], { box: true }],
+    ['wipeL', DT + 1.0, [376, 395, 730, 175], { rad: 0, d: 1.1 }],
+    ['fade', DT + 0.95, [372, 603, 738, 102], { box: true }],
+    ['slideR', DT + 0.75, [1124, 85, 264, 170], { rad: 0 }],
+    ['slideR', DT + 0.85, [1124, 262, 264, 128], { rad: 0 }],
+    ['slideR', DT + 0.95, [1124, 395, 264, 145], { rad: 0 }],
+    ['slideR', DT + 1.05, [1124, 548, 264, 90], { rad: 0 }],
+  ]);
+  return u => {
+    A.render(u, 2.4);
+    const dq = E.out5(P(u, DT, DT + 0.75));
+    B.el.style.display = u >= DT ? 'block' : 'none';
+    scrim.style.opacity = P(u, DT, DT + 0.5);
+    left.style.opacity = E.out(P(u, DT + 0.1, DT + 0.6));
+    drawer.style.transform = `translateX(${(1 - dq) * 1060 * K}px)`;
+    A.el.style.display = u > DT + 0.7 ? 'none' : 'block';
+    B.render(u, DT + 2.6);
+  };
+});
+
+// 04 — Access graph
+page(4.3, 'y', rig => {
+  const L = layer(rig, '04-vendor-access-graph.webp', 705.8);
+  const ov = S('svg', { class: 'overlay', viewBox: `0 0 1400 ${UH}`, width: RW, height: RH });
+  L.add([
+    ['slideD', 0.15, [0, 0, 1400, 31], { rad: 0 }],
+    ['slideR', 0.3, [981, 31, 419, 60], { rad: 0 }],
+    ['fade', 0.45, [985, 78, 210, 26], { rad: 0 }],
+    ['wipeD', 0.55, [985, 105, 410, 600], { rad: 0, d: 1.3 }],
+    ['fade', 0.4, [108, 142, 610, 26], { rad: 0 }],
+  ]);
+  L.el.append(ov);
+  const lines = [
+    ['M151,188 C185,188 188,203 219,203', 0.85],
+    ['M367,203 C412,203 392,453 435,453', 1.15],
+    ...[211, 307, 393, 470, 548].map((y, i) => [`M582,453 C622,453 612,${y} 651,${y}`, 1.45 + i * 0.06]),
+  ].map(([d, t]) => ({ t, el: S('path', { d, fill: 'none', stroke: '#9a9ea8', 'stroke-width': 1.1, pathLength: 1, 'stroke-dasharray': 1, 'stroke-dashoffset': 1 }, ov) }));
+  L.add([
+    ['scale', 0.6, [113, 166, 46, 46], {}],
+    ['pop', 0.95, [217, 169, 152, 68], {}],
+    ...[245, 308, 371, 434].map((y, i) => ['slideU', 1.05 + i * 0.06, [219, y, 150, 62], { rad: 4 }]),
+    ['fade', 1.35, [219, 487, 150, 22], { rad: 4 }],
+    ...[170, 216, 261, 307, 352, 398].map((y, i) => ['slideU', 1.1 + i * 0.05, [434, y, 150, 44], { rad: 4 }]),
+    ['pop', 1.3, [433, 441, 151, 26], {}],
+    ['fade', 1.45, [434, 485, 150, 36], { rad: 4 }],
+    ...[[171, 86], [266, 86], [360, 72], [438, 68], [515, 68]].map(([y, h], i) => ['pop', 1.75 + i * 0.08, [649, y - 2, 151, h], {}]),
+    ['fade', 2.2, [649, 590, 151, 24], { rad: 4 }],
+    ['scale', 2.1, [455, 671, 70, 24], { rad: 4 }],
+  ]);
+  return u => {
+    lines.forEach(l => l.el.setAttribute('stroke-dashoffset', 1 - E.inOut(P(u, l.t, l.t + 0.5))));
+    ov.style.opacity = 1 - P(u, 2.85, 3.2);
+    L.render(u, 2.85);
+  };
+});
+
+// 05 — Threat center
+page(4.2, 'x', rig => {
+  const L = layer(rig, '05-threat-center.webp', 705.8);
+  L.add([
+    ['slideD', 0.15, [0, 0, 1400, 40], { rad: 0 }],
+    ['fade', 0.3, [0, 52, 1400, 36], { rad: 0 }],
+    ...[13, 359, 705, 1050].map((x, i) => ['flip', 0.4 + i * 0.08, [x, 93, 337, 98], { d: 0.8 }]),
+    ['fade', 0.7, [10, 200, 285, 30], { rad: 0 }],
+    ...rows(8, 13, 236, 62.8, 268, 57, 0.75, 0.055, 'slideL'),
+    ['fade', 0.9, [305, 205, 1095, 46], { rad: 0 }],
+    ['wipeD', 1.0, [312, 265, 795, 100], { rad: 0, d: 0.8 }],
+    ['fade', 1.2, [312, 398, 795, 46], { rad: 0 }],
+    ['wipeL', 1.3, [318, 452, 784, 22], { rad: 0, d: 0.6 }],
+    ...rows(5, 318, 474, 33, 784, 33, 1.4, 0.065),
+    ['fade', 1.85, [970, 643, 135, 26], { rad: 0 }],
+    ['slideR', 1.05, [1112, 268, 285, 315], { rad: 0, d: 0.8 }],
+  ]);
+  return u => L.render(u, 2.6);
+});
+
+// 06 — Integrations
+page(3.9, 'y', rig => {
+  const L = layer(rig, '06-integrations-grid.jpg', 700);
+  const cols = [222, 458, 693, 929, 1165], ys = [244, 393, 541];
+  L.add([
+    ['slideD', 0.15, [0, 0, 1400, 50], { rad: 0 }],
+    ['slideL', 0.3, [0, 60, 205, 215], { rad: 0 }],
+    ['fade', 0.4, [210, 70, 1190, 110], { rad: 0 }],
+    ['fade', 0.5, [210, 196, 1190, 44], { rad: 0 }],
+    ...ys.flatMap((y, r) => cols.map((x, c) => ['card', 0.6 + (c + r) * 0.07, [x, y, 217, 131], { rad: 8, d: 0.75 }])),
+  ]);
+  return u => L.render(u, 2.3);
+});
+
+// 07 — Assessment
+page(4.6, 'x', rig => {
+  const L = layer(rig, '07-assessment-flow-1.webp', 705.8);
+  L.add([
+    ['slideD', 0.15, [0, 0, 1400, 38], { rad: 0 }],
+    ['fade', 0.3, [17, 60, 970, 40], { box: true }],
+    ...[[110, 56], [196, 56], [256, 42], [297, 52], [380, 52]].map(([y, h], i) => ['slideU', 0.5 + i * 0.08, [228, y, 560, h], { rad: 0 }]),
+    ['wipeL', 0.6, [228, 172, 560, 18], { rad: 0 }],
+    ['wipeL', 0.85, [228, 355, 560, 18], { rad: 0 }],
+    ['pop', 1.05, [233, 441, 367, 188], { rad: 14, box: true }],
+    ['slideU', 1.4, [233, 641, 534, 42], { rad: 8 }],
+    ['slideR', 0.35, [995, 60, 392, 40], { rad: 0 }],
+    ['pop', 0.55, [1008, 110, 366, 92], { box: true }],
+    ['fade', 0.65, [1008, 205, 366, 40], { box: true }],
+    ['conic', 0.85, [1046, 254, 114, 114], { rad: 57, d: 1.0 }],
+    ...rows(5, 1192, 237, 29, 170, 29, 0.9, 0.07, 'slideR'),
+    ['pop', 0.8, [1008, 400, 366, 120], { box: true }],
+    ['pop', 0.95, [1008, 525, 366, 110], { box: true }],
+  ]);
+  return u => L.render(u, 2.7);
+});
+
+// closing blank screen = the opening state, so the video loops
+page(0, 'y', null);
+
+// =====================================================================
+// timeline: each page lives, then flips into the next
+// =====================================================================
+const FLIP = 1.05;
+let acc = 0;
+for (const p of pages) { p.start = acc; acc += p.life + FLIP; }
+const DURATION = pages[pages.length - 1].start;
+window.DURATION = DURATION;
+
+const pose = u => ({ rx: 7 - 2 * E.sine(P(u, 0, 5.5)), ry: -9 + 12 * E.sine(P(u, 0, 5.5)) });
+function place(p, u, extra = {}) {
+  const { rx, ry } = extra.pose || pose(u);
+  const a = extra.a || 0, s = extra.s || 1, z = extra.z || 0;
+  const RX = rx + (p.axis === 'x' ? a : 0), RY = ry + (p.axis === 'y' ? a : 0);
+  p.rig.style.transform = `translateZ(${z}px) rotateX(${RX}deg) rotateY(${RY}deg) scale(${s})`;
+  p.rig.style.display = 'block';
+  // floor shadow follows the card's projected footprint
+  const wx = Math.abs(Math.cos(RY * Math.PI / 180)), wy = Math.abs(Math.cos(RX * Math.PI / 180));
+  floor.style.transform = `scale(${s * Math.max(wx, 0.08)}, ${0.7 + 0.3 * wy})`;
+  floor.style.opacity = 0.55 + 0.45 * wy;
+}
+
+window.render = t => {
+  pages.forEach(p => p.rig.style.display = 'none');
+  for (let i = 0; i < pages.length; i++) {
+    const p = pages[i], next = pages[i + 1];
+    const u = t - p.start, flipAt = p.life;
+    if (u < 0 || (next && t >= next.start)) continue;
+    if (u < flipAt || !next) { p.render(u); place(p, u); break; }
+    // flip: 0→180 around this page's axis; halfway the next page takes over, blank
+    const q = E.inOut5(P(u, flipAt, flipAt + FLIP)), ang = 180 * q;
+    const lift = Math.sin(Math.PI * q);
+    const s = 1 - 0.1 * lift, z = -160 * lift;
+    const p0 = pose(flipAt), p1 = pose(0);
+    const ps = { rx: lerp(p0.rx, p1.rx, q), ry: lerp(p0.ry, p1.ry, q) };
+    if (ang < 90) { p.render(u); place(p, u, { a: ang, s, z, pose: ps }); }
+    else {
+      next.render(-1);
+      // the incoming face continues the same rotation, pose taken from its own clock at 0
+      const pp = { ...next, axis: p.axis };
+      place(pp, 0, { a: ang - 180, s, z, pose: ps });
+    }
+    break;
+  }
+};
+
+window.ready = (async () => {
+  const files = ['01-shift-dashboard.webp', '02-inventory-vendors-page.webp', '03-inventory-vendors-card.png', '04-vendor-access-graph.webp', '05-threat-center.webp', '06-integrations-grid.jpg', '07-assessment-flow-1.webp'];
+  await Promise.all(files.map(f => { const i = new Image(); i.src = IMG + f; return i.decode(); }));
+  window.render(parseFloat(new URLSearchParams(location.search).get('t') || '0'));
+  return true;
+})();
+</script>
+</body>
+</html>

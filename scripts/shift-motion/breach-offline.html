@@ -1,0 +1,320 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<!-- "Your vendor's vendor got breached" — offline storyboard (2D stills, camera moves, full-frame title cards).
+     Story: detect (dashboard) → reach (threat center, impacted vendors) → trace (Vercel impact + access graph:
+     its Stripe / Twilio / Segment keys) → act (Remediate → triage In Progress).
+     Screens: the case-study stills + frames pulled from public/shift-walk.mp4 (breach/frames/, 2144×1080).
+     Served from the repo root (launch.json "shift-motion-preview"): /scripts/shift-motion/breach-offline.html?play -->
+<style>
+  @font-face { font-family: 'Overused Grotesk'; font-weight: 450; src: url(/scripts/shift-motion/fonts/OverusedGrotesk-Book.woff2) format('woff2'); }
+  @font-face { font-family: 'Overused Grotesk'; font-weight: 500; src: url(/scripts/shift-motion/fonts/OverusedGrotesk-Medium.woff2) format('woff2'); }
+  @font-face { font-family: 'Overused Grotesk'; font-weight: 600; src: url(/scripts/shift-motion/fonts/OverusedGrotesk-SemiBold.woff2) format('woff2'); }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1920px; height: 1080px; overflow: hidden; background: #e9e9ec; }
+  #frame { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; overflow: hidden; background: #e9e9ec; }
+  #page { position: absolute; left: 0; top: 0; transform-origin: 0 0; background-repeat: no-repeat; box-shadow: 0 0 0 1px rgba(0,0,0,.06), 0 30px 80px -30px rgba(0,0,0,.25); }
+  #page > * { position: absolute; }
+  /* full-frame title cards — dark, so they read as chapter breaks against the light UI shots. Overused Grotesk (Shift's
+     typeface, OFL: fonts/LICENSE.txt) on the left, the key phrase in Shift purple; on the right, a small diagram of what
+     the line says (supply chain, reach, keys, triage). */
+  /* palettes (?palette=graphite|stone|ink); the accent carries the key phrase, the alert colour the breach state */
+  :root { --bg: #1d1f22; --glow: #2a2d31; --ink: #f2f2ef; --muted: rgba(242,242,239,.5); --accent: #ff5a47; --alert: #ff5a47; --surface: #26292d; --line: rgba(255,255,255,.12); }
+  :root[data-palette="stone"] { --bg: #26231f; --glow: #36312a; --ink: #f3efe6; --muted: rgba(243,239,230,.52); --accent: #f0a73c; --alert: #f26b4f; --surface: #302c26; --line: rgba(255,245,230,.13); }
+  :root[data-palette="ink"] { --bg: #0f1c30; --glow: #1b2c47; --ink: #eef3fa; --muted: rgba(238,243,250,.52); --accent: #ff7a5c; --alert: #ff7a5c; --surface: #172840; --line: rgba(220,232,255,.14); }
+  #title { position: absolute; inset: 0; display: none; background: radial-gradient(ellipse 1100px 800px at 72% 46%, var(--glow) 0%, var(--bg) 62%); color: var(--ink); }
+  #title .tc { position: absolute; left: 160px; top: 50%; transform: translateY(-50%); width: 900px; }
+  #title p { font: 600 98px/1.03 'Overused Grotesk', sans-serif; letter-spacing: -.036em; }
+  #title p em { font-style: normal; color: var(--accent); }
+  #title .art { position: absolute; left: 1100px; top: 50%; width: 660px; height: 560px; transform: translateY(-50%); font-family: 'Overused Grotesk', sans-serif; }
+  #title .art > * { position: absolute; }
+  #title .art svg { left: 0; top: 0; overflow: visible; }
+  .nd { display: flex; align-items: center; gap: 14px; height: 76px; padding: 0 24px; border-radius: 16px; background: var(--surface); border: 1px solid var(--line);
+    font: 500 28px/1 'Overused Grotesk', sans-serif; letter-spacing: -.01em; color: var(--ink); white-space: nowrap; }
+  .nd small { font: 450 17px/1 'Overused Grotesk', sans-serif; color: var(--muted); letter-spacing: 0; }
+  .nd .st { display: flex; flex-direction: column; gap: 7px; }
+  .nd.bad { border-color: color-mix(in srgb, var(--alert) 65%, transparent); box-shadow: 0 0 0 6px color-mix(in srgb, var(--alert) 10%, transparent), 0 0 48px color-mix(in srgb, var(--alert) 25%, transparent); }
+  .nd .ic { width: 34px; height: 34px; border-radius: 9px; display: grid; place-items: center; background: rgba(255,255,255,.07); font-size: 18px; }
+  .chip { display: inline-flex; align-items: center; gap: 8px; height: 30px; padding: 0 12px; border-radius: 15px; font: 500 17px/1 'Overused Grotesk', sans-serif; white-space: nowrap; }
+  .chip.red { background: color-mix(in srgb, var(--alert) 16%, transparent); color: color-mix(in srgb, var(--alert) 70%, white); } .chip.grey { background: rgba(255,255,255,.07); color: var(--muted); }
+  .chip.prog { background: color-mix(in srgb, var(--accent) 18%, transparent); color: var(--accent); }
+  .chip i { width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
+  .btn { display: flex; align-items: center; height: 64px; padding: 0 30px; border-radius: 14px; background: var(--accent); color: var(--bg); font: 600 28px/1 'Overused Grotesk', sans-serif; box-shadow: 0 18px 40px -12px color-mix(in srgb, var(--accent) 60%, transparent); }
+  #title .end { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 36px; }
+  #title .mark { display: flex; align-items: center; gap: 28px; }
+  #title .mark img { width: 128px; height: 128px; }
+  #title .mark span { font: 600 150px/1 'Overused Grotesk', sans-serif; letter-spacing: -.045em; color: var(--ink); margin-top: -10px; }
+  #title .end small { font: 450 34px/1.3 'Overused Grotesk', sans-serif; letter-spacing: -.01em; color: var(--muted); text-align: center; max-width: 1200px; text-wrap: balance; }
+  /* breach looks (?palette=incident|contagion|bulletin) — the full-frame cards only; the UI shots are untouched.
+     incident: graphite black, red as the only colour, a live incident clock · contagion: the red physically spreads
+     (solid glowing wires, infected nodes) · bulletin: light security-bulletin paper, black type, red marker */
+  :root[data-palette="incident"] { --bg: #0b0c0e; --glow: #17191d; --ink: #f4f4f2; --muted: rgba(244,244,242,.48); --accent: #ff3b30; --alert: #ff3b30; --surface: #15171a; --line: rgba(255,255,255,.12); }
+  :root[data-palette="contagion"] { --bg: #070606; --glow: #2a0d0b; --ink: #f6f1ef; --muted: rgba(246,241,239,.5); --accent: #ff4632; --alert: #ff4632; --surface: #161212; --line: rgba(255,230,225,.12); }
+  :root[data-palette="bulletin"] { --bg: #f2f0eb; --glow: #f2f0eb; --ink: #121212; --muted: rgba(18,18,18,.5); --accent: #e5281c; --alert: #e5281c; --surface: #fff; --line: rgba(0,0,0,.14); }
+  #title .kick { display: flex; align-items: center; gap: 14px; margin-bottom: 40px; font: 500 22px/1 ui-monospace, 'SF Mono', monospace; letter-spacing: .06em; color: var(--muted); white-space: nowrap; }
+  #title .kick b { font-weight: 500; color: var(--alert); }
+  #title .kick .dot { width: 12px; height: 12px; border-radius: 50%; background: var(--alert); box-shadow: 0 0 0 6px color-mix(in srgb, var(--alert) 22%, transparent), 0 0 24px var(--alert); }
+  :root[data-palette="contagion"] #title .art path { stroke-dasharray: none; stroke-width: 3; filter: drop-shadow(0 0 8px var(--alert)); }
+  :root[data-palette="contagion"] .nd.bad { background: color-mix(in srgb, var(--alert) 22%, var(--surface)); box-shadow: 0 0 0 10px color-mix(in srgb, var(--alert) 10%, transparent), 0 0 90px color-mix(in srgb, var(--alert) 45%, transparent); }
+  :root[data-palette="bulletin"] #title p em { color: #fff; background: var(--alert); padding: 0 .12em; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
+  :root[data-palette="bulletin"] #title .art path { stroke-dasharray: none; }
+  :root[data-palette="bulletin"] .nd .ic path { fill: var(--ink); }
+  :root[data-palette="bulletin"] .nd.bad { background: var(--alert); color: #fff; border-color: var(--alert); box-shadow: none; }
+  :root[data-palette="bulletin"] .nd.bad small { color: rgba(255,255,255,.75); }
+  :root[data-palette="bulletin"] .nd.bad .ic { background: rgba(255,255,255,.18); color: #fff; }
+  :root[data-palette="bulletin"] .nd.bad .chip.red { background: #fff; color: var(--alert); }
+  :root[data-palette="bulletin"] .chip.grey { background: rgba(0,0,0,.06); }
+  :root[data-palette="bulletin"] .btn { color: #fff; }
+  :root[data-palette="bulletin"] #title .mark img { filter: invert(1); }
+  /* report: threat-report language (inspired by CrowdStrike's 2026 Global Threat Report key art, nothing of theirs reused) —
+     black page, a pure-red field blooming from the right, cut into displaced vertical slices, film grain over all;
+     solid red label chips, uppercase; teal is the only counter-colour (the response) */
+  :root[data-palette="report"] { --bg: #050505; --glow: #050505; --ink: #ffffff; --muted: rgba(255,255,255,.6); --accent: #ff1d25; --alert: #ff1d25; --teal: #36d6d0; --surface: rgba(8,8,9,.86); --line: rgba(255,255,255,.16); }
+  :root[data-palette="report"] #title { background: #050505; }
+  #title .fx { position: absolute; inset: 0; overflow: hidden; }
+  #title .fx .field { position: absolute; inset: 0; background: radial-gradient(ellipse 900px 1150px at 108% 64%, #c8101a 0%, #8a0710 24%, #3a0306 48%, rgba(5,5,5,0) 68%); }
+  #title .fx .sl { position: absolute; top: 0; bottom: 0; background: linear-gradient(180deg, rgba(5,5,5,0) 0%, #b80d17 40%, #6e0509 66%, rgba(5,5,5,0) 100%); }
+  #title .fx .gr { position: absolute; inset: 0; opacity: .24; mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.1' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.5 0 0 0 0 0.5 0 0 0 0 0.5 0 0 0 2.2 -0.6'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)'/%3E%3C/svg%3E"); }
+  #title .fx .vig { position: absolute; inset: 0; background: linear-gradient(90deg, #050505 0%, rgba(5,5,5,.94) 46%, rgba(5,5,5,0) 72%); }
+  :root[data-palette="report"] #title .tc, :root[data-palette="report"] #title .art, :root[data-palette="report"] #title .end { z-index: 1; }
+  :root[data-palette="report"] #title p { font-weight: 600; letter-spacing: -.04em; }
+  :root[data-palette="report"] #title .kick { font: 600 22px/1 'Overused Grotesk', sans-serif; letter-spacing: .14em; color: #fff; }
+  :root[data-palette="report"] #title .kick b { font-weight: 600; color: #fff; background: var(--alert); padding: 10px 14px 9px; border-radius: 2px; }
+  :root[data-palette="report"] .nd { border-radius: 6px; backdrop-filter: blur(6px); }
+  :root[data-palette="report"] .nd.bad { background: #050505; border: 2px solid #fff; box-shadow: none; }
+  :root[data-palette="report"] .chip { border-radius: 2px; text-transform: uppercase; letter-spacing: .08em; font-weight: 600; font-size: 15px; }
+  :root[data-palette="report"] .chip.red { background: var(--alert); color: #fff; }
+  :root[data-palette="report"] .chip.prog { background: color-mix(in srgb, var(--teal) 18%, transparent); color: var(--teal); }
+  :root[data-palette="report"] #title .art path { stroke: #fff !important; stroke-dasharray: none; opacity: .7; }
+  :root[data-palette="report"] .btn { border-radius: 4px; color: #fff; text-transform: uppercase; letter-spacing: .08em; font-size: 24px; box-shadow: none; }
+  #cap { position: absolute; left: 24px; bottom: 20px; padding: 8px 14px; border-radius: 8px; background: rgba(17,17,20,.82); color: #fff;
+    font: 500 22px/1.2 'Overused Grotesk', sans-serif; letter-spacing: -.01em; }
+  #cap b { color: #9cf; font-weight: 600; margin-right: 10px; }
+</style>
+</head>
+<body>
+<div id="frame"><div id="page"></div><div id="title"></div><div id="cap"></div></div>
+<script>
+document.documentElement.dataset.palette = new URLSearchParams(location.search).get('palette') || 'report';   // chosen: report (threat-report language, toned down)
+const IMG = '/src/content/experience/shift/', WALK = '/scripts/shift-motion/breach/frames/';
+const WH = 1080 * 1400 / 2144;   // walkthrough frames in 1400-wide page units
+const SCREENS = {
+  '01': [IMG + '01-shift-dashboard.webp', 706.3], '05': [IMG + '05-threat-center.webp', 705.8],
+  'w10': [WALK + 'walk-10.png', WH],     // Vercel impact panel over the threat center
+  'w14': [WALK + 'walk-14.png', WH],     // Vercel access graph (Investigate)
+};
+const BASE = 1728 / 1400;
+const W = 'wide', V = (cx, cy, s) => ({ cx, cy, s });
+
+// ---------------------------------------------------------------- before-states (each screenshot is the AFTER state)
+const noNewRow01 = [['move', [16, 548, 504, 89], 0, -22.2], ['patch', [16, 614.6, 504, 23]]];   // Recent Findings without the Context.ai row
+const IMP = [316, 474, 790, 166];                                                              // 05 Impacted Vendors rows (Vercel, Retool, Loom, Supabase, Linear)
+const rowsHidden = n => [['patch', [IMP[0], IMP[1] + n * 33, IMP[2], IMP[3] - n * 33]]];       // rows from n on not filled in yet
+const TRIAGE = [884, 480, 92, 20];                                                             // Vercel's "In Progress" triage cell
+const triageOn = [['copy', TRIAGE, 0, 33], ['copy', TRIAGE, 0, 66]];                            // Retool + Loom → In Progress
+const KEYS = [[607.6, 332.5, 142.8, 47.5], [607.6, 391, 142.8, 48], [607.6, 450, 142.8, 48]];   // w14: Stripe, Twilio, Segment key nodes (faded)
+const keysLit = n => KEYS.slice(0, n).map(r => ['ink', r]);
+
+// ---------------------------------------------------------------- shot list
+// [screen, seconds, view, overlays, caption, kind, opts] — screen 'title' carries { text, sub } / { mark }
+const FIND = V(268, 560, 2.6), IMPV = V(700, 545, 2.0), ROWV = V(520, 520, 2.4);
+const IMPACT = V(560, 140, 2.3), MINI = V(930, 470, 2.0), KEYV = V(640, 400, 2.1), FIX = V(1110, 380, 1.5);
+const SHOTS = [
+  ['title', 2.4, W, [], 'Open', 'title', { art: 'chain', text: 'Your vendor’s vendor<br><em>just got breached.</em>' }],
+
+  ['01', 1.2, W, [...noNewRow01, ['wave', 0.55]], 'Dashboard builds', 'build'],
+  ['01', 0.3, W, noNewRow01, 'Dashboard — settled', 'hold'],
+  ['01', 0.6, FIND, noNewRow01, 'Push in: Recent Findings', 'move'],
+  ['01', 1.0, FIND, [], 'Rows move down — “Context.ai Compromise · Vercel Credential Exposure” is revealed on top', 'moment'],
+  ['01', 0.6, FIND, [['tint', [16, 525, 504, 23], 'rgba(124,58,237,.07)'], ['cursor', 240, 538]], 'Click the finding', 'moment'],
+
+  ['title', 2.0, W, [], 'Card', 'title', { art: 'reach', text: 'It reaches <em>three</em><br>of your vendors.' }],
+
+  ['05', 1.1, W, [...rowsHidden(0), ['wave', 0.55]], 'Threat Center builds — Context.ai alert', 'build'],
+  ['05', 0.3, W, rowsHidden(0), 'Threat Center — settled', 'hold'],
+  ['05', 0.6, IMPV, rowsHidden(0), 'Push in: Impacted Vendors', 'move'],
+  ['05', 0.5, IMPV, rowsHidden(1), 'Vercel — Confirmed · Critical', 'moment'],
+  ['05', 0.5, IMPV, rowsHidden(3), 'Retool, Loom — Confirmed', 'moment'],
+  ['05', 0.4, IMPV, rowsHidden(5), 'Supabase, Linear — Potential', 'moment'],
+  ['05', 0.5, IMPV, [['tint', [316, 474, 786, 33], 'rgba(124,58,237,.07)'], ['cursor', 560, 492]], 'Click Vercel', 'moment'],
+  ['05', 0.8, W, [['tint', [316, 474, 786, 33], 'rgba(124,58,237,.07)'], ['drawer', 'w10', 350]], 'Vercel’s impact panel slides in', 'moment'],
+  ['w10', 0.6, IMPACT, [['leftFrom', '05', 350]], 'Push in: Impact Analysis — Critical', 'move'],
+  ['w10', 1.4, IMPACT, [['leftFrom', '05', 350]], 'API keys for Stripe, Twilio and Segment exposed', 'hold'],
+  ['w10', 0.6, MINI, [['leftFrom', '05', 350]], 'Camera moves to the access graph', 'move'],
+  ['w10', 0.5, MINI, [['leftFrom', '05', 350], ['cursor', 1060, 383]], 'Click Investigate', 'moment'],
+
+  ['title', 2.0, W, [], 'Card', 'title', { art: 'keys', text: 'Vercel holds your <em>Stripe, Twilio and Segment</em> keys.' }],
+
+  ['w14', 0.9, W, [['wave', 0.55]], 'Vercel access graph builds', 'build'],
+  ['w14', 0.3, W, [], 'Access graph — settled', 'hold'],
+  ['w14', 0.6, KEYV, [], 'Push in: identities → permissions', 'move'],
+  ['w14', 0.5, KEYV, keysLit(1), 'Stripe Secret Key lights up', 'moment'],
+  ['w14', 0.5, KEYV, keysLit(2), 'Twilio Auth Token', 'moment'],
+  ['w14', 0.8, KEYV, keysLit(3), 'Segment Write Key', 'moment'],
+
+  ['title', 2.0, W, [], 'Card', 'title', { art: 'triage', text: 'Triage starts<br><em>in one click.</em>' }],
+
+  ['05', 0.8, W, [['wave', 0.55]], 'Threat Center builds', 'build'],
+  ['05', 0.6, FIX, [], 'Push in: Remediate + triage', 'move'],
+  ['05', 0.7, FIX, [['cursor', 1322, 210], ['tint', [1296, 204, 66, 20], 'rgba(24,24,27,.07)']], 'Click Remediate', 'moment'],
+  ['05', 1.0, FIX, triageOn, 'Retool and Loom move to In Progress', 'moment'],
+  ['05', 0.5, FIX, triageOn, 'Hold', 'hold'],
+
+  ['title', 2.6, W, [], 'End', 'title', { mark: true, sub: 'Agent-led third-party security, with people accountable for the decisions.' }],
+];
+
+// ---------------------------------------------------------------- render
+const page = document.getElementById('page'), cap = document.getElementById('cap'), title = document.getElementById('title');
+const capOn = new URLSearchParams(location.search).get('captions') !== '0';
+let at = 0; const starts = SHOTS.map(s => { const a = at; at += s[1]; return a; });
+const DURATION = at;
+const inOut = x => x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const viewOf = i => { const [scr, , v] = SHOTS[i]; const H = (SCREENS[scr] || [0, 706])[1]; return v === W ? { cx: 700, cy: H / 2, s: 1 } : v; };
+const el = (css = {}) => { const e = document.createElement('div'); Object.assign(e.style, css); page.append(e); return e; };
+const rectCss = ([x, y, w, h]) => ({ left: x + 'px', top: y + 'px', width: w + 'px', height: h + 'px' });
+const sliceCss = (src, H, [x, y, w, h]) => ({ ...rectCss([x, y, w, h]), backgroundImage: `url(${src})`, backgroundSize: `1400px ${H}px`, backgroundPosition: `${-x}px ${-y}px`, backgroundRepeat: 'no-repeat' });
+const CURSOR = '<svg viewBox="0 0 12 18" width="12" height="18" style="overflow:visible"><path d="M0 0 L0 14 L3.6 10.8 L6.2 16.6 L8.4 15.6 L5.9 9.9 L10.8 9.9 Z" fill="#111" stroke="#fff" stroke-width="1.1" stroke-linejoin="round"/></svg>';
+// levels: a faded node's greys → solid ink, its white stays white
+document.body.insertAdjacentHTML('beforeend', '<svg width="0" height="0" style="position:absolute"><filter id="ink" color-interpolation-filters="sRGB"><feComponentTransfer><feFuncR type="linear" slope="3" intercept="-1.82"/><feFuncG type="linear" slope="3" intercept="-1.82"/><feFuncB type="linear" slope="3" intercept="-1.82"/></feComponentTransfer></filter></svg>');
+// ---------------------------------------------------------------- title-card diagrams (660×560 box, right of the line)
+const TRI = '<svg width="20" height="18" viewBox="0 0 20 18"><path d="M10 1 L19 17 H1 Z" fill="#f4f4f5"/></svg>';
+const KEY = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="15" r="4"/><path d="M11 12 L20 3 M17 6 L20 9 M15 8 L17 10"/></svg>';
+const CUR = '<svg width="26" height="38" viewBox="0 0 12 18"><path d="M0 0 L0 14 L3.6 10.8 L6.2 16.6 L8.4 15.6 L5.9 9.9 L10.8 9.9 Z" fill="#fff" stroke="#111" stroke-width=".8" stroke-linejoin="round"/></svg>';
+const at_ = (x, y, html) => `<div style="left:${x}px;top:${y}px">${html}</div>`;
+const node = (label, sub, opt = {}) => `<div class="nd${opt.bad ? ' bad' : ''}">${opt.icon ? `<span class="ic">${opt.icon}</span>` : ''}<span class="st">${sub ? `<small>${sub}</small>` : ''}${label}</span>${opt.chip || ''}</div>`;
+const wires = paths => `<svg width="660" height="560">${paths.map(([d, c, dash]) => `<path d="${d}" fill="none" style="stroke:${c}" stroke-width="2" ${dash ? 'stroke-dasharray="6 7"' : ''}/>`).join('')}</svg>`;
+const LINE = 'color-mix(in srgb, var(--ink) 22%, transparent)', REDL = 'color-mix(in srgb, var(--alert) 70%, transparent)';
+const ART = {
+  // your company → your vendor → their vendor (breached)
+  chain: () => wires([['M280 128 V214', LINE], ['M280 290 V376', REDL, true]])
+    + at_(200, 52, node('Your company', 'You')) + at_(200, 214, node('Vercel', 'Your vendor', { icon: TRI }))
+    + at_(200, 376, node('Context.ai', 'Their vendor', { bad: true, chip: '<span class="chip red" style="margin-left:18px"><i></i>Breached</span>' })),
+  // the breach fans out to three of your vendors
+  reach: () => wires([['M232 280 C320 280 320 112 400 112', REDL, true], ['M232 280 H400', REDL, true], ['M232 280 C320 280 320 448 400 448', REDL, true]])
+    + at_(0, 242, node('Context.ai', 'Breached', { bad: true }))
+    + at_(400, 74, node('Vercel', '', { icon: TRI, chip: '<span class="chip red" style="margin-left:14px">Critical</span>' }))
+    + at_(400, 242, node('Retool', '', { chip: '<span class="chip red" style="margin-left:14px">High</span>' }))
+    + at_(400, 410, node('Loom', '', { chip: '<span class="chip red" style="margin-left:14px">Med</span>' })),
+  // Vercel holds three of your keys
+  keys: () => wires([['M200 280 C290 280 290 112 370 112', LINE], ['M200 280 H370', LINE], ['M200 280 C290 280 290 448 370 448', LINE]])
+    + at_(0, 242, node('Vercel', '', { icon: TRI }))
+    + [['Stripe', 'Secret key', 74], ['Twilio', 'Auth token', 242], ['Segment', 'Write key', 410]].map(([n, k, y]) => at_(370, y, node(n, k, { icon: `<span style="color:var(--alert)">${KEY}</span>`, bad: true }))).join(''),
+  // one click: Remediate → the impacted vendors move to In Progress
+  triage: () => at_(40, 70, '<div class="btn">Remediate</div>') + at_(232, 112, CUR)
+    + [['Retool', 230], ['Loom', 350]].map(([n, y]) => at_(40, y, `<div class="nd" style="width:560px;justify-content:space-between"><span>${n}</span><span style="display:flex;gap:12px;align-items:center"><span class="chip grey" style="text-decoration:line-through">Open</span><span style="color:var(--muted)">→</span><span class="chip prog"><i></i>In Progress</span></span></div>`)).join(''),
+};
+// card kicker line, per look: incident runs a live clock across the cards, bulletin files them under one bulletin
+const KICK = {
+  incident: { chain: 'T+00:00:00', reach: 'T+00:00:42', keys: 'T+00:01:30', triage: 'T+00:02:05' },
+  bulletin: { chain: 'FOURTH-PARTY BREACH', reach: '3 VENDORS CONFIRMED', keys: 'API KEYS EXPOSED', triage: 'TRIAGE' },
+  report: { chain: 'Fourth-party breach', reach: 'Blast radius', keys: 'Exposed secrets', triage: 'Response' },
+};
+const kicker = art => { const pal = document.documentElement.dataset.palette, k = KICK[pal]?.[art];
+  if (!k) return '';
+  return pal === 'incident' ? `<div class="kick"><span class="dot"></span><b>LIVE INCIDENT</b>&nbsp; CONTEXT.AI → VERCEL &nbsp;·&nbsp; ${k}</div>`
+    : pal === 'report' ? `<div class="kick"><b>${k.toUpperCase()}</b></div>`
+    : `<div class="kick"><b>THREAT BULLETIN</b>&nbsp; · &nbsp;${k}</div>`; };
+// report look: the red field, cut into displaced vertical slices (seeded per card so a card never shimmers), plus grain
+const fx = seed => { if (document.documentElement.dataset.palette !== 'report') return '';
+  if (seed === 'end') return '<div class="fx"><div class="gr"></div></div>';   // the resolution: the red is gone
+  let h = 0; for (const c of seed) h = (h * 31 + c.charCodeAt(0)) >>> 0; const rnd = () => ((h = (h * 1664525 + 1013904223) >>> 0) / 2 ** 32);
+  let sl = '', x = 1240; while (x < 1920) { const w = 6 + rnd() * (rnd() < .2 ? 90 : 34), dy = (rnd() - .5) * 320, o = .2 + rnd() * .4;
+    if (rnd() < .5) sl += `<div class="sl" style="left:${x.toFixed(0)}px;width:${w.toFixed(0)}px;transform:translateY(${dy.toFixed(0)}px);opacity:${o.toFixed(2)}"></div>`;
+    x += w + rnd() * 26; }
+  return `<div class="fx"><div class="field"></div>${sl}<div class="vig"></div><div class="gr"></div></div>`; };
+let shown = -1, anims = [];
+function show(i) {
+  if (i === shown) return; shown = i;
+  const [scr, dur, , ovs, caption, kind, o = {}] = SHOTS[i];
+  page.innerHTML = ''; page.style.webkitMaskImage = ''; anims = [];
+  cap.style.display = capOn ? 'block' : 'none';
+  cap.innerHTML = `<b>${scr === 'title' ? 'CARD' : scr} ${kind.toUpperCase()} · ${dur.toFixed(1)}s</b>${caption}`;
+  const isTitle = scr === 'title';
+  title.style.display = isTitle ? 'flex' : 'none'; page.style.display = isTitle ? 'none' : 'block';
+  if (isTitle) {
+    title.innerHTML = fx(o.art || 'end') + (o.mark
+      ? `<div class="end"><div class="mark"><img src="${IMG}icon.svg"><span>Shift</span></div>${o.sub ? `<small>${o.sub}</small>` : ''}</div>`
+      : `<div class="tc">${kicker(o.art)}<p>${o.text}</p></div><div class="art">${ART[o.art]()}</div>`);
+    return;
+  }
+  const [src, H] = SCREENS[scr];
+  Object.assign(page.style, { width: '1400px', height: H + 'px', backgroundImage: `url(${src})`, backgroundSize: `1400px ${H}px` });
+  for (const [type, ...a] of ovs) {
+    if (type === 'patch') { const [r, opt = {}] = a; el({ ...rectCss(r), background: opt.bg || '#fff' }); }
+    if (type === 'move' || type === 'copy') { const [r, dx, dy] = a; const e = el(sliceCss(src, H, r)); e.style.left = r[0] + dx + 'px'; e.style.top = r[1] + dy + 'px'; }
+    if (type === 'tint') { const [r, c] = a; el({ ...rectCss(r), background: c }); }
+    if (type === 'ink') { const [r] = a; const e = el(sliceCss(src, H, r)); e.style.filter = 'url(#ink)'; e.style.borderRadius = '3px'; }
+    if (type === 'cursor') { const [x, y] = a; el({ left: x + 'px', top: y + 'px', width: '12px', height: '18px', filter: 'drop-shadow(0 1px 1.5px rgba(0,0,0,.3))' }).innerHTML = CURSOR; }
+    if (type === 'wave') { const [q] = a; const e = q * 100; page.style.webkitMaskImage = `linear-gradient(180deg, #000 ${e}%, transparent ${e + 12}%)`; }
+    // the left side keeps the previous screen under a scrim, so the panel swap doesn't jump
+    if (type === 'leftFrom') { const [s2, x] = a; const [src2, H2] = SCREENS[s2];
+      el({ ...rectCss([0, 0, x, H2]), backgroundImage: `url(${src2})`, backgroundSize: `1400px ${H2}px`, backgroundRepeat: 'no-repeat' });
+      el({ ...rectCss([0, 0, x, H]), background: 'rgba(40,40,46,.42)' }); }
+    if (type === 'drawer') {   // the next screen's side panel slides in from the right over a scrim
+      const [s2, x] = a; const [src2, H2] = SCREENS[s2];
+      const scrim = el({ ...rectCss([0, 0, 1400, H]), background: 'rgba(40,40,46,.42)', opacity: 0 });
+      const wrap = el({ ...rectCss([0, 0, 1400, H2]) });
+      const pan = document.createElement('div'); wrap.append(pan);
+      Object.assign(pan.style, { position: 'absolute', ...sliceCss(src2, H2, [x, 0, 1400 - x, H2]), boxShadow: '-30px 0 60px rgba(0,0,0,.12)' });
+      anims.push(u => { scrim.style.opacity = clamp(u / 0.4); wrap.style.transform = `translateX(${Math.pow(1 - clamp(u / 0.6), 5) * (1400 - x + 10)}px)`; });
+    }
+  }
+}
+function camera(i, u) {
+  if (SHOTS[i][0] === 'title') return;
+  let v = viewOf(i);
+  const [scr, dur, , , , kind, o = {}] = SHOTS[i];
+  if (kind === 'move' && i > 0 && SHOTS[i - 1][0] !== 'title') {
+    const a = viewOf(i - 1), e = inOut(Math.min(1, u / dur));
+    v = { cx: a.cx + (v.cx - a.cx) * e, cy: a.cy + (v.cy - a.cy) * e, s: Math.exp(Math.log(a.s) + (Math.log(v.s) - Math.log(a.s)) * e) };
+  }
+  const k = BASE * v.s;
+  page.style.transform = `translate(${960 - v.cx * k}px, ${540 - v.cy * k}px) scale(${k})`;
+}
+const shotAt = t => { let i = 0; while (i < SHOTS.length - 1 && t >= starts[i + 1]) i++; return i; };
+window.DURATION = DURATION;
+window.render = t => { const i = shotAt(t); show(i); camera(i, t - starts[i]); anims.forEach(f => f(t - starts[shown])); };
+window.BEATS = SHOTS.map((s, i) => ({ name: s[0] === 'title' ? (s[6].mark ? 'End' : 'Card') : ({ '01': 'Detect', '05': 'Threat', w10: 'Vercel', w14: 'Graph' })[s[0]], start: +starts[i].toFixed(2) }))
+  .filter((b, i, arr) => i === 0 || b.name !== arr[i - 1].name);
+window.ready = (async () => {
+  await Promise.all([...Object.values(SCREENS).map(([s]) => s), '/scripts/shift-motion/bg-test.jpg', IMG + 'icon.svg'].map(src => { const i = new Image(); i.src = src; return i.decode(); }));
+  await Promise.all([...['450', '500', '600'].map(w => document.fonts.load(`${w} 100px 'Overused Grotesk'`))]);
+  window.render(parseFloat(new URLSearchParams(location.search).get('t') || '0'));
+  return true;
+})();
+
+// ?play — review player (space, scrub, ←/→ shot to shot)
+if (new URLSearchParams(location.search).has('play')) window.ready.then(() => {
+  const fr = document.getElementById('frame');
+  document.documentElement.style.cssText = document.body.style.cssText = 'width:100%;height:100%;overflow:hidden;background:#1b1b1f';
+  const bar = document.createElement('div'); document.body.append(bar);
+  bar.style.cssText = 'position:fixed;left:0;right:0;bottom:0;height:64px;padding:8px 16px;font:12px/1.2 ui-monospace,monospace;color:#ddd;background:#111;z-index:9;user-select:none';
+  bar.innerHTML = '<div style="display:flex;gap:12px;align-items:center;height:20px"><button id="pp" style="font:inherit;width:64px">pause</button><span id="tc"></span></div><div id="tl" style="position:relative;height:24px;margin-top:6px;background:#222;cursor:pointer"><div id="hd" style="position:absolute;top:0;bottom:0;width:2px;background:#fff;z-index:2"></div></div>';
+  const tl = bar.querySelector('#tl'), hd = bar.querySelector('#hd'), tc = bar.querySelector('#tc'), pp = bar.querySelector('#pp');
+  const X = s => (s / DURATION * 100) + '%';
+  const KC = { build: '#3a3a44', hold: '#2a2a30', move: '#4b6a9b', moment: '#c96', title: '#7a6a9b' };
+  SHOTS.forEach((s, i) => { const m = document.createElement('div'); tl.append(m); m.style.cssText = `position:absolute;bottom:0;height:6px;left:${X(starts[i])};width:calc(${X(s[1])} - 1px);background:${KC[s[5]]}`; });
+  for (const b of BEATS) { const m = document.createElement('div'); tl.append(m); m.style.cssText = `position:absolute;top:0;bottom:6px;left:${X(b.start)};border-left:1px solid #9cf;padding-left:3px;color:#9cf;font-size:10px;white-space:nowrap`; m.textContent = b.name; }
+  const fit = () => { const k = Math.min(innerWidth / 1920, (innerHeight - 64) / 1080);
+    fr.style.cssText = `width:1920px;height:1080px;transform-origin:0 0;transform:translate(${(innerWidth - 1920 * k) / 2}px,0) scale(${k})`; };
+  fit(); addEventListener('resize', fit);
+  let t = 0, playing = true, last = performance.now();
+  const upd = () => { window.render(t); hd.style.left = X(t); tc.textContent = `${t.toFixed(2)}s / ${DURATION.toFixed(1)}s  ·  shot ${shown + 1}/${SHOTS.length}`; pp.textContent = playing ? 'pause' : 'play'; };
+  const loop = now => { if (playing) { t = (t + (now - last) / 1000) % DURATION; upd(); } last = now; requestAnimationFrame(loop); };
+  requestAnimationFrame(loop);
+  const seek = e => { const r = tl.getBoundingClientRect(); t = clamp((e.clientX - r.left) / r.width) * DURATION; upd(); };
+  tl.addEventListener('pointerdown', e => { seek(e); tl.setPointerCapture(e.pointerId); tl.onpointermove = seek; });
+  tl.addEventListener('pointerup', () => { tl.onpointermove = null; });
+  pp.onclick = () => { playing = !playing; upd(); };
+  addEventListener('keydown', e => {
+    if (e.code === 'Space') { e.preventDefault(); playing = !playing; }
+    if (e.code === 'ArrowRight' || e.code === 'ArrowLeft') { playing = false; const i = Math.max(0, Math.min(SHOTS.length - 1, shown + (e.code === 'ArrowRight' ? 1 : -1))); t = starts[i] + 0.001; }
+    upd();
+  });
+});
+</script>
+</body>
+</html>
