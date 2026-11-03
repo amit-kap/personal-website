@@ -23,13 +23,13 @@ describe('Shift work page', () => {
     expect(meta.textContent).not.toMatch(/TLV/)
   })
 
-  it('links the strategy story under the intro and again at the end, beside Back to home', () => {
+  it('links the strategy story in the opening text and at the end, beside Back to home', () => {
     renderWork('shift')
 
     expect(screen.getByRole('link', { name: 'Back to home' })).toHaveAttribute('href', '/')
-    const reads = screen.getAllByRole('link', { name: 'Read: Designing for the Supervisor' })
-    expect(reads).toHaveLength(2)
-    for (const read of reads) expect(read).toHaveAttribute('href', '/case-studies/designing-for-the-supervisor')
+    for (const name of ['Designing for the Supervisor', 'Read: Designing for the Supervisor']) {
+      expect(screen.getByRole('link', { name })).toHaveAttribute('href', '/case-studies/designing-for-the-supervisor')
+    }
   })
 
   it('renders a window card for each feature and opens it in a lightbox with the window bar', async () => {

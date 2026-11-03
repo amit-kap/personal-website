@@ -16,6 +16,7 @@ const About = lazy(() => import('@/pages/About'))
 const WorkWithMe = lazy(() => import('@/pages/WorkWithMe'))
 const Agent = lazy(() => import('@/pages/Agent'))
 const NotFound = lazy(() => import('@/pages/NotFound'))
+const ShiftDevStage = import.meta.env.DEV ? lazy(() => import('@/shift-ui/prototypes/DevStage')) : null
 
 /* Inside Suspense so the page's DOM is ready before restoring its position,
    including a hash target on a route whose chunk was not cached yet. */
@@ -73,6 +74,7 @@ export default function App() {
                 <Route path="/about" element={<About />} />
                 <Route path="/work-with-me" element={<WorkWithMe />} />
                 <Route path="/agent" element={<Agent />} />
+                {ShiftDevStage && <Route path="/dev/shift-ui/:screen?" element={<ShiftDevStage />} />}
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </Suspense>
