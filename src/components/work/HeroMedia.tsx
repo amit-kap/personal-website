@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import type { ContentImage } from '@/lib/content'
 import Reveal from '@/components/Reveal'
-import { ZoomInIcon } from '@/components/icons'
 import Lightbox from '@/components/work/Lightbox'
+import { MediaCaption } from '@/components/work/MediaCaption'
 import ProductVideo from '@/components/work/ProductVideo'
 
 /* The hero product media, whole, in the home page's Featured frame.
@@ -24,19 +24,7 @@ export function HeroMedia({ image, video, alt, caption }: { image?: ContentImage
               )
             )}
           </div>
-          {video && caption && (
-            <div className="mt-3 flex items-center justify-between gap-4 text-meta text-muted-foreground">
-              <span>{caption}</span>
-              <button
-                type="button"
-                onClick={() => setOpen(true)}
-                className="inline-flex items-center gap-1.5 transition-colors hover:text-primary focus-visible:text-primary"
-              >
-                <ZoomInIcon />
-                Enlarge
-              </button>
-            </div>
-          )}
+          {video && caption && <MediaCaption label={caption} onEnlarge={() => setOpen(true)} />}
         </Reveal>
         {video && open && <Lightbox src={video} alt={alt} video onClose={() => setOpen(false)} />}
       </div>

@@ -20,6 +20,7 @@ const features = [
     copy: 'The supervisor starts with one question: "What needs me today?" The home prioritizes counts, urgency, and in-flight work before drill-down. Status carries the hierarchy; decoration carries nothing.',
     image: '01-shift-dashboard',
     alt: 'Shift home dashboard',
+    label: 'Home dashboard',
     prototype: 'dashboard' as PrototypeName,
   },
   {
@@ -28,6 +29,7 @@ const features = [
     copy: "The inventory treats every vendor as a continuously maintained record of evidence, access, exposure, and decisions in one place, so any assessment starts from what's already known instead of a blank questionnaire.",
     image: '02-inventory-vendors-page',
     alt: 'Shift vendor inventory',
+    label: 'Vendor inventory',
     prototype: 'vendors' as PrototypeName,
   },
   {
@@ -36,6 +38,7 @@ const features = [
     copy: 'Vendor risk only means something against what the vendor can actually touch. The access graph maps vendors to systems and data, turning exposure from a spreadsheet abstraction into something you can point at.',
     image: '04-vendor-access-graph',
     alt: 'Shift vendor access graph',
+    label: 'Vendor access graph',
   },
   {
     eyebrow: 'Where Judgment Lands',
@@ -43,6 +46,7 @@ const features = [
     copy: "The agent's work arrives in a reviewable structure: mapped evidence, proposed verdicts, and drafted follow-ups. The interface reserves its strongest moments for the calls only a person should make.",
     image: '07-assessment-flow-1',
     alt: 'Shift assessment flow',
+    label: 'Assessment flow',
     prototype: 'assessments' as PrototypeName,
   },
 ]
@@ -106,9 +110,9 @@ export default function ShiftWorkPage({ work }: { work: Work }) {
             <Reveal as="p" className="body-copy max-w-[760px]" delay={0.12}>{feature.copy}</Reveal>
             <Reveal>
               {'prototype' in feature && feature.prototype ? (
-                <PrototypeWindow name={feature.prototype} image={imageFor(work, feature.image)} alt={feature.alt} />
+                <PrototypeWindow name={feature.prototype} image={imageFor(work, feature.image)} alt={feature.alt} caption={feature.label} />
               ) : (
-                <WindowCard image={imageFor(work, feature.image)} alt={feature.alt} />
+                <WindowCard image={imageFor(work, feature.image)} alt={feature.alt} caption={feature.label} />
               )}
             </Reveal>
           </div>
