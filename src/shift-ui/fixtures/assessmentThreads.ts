@@ -7,8 +7,9 @@ import type { ActiveAssessment } from './assessmentCenter'
 
 export type EventKind = 'sent' | 'reply' | 'review'
 
-/* The agent writes in formatted blocks; **bold** marks emphasis. */
-export type Block = { p: string } | { ul: string[] } | { sources: { title: string; site: string }[] }
+/* The agent writes in formatted blocks; **bold** marks emphasis. A verdict is
+   the one-line answer, in the primary color with a check. */
+export type Block = { p: string } | { verdict: string } | { ul: string[] } | { sources: { title: string; site: string }[] }
 
 export type ThreadAction = { label: string; look: 'primary' | 'ghost' | 'text'; icon?: 'eye' | 'gavel' }
 
@@ -78,7 +79,8 @@ const trimbox: ThreadItem[] = [
     time: '10:09',
     decision: true,
     blocks: [
-      { p: '**Recommendation: approve with conditions.** 21 of 23 high-risk questions are closed, and the risk score stays at **38 (High)** until the conditions are met.' },
+      { verdict: 'Approve with conditions' },
+      { p: '21 of 23 high-risk questions are closed, and the risk score stays at **38 (High)** until the conditions are met.' },
       { p: '**Conditions**' },
       { ul: ['Reduce the OAuth grant from full mailbox access to read-only scopes', 'Provide a penetration test report within 90 days', 'Provide a written breach statement within 30 days'] },
       { p: 'The vendor answered every question and the controls it evidenced are sound. What remains is documentation, not design.' },

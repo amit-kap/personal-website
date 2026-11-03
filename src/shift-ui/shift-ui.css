@@ -2597,6 +2597,30 @@
 .shift-ui .s-ac-source:hover span {
   color: var(--s-ink);
 }
+.shift-ui .s-ac-rich .s-ac-verdict {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+.shift-ui .s-ac-verdict-icon {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--s-agent-bg);
+  color: var(--s-agent);
+}
+.shift-ui .s-ac-actions .s-dark {
+  background: var(--s-agent);
+}
+.shift-ui .s-ac-actions .s-dark:hover {
+  background: #6a4bc4;
+}
 .shift-ui .s-ac-rich strong {
   font-weight: 600;
 }

@@ -1,5 +1,5 @@
 import { useEffect, useRef, type ReactNode } from 'react'
-import { AgentGlyph, CubeLoader, ExternalLink, Eye, FileText, Gavel, Inbox, Info, PaperPlane, User } from '../icons'
+import { AgentGlyph, Check, CubeLoader, ExternalLink, Eye, FileText, Gavel, Inbox, Info, PaperPlane, User } from '../icons'
 import { resultTone, statusLabel, type ActiveAssessment } from '../fixtures/assessmentCenter'
 import { closedThread, threadFor, type Block, type EventKind, type ThreadItem } from '../fixtures/assessmentThreads'
 import { vendors } from '../fixtures/vendors'
@@ -126,6 +126,13 @@ function Blocks({ blocks }: { blocks: Block[] }) {
           <p key={i}>
             <Rich text={b.p} />
           </p>
+        ) : 'verdict' in b ? (
+          <p key={i} className="s-ac-verdict">
+            <span className="s-ac-verdict-icon">
+              <Check size={12} />
+            </span>
+            {b.verdict}
+          </p>
         ) : 'ul' in b ? (
           <ul key={i}>
             {b.ul.map((li) => (
@@ -221,7 +228,7 @@ function ThreadEntry({ item }: { item: ThreadItem }) {
       <Entry icon={<AgentGlyph size={14} />} tone="agent" title="Shift agent" time={item.time}>
         {item.decision ? (
           <div className="s-ac-decision">
-            <small>Decision needed</small>
+            <small>Recommended action</small>
             {body}
           </div>
         ) : (
