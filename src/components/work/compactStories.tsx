@@ -9,13 +9,11 @@ export type CompactStory = {
   heroImage: string
   heroAlt: string
   startingPoint: { stmt: string; paras: string[] }
+  jobsStmt: string
   jobs: Array<{ title: string; copy: string }>
-  surfaces?: {
-    heading: string
-    items: Array<{ image: string; alt: string; eyebrow: string; title: string; copy: React.ReactNode }>
-  }
+  surfaces?: Array<{ image: string; alt: string; label: string; eyebrow: string; title: string; copy: React.ReactNode }>
   results: { stmt: string; paras: string[] }
-  related?: { stmt: string; copy: string; label: string; to: string }
+  related?: { stmt?: string; copy?: string; label: string; to: string }
 }
 
 export const compactStories: Record<string, CompactStory> = {
@@ -32,17 +30,17 @@ export const compactStories: Record<string, CompactStory> = {
         'My role was to connect an executive decision to the work behind it: the benchmark, the expected result, the responsible owner, the active tasks, and anything holding progress back.',
       ],
     },
+    jobsStmt: 'Three jobs in a six-month engagement',
     jobs: [
       { title: 'Product design leadership', copy: 'Led product design during a focused engagement from April to October 2024.' },
       { title: 'Strategy into operations', copy: 'Connected benchmarks and SLAs to owners, tasks, progress, and delays.' },
       { title: 'One security data model', copy: 'Brought the security stack, BI, and operational systems into one working view.' },
     ],
-    surfaces: {
-      heading: 'From benchmarks to the tasks behind them',
-      items: [
+    surfaces: [
         {
           image: '05-p-hub',
           alt: 'Onyxia performance hub',
+          label: 'Performance hub',
           eyebrow: 'The Follow-Through',
           title: 'The Performance Hub',
           copy: 'The current and expected score, followed by the active and suggested tasks that could close the gap. Each task has an owner and a deadline.',
@@ -50,6 +48,7 @@ export const compactStories: Record<string, CompactStory> = {
         {
           image: '03-frameworks',
           alt: 'Onyxia frameworks builder',
+          label: 'Frameworks builder',
           eyebrow: 'The Benchmark',
           title: 'Weighted frameworks',
           copy: 'A measurable expression of executive priorities, using weighted categories and the CPIs behind them.',
@@ -57,6 +56,7 @@ export const compactStories: Record<string, CompactStory> = {
         {
           image: '02-SSM-2',
           alt: 'Onyxia security stack map budget view',
+          label: 'Stack map, budget view',
           eyebrow: 'The Stack',
           title: 'The security stack map',
           copy: 'Coverage and budget in one matrix: security functions against the assets they protect.',
@@ -64,12 +64,12 @@ export const compactStories: Record<string, CompactStory> = {
         {
           image: '04-insights',
           alt: 'Onyxia insights feed',
+          label: 'Insights feed',
           eyebrow: 'The Signal',
           title: 'Insights, explained',
           copy: "A readable feed of the week's CPI movements: what improved, what declined, and why it matters.",
         },
-      ],
-    },
+    ],
     results: {
       stmt: 'From executive benchmark to operational work',
       paras: ['In six months, I led the design of the core path from a CISO-level benchmark to the owners, tasks, progress, and delays behind it. The screens shown here represent that product direction.'],
@@ -88,17 +88,17 @@ export const compactStories: Record<string, CompactStory> = {
         'Before applying a change, Veriti explained what would change, in which product, why it mattered, and what effect the team should expect. A person remained accountable for approval.',
       ],
     },
+    jobsStmt: 'Three jobs, one remediation model',
     jobs: [
       { title: 'Product model and design system', copy: 'Built the product language and core interaction model during two and a half years of founding design.' },
       { title: 'Threat to control change', copy: 'Connected a known exposure to the exact configuration gap in the existing security stack.' },
       { title: 'Controlled remediation', copy: 'Made approval the accountability point before a change reached a production security control.' },
     ],
-    surfaces: {
-      heading: 'What changes, where, why',
-      items: [
+    surfaces: [
         {
           image: '04',
           alt: 'Veriti insights and remediation queue',
+          label: 'Insights and remediation queue',
           eyebrow: 'The Core Flow',
           title: 'From found weakness to an approved fix',
           copy: "Each insight connects the exposure to its root cause and proposed control change. The product explains what changes, where, and why before requesting approval.",
@@ -106,6 +106,7 @@ export const compactStories: Record<string, CompactStory> = {
         {
           image: '05',
           alt: 'Veriti threat indicators table',
+          label: 'Threat indicators table',
           eyebrow: 'The Data',
           title: 'Threat indicators at table scale',
           copy: (
@@ -121,6 +122,7 @@ export const compactStories: Record<string, CompactStory> = {
         {
           image: '03',
           alt: 'Veriti security posture map',
+          label: 'Security posture map',
           eyebrow: 'Posture',
           title: 'One score, and a map of what needs attention',
           copy: 'A posture score supported by a map of assets, exposure, and business impact.',
@@ -128,19 +130,17 @@ export const compactStories: Record<string, CompactStory> = {
         {
           image: '06',
           alt: 'Veriti Am I Protected search',
+          label: 'Am I Protected search',
           eyebrow: 'The Question',
           title: 'Am I protected?',
           copy: "The product's simplest surface: ask about any CVE and get an answer from your own stack.",
         },
-      ],
-    },
+    ],
     results: {
       stmt: 'From product model to safe remediation',
       paras: ['Over two and a half years, the product moved from an initial model to a working remediation system. The surfaces shown here explain exposures, prioritize work, and carry a proposed control change through human approval.'],
     },
     related: {
-      stmt: 'The filtering pattern, written up',
-      copy: 'How we helped Veriti users wade through their data with a filtering pattern that scales.',
       label: 'Read: Sailing the Data Oceans',
       to: '/case-studies/sailing-the-data-oceans',
     },
@@ -158,6 +158,7 @@ export const compactStories: Record<string, CompactStory> = {
         'That transition required a shared product vocabulary: what counts as a vulnerability, a dangerous configuration, an alert, or an insight, and how severity and urgency determine what needs attention.',
       ],
     },
+    jobsStmt: 'Three jobs, one product language',
     jobs: [
       { title: 'UX team leadership', copy: 'Built and led the in-house UX team while the platform expanded into identity security.' },
       { title: 'A language for risk', copy: 'Defined a shared vocabulary for vulnerabilities, configurations, alerts, and insights, organized by severity and urgency.' },
@@ -181,17 +182,17 @@ export const compactStories: Record<string, CompactStory> = {
         'During six years as a UX Expert, I worked with a large R&D organization to translate product and technical requirements into information architecture, workflows, prototypes, and cross-platform behavior.',
       ],
     },
+    jobsStmt: 'Three jobs inside a large organization',
     jobs: [
       { title: 'Design inside a large R&D organization', copy: 'Alignment, technical constraints, ownership, and implementation were all part of the UX problem.' },
       { title: 'One information architecture', copy: 'Reorganized products, objects, policies, and daily security tasks around the administrator.' },
       { title: 'Requirements into behavior', copy: 'Turned complex product and technical requirements into flows, prototypes, and cross-platform experiences.' },
     ],
-    surfaces: {
-      heading: 'One system, not twenty tabs',
-      items: [
+    surfaces: [
         {
           image: '01-details',
           alt: 'Check Point action center activities',
+          label: 'Action Center activities',
           eyebrow: 'The Action Center',
           title: 'One activity stream for security operations',
           copy: 'Security, system, and configuration alerts in a single triaged stream: severity carries the eye, details one click down.',
@@ -199,6 +200,7 @@ export const compactStories: Record<string, CompactStory> = {
         {
           image: '06-mainPage',
           alt: 'Check Point Threat Cloud portal',
+          label: 'Threat Cloud portal',
           eyebrow: 'Threat Cloud',
           title: 'The public face of the intelligence',
           copy: "Check Point's threat-intelligence portal: live attack counts, research, and security updates in one place.",
@@ -206,6 +208,7 @@ export const compactStories: Record<string, CompactStory> = {
         {
           image: '04-timeline',
           alt: 'Check Point event timeline',
+          label: 'Event timeline',
           eyebrow: 'The Timeline',
           title: 'An event traced over time',
           copy: 'A high-CPU event plotted across months, with confirm, remind, and hand-off actions right on the row.',
@@ -213,19 +216,25 @@ export const compactStories: Record<string, CompactStory> = {
         {
           image: '02-mobile',
           alt: 'Check Point mobile device pairing',
+          label: 'Mobile device pairing',
           eyebrow: 'Desktop to Mobile',
           title: 'Pairing a mobile device',
-          copy: 'The bridge from the management console to mobile: a QR pairing flow inside the Action Center.',
+          copy: (
+            <>
+              The bridge from the management console to mobile: a QR pairing flow inside the Action Center. How the team shipped the SMB app itself is in{' '}
+              <Link to="/case-studies/falling-down-the-rabbit-hole" className="font-medium text-primary hover:underline hover:underline-offset-4">
+                Falling Down the Rabbit Hole
+              </Link>
+              .
+            </>
+          ),
         },
-      ],
-    },
+    ],
     results: {
       stmt: 'Enterprise design is also organizational design',
       paras: ['The redesign replaced product-shaped navigation with an information architecture organized around the administrator’s work. It also taught me how product decisions move through technical constraints, ownership boundaries, release cycles, and a large organization.'],
     },
     related: {
-      stmt: 'A consumer app inside an enterprise company',
-      copy: 'How a Check Point team adapted its product process to ship an SMB security app for iOS and Android.',
       label: 'Read: Falling Down the Rabbit Hole',
       to: '/case-studies/falling-down-the-rabbit-hole',
     },

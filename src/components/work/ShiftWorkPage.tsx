@@ -2,9 +2,10 @@
    sections. Every other work uses CompactWorkPage. */
 import { Link } from 'react-router-dom'
 import type { Work } from '@/lib/content'
-import Reveal from '@/components/Reveal'
 import { ClosingActions } from '@/components/work/ClosingActions'
+import { FeatureSection } from '@/components/work/FeatureSection'
 import { HeroMedia } from '@/components/work/HeroMedia'
+import { JobList } from '@/components/work/JobList'
 import { SplitSection } from '@/components/work/SplitSection'
 import { TitleBlock } from '@/components/work/TitleBlock'
 import { WindowCard } from '@/components/work/WindowCard'
@@ -66,7 +67,7 @@ export default function ShiftWorkPage({ work }: { work: Work }) {
         caption="Product walkthrough"
       />
 
-      <SplitSection eyebrow="The Starting Point" stmt="The product model and the interface had to develop together" stacked>
+      <SplitSection eyebrow="The Starting Point" stmt="The product model and the interface had to develop together">
         <p className="body-copy">
           The design system could not wait for the product, and the product could not wait for the system: every screen built the language it was written in. Each workflow tested the components, density, and behavior the next one would use.
         </p>
@@ -79,47 +80,27 @@ export default function ShiftWorkPage({ work }: { work: Work }) {
         </p>
       </SplitSection>
 
-      <SplitSection eyebrow="The Job" stmt="Four domains, one navigable product" stacked>
-        <div className="flex flex-col gap-6">
-          <div className="flex flex-col gap-1.5">
-            <h3 className="font-heading text-title font-medium">A design system from zero</h3>
-            <p className="body-copy">Tokens, components, and density rules for a data-heavy security product: one language across dashboards, records, graphs, and conversations.</p>
-          </div>
-          <div className="flex flex-col gap-1.5">
-            <h3 className="font-heading text-title font-medium">Onboarding</h3>
-            <p className="body-copy">Onboarding takes a new customer from login through connected data sources to a vendor inventory populated with usable context.</p>
-          </div>
-          <div className="flex flex-col gap-1.5">
-            <h3 className="font-heading text-title font-medium">The core surfaces</h3>
-            <p className="body-copy">Vendor evidence, access, exposure, and assessment decisions could each become a separate tool. The product needed one model a supervisor could understand and navigate.</p>
-          </div>
-          <div className="flex flex-col gap-1.5">
-            <h3 className="font-heading text-title font-medium">Human-agent supervision</h3>
-            <p className="body-copy">Define where the agent can act, where it must ask, and what evidence a person needs before making the final decision.</p>
-          </div>
-        </div>
-      </SplitSection>
+      <JobList
+        stmt="Four domains, one navigable product"
+        jobs={[
+          { title: 'A design system from zero', copy: 'Tokens, components, and density rules for a data-heavy security product: one language across dashboards, records, graphs, and conversations.' },
+          { title: 'Onboarding', copy: 'Onboarding takes a new customer from login through connected data sources to a vendor inventory populated with usable context.' },
+          { title: 'The core surfaces', copy: 'Vendor evidence, access, exposure, and assessment decisions could each become a separate tool. The product needed one model a supervisor could understand and navigate.' },
+          { title: 'Human-agent supervision', copy: 'Define where the agent can act, where it must ask, and what evidence a person needs before making the final decision.' },
+        ]}
+      />
 
       {features.map((feature) => (
-        <section key={feature.eyebrow} className="relative">
-          <div className="inner-col flex flex-col gap-4.5 py-12">
-            <Reveal as="p" className="eyebrow">{feature.eyebrow}</Reveal>
-            <Reveal as="h2" className="font-heading text-title-sm font-medium" delay={0.06}>
-              {feature.title}
-            </Reveal>
-            <Reveal as="p" className="body-copy max-w-[760px]" delay={0.12}>{feature.copy}</Reveal>
-            <Reveal>
-              {'prototype' in feature && feature.prototype ? (
-                <PrototypeWindow name={feature.prototype} image={imageFor(work, feature.image)} alt={feature.alt} caption={feature.label} />
-              ) : (
-                <WindowCard image={imageFor(work, feature.image)} alt={feature.alt} caption={feature.label} />
-              )}
-            </Reveal>
-          </div>
-        </section>
+        <FeatureSection key={feature.eyebrow} eyebrow={feature.eyebrow} title={feature.title} copy={feature.copy}>
+          {'prototype' in feature && feature.prototype ? (
+            <PrototypeWindow name={feature.prototype} image={imageFor(work, feature.image)} alt={feature.alt} caption={feature.label} />
+          ) : (
+            <WindowCard image={imageFor(work, feature.image)} alt={feature.alt} caption={feature.label} />
+          )}
+        </FeatureSection>
       ))}
 
-      <SplitSection eyebrow="Results" stmt="The foundations the product is built on" stacked>
+      <SplitSection eyebrow="Results" stmt="The foundations the product is built on">
         <p className="body-copy">
           The product foundation includes the design system, onboarding, vendor inventory, access graph, operating console, and assessment workflows shown here.
         </p>

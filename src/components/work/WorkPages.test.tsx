@@ -65,9 +65,8 @@ describe('compact work pages', () => {
     renderWork('veriti')
 
     const surfaces = compactStories.veriti.surfaces!
-    expect(screen.getByRole('heading', { name: surfaces.heading })).toBeInTheDocument()
     expect(screen.getAllByRole('button', { name: /^Enlarge: / }).length).toBeGreaterThan(0)
-    for (const item of surfaces.items) expect(screen.getByRole('heading', { name: item.title })).toBeInTheDocument()
+    for (const item of surfaces) expect(screen.getByRole('heading', { name: item.title })).toBeInTheDocument()
   })
 
   it('closes the page with Back to home, plus Read only where the story has related writing', () => {

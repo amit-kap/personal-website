@@ -27,9 +27,20 @@ export default function Lightbox({
     const opener = document.activeElement as HTMLElement | null
     const lenis = getLenis()
     lenis?.stop()
+    // Closing with the mouse hands focus back to the opener without a ring;
+    // closing with the keyboard keeps it, so keyboard users see where they are.
+    let usedKeyboard = false
+    const onKey = () => { usedKeyboard = true }
+    document.addEventListener('keydown', onKey, true)
     return () => {
+      document.removeEventListener('keydown', onKey, true)
       lenis?.start()
-      opener?.focus()
+      if (!opener) return
+      if (!usedKeyboard) {
+        opener.setAttribute('data-pointer-focus', '')
+        opener.addEventListener('blur', () => opener.removeAttribute('data-pointer-focus'), { once: true })
+      }
+      opener.focus()
     }
   }, [])
 

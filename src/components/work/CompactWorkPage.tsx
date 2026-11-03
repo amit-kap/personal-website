@@ -1,15 +1,16 @@
 import type { Work } from '@/lib/content'
 import { ClosingActions } from '@/components/work/ClosingActions'
 import { HeroMedia } from '@/components/work/HeroMedia'
-import { JobGrid } from '@/components/work/JobGrid'
+import { FeatureSection } from '@/components/work/FeatureSection'
+import { JobList } from '@/components/work/JobList'
 import { SplitSection } from '@/components/work/SplitSection'
-import { SurfacesGrid } from '@/components/work/SurfacesGrid'
 import { TitleBlock } from '@/components/work/TitleBlock'
+import { WindowCard } from '@/components/work/WindowCard'
 import { compactStories } from '@/components/work/compactStories'
 import { imageFor } from '@/lib/workImages'
 
 /* The shorter work-page template used by every work except Shift, which has
-   its own page (ShiftWorkPage). Copy and image keys come from compactStories. */
+   its own page (ShiftWorkPage). Same stacked layout as Shift. Copy and image keys come from compactStories. */
 export default function CompactWorkPage({ work }: { work: Work }) {
   const story = compactStories[work.slug]
   if (!story) return null
@@ -25,37 +26,23 @@ export default function CompactWorkPage({ work }: { work: Work }) {
         ))}
       </SplitSection>
 
-      <JobGrid jobs={story.jobs} />
+      <JobList stmt={story.jobsStmt} jobs={story.jobs} />
 
-      {story.surfaces && (
-        <SurfacesGrid
-          heading={story.surfaces.heading}
-          items={story.surfaces.items.map((item) => ({ ...item, image: imageFor(work, item.image) }))}
-        />
-      )}
+      {story.surfaces?.map((item) => (
+        <FeatureSection key={item.title} eyebrow={item.eyebrow} title={item.title} copy={item.copy}>
+          <WindowCard image={imageFor(work, item.image)} alt={item.alt} caption={item.label} />
+        </FeatureSection>
+      ))}
 
-      {story.related ? (
-        <section className="relative">
-          <div className="inner-col grid gap-10 py-14 sm:grid-cols-2 sm:gap-0">
-            <div className="flex flex-col gap-3 sm:pr-12">
-              <p className="eyebrow">Results</p>
-              <h2 className="stmt">{story.results.stmt}</h2>
-              {story.results.paras.map((para) => (
-                <p key={para.slice(0, 24)} className="body-copy">{para}</p>
-              ))}
-            </div>
-            <div className="flex flex-col gap-3 sm:pl-12">
-              <p className="eyebrow">From the Work</p>
-              <h2 className="stmt">{story.related.stmt}</h2>
-              <p className="body-copy">{story.related.copy}</p>
-            </div>
-          </div>
-        </section>
-      ) : (
-        <SplitSection eyebrow="Results" stmt={story.results.stmt}>
-          {story.results.paras.map((para) => (
-            <p key={para.slice(0, 24)} className="body-copy">{para}</p>
-          ))}
+      <SplitSection eyebrow="Results" stmt={story.results.stmt}>
+        {story.results.paras.map((para) => (
+          <p key={para.slice(0, 24)} className="body-copy">{para}</p>
+        ))}
+      </SplitSection>
+
+      {story.related?.stmt && story.related.copy && (
+        <SplitSection eyebrow="From the Work" stmt={story.related.stmt}>
+          <p className="body-copy">{story.related.copy}</p>
         </SplitSection>
       )}
 
