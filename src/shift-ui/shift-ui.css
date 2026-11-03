@@ -122,11 +122,11 @@
   padding-bottom: 24px;
 }
 .shift-ui .s-title-row {
-  height: 70px;
+  height: 61px;
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  padding-top: 33px;
+  padding-top: 24px;
 }
 .shift-ui .s-title {
   font-size: 22px;
@@ -629,6 +629,18 @@
 }
 
 /* Vendors page */
+.shift-ui .s-sum-collapse {
+  display: grid;
+  grid-template-rows: 1fr;
+  transition: grid-template-rows 280ms var(--s-ease);
+}
+.shift-ui .s-sum-collapse[data-open='false'] {
+  grid-template-rows: 0fr;
+}
+.shift-ui .s-sum-clip {
+  min-height: 0;
+  overflow: hidden;
+}
 .shift-ui .s-sum-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
