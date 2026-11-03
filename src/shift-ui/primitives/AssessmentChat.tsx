@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import { AgentGlyph, Eye, Gavel, Inbox, Info, MessageSquare, PaperPlane, Paperclip, User } from '../icons'
+import { AgentGlyph, CubeLoader, Eye, FileText, Gavel, Inbox, Info, MessageSquare, PaperPlane, Paperclip, User } from '../icons'
 import { statusLabel, type ActiveAssessment } from '../fixtures/assessmentCenter'
 import { threadFor, type EventKind, type ThreadItem } from '../fixtures/assessmentThreads'
 import { vendors } from '../fixtures/vendors'
@@ -13,10 +13,14 @@ export function AssessmentChat({
   assessment,
   panelOpen,
   onTogglePanel,
+  artifactsOpen,
+  onToggleArtifacts,
 }: {
   assessment: ActiveAssessment
   panelOpen: boolean
   onTogglePanel: () => void
+  artifactsOpen: boolean
+  onToggleArtifacts: () => void
 }) {
   const row = vendors.find((v) => v.name === assessment.vendor)
   const pct = Math.round((assessment.answered / assessment.total) * 100)
@@ -50,10 +54,20 @@ export function AssessmentChat({
             </span>
           </span>
           <span className="s-ac-status" data-status={assessment.status}>
+            {assessment.status === 'agent' && <CubeLoader />}
             {statusLabel[assessment.status]}
           </span>
         </div>
         <div className="s-ac-end">
+          <button
+            type="button"
+            className="s-icon-btn"
+            aria-label={artifactsOpen ? 'Hide artifacts' : 'Show artifacts'}
+            aria-pressed={artifactsOpen}
+            onClick={onToggleArtifacts}
+          >
+            <FileText size={16} />
+          </button>
           <button
             type="button"
             className="s-icon-btn"

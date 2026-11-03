@@ -1,5 +1,5 @@
-import { useState, type ReactNode } from 'react'
-import { Check, ChevronDown, Search } from '../icons'
+import { useRef, useState, type ReactNode } from 'react'
+import { CubeLoader, MoreHorizontal, Search } from '../icons'
 import {
   activeAssessments,
   compareHistory,
@@ -13,53 +13,8 @@ import {
   type HistorySort,
 } from '../fixtures/assessmentCenter'
 import { Menu } from './Menu'
+import { Picker } from './Picker'
 import { VendorLogo } from './VendorLogo'
-
-/* A small dropdown: the button shows the current choice, the menu has a check
-   beside it. */
-function Picker<T extends string>({
-  label,
-  value,
-  options,
-  onChange,
-}: {
-  label: string
-  value: T
-  options: { id: T; label: string }[]
-  onChange: (id: T) => void
-}) {
-  return (
-    <Menu
-      below
-      label={label}
-      trigger={({ open, toggle }) => (
-        <button type="button" className="s-ghost s-ac-filter-btn" aria-haspopup="menu" aria-expanded={open} aria-label={`${label}: ${options.find((o) => o.id === value)?.label}`} onClick={toggle}>
-          {options.find((o) => o.id === value)?.label}
-          <ChevronDown size={12} />
-        </button>
-      )}
-    >
-      {(close) =>
-        options.map((o) => (
-          <button
-            key={o.id}
-            type="button"
-            role="menuitemradio"
-            aria-checked={o.id === value}
-            className="s-menu-item"
-            onClick={() => {
-              onChange(o.id)
-              close()
-            }}
-          >
-            {o.label}
-            {o.id === value && <Check size={13} />}
-          </button>
-        ))
-      }
-    </Menu>
-  )
-}
 
 /* Left column: Active sessions or the History of finished ones. Active can be
    filtered by who the work is waiting on and is ordered with what needs you
@@ -79,6 +34,13 @@ export function AssessmentList({
   const [filter, setFilter] = useState<'all' | AssessmentStatus>('all')
   const [sort, setSort] = useState<HistorySort>('newest')
   const [query, setQuery] = useState('')
+  const [searching, setSearching] = useState(false)
+  const field = useRef<HTMLInputElement>(null)
+  const toggleSearch = () => {
+    if (searching) setQuery('')
+    else window.setTimeout(() => field.current?.focus({ preventScroll: true }), 200)
+    setSearching(!searching)
+  }
   const q = query.trim().toLowerCase()
   const matches = (vendor: string) => !q || vendor.toLowerCase().includes(q)
   const past = resolvedAssessments.filter((r) => matches(r.vendor)).sort(compareHistory[sort])
@@ -88,27 +50,54 @@ export function AssessmentList({
 
   return (
     <aside className="s-ac-list" aria-label="Assessments" style={{ width }}>
-      <div className="s-ac-tabs" role="tablist" aria-label="Assessments">
-        <button type="button" role="tab" aria-selected={tab === 'active'} onClick={() => setTab('active')}>
-          Active
-          <span className="s-ac-count">{activeAssessments.length}</span>
-        </button>
-        <button type="button" role="tab" aria-selected={tab === 'history'} onClick={() => setTab('history')}>
-          History
-          <span className="s-ac-count">{RESOLVED_COUNT}</span>
-        </button>
-      </div>
-
-      <div className="s-ac-filter">
-        <label className="s-search">
-          <Search size={14} />
-          <input type="search" placeholder="Search..." value={query} onChange={(e) => setQuery(e.target.value)} aria-label="Search assessments" />
-        </label>
+      <div className="s-ac-bar">
+        <Picker
+          label="View"
+          value={tab}
+          options={[
+            { id: 'active', label: 'Active', count: activeAssessments.length },
+            { id: 'history', label: 'History', count: RESOLVED_COUNT },
+          ]}
+          onChange={setTab}
+        />
         {tab === 'active' ? (
           <Picker label="Filter assessments" value={filter} options={filters} onChange={setFilter} />
         ) : (
           <Picker label="Sort history" value={sort} options={historySorts} onChange={setSort} />
         )}
+        <span className="s-ac-bar-end">
+          <button type="button" className="s-ghost s-ac-more" aria-label="Search assessments" aria-expanded={searching} aria-pressed={searching} onClick={toggleSearch}>
+            <Search size={14} />
+          </button>
+          <Menu
+            below
+            label="Assessment actions"
+            trigger={({ open, toggle }) => (
+              <button type="button" className="s-ghost s-ac-more" aria-haspopup="menu" aria-expanded={open} aria-label="More actions" onClick={toggle}>
+                <MoreHorizontal size={16} />
+              </button>
+            )}
+          >
+            {(close) =>
+              ['Start assessment', 'Export list'].map((l) => (
+                <button key={l} type="button" role="menuitem" className="s-menu-item" onClick={close}>
+                  {l}
+                </button>
+              ))
+            }
+          </Menu>
+        </span>
+      </div>
+
+      <div className="s-ac-search" data-open={searching} inert={!searching}>
+        <div className="s-ac-search-clip">
+          <div className="s-ac-filter">
+            <label className="s-search">
+              <Search size={14} />
+              <input ref={field} type="search" placeholder="Search..." value={query} onChange={(e) => setQuery(e.target.value)} onKeyDown={(e) => e.key === 'Escape' && (e.stopPropagation(), toggleSearch())} aria-label="Search assessments" />
+            </label>
+          </div>
+        </div>
       </div>
 
       <div className="s-ac-scroll" role="tabpanel" data-lenis-prevent>
@@ -121,6 +110,7 @@ export function AssessmentList({
                   <span className="s-ac-item-main">
                     <b>{a.vendor}</b>
                     <span className="s-ac-tag" data-status={a.status}>
+                      {a.status === 'agent' && <CubeLoader />}
                       {statusLabel[a.status]}
                     </span>
                   </span>

@@ -178,6 +178,14 @@ export const Check = (p: P) => (
   </Icon>
 )
 
+export const MoreHorizontal = (p: P) => (
+  <Icon {...p}>
+    <circle cx="12" cy="12" r="1"/>
+    <circle cx="19" cy="12" r="1"/>
+    <circle cx="5" cy="12" r="1"/>
+  </Icon>
+)
+
 export const Menu = (p: P) => (
   <Icon {...p}>
     <line x1="4" x2="20" y1="12" y2="12"/>
@@ -315,5 +323,39 @@ export const Gavel = (p: P) => (
     <path d="m8 8 6-6" />
     <path d="m9 7 8 8" />
     <path d="m21 11-8-8" />
+  </Icon>
+)
+
+/* A 3x3 grid of cubes that pulse in a diagonal wave: the "working" loader. */
+export const CubeLoader = () => (
+  <span className="s-cube" aria-hidden="true">
+    {Array.from({ length: 9 }, (_, i) => (
+      <i key={i} style={{ animationDelay: `${((i % 3) + Math.floor(i / 3)) * 120}ms` }} />
+    ))}
+  </span>
+)
+
+export const FileText = (p: P) => (
+  <Icon {...p}>
+    <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/>
+    <path d="M14 2v4a2 2 0 0 0 2 2h4"/>
+    <path d="M10 9H8"/>
+    <path d="M16 13H8"/>
+    <path d="M16 17H8"/>
+  </Icon>
+)
+
+export const Download = (p: P) => (
+  <Icon {...p}>
+    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+    <polyline points="7 10 12 15 17 10"/>
+    <line x1="12" x2="12" y1="15" y2="3"/>
+  </Icon>
+)
+
+export const Lock = (p: P) => (
+  <Icon {...p}>
+    <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/>
+    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
   </Icon>
 )
