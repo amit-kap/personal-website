@@ -359,3 +359,11 @@ export const Lock = (p: P) => (
     <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
   </Icon>
 )
+
+/* Lucide "picture-in-picture-2": the panel returns to a floating window. */
+export const Undock = (p: P) => (
+  <Icon {...p}>
+    <path d="M21 9V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v10c0 1.1.9 2 2 2h4" />
+    <rect width="10" height="7" x="12" y="13" rx="2" />
+  </Icon>
+)

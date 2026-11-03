@@ -1,9 +1,12 @@
 import { Fragment, useEffect, useRef, useState } from 'react'
 import { type Answer, type AskScript } from '../fixtures/ask'
-import { AgentGlyph, Building, Check, ClipboardCheck, Close, Menu, Radar, ShieldAlert } from '../icons'
+import { AgentGlyph, Building, Check, ClipboardCheck, Close, MoreHorizontal, PanelRight, Radar, ShieldAlert, Undock } from '../icons'
 import { Composer } from './Composer'
 import { Menu as Popover } from './Menu'
 import { VendorLogo } from './VendorLogo'
+
+/* Closed, a floating window above the button, or docked as a side panel. */
+export type AskMode = 'closed' | 'float' | 'docked'
 
 const groupIcon = { vendors: Building, exposures: ShieldAlert, threats: Radar, assessments: ClipboardCheck } as const
 
@@ -151,7 +154,9 @@ function AgentMessage({
 /* The Ask Shift panel: suggested questions until the first message, then the
    conversation. Always mounted so it can slide; inert while closed. */
 export function AskShift({
-  open,
+  mode,
+  exiting,
+  onDock,
   width,
   onWidth,
   onDragging,
@@ -159,7 +164,10 @@ export function AskShift({
   onClose,
   script,
 }: {
-  open: boolean
+  mode: AskMode
+  /* A floating window that is on its way out. */
+  exiting: boolean
+  onDock: () => void
   width: number
   onWidth: (w: number) => void
   onDragging: (dragging: boolean) => void
@@ -167,6 +175,7 @@ export function AskShift({
   onClose: () => void
   script: AskScript
 }) {
+  const open = mode !== 'closed'
   const [messages, setMessages] = useState<Message[]>([])
   const panel = useRef<HTMLElement>(null)
   const scroller = useRef<HTMLDivElement>(null)
@@ -248,7 +257,7 @@ export function AskShift({
   }
 
   return (
-    <aside ref={panel} id="s-ask" className="s-ask" data-open={open} aria-label="Ask Shift" inert={!open}>
+    <aside ref={panel} id="s-ask" className="s-ask" data-open={open} data-mode={exiting ? 'float' : mode} data-exiting={exiting} aria-label="Ask Shift" inert={!open}>
       <div
         className="s-ask-resize"
         role="separator"
@@ -265,12 +274,21 @@ export function AskShift({
         <div className="s-ask-top">
           <span className="s-ask-title">{title ?? 'New session'}</span>
           <div className="s-ask-actions">
+          <button
+            type="button"
+            className="s-tool s-icon-only s-ask-dock"
+            aria-label={mode === 'docked' ? 'Undock to a floating window' : 'Dock to the side'}
+            title={mode === 'docked' ? 'Undock' : 'Dock to side'}
+            onClick={onDock}
+          >
+            {mode === 'docked' ? <Undock size={16} /> : <PanelRight size={16} />}
+          </button>
           <Popover
             below
             label="Session"
             trigger={({ open, toggle }) => (
               <button type="button" className="s-tool s-icon-only" aria-haspopup="menu" aria-expanded={open} aria-label="Menu" onClick={toggle}>
-                <Menu size={16} />
+                <MoreHorizontal size={16} />
               </button>
             )}
           >
@@ -288,6 +306,7 @@ export function AskShift({
               </button>
             )}
           </Popover>
+          <span className="s-ask-sep" aria-hidden="true" />
           <button type="button" className="s-tool s-icon-only" aria-label="Close Ask Shift" onClick={onClose}>
             <Close size={16} />
           </button>
