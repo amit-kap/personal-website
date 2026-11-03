@@ -15,7 +15,8 @@ export type ThreadAction = { label: string; look: 'primary' | 'ghost' | 'text'; 
 export type ThreadItem =
   | { kind: 'day'; label: string; note?: string }
   | { kind: 'user'; time: string; text: string }
-  | { kind: 'agent'; time: string; blocks: Block[]; actions?: ThreadAction[] }
+  | { kind: 'agent'; time: string; blocks: Block[]; actions?: ThreadAction[]; decision?: boolean }
+  | { kind: 'working' }
   | { kind: 'event'; time: string; event: EventKind; title: string; detail: string; link?: string }
 
 const agent = (time: string, ...blocks: Block[]): ThreadItem => ({ kind: 'agent', time, blocks })
@@ -75,6 +76,7 @@ const trimbox: ThreadItem[] = [
   {
     kind: 'agent',
     time: '10:09',
+    decision: true,
     blocks: [
       { p: '**Recommendation: approve with conditions.** 21 of 23 high-risk questions are closed, and the risk score stays at **38 (High)** until the conditions are met.' },
       { p: '**Conditions**' },
@@ -106,7 +108,18 @@ function generic(a: ActiveAssessment): ThreadItem[] {
     { kind: 'day', label: 'May 29, 2026' },
     start,
     agent('09:13', { p: 'Collecting public evidence and mapping it to controls. I will draft the first inquiry for your approval.' }),
+    { kind: 'working' },
   ]
 }
+
+/* A finished assessment reads as a short, closed record. */
+export const closedThread = (vendor: string, result: string): ThreadItem[] => [
+  { kind: 'day', label: 'Closed' },
+  agent(
+    '09:00',
+    { p: `**${result}.** The assessment for **${vendor}** is closed and the decision is on record.` },
+    { p: 'The vendor information and artifacts stay available on the right. Messages are off until the assessment is reopened.' },
+  ),
+]
 
 export const threadFor = (a: ActiveAssessment): ThreadItem[] => (a.vendor === 'Trimbox' ? trimbox : generic(a))

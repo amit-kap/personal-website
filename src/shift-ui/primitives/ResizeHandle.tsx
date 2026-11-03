@@ -2,9 +2,10 @@ import type { KeyboardEvent, PointerEvent } from 'react'
 
 /* A drag handle on the edge of a column. `edge` is the side of the column it
    sits on: 'right' for a column at the left of the screen, 'left' for one at
-   the right. The width follows the pointer inside the closest .s-ac, in the
-   screen's own pixels, so it also works when the screen is scaled down. Arrow
-   keys nudge it and a double click resets it. */
+   the right. The width follows the pointer from the column's own anchored
+   edge, in the screen's own pixels, so it also works when the screen is scaled
+   down and when other columns sit beside it. Arrow keys nudge it and a double
+   click resets it. */
 export function ResizeHandle({
   edge,
   width,
@@ -26,13 +27,23 @@ export function ResizeHandle({
     e.preventDefault()
     const handle = e.currentTarget
     handle.setPointerCapture(e.pointerId)
-    const frame = handle.closest<HTMLElement>('.s-ac')!
-    const rect = frame.getBoundingClientRect()
-    const k = rect.width / frame.offsetWidth || 1
+    const column = handle.parentElement!
+    const rect = column.getBoundingClientRect()
+    const k = rect.width / column.offsetWidth || 1
     onDragging(true)
-    const move = (ev: globalThis.PointerEvent) =>
-      onWidth(clamp(Math.round(edge === 'right' ? (ev.clientX - rect.left) / k : (rect.right - ev.clientX) / k)))
+    /* One update per frame: the whole screen re-renders on each. */
+    let frame = 0
+    let latest = 0
+    const move = (ev: globalThis.PointerEvent) => {
+      latest = Math.round(edge === 'right' ? (ev.clientX - rect.left) / k : (rect.right - ev.clientX) / k)
+      if (!frame)
+        frame = requestAnimationFrame(() => {
+          frame = 0
+          onWidth(clamp(latest))
+        })
+    }
     const end = () => {
+      cancelAnimationFrame(frame)
       onDragging(false)
       handle.removeEventListener('pointermove', move)
       handle.removeEventListener('pointerup', end)
@@ -59,6 +70,8 @@ export function ResizeHandle({
       aria-orientation="vertical"
       aria-label={label}
       aria-valuenow={width}
+      aria-valuemin={clamp(0)}
+      aria-valuemax={clamp(100000)}
       tabIndex={0}
       onPointerDown={start}
       onKeyDown={nudge}

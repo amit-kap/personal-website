@@ -3,10 +3,12 @@ import { CubeLoader, MoreHorizontal, Search } from '../icons'
 import {
   activeAssessments,
   compareHistory,
+  emptyFilter,
   filters,
   historySorts,
   RESOLVED_COUNT,
   resolvedAssessments,
+  resultTone,
   statusLabel,
   statusRank,
   type AssessmentStatus,
@@ -36,9 +38,12 @@ export function AssessmentList({
   const [query, setQuery] = useState('')
   const [searching, setSearching] = useState(false)
   const field = useRef<HTMLInputElement>(null)
+  const searchButton = useRef<HTMLButtonElement>(null)
   const toggleSearch = () => {
-    if (searching) setQuery('')
-    else window.setTimeout(() => field.current?.focus({ preventScroll: true }), 200)
+    if (searching) {
+      setQuery('')
+      searchButton.current?.focus({ preventScroll: true })
+    } else window.setTimeout(() => field.current?.focus({ preventScroll: true }), 200)
     setSearching(!searching)
   }
   const q = query.trim().toLowerCase()
@@ -66,7 +71,7 @@ export function AssessmentList({
           <Picker label="Sort history" value={sort} options={historySorts} onChange={setSort} />
         )}
         <span className="s-ac-bar-end">
-          <button type="button" className="s-ghost s-ac-more" aria-label="Search assessments" aria-expanded={searching} aria-pressed={searching} onClick={toggleSearch}>
+          <button ref={searchButton} type="button" className="s-ghost s-ac-more" aria-label="Search assessments" aria-expanded={searching} aria-controls="s-ac-search" onClick={toggleSearch}>
             <Search size={14} />
           </button>
           <Menu
@@ -89,9 +94,9 @@ export function AssessmentList({
         </span>
       </div>
 
-      <div className="s-ac-search" data-open={searching} inert={!searching}>
+      <div id="s-ac-search" className="s-ac-search" data-open={searching} inert={!searching}>
         <div className="s-ac-search-clip">
-          <div className="s-ac-filter">
+          <div className="s-ac-search-field">
             <label className="s-search">
               <Search size={14} />
               <input ref={field} type="search" placeholder="Search..." value={query} onChange={(e) => setQuery(e.target.value)} onKeyDown={(e) => e.key === 'Escape' && (e.stopPropagation(), toggleSearch())} aria-label="Search assessments" />
@@ -100,7 +105,7 @@ export function AssessmentList({
         </div>
       </div>
 
-      <div className="s-ac-scroll" role="tabpanel" data-lenis-prevent>
+      <div className="s-ac-scroll" data-lenis-prevent>
         {tab === 'active' ? (
           <ul className="s-ac-items">
             {rows.map((a) => (
@@ -120,25 +125,25 @@ export function AssessmentList({
                 </button>
               </li>
             ))}
-            {rows.length === 0 && <li className="s-empty">Nothing here.</li>}
+            {rows.length === 0 && <li className="s-empty">{q ? `No match for “${query.trim()}”` : filter === 'all' ? 'No active assessments' : emptyFilter[filter]}</li>}
           </ul>
         ) : (
           <ul className="s-ac-items">
             {past.map((r) => (
               <li key={r.vendor}>
-                <div className="s-ac-item" data-resolved>
+                <button type="button" className="s-ac-item" data-selected={selected === r.vendor} aria-current={selected === r.vendor ? 'true' : undefined} onClick={() => onSelect(r.vendor)}>
                   <VendorLogo name={r.vendor} size={28} />
                   <span className="s-ac-item-main">
                     <b>{r.vendor}</b>
-                    <span className="s-ac-result" data-result={r.result.split(' ')[0]}>
+                    <span className="s-ac-result" data-result={resultTone(r.result)}>
                       {r.result}
                     </span>
                   </span>
                   <span className="s-ac-item-meta">{r.when}</span>
-                </div>
+                </button>
               </li>
             ))}
-            {past.length === 0 && <li className="s-empty">Nothing here.</li>}
+            {past.length === 0 && <li className="s-empty">{q ? `No match for “${query.trim()}”` : 'No finished assessments'}</li>}
           </ul>
         )}
       </div>

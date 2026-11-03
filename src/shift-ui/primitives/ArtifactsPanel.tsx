@@ -20,6 +20,12 @@ export function ArtifactsPanel({
   children?: ReactNode
 }) {
   const [filter, setFilter] = useState<'all' | ArtifactAccess>('all')
+  const [seen, setSeen] = useState(vendor)
+  /* A different vendor starts unfiltered. */
+  if (seen !== vendor) {
+    setSeen(vendor)
+    setFilter('all')
+  }
   const all = artifactsFor(vendor)
   const docs = all.filter((d) => filter === 'all' || d.access === filter)
   return (
@@ -33,7 +39,7 @@ export function ArtifactsPanel({
             </button>
           </header>
           <div className="s-ac-docs-bar">
-            <Picker label="Filter documents" value={filter} options={artifactFilters.map((f) => ({ ...f }))} onChange={setFilter} />
+            <Picker label="Filter documents" value={filter} options={artifactFilters} onChange={setFilter} />
             <button type="button" className="s-ghost">
               <Download size={13} />
               Bulk download
@@ -50,7 +56,12 @@ export function ArtifactsPanel({
                     <small>{d.category}</small>
                     <b>{d.name}</b>
                   </span>
-                  {d.access === 'private' && <Lock size={12} className="s-ac-doc-lock" aria-label="Private" />}
+                  {d.access === 'private' && (
+                    <span className="s-ac-doc-lock">
+                      <Lock size={12} />
+                      <span className="s-sr">Private</span>
+                    </span>
+                  )}
                   <button type="button" className="s-icon-btn s-ac-doc-dl" aria-label={`Download ${d.name}`}>
                     <Download size={14} />
                   </button>

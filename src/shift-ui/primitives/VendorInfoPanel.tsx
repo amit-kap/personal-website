@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
 import { vendorDetails } from '../fixtures/vendorDetail'
-import { Close } from '../icons'
+import { Close, Info } from '../icons'
 import { Rail } from './VendorDetail'
 
 /* Right column: facts about the vendor, reusing the vendor card's rail. Always
@@ -31,7 +31,13 @@ export function VendorInfoPanel({
             </button>
           </header>
           <div className="s-ac-panel-body" data-lenis-prevent>
-            {detail ? <Rail detail={detail} /> : <p className="s-empty">No vendor information.</p>}
+            {detail ? <Rail detail={detail} /> : (
+              <div className="s-ac-panel-empty">
+                <Info size={18} />
+                <b>No vendor information yet</b>
+                <span>Shift adds details here as the assessment collects them.</span>
+              </div>
+            )}
           </div>
         </div>
       </div>

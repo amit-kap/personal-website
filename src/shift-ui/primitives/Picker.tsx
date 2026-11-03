@@ -11,7 +11,7 @@ export function Picker<T extends string>({
 }: {
   label: string
   value: T
-  options: { id: T; label: string; count?: number }[]
+  options: readonly { id: T; label: string; count?: number }[]
   onChange: (id: T) => void
 }) {
   const current = options.find((o) => o.id === value)
@@ -20,7 +20,7 @@ export function Picker<T extends string>({
       below
       label={label}
       trigger={({ open, toggle }) => (
-        <button type="button" className="s-ghost s-ac-filter-btn" aria-haspopup="menu" aria-expanded={open} aria-label={`${label}: ${current?.label}`} onClick={toggle}>
+        <button type="button" className="s-ghost" aria-haspopup="menu" aria-expanded={open} aria-label={`${label}: ${current?.label}${current?.count != null ? `, ${current.count}` : ''}`} onClick={toggle}>
           {current?.label}
           {current?.count != null && <span className="s-ac-count">{current.count}</span>}
           <ChevronDown size={12} />

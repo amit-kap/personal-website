@@ -1,7 +1,7 @@
 import { useEffect, useRef, type ReactNode } from 'react'
 import { AgentGlyph, CubeLoader, ExternalLink, Eye, FileText, Gavel, Inbox, Info, PaperPlane, User } from '../icons'
-import { statusLabel, type ActiveAssessment } from '../fixtures/assessmentCenter'
-import { threadFor, type Block, type EventKind, type ThreadItem } from '../fixtures/assessmentThreads'
+import { resultTone, statusLabel, type ActiveAssessment } from '../fixtures/assessmentCenter'
+import { closedThread, threadFor, type Block, type EventKind, type ThreadItem } from '../fixtures/assessmentThreads'
 import { vendors } from '../fixtures/vendors'
 import { Composer } from './Composer'
 import { VendorLogo } from './VendorLogo'
@@ -11,20 +11,26 @@ import { VendorLogo } from './VendorLogo'
    now: it opens with the assessment starting. */
 export function AssessmentChat({
   assessment,
+  result,
   panelOpen,
   onTogglePanel,
   artifactsOpen,
   onToggleArtifacts,
 }: {
   assessment: ActiveAssessment
+  /* Set for a finished assessment: the thread is a read-only record. */
+  result?: string
   panelOpen: boolean
   onTogglePanel: () => void
   artifactsOpen: boolean
   onToggleArtifacts: () => void
 }) {
   const row = vendors.find((v) => v.name === assessment.vendor)
-  const pct = Math.round((assessment.answered / assessment.total) * 100)
-  const items = threadFor(assessment)
+  const pct = assessment.total ? Math.round((assessment.answered / assessment.total) * 100) : 0
+  const items = result ? closedThread(assessment.vendor, result) : threadFor(assessment)
+  const open = assessment.total - assessment.answered
+  /* The next step, not a repeat of the list's tag. */
+  const status = assessment.status === 'review' ? (open > 0 ? `${open} open · decision pending` : 'Decision pending') : statusLabel[assessment.status]
   const thread = useRef<HTMLDivElement>(null)
 
   /* Open at the latest message, where the agent is waiting on you. */
@@ -45,18 +51,26 @@ export function AssessmentChat({
           <h2 className="s-ac-title">{assessment.vendor}</h2>
         </div>
         <div className="s-ac-mid">
-          <span className="s-ac-progress" title={`${assessment.answered} of ${assessment.total} questions answered`}>
-            <span className="s-progress-track">
-              <span className="s-progress-fill" style={{ width: `${pct}%` }} />
+          {result ? (
+            <span className="s-ac-status" data-status="closed" data-result={resultTone(result)}>
+              {result}
             </span>
-            <span className="s-progress-label">
-              {assessment.answered} of {assessment.total} ({pct}%)
-            </span>
-          </span>
-          <span className="s-ac-status" data-status={assessment.status}>
-            {assessment.status === 'agent' && <CubeLoader />}
-            {statusLabel[assessment.status]}
-          </span>
+          ) : (
+            <>
+              <span className="s-ac-progress" title={`${assessment.answered} of ${assessment.total} questions answered`}>
+                <span className="s-progress-track">
+                  <span className="s-progress-fill" style={{ width: `${pct}%` }} />
+                </span>
+                <span className="s-progress-label">
+                  {assessment.answered} of {assessment.total} ({pct}%)
+                </span>
+              </span>
+              <span className="s-ac-status" data-status={assessment.status}>
+                {assessment.status === 'agent' && <CubeLoader />}
+                {status}
+              </span>
+            </>
+          )}
         </div>
         <div className="s-ac-end">
           <button
@@ -89,7 +103,7 @@ export function AssessmentChat({
       </div>
 
       <div className="s-ac-foot">
-        <Composer onSend={() => {}} placeholder={`Message the agent about ${assessment.vendor}`} />
+        {result ? <p className="s-ac-closed">This assessment is closed.</p> : <Composer onSend={() => {}} placeholder={`Message the agent about ${assessment.vendor}`} />}
       </div>
     </section>
   )
@@ -176,9 +190,19 @@ function ThreadEntry({ item }: { item: ThreadItem }) {
       </div>
     )
   }
-  if (item.kind === 'agent') {
+  if (item.kind === 'working') {
     return (
-      <Entry icon={<AgentGlyph size={14} />} tone="agent" title="Shift agent" time={item.time}>
+      <Entry icon={<AgentGlyph size={14} />} tone="agent" title="Shift agent" time="">
+        <p className="s-ac-working">
+          <CubeLoader />
+          Working on it
+        </p>
+      </Entry>
+    )
+  }
+  if (item.kind === 'agent') {
+    const body = (
+      <>
         <Blocks blocks={item.blocks} />
         {item.actions && (
           <div className="s-ac-actions">
@@ -190,6 +214,18 @@ function ThreadEntry({ item }: { item: ThreadItem }) {
               </button>
             ))}
           </div>
+        )}
+      </>
+    )
+    return (
+      <Entry icon={<AgentGlyph size={14} />} tone="agent" title="Shift agent" time={item.time}>
+        {item.decision ? (
+          <div className="s-ac-decision">
+            <small>Decision needed</small>
+            {body}
+          </div>
+        ) : (
+          body
         )}
       </Entry>
     )

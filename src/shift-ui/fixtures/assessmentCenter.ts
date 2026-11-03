@@ -31,10 +31,21 @@ export const activeAssessments: ActiveAssessment[] = [
 
 export const filters: { id: 'all' | AssessmentStatus; label: string }[] = [
   { id: 'all', label: 'All' },
-  { id: 'review', label: 'Needs you' },
-  { id: 'vendor', label: 'Awaiting vendor' },
-  { id: 'agent', label: 'Agent working' },
+  { id: 'review', label: statusLabel.review },
+  { id: 'vendor', label: statusLabel.vendor },
+  { id: 'agent', label: statusLabel.agent },
 ]
+
+/* What an empty filter says, by status. */
+export const emptyFilter: Record<AssessmentStatus, string> = {
+  review: 'No sessions need you',
+  vendor: 'No sessions are waiting on a vendor',
+  agent: 'No sessions are being analyzed',
+}
+
+export type ResultTone = 'approved' | 'conditions' | 'declined'
+
+export const resultTone = (result: string): ResultTone => (result === 'Declined' ? 'declined' : result === 'Approved' ? 'approved' : 'conditions')
 
 /* Finished assessments, newest first. */
 export const resolvedAssessments = [

@@ -9,14 +9,14 @@ export const artifactFilters = [
 ] as const
 
 /* Documents the vendor has shared for an assessment, in the manner of a trust
-   center's document list. Trimbox's are the five attachments on its reply. */
+   center's document list. Trimbox's are what it evidenced across the two inquiries. */
 const shared: Record<string, Artifact[]> = {
   Trimbox: [
-    { name: 'SOC 2 Type II Report', category: 'Reports', access: 'private' },
-    { name: 'Penetration Test Report', category: 'Reports', access: 'private' },
-    { name: 'ISO/IEC 27001:2022', category: 'Compliance', access: 'public' },
-    { name: 'Information Security Policy', category: 'Policies', access: 'public' },
+    { name: 'Encryption Policy', category: 'Policies', access: 'private' },
+    { name: 'Incident Response Policy', category: 'Policies', access: 'private' },
+    { name: 'Data Processing Agreement', category: 'Legal', access: 'private' },
     { name: 'Subprocessors', category: 'Legal', access: 'public' },
+    { name: 'Privacy Policy', category: 'Legal', access: 'public' },
   ],
 }
 
