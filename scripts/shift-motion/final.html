@@ -46,8 +46,8 @@
   #txt > div { font-weight: 500; white-space: nowrap; }
   #txt .ch { opacity: 0; }
   /* block cursor: zero-width anchor so it never shifts the text; the block hangs off it */
-  #txt .cur { display: inline-block; width: 0; height: 0; position: relative; }
-  #txt .cur i { position: absolute; left: .05em; bottom: -.02em; width: .44em; height: .76em; background: #08080a; }
+  .cur { display: inline-block; width: 0; height: 0; position: relative; }
+  .cur i { position: absolute; left: .05em; bottom: -.02em; width: .44em; height: .76em; background: #08080a; }
   #txt > div.hook { font-weight: 700; color: #7c5cd6; }
   /* digital background layer (approved in the Claude Design canvas): behind the card, above the plate */
   #digi { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; pointer-events: none; mix-blend-mode: var(--digi-mode, multiply); filter: blur(.45px); opacity: .9; }
@@ -60,7 +60,7 @@
   #lock { display: flex; align-items: center; gap: 26px; }
   #sub { font: 500 46px/1.1 'Overused Grotesk', 'Helvetica Neue', Arial, sans-serif; color: #4a4a52; letter-spacing: -.02em; white-space: nowrap; opacity: 0; }
   #end img { width: 120px; height: 120px; filter: brightness(0); }   /* icon.svg is now a pale fill for dark surfaces; this card is white */
-  #end span { font: 600 134px/1 Geist, sans-serif; color: #09090b; letter-spacing: -.045em; margin-top: -8px; display: inline-block; }
+  #end #lock > span { font: 600 134px/1 Geist, sans-serif; color: #09090b; letter-spacing: -.045em; margin-top: -8px; display: inline-block; }
 </style>
 </head>
 <body>
@@ -417,12 +417,22 @@ const DIGIT = [3.1, -0.3];   // 01 counter glyph offset inside its patch (tuned 
 
 // ---------------------------------------------------------------- end: the Shift mark draws on
 const endEl = document.getElementById('end'), endImg = endEl.querySelector('img'), endWord = endEl.querySelector('span'), endSub = document.getElementById('sub');
+// the mark and the subtitle type in like the captions: Shift first (slower, it is big), then the subtitle, one block cursor that moves along and lingers
+const END_WORD_AT = 0.4, END_WORD_CPS = 14, END_SUB_GAP = 0.2, END_SUB_CPS = 60, END_CURSOR_HOLD = 1.0;
+const splitChars = el => { const t = el.textContent; el.replaceChildren(); return [...t].map(ch => { const sp = document.createElement('span'); sp.textContent = ch; sp.style.cssText = 'display:inline;opacity:0;margin:0'; el.append(sp); return sp; }); };
+const endChars = [...splitChars(endWord), ...splitChars(endSub)], nWord = 5;
+endWord.style.opacity = endSub.style.opacity = 1;
+const subAt = END_WORD_AT + nWord / END_WORD_CPS + END_SUB_GAP;
+endChars.forEach((sp, i) => { sp._at = i < nWord ? END_WORD_AT + i / END_WORD_CPS : subAt + (i - nWord) / END_SUB_CPS; });
+const endTypedBy = endChars[endChars.length - 1]._at;
+const endCur = document.createElement('span'); endCur.className = 'cur'; endCur.innerHTML = '<i></i>';
 const drawEnd = u => {
-  const a = E.back(P(u, 0.05, 0.6)), w = E.out5(P(u, 0.35, 1.1));
+  const a = E.back(P(u, 0.05, 0.6));
   endImg.style.opacity = P(u, 0.05, 0.25); endImg.style.transform = `scale(${lerp(0.5, 1, a)})`;
-  endWord.style.opacity = E.out(P(u, 0.35, 0.8)); endWord.style.transform = `translateX(${-30 * (1 - w)}px)`;
-  { const q = E.out(P(u, 0.9, 1.5)); endSub.style.opacity = q; endSub.style.transform = `translateY(${(1 - q) * 18}px)`; }
-  endWord.style.clipPath = `inset(0 ${(1 - w) * 100}% 0 0)`; endWord.style.filter = w < 1 ? `blur(${(8 * (1 - w)).toFixed(1)}px)` : '';
+  let n = 0; endChars.forEach(sp => { const on = u >= sp._at; sp.style.opacity = on ? 1 : 0; if (on) n++; });
+  if (n) endChars[n - 1].after(endCur); else endChars[0].before(endCur);
+  const idle = u - endTypedBy;
+  endCur.style.opacity = u < END_WORD_AT - 0.05 ? 0 : idle < 0.05 ? 1 : idle < END_CURSOR_HOLD ? (Math.floor(idle * BLINK * 2) % 2 === 0 ? 1 : 0) : 0;
 };
 
 // ---------------------------------------------------------------- card: camera views → card push, screen changes → flips
@@ -489,7 +499,7 @@ window.render = t => {
 };
 // ---------------------------------------------------------------- captions (copy + type from the Claude Design canvas): lines rise in just after each flip lands, hold CAP_HOLD s
 // The last line of each caption is the hook (bold, Shift violet). Copy is still a draft awaiting Amit's approval.
-const CAP_LAG = 0.1, CAP_HOLD = 2.6, CAP_OUT = 0.3, CPS = 75, CAP_START = 0.1, LINE_PAUSE = 0, BLINK = 2.4;   // typed at CPS characters/s, LINE_PAUSE = extra char-times at each line end
+const CAP_LAG = 0.1, CAP_HOLD = 2.6, CAP_OUT = 0.3, CPS = 75, CAP_START = 0.1, LINE_PAUSE = 0, BLINK = 2.4, CURSOR_HOLD = 1.0;   // typed at CPS characters/s, LINE_PAUSE = extra char-times at each line end
 const CAPS = [
   ['01', ['See every vendor,', 'including the ones', 'nobody told you about.']],
   ['02', ['Every vendor, digitized.', 'One click to', 'the full picture.']],
@@ -526,7 +536,9 @@ window.render = t => {
   let n = 0; chars.forEach(sp => { const on = u >= +sp.dataset.at; sp.style.opacity = on ? out : 0; if (on) n++; });
   // the cursor sits after the last typed character and is removed once typing is done
   (n ? chars[n - 1].after(curEl) : chars[0].before(curEl));
-  curEl.style.opacity = u < c.typedBy + 0.05 ? out : 0;   // gone as soon as the last character lands
+  // solid while typing, then it lingers CURSOR_HOLD s (blinking) after the last character and goes
+  const idle = u - c.typedBy;
+  curEl.style.opacity = (idle < 0.05 ? 1 : idle < CURSOR_HOLD ? (Math.floor(idle * BLINK * 2) % 2 === 0 ? 1 : 0) : 0) * out;
 };
 window.CAPS = CAPS;
 window.DURATION = DURATION;
