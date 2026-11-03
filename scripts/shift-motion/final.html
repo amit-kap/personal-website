@@ -42,13 +42,20 @@
   #cap { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; pointer-events: none; z-index: 5; font-family: 'Overused Grotesk', 'Helvetica Neue', Arial, sans-serif; }
   #wash { position: absolute; left: 0; bottom: -2px; width: 1700px; height: 800px; opacity: 0;
     background: radial-gradient(ellipse 75% 85% at 16% 100%, rgba(244,243,254,.84) 0%, rgba(244,243,254,.62) 38%, rgba(244,243,254,0) 80%); }
-  #txt { position: absolute; left: 128px; bottom: 104px; font-size: 80px; line-height: 1; letter-spacing: -.045em; color: #08080a; }
+  #txt { position: absolute; left: 128px; bottom: 104px; font-size: 80px; line-height: 1; letter-spacing: -.03em; color: #08080a; }
   #txt > div { font-weight: 500; white-space: nowrap; }
   #txt .ch { opacity: 0; }
   /* block cursor: zero-width anchor so it never shifts the text; the block hangs off it */
   #txt .cur { display: inline-block; width: 0; height: 0; position: relative; }
   #txt .cur i { position: absolute; left: .05em; bottom: -.02em; width: .44em; height: .76em; background: #08080a; }
   #txt > div.hook { font-weight: 700; color: #7c5cd6; }
+  /* digital background layer (approved in the Claude Design canvas): behind the card, above the plate */
+  #digi { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; pointer-events: none; mix-blend-mode: var(--digi-mode, multiply); filter: blur(.45px); opacity: .9; }
+  #digi .grid { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px;
+    -webkit-mask-image: radial-gradient(ellipse 68% 72% at 50% 50%, rgba(0,0,0,.3) 0%, #000 100%); mask-image: radial-gradient(ellipse 68% 72% at 50% 50%, rgba(0,0,0,.3) 0%, #000 100%); }
+  #digi .cell { position: absolute; width: 40px; height: 40px; color: #7c5cd6; font: 500 15px/40px ui-monospace, 'SF Mono', Menlo, Consolas, monospace; text-align: center; }
+  #digi .sq { position: absolute; width: 10px; height: 10px; background: #7c5cd6; }
+  #digi .bar { width: 6px; background: #7c5cd6; }
   #end { position: absolute; left: 0; right: 0; top: 40px; bottom: 0; display: none; flex-direction: column; align-items: center; justify-content: center; gap: 44px; background: #fff; }
   #lock { display: flex; align-items: center; gap: 26px; }
   #sub { font: 500 46px/1.1 'Overused Grotesk', 'Helvetica Neue', Arial, sans-serif; color: #4a4a52; letter-spacing: -.02em; white-space: nowrap; opacity: 0; }
@@ -496,7 +503,7 @@ const capsOn = new URLSearchParams(location.search).get('cap') !== '0';
 let capShown = null, chars = [], curEl = null;
 const baseRender = window.render;
 window.render = t => {
-  baseRender(t);
+  baseRender(t); digiUpdate(t);
   const c = capsOn && CAPS.find(c => t >= c.start && t < c.start + CAP_HOLD + CAP_OUT);
   if (c !== capShown) {
     capShown = c; txtEl.replaceChildren(); chars = [];
@@ -525,6 +532,62 @@ window.CAPS = CAPS;
 window.DURATION = DURATION;
 window.BEATS = SHOTS.map((s, i) => ({ name: s[0] === 'blank' ? 'Intro' : s[0] === 'end' ? 'End' : (s[0] === '03' ? '02' : s[0]), start: +starts[i].toFixed(2) }))
   .filter((b, i, a) => i === 0 || b.name !== a[i - 1].name);
+// ---------------------------------------------------------------- digital background (layout from the Claude Design canvas; every flip/blink is a pure function of t)
+const digi = document.createElement('div'); digi.id = 'digi';
+{ const grid = document.createElement('div'); grid.className = 'grid'; digi.append(grid);
+  let seed = 7; const rnd = () => { seed = (seed * 16807) % 2147483647; return seed / 2147483647; };
+  for (let i = 0; i < 48 * 27; i++) {
+    const r = rnd(), r2 = rnd(), r3 = rnd(), el = document.createElement('div');
+    el.className = 'cell'; el.style.left = (i % 48) * 40 + 'px'; el.style.top = Math.floor(i / 48) * 40 + 'px';
+    el._tier = r < 0.07 ? 2 : r < 0.3 ? 1 : 0; el._d = 1.4 + r2 * 3.2; el._l = r3 * 4;
+    grid.append(el);
+  }
+  const decor = document.createElement('div'); decor.innerHTML = `<div style="position: absolute; left: 0; top: 0; width: 1920px; height: 130px; background: repeating-linear-gradient(90deg, rgba(124,92,214,0.0) 0px, rgba(124,92,214,0.0) 39px, rgba(124,92,214,0.4) 39px, rgba(124,92,214,0.4) 40px); -webkit-mask-image: linear-gradient(180deg, rgba(0,0,0,0) 62%, #000 62%, #000 72%, rgba(0,0,0,0) 72%); mask-image: linear-gradient(180deg, rgba(0,0,0,0) 62%, #000 62%, #000 72%, rgba(0,0,0,0) 72%)"></div>
+<div style="position: absolute; left: 40px; right: 40px; top: 104px; height: 1px; background: rgba(124,92,214,0.45)"></div>
+<div style="position: absolute; left: 40px; right: 40px; bottom: 104px; height: 1px; background: rgba(124,92,214,0.45)"></div>
+<div style="position: absolute; left: 64px; top: 40px; bottom: 40px; width: 1px; background: repeating-linear-gradient(180deg, rgba(124,92,214,0.5) 0px, rgba(124,92,214,0.5) 6px, rgba(124,92,214,0) 6px, rgba(124,92,214,0) 14px)"></div>
+<div style="position: absolute; right: 64px; top: 40px; bottom: 40px; width: 1px; background: repeating-linear-gradient(180deg, rgba(124,92,214,0.5) 0px, rgba(124,92,214,0.5) 6px, rgba(124,92,214,0) 6px, rgba(124,92,214,0) 14px)"></div>
+
+<div style="position: absolute; left: 24px; top: 24px; width: 48px; height: 48px; border-left: 2px solid #7c5cd6; border-top: 2px solid #7c5cd6; opacity: 0.7"></div>
+<div style="position: absolute; right: 24px; top: 24px; width: 48px; height: 48px; border-right: 2px solid #7c5cd6; border-top: 2px solid #7c5cd6; opacity: 0.7"></div>
+<div style="position: absolute; left: 24px; bottom: 24px; width: 48px; height: 48px; border-left: 2px solid #7c5cd6; border-bottom: 2px solid #7c5cd6; opacity: 0.7"></div>
+<div style="position: absolute; right: 24px; bottom: 24px; width: 48px; height: 48px; border-right: 2px solid #7c5cd6; border-bottom: 2px solid #7c5cd6; opacity: 0.7"></div>
+
+<div style="position: absolute; left: 200px; top: 98px; width: 14px; height: 14px; opacity: 0.8"><div style="position: absolute; left: 6px; top: 0; width: 2px; height: 14px; background: #7c5cd6"></div><div style="position: absolute; left: 0; top: 6px; width: 14px; height: 2px; background: #7c5cd6"></div></div>
+<div style="position: absolute; left: 1706px; top: 98px; width: 14px; height: 14px; opacity: 0.8"><div style="position: absolute; left: 6px; top: 0; width: 2px; height: 14px; background: #7c5cd6"></div><div style="position: absolute; left: 0; top: 6px; width: 14px; height: 2px; background: #7c5cd6"></div></div>
+<div style="position: absolute; left: 200px; top: 968px; width: 14px; height: 14px; opacity: 0.8"><div style="position: absolute; left: 6px; top: 0; width: 2px; height: 14px; background: #7c5cd6"></div><div style="position: absolute; left: 0; top: 6px; width: 14px; height: 2px; background: #7c5cd6"></div></div>
+<div style="position: absolute; left: 1706px; top: 968px; width: 14px; height: 14px; opacity: 0.8"><div style="position: absolute; left: 6px; top: 0; width: 2px; height: 14px; background: #7c5cd6"></div><div style="position: absolute; left: 0; top: 6px; width: 14px; height: 2px; background: #7c5cd6"></div></div>
+
+<div class="sq" style="left: 96px; top: 300px; animation-delay: -0.4s"></div>
+<div class="sq" style="left: 96px; top: 316px; width: 6px; height: 6px; animation-delay: -1.5s"></div>
+<div class="sq" style="left: 1814px; top: 720px; animation-delay: -0.9s"></div>
+<div class="sq" style="left: 1822px; top: 736px; width: 6px; height: 6px; animation-delay: -1.9s"></div>
+<div class="sq" style="left: 880px; top: 60px; animation-delay: -1.1s"></div>
+<div class="sq" style="left: 1040px; top: 1010px; animation-delay: -0.2s"></div>
+
+<div style="position: absolute; right: 120px; bottom: 36px; height: 28px; display: flex; align-items: flex-end; gap: 4px">
+<div class="bar" style="height: 10px; animation-delay: -0.2s"></div>
+<div class="bar" style="height: 22px; animation-delay: -1.1s"></div>
+<div class="bar" style="height: 16px; animation-delay: -2.1s"></div>
+<div class="bar" style="height: 28px; animation-delay: -0.7s"></div>
+<div class="bar" style="height: 12px; animation-delay: -1.7s"></div>
+<div class="bar" style="height: 20px; animation-delay: -2.6s"></div>
+</div>`;
+  digi.append(...decor.children);
+  const scan = document.createElement('div'); scan.style.cssText = 'position:absolute;left:0;top:0;width:1920px;height:2px;background:linear-gradient(90deg,rgba(124,92,214,0) 0%,rgba(124,92,214,.35) 50%,rgba(124,92,214,0) 100%)'; digi.append(scan);
+  digi._grid = [...grid.children]; digi._scan = scan;
+  digi._blink = [...digi.querySelectorAll('.sq, .bar')].map(el => ({ el, off: -parseFloat(el.style.animationDelay || 0), period: el.className === 'sq' ? 2.2 : 3 })); }
+document.getElementById('frame').prepend(digi);
+const wave = ph => (1 - Math.cos(2 * Math.PI * ph)) / 2;
+function digiUpdate(t) {
+  for (const el of digi._grid) {
+    const ph = ((t + el._l) % el._d) / el._d, ch = ph < 0.5 ? '0' : '1';
+    if (el._ch !== ch) { el.textContent = ch; el._ch = ch; }
+    el.style.opacity = el._tier === 2 ? 0.18 + 0.52 * wave(((t + el._l) % 2.8) / 2.8) : el._tier === 1 ? 0.22 : 0.1;
+  }
+  for (const b of digi._blink) b.el.style.opacity = 0.15 + 0.7 * wave(((t + b.off) % b.period) / b.period) * (b.el.className === 'bar' ? 0.75 : 1);
+  digi._scan.style.transform = `translateY(${-120 + 1320 * ((t % 9) / 9)}px)`;
+}
 const TONES = { shift: ['#7c5cd6', .26, 'color'], lav: ['#8f86d4', .30, 'color'], cool: ['#98a2b3', .38, 'color'], light: ['#ffffff', .32, 'soft-light'] };
 const toneKey = new URLSearchParams(location.search).get('tone') || 'shift';   // default: the warm olive of the plate swapped for Shift's faint violet; ?tone=off keeps the original
 if (TONES[toneKey]) { const [c, o, m] = TONES[toneKey], d = document.createElement('div');
