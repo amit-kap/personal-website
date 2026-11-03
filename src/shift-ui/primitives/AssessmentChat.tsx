@@ -1,7 +1,7 @@
-import { useEffect, useRef } from 'react'
-import { AgentGlyph, CubeLoader, Eye, FileText, Gavel, Inbox, Info, MessageSquare, PaperPlane, Paperclip, User } from '../icons'
+import { useEffect, useRef, type ReactNode } from 'react'
+import { AgentGlyph, CubeLoader, ExternalLink, Eye, FileText, Gavel, Inbox, Info, PaperPlane, User } from '../icons'
 import { statusLabel, type ActiveAssessment } from '../fixtures/assessmentCenter'
-import { threadFor, type EventKind, type ThreadItem } from '../fixtures/assessmentThreads'
+import { threadFor, type Block, type EventKind, type ThreadItem } from '../fixtures/assessmentThreads'
 import { vendors } from '../fixtures/vendors'
 import { Composer } from './Composer'
 import { VendorLogo } from './VendorLogo'
@@ -83,7 +83,7 @@ export function AssessmentChat({
       <div ref={thread} className="s-ac-thread" data-lenis-prevent>
         <div className="s-ac-thread-inner">
           {items.map((item, i) => (
-            <ThreadEntry key={i} item={item} connected={item.kind === 'event' && items[i + 1]?.kind === 'event'} />
+            <ThreadEntry key={i} item={item} />
           ))}
         </div>
       </div>
@@ -95,9 +95,72 @@ export function AssessmentChat({
   )
 }
 
+/* **bold** in a block's text. */
+function Rich({ text }: { text: string }) {
+  return (
+    <>
+      {text.split(/\*\*([^*]+)\*\*/).map((part, i) => (i % 2 ? <strong key={i}>{part}</strong> : part))}
+    </>
+  )
+}
+
+function Blocks({ blocks }: { blocks: Block[] }) {
+  return (
+    <div className="s-ac-rich">
+      {blocks.map((b, i) =>
+        'p' in b ? (
+          <p key={i}>
+            <Rich text={b.p} />
+          </p>
+        ) : 'ul' in b ? (
+          <ul key={i}>
+            {b.ul.map((li) => (
+              <li key={li}>
+                <Rich text={li} />
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <ul key={i} className="s-ac-sources">
+            {b.sources.map((src) => (
+              <li key={src.site}>
+                <button type="button" className="s-ac-source">
+                  <ExternalLink size={12} />
+                  <span>{src.title}</span>
+                  <small>{src.site}</small>
+                </button>
+              </li>
+            ))}
+          </ul>
+        ),
+      )}
+    </div>
+  )
+}
+
 const eventIcon: Record<EventKind, typeof PaperPlane> = { sent: PaperPlane, reply: Inbox, review: User }
 
-function ThreadEntry({ item, connected }: { item: ThreadItem; connected: boolean }) {
+/* Every entry speaks the same way: an icon in the gutter, a title line with the
+   time, then the body. The agent's body is formatted text; an event's is its
+   detail. Only your own messages are bubbles. */
+function Entry({ icon, tone, title, time, children }: { icon: ReactNode; tone: string; title: string; time: string; children: ReactNode }) {
+  return (
+    <div className="s-ac-entry">
+      <span className="s-ac-entry-icon" data-tone={tone}>
+        {icon}
+      </span>
+      <div className="s-ac-entry-main">
+        <div className="s-ac-entry-head">
+          <b>{title}</b>
+          <span>{time}</span>
+        </div>
+        {children}
+      </div>
+    </div>
+  )
+}
+
+function ThreadEntry({ item }: { item: ThreadItem }) {
   if (item.kind === 'day') {
     return (
       <div className="s-ac-day">
@@ -105,75 +168,43 @@ function ThreadEntry({ item, connected }: { item: ThreadItem; connected: boolean
       </div>
     )
   }
-  if (item.kind === 'agent') {
+  if (item.kind === 'user') {
     return (
-      <div className="s-msg s-msg-agent">
-        <div className="s-msg-who">
-          <AgentGlyph size={14} />
-          Shift agent
-          <span className="s-msg-time">{item.time}</span>
-        </div>
-        <p>{item.text}</p>
-      </div>
-    )
-  }
-  if (item.kind === 'event') {
-    const Icon = eventIcon[item.event]
-    return (
-      <div className="s-ac-event" data-event={item.event} data-connected={connected}>
-        <span className="s-ac-event-icon">
-          <Icon size={14} />
-        </span>
-        <span className="s-ac-event-time">{item.time}</span>
-        <div className="s-ac-event-body">
-          <b>{item.title}</b>
-          <span>{item.detail}</span>
-          {item.link && (
-            <button type="button" className="s-ac-link">
-              {item.link}
-            </button>
-          )}
-        </div>
-      </div>
-    )
-  }
-  return (
-    <div className="s-ac-bubble">
-      <div className="s-msg-who">
-        <AgentGlyph size={14} />
-        Shift agent
+      <div className="s-ac-user">
+        <div className="s-msg s-msg-user">{item.text}</div>
         <span className="s-msg-time">{item.time}</span>
       </div>
-      <p className="s-ac-bubble-text">{item.text}</p>
-      <p className="s-ac-bubble-reco">{item.recommendation}</p>
-      <div className="s-ac-need">
-        <small>USER ACTION REQUIRED</small>
-        <h4>{item.title}</h4>
-        <div className="s-ac-need-stats">
-          {item.stats.map((st) => (
-            <div key={st.label}>
-              <span>
-                {st.icon === 'answers' ? <MessageSquare size={16} /> : <Paperclip size={16} />}
-                {st.value}
-              </span>
-              <em>{st.label}</em>
-            </div>
-          ))}
-        </div>
+    )
+  }
+  if (item.kind === 'agent') {
+    return (
+      <Entry icon={<AgentGlyph size={14} />} tone="agent" title="Shift agent" time={item.time}>
+        <Blocks blocks={item.blocks} />
+        {item.actions && (
+          <div className="s-ac-actions">
+            {item.actions.map((a) => (
+              <button key={a.label} type="button" className={{ primary: 's-dark', ghost: 's-ghost', text: 's-ac-dismiss' }[a.look]}>
+                {a.icon === 'eye' && <Eye size={14} />}
+                {a.icon === 'gavel' && <Gavel size={14} />}
+                {a.label}
+              </button>
+            ))}
+          </div>
+        )}
+      </Entry>
+    )
+  }
+  const Icon = eventIcon[item.event]
+  return (
+    <Entry icon={<Icon size={14} />} tone={item.event} title={item.title} time={item.time}>
+      <div className="s-ac-event-detail">
+        <span>{item.detail}</span>
+        {item.link && (
+          <button type="button" className="s-ac-link">
+            {item.link}
+          </button>
+        )}
       </div>
-      <div className="s-ac-bubble-actions">
-        <button type="button" className="s-dark">
-          <Eye size={14} />
-          {item.primary}
-        </button>
-        <button type="button" className="s-ghost">
-          <Gavel size={14} />
-          {item.secondary}
-        </button>
-        <button type="button" className="s-ac-dismiss">
-          Dismiss
-        </button>
-      </div>
-    </div>
+    </Entry>
   )
 }

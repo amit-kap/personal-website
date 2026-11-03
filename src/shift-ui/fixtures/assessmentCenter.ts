@@ -21,7 +21,7 @@ export interface ActiveAssessment {
 
 /* Same six as the dashboard's Active Assessments. */
 export const activeAssessments: ActiveAssessment[] = [
-  { vendor: 'Trimbox', status: 'review', meta: '11h', answered: 3, total: 23 },
+  { vendor: 'Trimbox', status: 'review', meta: '11h', answered: 21, total: 23 },
   { vendor: 'Brightwave Media Inc.', status: 'vendor', meta: '2d', answered: 12, total: 30 },
   { vendor: 'Metaview', status: 'vendor', meta: '4d', answered: 9, total: 18 },
   { vendor: 'Demandbase', status: 'agent', meta: 'Just now', answered: 0, total: 26 },
