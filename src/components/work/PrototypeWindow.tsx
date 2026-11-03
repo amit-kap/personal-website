@@ -10,7 +10,9 @@ const ShiftDashboard = lazy(() => import('@/shift-ui/prototypes/DashboardPrototy
 
 const ShiftVendors = lazy(() => import('@/shift-ui/prototypes/VendorsPrototype'))
 
-const screens = { dashboard: ShiftDashboard, vendors: ShiftVendors } as const
+const ShiftAssessments = lazy(() => import('@/shift-ui/prototypes/AssessmentsPrototype'))
+
+const screens = { dashboard: ShiftDashboard, vendors: ShiftVendors, assessments: ShiftAssessments } as const
 export type PrototypeName = keyof typeof screens
 
 export function PrototypeWindow({ name, image, alt }: { name: PrototypeName; image?: ContentImage; alt: string }) {

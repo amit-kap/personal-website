@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react'
-import Lightbox from './Lightbox'
 
 function PlayIcon() {
   return (
@@ -9,17 +8,10 @@ function PlayIcon() {
   )
 }
 
-function PauseIcon() {
-  return (
-    <svg width="10" height="12" viewBox="0 0 10 12" fill="currentColor" aria-hidden="true">
-      <rect x="0.5" y="1" width="3" height="10" rx="1" />
-      <rect x="6.5" y="1" width="3" height="10" rx="1" />
-    </svg>
-  )
-}
-
-/* Looping product video carrying the page's own controls: a hairline progress
-   line on the bottom edge, scrubbable, and a play/pause that fades in on hover. */
+/* Looping product video carrying the page's own controls: clicking it toggles
+   play and pause like YouTube. While it is paused a play badge stays at the
+   centre; pressing play flashes it out. A hairline progress line on the bottom
+   edge is scrubbable. */
 export default function ProductVideo({
   src,
   poster,
@@ -32,7 +24,7 @@ export default function ProductVideo({
   const videoRef = useRef<HTMLVideoElement>(null)
   const [playing, setPlaying] = useState(true)
   const [progress, setProgress] = useState(0)
-  const [open, setOpen] = useState(false)
+  const [flash, setFlash] = useState(0)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -65,8 +57,10 @@ export default function ProductVideo({
   const toggle = () => {
     const video = videoRef.current
     if (!video) return
-    if (video.paused) video.play()
-    else video.pause()
+    if (video.paused) {
+      video.play()
+      setFlash((f) => f + 1)
+    } else video.pause()
   }
 
   const scrub = (event: React.MouseEvent<HTMLDivElement>) => {
@@ -76,25 +70,22 @@ export default function ProductVideo({
     video.currentTime = Math.min(Math.max((event.clientX - left) / width, 0), 1) * video.duration
   }
 
-  const openFull = () => setOpen(true)
-
   return (
     <>
       <div className="product-media vid" aria-busy={loading}>
-        {/* The video opens the full-frame viewer, so it is exposed as a button
-            and handles Enter and Space itself. The play/pause control below
-            is separate, and stops the click reaching this one. */}
+        {/* The video itself is the play/pause button, and handles Enter and
+            Space. */}
         <video
           ref={videoRef}
           src={src}
           poster={poster}
           aria-label={label}
-          className="block h-auto w-full cursor-zoom-in"
-          onClick={openFull}
+          className="block h-auto w-full cursor-pointer"
+          onClick={toggle}
           onKeyDown={(event) => {
             if (event.key === 'Enter' || event.key === ' ') {
               event.preventDefault()
-              openFull()
+              toggle()
             }
           }}
           onCanPlay={() => setLoading(false)}
@@ -113,17 +104,23 @@ export default function ProductVideo({
             Loading video
           </div>
         )}
-        <button type="button" className="vid-btn" onClick={(event) => { event.stopPropagation(); toggle() }} aria-label={playing ? 'Pause video' : 'Play video'}>
-          {playing ? <PauseIcon /> : <PlayIcon />}
-        </button>
-        {/* Click-to-seek strip; keyboard users have the native controls in the viewer. */}
+        {!playing && (
+          <span className="vid-badge" aria-hidden="true">
+            <PlayIcon />
+          </span>
+        )}
+        {flash > 0 && playing && (
+          <span key={flash} className="vid-badge" data-flash aria-hidden="true" onAnimationEnd={() => setFlash(0)}>
+            <PlayIcon />
+          </span>
+        )}
+        {/* Click-to-seek strip; the viewer has native controls. */}
         <div className="vid-track" onClick={(event) => { event.stopPropagation(); scrub(event) }} role="presentation">
           <div className="vid-line">
             <div className="vid-fill" style={{ transform: `scaleX(${progress})` }} />
           </div>
         </div>
       </div>
-      {open && <Lightbox src={src} alt={label} video onClose={() => setOpen(false)} />}
     </>
   )
 }

@@ -111,7 +111,7 @@ export const compactStories: Record<string, CompactStory> = {
           copy: (
             <>
               Tens of thousands of indicators made workable: the filtering pattern behind{' '}
-              <Link to="/case-studies/sailing-the-data-oceans" className="border-b border-border text-foreground transition-colors hover:text-primary">
+              <Link to="/case-studies/sailing-the-data-oceans" className="font-medium text-primary hover:underline hover:underline-offset-4">
                 Sailing the Data Oceans
               </Link>
               .

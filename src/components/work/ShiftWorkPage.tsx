@@ -3,8 +3,6 @@
 import { Link } from 'react-router-dom'
 import type { Work } from '@/lib/content'
 import Reveal from '@/components/Reveal'
-import { Button } from '@amit-kap/glaze/components/button'
-import { ArrowRightIcon } from '@/components/icons'
 import { ClosingActions } from '@/components/work/ClosingActions'
 import { HeroMedia } from '@/components/work/HeroMedia'
 import { SplitSection } from '@/components/work/SplitSection'
@@ -45,6 +43,7 @@ const features = [
     copy: "The agent's work arrives in a reviewable structure: mapped evidence, proposed verdicts, and drafted follow-ups. The interface reserves its strongest moments for the calls only a person should make.",
     image: '07-assessment-flow-1',
     alt: 'Shift assessment flow',
+    prototype: 'assessments' as PrototypeName,
   },
 ]
 
@@ -55,41 +54,28 @@ export default function ShiftWorkPage({ work }: { work: Work }) {
         meta="Third-Party Risk  ·  Founding Designer  ·  2024–2026"
         title="Designing Shift's agent-led third-party security platform from product model to shipped system."
         intro="I joined Shift as its first designer. I helped define the human-agent operating model, then built the design system, onboarding, and core workflows connecting vendor evidence, access, exposure, and risk decisions."
-      >
-        {/* The strategy write-up, linked up top as well as at the end: Glaze's
-            link Button, pulled left and in by its own padding so its label
-            lines up with the intro and sits the block's 20px below it. */}
-        <Button
-          render={<Link to={STRATEGY_STORY} />}
-          nativeButton={false}
-          role="link"
-          variant="link"
-          className="-my-1.5 -ms-2.5"
-        >
-          Read: Designing for the Supervisor
-          <ArrowRightIcon />
-        </Button>
-      </TitleBlock>
+      />
       <HeroMedia
         image={imageFor(work, '01-shift-dashboard')}
         video={`${import.meta.env.BASE_URL}shift-walk.mp4`}
         alt="Shift product walkthrough: vendor evidence, access, exposure, and assessment decisions"
+        caption="Product walkthrough"
       />
 
-      <SplitSection eyebrow="The Starting Point" stmt="The product model and the interface had to develop together">
+      <SplitSection eyebrow="The Starting Point" stmt="The product model and the interface had to develop together" stacked>
         <p className="body-copy">
           The design system could not wait for the product, and the product could not wait for the system: every screen built the language it was written in. Each workflow tested the components, density, and behavior the next one would use.
         </p>
         <p className="body-copy">
           The product is built around an agent that performs assessment work while a person supervises it. The market scan, operating-model decision, and product strategy behind that structure are documented in{' '}
-          <Link to={STRATEGY_STORY} className="border-b border-border text-foreground transition-colors hover:text-primary">
+          <Link to={STRATEGY_STORY} className="font-medium text-primary hover:underline hover:underline-offset-4">
             Designing for the Supervisor
           </Link>
           . This page focuses on how that direction became a working system.
         </p>
       </SplitSection>
 
-      <SplitSection eyebrow="The Job" stmt="Four domains, one navigable product">
+      <SplitSection eyebrow="The Job" stmt="Four domains, one navigable product" stacked>
         <div className="flex flex-col gap-6">
           <div className="flex flex-col gap-1.5">
             <h3 className="font-heading text-title font-medium">A design system from zero</h3>
@@ -112,7 +98,7 @@ export default function ShiftWorkPage({ work }: { work: Work }) {
 
       {features.map((feature) => (
         <section key={feature.eyebrow} className="relative">
-          <div className="inner-col flex flex-col gap-4.5 pb-14 pt-12">
+          <div className="inner-col flex flex-col gap-4.5 py-12">
             <Reveal as="p" className="eyebrow">{feature.eyebrow}</Reveal>
             <Reveal as="h2" className="font-heading text-title-sm font-medium" delay={0.06}>
               {feature.title}
@@ -129,17 +115,11 @@ export default function ShiftWorkPage({ work }: { work: Work }) {
         </section>
       ))}
 
-      <SplitSection eyebrow="Results" stmt="The foundations the product is built on">
+      <SplitSection eyebrow="Results" stmt="The foundations the product is built on" stacked>
         <p className="body-copy">
           The product foundation includes the design system, onboarding, vendor inventory, access graph, operating console, and assessment workflows shown here.
         </p>
         <p className="text-meta text-muted-foreground">Note: adoption and usage details can be shared in a private setting.</p>
-      </SplitSection>
-
-      <SplitSection eyebrow="The Strategy Story" stmt="Why the product is organized around a supervisor">
-        <p className="body-copy">
-          The market scan, early directions, stakeholder decision, and product-strategy reframe are written up separately.
-        </p>
       </SplitSection>
 
       <ClosingActions read={{ to: STRATEGY_STORY, label: 'Read: Designing for the Supervisor' }} />
