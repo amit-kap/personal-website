@@ -18,7 +18,7 @@
 
    The rules live in topic files under styles/, imported below in cascade
    order. Keep that order: motion.css's reduced-motion block resets
-   transitions that media.css declares (.window-btn), so it must come after.
+   transitions that earlier files declare, so it must come after.
    Sections are numbered across the files: 1-2 site-tokens, 3-5 structure,
    6 media, 7 motion, 8 prose.
    ============================================================================ */
