@@ -35,3 +35,5 @@ scripts/shift-motion/built.html
 scripts/shift-motion/preview.html
 scripts/shift-motion/.impeccable/
 public/shift-motion.local.mp4
+scripts/shift-motion/film/build/
+scripts/shift-motion/film/node_modules/

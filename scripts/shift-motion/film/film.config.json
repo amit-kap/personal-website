@@ -1,0 +1,76 @@
+{
+  "_": "Single source of truth for the Shift film's render quality. Every stage reads this file; render settings go into every frame's cache key, encode settings do not.",
+  "fps": 30,
+  "tolerance": 10,
+  "res": [
+    1920,
+    1080
+  ],
+  "source": "../final.html",
+  "face": {
+    "scale": 3,
+    "screen": [
+      1560,
+      827
+    ],
+    "q": 2
+  },
+  "render": {
+    "look": "plate-eevee",
+    "samples": 128,
+    "glow": 0.9,
+    "env": "studio_small_09",
+    "envRot": 90,
+    "envK": 1.0,
+    "backdrop": {
+      "variant": "inside_centre",
+      "mapping": "wrapped",
+      "scaleZ": 0.75,
+      "fstop": 1.0,
+      "spinDeg": 24
+    },
+    "reflection": {
+      "strength": 0.9,
+      "length": 2.6,
+      "plane": 0.32
+    },
+    "screenReflect": {
+      "k": 1.0,
+      "rot": 180,
+      "gain": 1.5
+    }
+  },
+  "encode": {
+    "crf": 16,
+    "preset": "slow"
+  },
+  "gate": {
+    "reference": "../../../public/shift-motion.mp4",
+    "pairs": [
+      {
+        "name": "zoom",
+        "t": 14.0,
+        "refT": 17.0
+      },
+      {
+        "name": "flip",
+        "t": 7.07,
+        "refT": 5.0
+      },
+      {
+        "name": "flat",
+        "t": 20.0,
+        "refT": 24.0
+      },
+      {
+        "name": "end",
+        "t": 38.8,
+        "refT": 28.5
+      }
+    ]
+  },
+  "plate": {
+    "page": "bg/v5.html",
+    "scale": 2
+  }
+}

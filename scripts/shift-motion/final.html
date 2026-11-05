@@ -321,7 +321,7 @@ const DIGIT = [3.1, -0.3];   // 01 counter glyph offset inside its patch (tuned 
   L.wave(-LEAD, 0.8);
   // the change: Sites gains the Customer PII tag once the camera is there
   const sites = L.find([649, 169, 151, 86]), rel = ([x, y, w, h]) => R([x - 649, y - 169, w, h]);
-  $('div', sites.el, { ...rel([713.5, 203.5, 61, 15.5]), background: '#fff' });
+  $('div', sites.el, { ...rel([711.5, 201, 65, 18.5]), background: '#fff' });
   const tag = L.slice([715, 204.5, 58, 13.5], sites.el);
   Object.assign(tag.style, rel([715, 204.5, 58, 13.5]), { borderRadius: '7px' });
   const st = at('sites');
@@ -536,6 +536,8 @@ window.render = t => {
   let n = 0; chars.forEach(sp => { const on = u >= +sp.dataset.at; sp.style.opacity = on ? out : 0; if (on) n++; });
   // the cursor sits after the last typed character and is removed once typing is done
   (n ? chars[n - 1].after(curEl) : chars[0].before(curEl));
+  // the block takes the hook's violet once it reaches the last line, and keeps it while it blinks out
+  curEl.firstChild.style.background = (n ? chars[n - 1] : chars[0]).parentNode.classList.contains('hook') ? '#7c5cd6' : '';
   // solid while typing, then it lingers CURSOR_HOLD s (blinking) after the last character and goes
   const idle = u - c.typedBy;
   curEl.style.opacity = (idle < 0.05 ? 1 : idle < CURSOR_HOLD ? (Math.floor(idle * BLINK * 2) % 2 === 0 ? 1 : 0) : 0) * out;
