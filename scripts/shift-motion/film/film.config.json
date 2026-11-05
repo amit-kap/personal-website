@@ -45,7 +45,7 @@
     "preset": "slow"
   },
   "gate": {
-    "reference": "../../../public/shift-motion.mp4",
+    "reference": "../../../public/shift-motion-v2.mp4",
     "pairs": [
       {
         "name": "zoom",

@@ -115,7 +115,7 @@ function FeaturedFilm() {
           }
         }}
       >
-        <source src="/shift-motion.mp4" type="video/mp4" />
+        <source src="/shift-motion-v2.mp4" type="video/mp4" />
       </video>
       {!playing && started && (
         <span className="vid-badge" aria-hidden="true">

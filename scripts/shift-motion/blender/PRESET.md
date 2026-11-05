@@ -1,6 +1,6 @@
 # Blender glass preset: "v11" (the look on the site, approved)
 
-Reference: `public/shift-motion.mp4`. Verified 2026-11-04 by re-rendering frames 150, 330 and 500 of its cache
+Reference: `public/shift-motion-v2.mp4`. Verified 2026-11-04 by re-rendering frames 150, 330 and 500 of its cache
 (`cache-final-hq`, 876 faces at 3120x1654): the settings below reproduce it.
 
 The settings live in `../film/film.config.json` and are applied by `../film/film.mjs`. Do not render with loose `SHIFT_*`
