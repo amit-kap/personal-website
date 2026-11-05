@@ -2366,6 +2366,9 @@
   padding: 0;
   color: var(--s-muted);
 }
+.shift-ui .s-ac-more svg {
+  flex: none;
+}
 .shift-ui .s-ac-menu-count {
   font-size: 10px;
   color: var(--s-muted);

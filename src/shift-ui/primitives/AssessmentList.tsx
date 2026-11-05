@@ -72,7 +72,7 @@ export function AssessmentList({
         )}
         <span className="s-ac-bar-end">
           <button ref={searchButton} type="button" className="s-ghost s-ac-more" aria-label="Search assessments" aria-expanded={searching} aria-controls="s-ac-search" onClick={toggleSearch}>
-            <Search size={14} />
+            <Search size={16} />
           </button>
           <Menu
             below
