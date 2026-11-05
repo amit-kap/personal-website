@@ -5,11 +5,9 @@ import { Link, useNavigate } from 'react-router-dom'
 import homeCopy from '@/content/home.json'
 import Reveal from '@/components/Reveal'
 import { RevealButton } from '@amit-kap/glaze/components/reveal-button'
-import { Button } from '@amit-kap/glaze/components/button'
-import { Progress } from '@amit-kap/glaze/components/progress'
 import { accentRevealButton } from '@/components/actionButtons'
 import { useAllowMotion } from '@/lib/useAllowMotion'
-import { RestartIcon, RevealArrow } from '@/components/icons'
+import { RevealArrow } from '@/components/icons'
 import { ShiftMark } from './ShiftMark'
 import { bandClass, innerClass, labelClass } from './layout'
 
@@ -18,42 +16,55 @@ import { bandClass, innerClass, labelClass } from './layout'
    takes the capture's own ~2:1 shape instead of cropping it to 16:9. */
 const featuredMedia = 'block h-auto w-full rounded-item'
 
-/* The film with its own controls over the bottom edge: a restart button and
-   a progress line. They show while the pointer moves over the film (or a
-   tap, or keyboard focus) and fade out 3s after it stops. While they show,
-   progress is read every frame, not on timeupdate (~4 a second), so the line
-   runs smooth.
-   The film plays only while half of it is on screen: it starts from its
-   first frame when first scrolled to, pauses when it leaves and resumes
-   when it comes back. Nothing but the poster loads before that. */
-const CONTROLS_IDLE_MS = 3000
+/* The film carries the Shift page's controls: clicking it toggles play and
+   pause, a play badge stays at the centre while paused (and flashes out when
+   play is pressed), and a scrubbable hairline runs along the bottom edge.
+   The film plays only while half of it is on screen: it starts when first
+   scrolled to, pauses when it leaves and resumes when it comes back, unless
+   the visitor paused it themselves. Nothing but the poster loads before that. */
+function PlayIcon() {
+  return (
+    <svg width="11" height="12" viewBox="0 0 11 12" fill="currentColor" aria-hidden="true">
+      <path d="M1 1.2 9.6 6 1 10.8z" />
+    </svg>
+  )
+}
 
 function FeaturedFilm() {
   const videoRef = useRef<HTMLVideoElement>(null)
+  const heldByUser = useRef(false)
+  const [playing, setPlaying] = useState(false)
+  const [started, setStarted] = useState(false)
   const [progress, setProgress] = useState(0)
-  const [controlsShown, setControlsShown] = useState(false)
-  const [focused, setFocused] = useState(false)
-  const hideTimer = useRef<number | undefined>(undefined)
-  const lastPointer = useRef({ x: -1, y: -1 })
+  const [flash, setFlash] = useState(0)
 
-  const showControls = () => {
-    setControlsShown(true)
-    window.clearTimeout(hideTimer.current)
-    hideTimer.current = window.setTimeout(() => setControlsShown(false), CONTROLS_IDLE_MS)
-  }
-  const hideControls = () => {
-    window.clearTimeout(hideTimer.current)
-    setControlsShown(false)
-  }
-  useEffect(() => () => window.clearTimeout(hideTimer.current), [])
+  useEffect(() => {
+    const video = videoRef.current
+    if (!video) return
+    const onTime = () => setProgress(video.duration ? video.currentTime / video.duration : 0)
+    const onPlay = () => {
+      setPlaying(true)
+      setStarted(true)
+    }
+    const onPause = () => setPlaying(false)
+    video.addEventListener('timeupdate', onTime)
+    video.addEventListener('play', onPlay)
+    video.addEventListener('pause', onPause)
+    return () => {
+      video.removeEventListener('timeupdate', onTime)
+      video.removeEventListener('play', onPlay)
+      video.removeEventListener('pause', onPause)
+    }
+  }, [])
 
   useEffect(() => {
     const video = videoRef.current
     if (!video || typeof IntersectionObserver === 'undefined') return
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) void video.play().catch(() => {})
-        else video.pause()
+        if (entry.isIntersecting) {
+          if (!heldByUser.current) void video.play().catch(() => {})
+        } else video.pause()
       },
       { threshold: 0.5 },
     )
@@ -61,65 +72,28 @@ function FeaturedFilm() {
     return () => observer.disconnect()
   }, [])
 
-  // The line is only read while it is on screen: the loop runs while the film
-  // plays and its controls show, and stops on pause.
-  const controlsVisible = controlsShown || focused
-  useEffect(() => {
-    const video = videoRef.current
-    if (!video || !controlsVisible) return
-    let frame = 0
-    const read = () => {
-      if (video.duration) setProgress((video.currentTime / video.duration) * 100)
-    }
-    const tick = () => {
-      read()
-      frame = requestAnimationFrame(tick)
-    }
-    const start = () => {
-      cancelAnimationFrame(frame)
-      frame = requestAnimationFrame(tick)
-    }
-    const stop = () => {
-      cancelAnimationFrame(frame)
-      read()
-    }
-    read()
-    if (!video.paused) start()
-    video.addEventListener('play', start)
-    video.addEventListener('pause', stop)
-    return () => {
-      cancelAnimationFrame(frame)
-      video.removeEventListener('play', start)
-      video.removeEventListener('pause', stop)
-    }
-  }, [controlsVisible])
-
-  const restart = () => {
+  const toggle = () => {
     const video = videoRef.current
     if (!video) return
-    video.currentTime = 0
-    void video.play().catch(() => {})
+    if (video.paused) {
+      heldByUser.current = false
+      void video.play().catch(() => {})
+      setFlash((f) => f + 1)
+    } else {
+      heldByUser.current = true
+      video.pause()
+    }
+  }
+
+  const scrub = (event: React.MouseEvent<HTMLDivElement>) => {
+    const video = videoRef.current
+    if (!video || !video.duration) return
+    const { left, width } = event.currentTarget.getBoundingClientRect()
+    video.currentTime = Math.min(Math.max((event.clientX - left) / width, 0), 1) * video.duration
   }
 
   return (
-    <div
-      className="relative"
-      onPointerEnter={showControls}
-      onPointerMove={(event) => {
-        // The browser also sends moves while the pointer rests and the page
-        // repaints under it; only a real move keeps the controls up.
-        const { x, y } = lastPointer.current
-        if (event.clientX === x && event.clientY === y) return
-        lastPointer.current = { x: event.clientX, y: event.clientY }
-        showControls()
-      }}
-      onPointerDown={showControls}
-      onPointerLeave={(event) => {
-        if (event.pointerType === 'mouse') hideControls()
-      }}
-      onFocus={(event) => setFocused(event.target.matches(':focus-visible'))}
-      onBlur={() => setFocused(false)}
-    >
+    <div className="vid overflow-hidden rounded-item">
       <video
         ref={videoRef}
         muted
@@ -129,30 +103,34 @@ function FeaturedFilm() {
         width={1920}
         height={1080}
         poster="/shift-motion-poster.webp"
-        aria-hidden="true"
-        className={featuredMedia}
+        aria-label="Shift motion film"
+        role="button"
+        tabIndex={0}
+        className={`${featuredMedia} cursor-pointer`}
+        onClick={toggle}
+        onKeyDown={(event) => {
+          if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault()
+            toggle()
+          }
+        }}
       >
         <source src="/shift-motion.mp4" type="video/mp4" />
       </video>
-      <div
-        className={`absolute inset-x-3 bottom-3 flex items-center gap-3 transition-opacity duration-(--duration-moderate) ease-enter ${
-          controlsShown || focused ? 'opacity-100' : 'pointer-events-none opacity-0'
-        }`}
-      >
-        <Button
-          variant="secondary"
-          size="icon-sm"
-          onClick={restart}
-          aria-label="Restart the Shift film"
-          className="rounded-pill"
-        >
-          <RestartIcon />
-        </Button>
-        <Progress
-          value={progress}
-          aria-label="Film progress"
-          className="flex-1 [&_[data-slot=progress-indicator]]:transition-none [&_[data-slot=progress-track]]:bg-background/50"
-        />
+      {!playing && started && (
+        <span className="vid-badge" aria-hidden="true">
+          <PlayIcon />
+        </span>
+      )}
+      {flash > 0 && playing && (
+        <span key={flash} className="vid-badge" data-flash aria-hidden="true" onAnimationEnd={() => setFlash(0)}>
+          <PlayIcon />
+        </span>
+      )}
+      <div className="vid-track" onClick={(event) => { event.stopPropagation(); scrub(event) }} role="presentation">
+        <div className="vid-line">
+          <div className="vid-fill" style={{ transform: `scaleX(${progress})` }} />
+        </div>
       </div>
     </div>
   )
@@ -174,7 +152,7 @@ export function Featured() {
         </Reveal>
         <Reveal>
           <div className="flex flex-col gap-4">
-            <div className="overflow-hidden rounded-container bg-dim p-[0.6%]">
+            <div className="featured-frame">
               {allowMotion ? (
                 <FeaturedFilm />
               ) : (

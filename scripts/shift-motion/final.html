@@ -1,0 +1,650 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<!-- Shift motion — final motion reference (HTML). The offline storyboard (offline.html) with everything animated:
+     element-level wave builds, every moment, flips, card push-ins, intro/outro tumble, background plate.
+     Served from the repo root (launch.json "shift-motion-preview"): /scripts/shift-motion/final.html?play
+     ?bg=<url> swaps the background plate. Blender takes this over later (blender/export-offline.mjs pattern). -->
+<style>
+  @font-face { font-family: Geist; font-weight: 400; src: url(/scripts/shift-motion/fonts/geist-sans-latin-400-normal.woff2) format('woff2'); }
+  @font-face { font-family: Geist; font-weight: 500; src: url(/scripts/shift-motion/fonts/geist-sans-latin-500-normal.woff2) format('woff2'); }
+  @font-face { font-family: Geist; font-weight: 600; src: url(/scripts/shift-motion/fonts/geist-sans-latin-600-normal.woff2) format('woff2'); }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1920px; height: 1080px; overflow: hidden; background: #e6e5e1; }
+  #frame { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; overflow: hidden; background: #e6e5e1 center / cover no-repeat; }
+  /* contact shadow only — the plate has no floor to reflect in */
+  #floor { position: absolute; left: 50%; width: 1600px; height: 70px; margin-left: -800px; border-radius: 50%;
+    background: radial-gradient(closest-side, rgba(52,46,36,.34), rgba(52,46,36,0)); filter: blur(14px); }
+  #stage { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; perspective: 2600px; }
+  #card { position: absolute; border-radius: 26px; transform-origin: 50% 50%;
+    background: linear-gradient(165deg, rgba(255,255,255,.92) 0%, rgba(250,250,252,.62) 38%, rgba(232,233,238,.72) 100%);
+    box-shadow: inset 0 1.5px 0 #fff, inset 0 -1px 0 rgba(170,172,182,.35), inset 0 0 0 1px rgba(255,255,255,.55),
+      0 0 0 1px rgba(20,22,30,.07), 0 70px 110px -40px rgba(40,34,24,.36), 0 24px 46px -22px rgba(40,34,24,.2); }
+  #screen { position: absolute; left: 12px; top: 12px; border-radius: 16px; overflow: hidden; background: #fff; box-shadow: 0 0 0 1px rgba(20,22,30,.09); }
+  /* browser title bar — the site's .winbar, scaled to the card */
+  #winbar { position: absolute; left: 0; top: 0; right: 0; height: 40px; padding: 0 20px; display: flex; gap: 11px; align-items: center;
+    background: #fbfbfa; border-bottom: 1px solid rgba(17,17,17,.08); z-index: 2; }
+  #winbar i { width: 13px; height: 13px; border-radius: 999px; }
+  #winbar i:nth-child(1) { background: #f0685e; } #winbar i:nth-child(2) { background: #f6bf4f; } #winbar i:nth-child(3) { background: #5fc454; }
+  #page { position: absolute; left: 0; top: 40px; width: 1400px; transform-origin: 0 0; }
+  .layer { position: absolute; left: 0; top: 0; width: 1400px; perspective: 1600px; display: none; }
+  .layer > * { position: absolute; }
+  .base { left: 0; top: 0; width: 1400px; background-repeat: no-repeat; opacity: 0; }
+  .slice { background-repeat: no-repeat; border-radius: 7px; transform-origin: 50% 50%; opacity: 0; }
+  .slice > * { position: absolute; }
+  .flip { transform-origin: 50% 0%; }
+  .box { background: #fff; border: 1px solid #e3e3e7; border-radius: 7px; opacity: 0; }
+  /* caption layer — flat on the frame, above the card (not part of #screen, so the Blender export never sees it) */
+  /* typography and wash come from the approved Claude Design canvas (Overused Grotesk, Shift violet hook, lavender wash) */
+  @font-face { font-family: 'Overused Grotesk'; font-weight: 500; src: url(/scripts/shift-motion/fonts/OverusedGrotesk-Medium.woff2) format('woff2'); }
+  @font-face { font-family: 'Overused Grotesk'; font-weight: 700; src: url(/scripts/shift-motion/fonts/OverusedGrotesk-Bold.woff2) format('woff2'); }
+  #cap { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; pointer-events: none; z-index: 5; font-family: 'Overused Grotesk', 'Helvetica Neue', Arial, sans-serif; }
+  #wash { position: absolute; left: 0; bottom: -2px; width: 1700px; height: 800px; opacity: 0;
+    background: radial-gradient(ellipse 75% 85% at 16% 100%, rgba(244,243,254,.84) 0%, rgba(244,243,254,.62) 38%, rgba(244,243,254,0) 80%); }
+  #txt { position: absolute; left: 128px; bottom: 104px; font-size: 80px; line-height: 1; letter-spacing: -.03em; color: #08080a; }
+  #txt > div { font-weight: 500; white-space: nowrap; }
+  #txt .ch { opacity: 0; }
+  /* block cursor: zero-width anchor so it never shifts the text; the block hangs off it */
+  .cur { display: inline-block; width: 0; height: 0; position: relative; }
+  .cur i { position: absolute; left: .05em; bottom: -.02em; width: .44em; height: .76em; background: #08080a; }
+  #txt > div.hook { font-weight: 700; color: #7c5cd6; }
+  /* digital background layer (approved in the Claude Design canvas): behind the card, above the plate */
+  #digi { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; pointer-events: none; mix-blend-mode: var(--digi-mode, multiply); filter: blur(.45px); opacity: .9; }
+  #digi .grid { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px;
+    -webkit-mask-image: radial-gradient(ellipse 68% 72% at 50% 50%, rgba(0,0,0,.3) 0%, #000 100%); mask-image: radial-gradient(ellipse 68% 72% at 50% 50%, rgba(0,0,0,.3) 0%, #000 100%); }
+  #digi .cell { position: absolute; width: 40px; height: 40px; color: #7c5cd6; font: 500 15px/40px ui-monospace, 'SF Mono', Menlo, Consolas, monospace; text-align: center; }
+  #digi .sq { position: absolute; width: 10px; height: 10px; background: #7c5cd6; }
+  #digi .bar { width: 6px; background: #7c5cd6; }
+  #end { position: absolute; left: 0; right: 0; top: 40px; bottom: 0; display: none; flex-direction: column; align-items: center; justify-content: center; gap: 44px; background: #fff; }
+  #lock { display: flex; align-items: center; gap: 26px; }
+  #sub { font: 500 46px/1.1 'Overused Grotesk', 'Helvetica Neue', Arial, sans-serif; color: #4a4a52; letter-spacing: -.02em; white-space: nowrap; opacity: 0; }
+  #end img { width: 120px; height: 120px; filter: brightness(0); }   /* icon.svg is now a pale fill for dark surfaces; this card is white */
+  #end #lock > span { font: 600 134px/1 Geist, sans-serif; color: #09090b; letter-spacing: -.045em; margin-top: -8px; display: inline-block; }
+</style>
+</head>
+<body>
+<div id="frame"><div id="cap"><div id="wash"></div><div id="txt"></div></div><div id="floor"></div><div id="stage"><div id="card"><div id="screen"><div id="winbar"><i></i><i></i><i></i></div><div id="page"></div>
+  <div id="end"><div id="lock"><img src="/src/content/experience/shift/icon.svg"><span>Shift</span></div><div id="sub">Third-Party Security For The Agentic Era</div></div></div></div></div></div>
+<script>
+const IMG = '/src/content/experience/shift/';
+const SCREENS = {
+  '01': ['01-shift-dashboard.webp', 706.3], '02': ['02-inventory-vendors-page.webp', 701.5], '03': ['03-inventory-vendors-card.png', 704.6],
+  '04': ['04-vendor-access-graph.webp', 705.8], '05': ['05-threat-center.webp', 705.8], '06': ['06-integrations-grid.jpg', 700],
+  '07': ['07-assessment-flow-1.webp', 705.8],
+};
+const GREEN = '#22c55e', PICKED = 'rgba(124,58,237,.07)';   // selected-row tint, shared by every row click
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x)), P = (t, a, b) => clamp((t - a) / (b - a)), lerp = (a, b, x) => a + (b - a) * x;
+const E = {
+  out: x => 1 - Math.pow(1 - x, 3), out5: x => 1 - Math.pow(1 - x, 5), in: x => x * x * x,
+  inOut: x => x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2,
+  inOut5: x => x < .5 ? 16 * x ** 5 : 1 - Math.pow(-2 * x + 2, 5) / 2,
+  back: x => { const c1 = 1.4, c3 = c1 + 1; return 1 + c3 * Math.pow(x - 1, 3) + c1 * Math.pow(x - 1, 2); },
+  sine: x => (1 - Math.cos(Math.PI * x)) / 2,
+};
+const $ = (tag, parent, css = {}) => { const e = document.createElement(tag); Object.assign(e.style, css); if (parent) parent.append(e); return e; };
+const R = ([x, y, w, h]) => ({ left: x + 'px', top: y + 'px', width: w + 'px', height: h + 'px' });
+const xf = (el, { x = 0, y = 0, s = 1, rx = 0 } = {}, pre = '') => el.style.transform = `${pre}translate3d(${x}px,${y}px,0) rotateX(${rx}deg) scale(${s})`;
+
+// ---------------------------------------------------------------- layers: one screenshot sliced into UI pieces
+// (the scene.html engine, in page units). Each page builds as one continuous wave top → bottom; the full
+// screenshot fills in just behind the wave front.
+const DS = 0.62;   // authored item durations → seconds
+function layer(key) {
+  const [file, H] = SCREENS[key];
+  const el = $('div', document.getElementById('page'), { height: H + 'px' }); el.className = 'layer';
+  const base = $('div', el, { height: H + 'px', backgroundImage: `url(${IMG}${file})`, backgroundSize: `1400px ${H}px` }); base.className = 'base';
+  const L = { key, el, base, H, file, items: [], wv: { t0: -99, dur: 0.01, lag: 0 } };
+  L.slice = (r, parent = el) => {
+    const s = $('div', parent, { ...R(r), backgroundImage: `url(${IMG}${file})`, backgroundSize: `1400px ${H}px`, backgroundPosition: `${-r[0]}px ${-r[1]}px` });
+    s.className = 'slice'; return s;
+  };
+  L.add = specs => specs.forEach(([kind, , r, o = {}]) => {
+    const box = o.box ? $('div', el, R(r)) : null; if (box) box.className = 'box';
+    const s = L.slice(r); if (o.rad != null) s.style.borderRadius = o.rad + 'px'; if (kind === 'flip') s.classList.add('flip');
+    L.items.push({ kind, t: 0, r, d: (o.d ?? 0.7) * DS, el: s, box });
+  });
+  L.wave = (t0, dur, lag = 0.25) => { L.wv = { t0, dur, lag }; for (const it of L.items) it.t = t0 + (it.r[1] / H) * dur + (it.r[0] / 1400) * 0.15; };
+  L.find = r => L.items.find(it => it.r.every((v, k) => Math.abs(v - r[k]) < 0.5));
+  L.render = u => {
+    for (const it of L.items) {
+      const { kind, t, d, el: s, box } = it, q = P(u, t, t + d), e = E.out5(q);
+      if (box) { const bq = E.out5(P(u, t - 0.18, t + 0.16)); box.style.opacity = bq; box.style.transform = `scale(${lerp(0.94, 1, bq)})`; }
+      let op = u >= t ? 1 : 0; s.style.clipPath = ''; s.style.webkitMaskImage = '';
+      const fx = it.fx ? it.fx(u) : { dy: 0, op: 1 }, pre = fx.dy ? `translateY(${fx.dy}px) ` : '';
+      switch (kind) {
+        case 'fade': op = E.out(q); xf(s, {}, pre); break;
+        case 'pop': op = P(u, t, t + d * 0.35); xf(s, { y: (1 - e) * 24, s: lerp(0.95, 1, e) }, pre); break;
+        case 'scale': { const b = E.back(q); op = P(u, t, t + 0.08); xf(s, { s: lerp(0.3, 1, b) }, pre); break; }
+        case 'flip': op = P(u, t, t + 0.12); xf(s, { rx: -82 * (1 - e) }, pre); break;
+        case 'card': { const b = E.back(q); op = P(u, t, t + 0.1); xf(s, { rx: 70 * (1 - b), y: 36 * (1 - b), s: lerp(0.86, 1, b) }, pre); break; }
+        case 'slideL': op = P(u, t, t + d * 0.4); xf(s, { x: -45 * (1 - e) }, pre); break;
+        case 'slideR': op = P(u, t, t + d * 0.4); xf(s, { x: 63 * (1 - e) }, pre); break;
+        case 'slideU': op = P(u, t, t + d * 0.4); xf(s, { y: 20 * (1 - e) }, pre); break;
+        case 'slideD': op = P(u, t, t + d * 0.4); xf(s, { y: -27 * (1 - e) }, pre); break;
+        case 'wipeL': s.style.clipPath = `inset(0 ${(1 - E.inOut(q)) * 100}% 0 0)`; xf(s, {}, pre); break;
+        case 'wipeU': s.style.clipPath = `inset(${(1 - E.inOut(q)) * 100}% 0 0 0)`; xf(s, {}, pre); break;
+        case 'wipeD': s.style.clipPath = `inset(0 0 ${(1 - E.inOut(q)) * 100}% 0)`; xf(s, {}, pre); break;
+        case 'conic': { const a = 360 * E.inOut(q); s.style.webkitMaskImage = `conic-gradient(from 0deg, #000 ${a}deg, transparent ${a + 0.5}deg)`; xf(s, { s: lerp(0.85, 1, E.out5(q)) }, pre); break; }
+      }
+      s.style.opacity = op * fx.op;
+    }
+    const { t0, dur, lag } = L.wv, bq = P(u, t0 + lag, t0 + lag + dur), edge = lerp(-18, 100, bq);
+    base.style.opacity = bq > 0 ? 1 : 0;
+    base.style.webkitMaskImage = bq >= 1 ? '' : `linear-gradient(180deg, #000 ${edge}%, transparent ${edge + 18}%)`;
+    L.fx && L.fx(u);
+  };
+  return L;
+}
+const rows = (n, x, y0, pitch, w, h, kind = 'slideU') => Array.from({ length: n }, (_, i) => [kind, 0, [x, y0 + i * pitch, w, h ?? pitch], { rad: 0, d: 0.55 }]);
+
+const CURSOR = '<svg viewBox="0 0 12 18" width="12" height="18" style="overflow:visible"><path d="M0 0 L0 14 L3.6 10.8 L6.2 16.6 L8.4 15.6 L5.9 9.9 L10.8 9.9 Z" fill="#111" stroke="#fff" stroke-width="1.1" stroke-linejoin="round"/></svg>';
+function cursor(parent) { const c = $('div', parent, { width: '12px', height: '18px', opacity: 0, filter: 'drop-shadow(0 1px 1.5px rgba(0,0,0,.3))', zIndex: 5 }); c.innerHTML = CURSOR; return c; }
+// cursor glide + click: from (x0,y0) to (x1,y1) over [a, a+0.35], press at a+0.35
+function glide(c, u, a, [x0, y0], [x1, y1], until) {
+  const q = E.inOut(P(u, a, a + 0.35));
+  c.style.opacity = u > a - 0.05 && u < until ? 1 : 0;
+  c.style.left = lerp(x0, x1, q) + 'px'; c.style.top = lerp(y0, y1, q) + 'px';
+  c.style.transform = `scale(${1 - 0.15 * Math.sin(Math.PI * P(u, a + 0.36, a + 0.54))})`;
+}
+// the security-score donut, drawn as vectors over the screenshot's (same segmented ring, badge, score, pill) —
+// set(score, grade 0 = B → 1 = F, pill 0 = Moderate → 1 = Critical)
+const SVGNS = 'http://www.w3.org/2000/svg';
+const hexRgb = h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16));
+const mixRgb = (a, b, x) => hexRgb(a).map((v, i) => Math.round(lerp(v, hexRgb(b)[i], x)));
+const SCORE_STOPS = [[74, '#b2e458'], [54, '#f59e0b'], [34, '#ef4444']];
+const scoreRgb = sc => { for (let i = 1; i < SCORE_STOPS.length; i++) if (sc >= SCORE_STOPS[i][0]) return mixRgb(SCORE_STOPS[i][1], SCORE_STOPS[i - 1][1], (sc - SCORE_STOPS[i][0]) / (SCORE_STOPS[i - 1][0] - SCORE_STOPS[i][0])); return hexRgb('#ef4444'); };
+function scoreDonut(parent) {
+  const CX = 554.6, CY = 237, RR = 49.75, G = 0.7;
+  const box = $('div', parent, { position: 'absolute', ...R([CX - 57, CY - 57, 114, 114]), background: '#fff', borderRadius: '50%' });
+  const svg = document.createElementNS(SVGNS, 'svg'); box.append(svg);
+  Object.entries({ viewBox: '0 0 114 114', width: 114, height: 114 }).forEach(([k, v]) => svg.setAttribute(k, v));
+  svg.style.cssText = 'position:absolute;left:0;top:0;overflow:visible';
+  const arc = (a0, a1) => { const p = a => [57 + RR * Math.sin(a * Math.PI / 180), 57 - RR * Math.cos(a * Math.PI / 180)];
+    const [x0, y0] = p(a0), [x1, y1] = p(a1); return `M${x0} ${y0} A${RR} ${RR} 0 ${a1 - a0 > 180 ? 1 : 0} 1 ${x1} ${y1}`; };
+  const path = (d, stroke) => { const e = document.createElementNS(SVGNS, 'path'); e.setAttribute('d', d); e.setAttribute('fill', 'none'); e.setAttribute('stroke', stroke); e.setAttribute('stroke-width', 5.5); svg.append(e); return e; };
+  const segs = [0, 1, 2, 3, 4].map(i => { const a0 = i * 72 + G, a1 = (i + 1) * 72 - G; path(arc(a0, a1), '#e4e4e7'); return { a0, a1, el: path('', '#000') }; });
+  const badge = $('div', box, { position: 'absolute', ...R([57 - 10.4, 57 - 25.7, 20.8, 20.8]), borderRadius: '2.7px', overflow: 'hidden' });
+  const letter = g => { const e = $('div', badge, { position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', font: '600 10.5px Geist' }); e.textContent = g; return e; };
+  const LB = letter('B'), LF = letter('F');
+  const num = $('div', box, { position: 'absolute', ...R([0, 57 + 6 - 5, 114, 10]), textAlign: 'center', font: '400 7.4px/10px Geist', color: '#71717a' });
+  const pill = (text, bg, color) => { const e = $('div', box, { position: 'absolute', left: '50%', top: 57 + 21.6 - 4.9 + 'px', height: '9.8px', padding: '0 4.3px', borderRadius: '4.9px',
+    font: '400 6.6px/9.8px Geist', whiteSpace: 'nowrap', background: bg, color, transform: 'translateX(-50%)' }); e.textContent = text; return e; };
+  const P1 = pill('Moderate risk', '#f4f4f5', '#18181b'), P2 = pill('Critical risk', '#fee2e2', '#dc2626');
+  return (sc, g, pq) => {
+    const [r, gg, b] = scoreRgb(sc), c = `rgb(${r},${gg},${b})`, end = sc * 3.6;
+    segs.forEach(s => { const a1 = Math.min(s.a1, end); s.el.setAttribute('d', a1 > s.a0 ? arc(s.a0, a1) : ''); s.el.setAttribute('stroke', c); });
+    badge.style.background = `rgba(${r},${gg},${b},.14)`;
+    LB.style.color = LF.style.color = c;
+    LB.style.transform = `translateY(${-100 * g}%)`; LF.style.transform = `translateY(${100 * (1 - g)}%)`;
+    num.innerHTML = `<span style="color:#18181b">${Math.round(sc)}</span> / 100`;
+    P1.style.opacity = 1 - pq; P2.style.opacity = pq; P2.style.transform = `translateX(-50%) scale(${lerp(0.88, 1, E.back(pq))})`;
+  };
+}
+// a number that rolls from a to b (old value slides up and out, new one in from below)
+function roller(parent, r, font, a, b, dx = 2, dy = 0) {
+  const w = $('div', parent, { ...R(r), background: '#fff', overflow: 'hidden', font, color: '#09090b', lineHeight: r[3] + 'px' });
+  const A = $('span', w, { position: 'absolute', left: dx + 'px', top: dy + 'px' }), B = $('span', w, { position: 'absolute', left: dx + 'px', top: dy + 'px' });
+  A.textContent = a; B.textContent = b;
+  return q => { A.style.transform = `translateY(${-100 * q}%)`; B.style.transform = `translateY(${100 * (1 - q)}%)`; A.style.opacity = 1 - q; B.style.opacity = q; };
+}
+
+// ---------------------------------------------------------------- shots: same timing + camera as offline.html
+const W = 'wide', V = (cx, cy, s) => ({ cx, cy, s });
+const STAT = V(654, 138, 2.6), FIND = V(268, 560, 2.6), ROW = V(330, 521, 2.3), SCORE = V(600, 230, 2.3);
+const NODE = V(724.5, 212, 3.0), LIST = V(330, 330, 2.0), JIRA = V(801, 457, 2.6), BOXV = V(420, 535, 2.6);
+// [screen, seconds, view, kind, opts] — opts.id names a moment so the screen's animation can find its start
+const SHOTS = [
+  ['blank', 0.5, W, 'hold'],
+  ['01', 1.2, W, 'build'], ['01', 2.0, W, 'hold'], ['01', 0.5, STAT, 'move'], ['01', 0.6, STAT, 'moment', { id: 'tick' }],
+  ['01', 0.8, FIND, 'move', { id: 'follow' }], ['01', 1.5, FIND, 'moment', { id: 'land' }],   // the flip starts ~0.15s after the row click
+  ['02', 1.1, W, 'build'], ['02', 1.9, W, 'hold'], ['02', 0.5, ROW, 'move'], ['02', 0.35, ROW, 'moment', { id: 'select' }],
+  ['02', 0.75, W, 'move', { id: 'drawer' }],   // the panel opens on the click, the camera pulls back with it
+  ['03', 0.5, SCORE, 'move'], ['03', 1.5, SCORE, 'moment', { id: 'score' }], ['03', 0.5, SCORE, 'hold'],
+  ['04', 1.2, W, 'build'], ['04', 1.9, W, 'hold'], ['04', 0.6, NODE, 'move'], ['04', 1.2, NODE, 'moment', { id: 'sites' }], ['04', 0.5, NODE, 'hold'],
+  ['05', 1.1, W, 'build'], ['05', 1.9, W, 'hold'], ['05', 0.5, LIST, 'move'], ['05', 1.4, LIST, 'moment', { id: 'threat' }], ['05', 0.4, LIST, 'hold'],
+  ['06', 1.1, W, 'build'], ['06', 1.9, W, 'hold'], ['06', 0.5, JIRA, 'move'], ['06', 0.5, JIRA, 'moment', { id: 'press' }],
+  ['06', 1.2, JIRA, 'moment', { id: 'connected' }], ['06', 0.4, JIRA, 'hold'],
+  ['07', 1.1, W, 'build'], ['07', 1.9, W, 'hold'], ['07', 0.5, BOXV, 'move'], ['07', 0.9, BOXV, 'moment', { id: 'count' }],
+  ['07', 0.5, BOXV, 'moment', { id: 'cursor' }], ['07', 0.5, BOXV, 'moment', { id: 'click' }], ['07', 0.4, BOXV, 'hold'],
+  ['end', 4.0, W, 'hold', { id: 'logo' }],
+];
+let acc = 0; const starts = SHOTS.map(s => { const a = acc; acc += s[1]; return a; });
+const DURATION = acc;
+const firstOf = key => starts[SHOTS.findIndex(s => s[0] === key)];
+const at = id => { const i = SHOTS.findIndex(s => s[4]?.id === id); return starts[i] - firstOf(SHOTS[i][0]); };   // screen-local start
+
+// ---------------------------------------------------------------- pages
+const LAYERS = {};
+const LEAD = 0.3;   // builds start this long before the flip lands
+const DIGIT = [3.1, -0.3];   // 01 counter glyph offset inside its patch (tuned against the screenshot)
+// 01 — Dashboard: Shadow Vendors ticks 5 → 6, the camera follows the alert down, a new critical finding lands on top
+{
+  const L = LAYERS['01'] = layer('01');
+  L.add([
+    ['slideD', 0, [0, 0, 1400, 38], { rad: 0 }], ['fade', 0, [0, 44, 1046, 60], { rad: 0 }], ['slideR', 0, [1050, 40, 350, 666], { rad: 0, d: 0.8 }],
+    ...[13, 271, 528, 786].map(x => ['pop', 0, [x, 108, 251, 60], { box: true }]),
+    ['fade', 0, [13, 178, 508, 44], { box: true }],
+    ...[[23, 222, 94, 72], [23, 296, 94, 35], [119, 222, 83, 54], [119, 278, 83, 53], [204, 222, 157, 41], [204, 265, 157, 66], [363, 222, 94, 109], [459, 222, 52, 109]].map(r => ['scale', 0, r, { rad: 3 }]),
+    ['fade', 0, [528, 178, 509, 44], { box: true }],
+    ...[[588, 640], [655, 727], [750, 822], [845, 917], [942, 1012]].map(([a, b]) => ['wipeU', 0, [a, 226, b - a, 93], { rad: 0, d: 0.65 }]),
+    ['fade', 0, [540, 318, 490, 18], { rad: 0 }], ['pop', 0, [1063, 109, 323, 245], {}], ['fade', 0, [0, 388, 1046, 22], { rad: 0 }],
+    ...[13, 271, 528, 786].map(x => ['pop', 0, [x, 413, 251, 60], { box: true }]),
+    ['fade', 0, [13, 483, 508, 44], { box: true }],
+    ...rows(5, 20, 526, 22.2, 498, 22, 'fade'),
+    ['fade', 0, [528, 483, 509, 44], { box: true }], ['wipeL', 0, [536, 525, 495, 115], { rad: 0, d: 1.1 }],
+  ]);
+  L.wave(-LEAD, 0.8);
+  const stat = L.find([528, 108, 251, 60]);
+  const roll = roller(stat.el, [534 - 528, 115 - 108, 16, 20], '400 14.9px Geist', '5', '6', DIGIT[0], DIGIT[1]);   // matched to the screenshot's digit
+  const tick = at('tick'), land = at('land');
+  // Recent Findings: rows 2–5 sit one slot up (no Vercel row yet), then drop into place as the new row slides in
+  const R1 = L.find([20, 526, 498, 22]), rest = [1, 2, 3, 4].map(i => L.find([20, 526 + i * 22.2, 498, 22]));
+  const gap = $('div', L.el, { ...R([16, 614.6, 504, 23]), background: '#fff' });
+  L.el.insertBefore(gap, R1.el);
+  const drop = u => E.inOut(P(u, land + 0.15, land + 0.65));
+  rest.forEach(it => it.fx = u => ({ dy: -22.2 * (1 - drop(u)), op: 1 }));
+  R1.fx = u => ({ dy: 0, op: u >= land + 0.1 ? 1 : 0 });   // already in place — the rows moving down reveal it
+  const pick = $('div', L.el, { ...R([16, 525, 504, 23]), background: PICKED, opacity: 0 });
+  const cur = cursor(L.el);
+  L.fx = u => {
+    roll(E.inOut(P(u, tick + 0.15, tick + 0.45)));
+    gap.style.opacity = 1 - drop(u);
+    glide(cur, u, land + 0.6, [330, 610], [240, 538], 99);
+    pick.style.opacity = E.out(P(u, land + 0.97, land + 1.15));
+  };
+}
+// 02 — Vendors: the Databricks row is selected, the vendor card slides in over the table
+{
+  const L = LAYERS['02'] = layer('02');
+  L.add([
+    ['slideD', 0, [0, 0, 1400, 38], { rad: 0 }], ['fade', 0, [0, 55, 1400, 30], { rad: 0 }],
+    ...[[13, 335], [357, 335], [701, 334], [1044, 335]].map(([x, w]) => ['fade', 0, [x, 87, w, 22], { box: true }]),
+    ['conic', 0, [19, 111, 70, 70], { rad: 35, d: 0.9 }], ['slideL', 0, [95, 134, 250, 24], { rad: 0 }],
+    ...[0, 1, 2, 3, 4].map(i => ['wipeL', 0, [368, 116 + i * 9.4, 320, 9.4], { rad: 0, d: 0.7 }]),
+    ['fade', 0, [365, 163, 320, 16], { rad: 0 }], ['conic', 0, [706, 111, 70, 70], { rad: 35, d: 0.9 }], ['slideL', 0, [780, 134, 215, 24], { rad: 0 }],
+    ...[[1072, 1112], [1134, 1173], [1195, 1234], [1256, 1296], [1317, 1356]].map(([a, b]) => ['wipeU', 0, [a, 115, b - a, 50], { rad: 0, d: 0.6 }]),
+    ['fade', 0, [1050, 165, 325, 16], { rad: 0 }], ['fade', 0, [0, 191, 1400, 26], { rad: 0 }], ['wipeL', 0, [13, 222, 1366, 23], { rad: 0, d: 0.7 }],
+    ...rows(13, 13, 245, 32.6, 1366, 32.6), ['fade', 0, [0, 666, 1400, 30], { rad: 0 }],
+  ]);
+  L.wave(-LEAD, 0.8);
+  $('div', L.el, { ...R([1388, 160, 12, 96]), background: '#fff' });   // hides a floating widget baked into the screenshot
+  const tint = $('div', L.el, { ...R([13, 506, 1366, 32]), background: PICKED, opacity: 0 });
+  const cur = cursor(L.el);
+  // the drawer: 03's panel slides in from the right over a scrim, 03's dimmed left side fades in
+  const [f3, H3] = SCREENS['03'];
+  const s3 = (r, parent) => $('div', parent, { ...R(r), backgroundImage: `url(${IMG}${f3})`, backgroundSize: `1400px ${H3}px`, backgroundPosition: `${-r[0]}px ${-r[1]}px`, backgroundRepeat: 'no-repeat' });
+  const scrim = $('div', L.el, { ...R([0, 0, 1400, L.H]), background: 'rgba(40,40,46,.42)', opacity: 0 });
+  const wrap = $('div', L.el, { ...R([0, 0, 1400, H3]), transform: 'translateX(1060px)' });
+  const pan = s3([350, 0, 1050, H3], wrap); pan.style.position = 'absolute'; pan.style.boxShadow = '-30px 0 60px rgba(0,0,0,.12)';
+  scoreDonut(wrap)(74, 0, 0);   // arrives as the screenshot shows it: B · 74
+  const sel = at('select'), dr = at('drawer');
+  L.fx = u => {
+    const c = P(u, sel - 0.4, sel + 0.05);   // cursor glides to the row, clicks
+    cur.style.opacity = u > sel - 0.45 && u < dr + 0.1 ? 1 : 0;
+    cur.style.left = lerp(470, 352, E.inOut(c)) + 'px'; cur.style.top = lerp(560, 522, E.inOut(c)) + 'px';
+    cur.style.transform = `scale(${1 - 0.15 * Math.sin(Math.PI * P(u, sel + 0.02, sel + 0.2))})`;
+    tint.style.opacity = E.out(P(u, sel + 0.05, sel + 0.3));
+    scrim.style.opacity = P(u, dr, dr + 0.4);
+    wrap.style.transform = `translateX(${(1 - E.out5(P(u, dr, dr + 0.6))) * 1060}px)`;
+  };
+}
+// 03 — Vendor card (arrives with the drawer): on the zoom the score drops 74 → 34 — B → F, Critical risk
+{
+  const L = LAYERS['03'] = layer('03');
+  // the left side stays the vendors table under the scrim (03's own copy is scrolled differently)
+  const [f2, H2] = SCREENS['02'];
+  $('div', L.el, { ...R([0, 0, 350, H2]), backgroundImage: `url(${IMG}${f2})`, backgroundSize: `1400px ${H2}px`, backgroundRepeat: 'no-repeat' });
+  $('div', L.el, { ...R([0, 0, 350, L.H]), background: 'rgba(40,40,46,.42)' });
+  $('div', L.el, { ...R([350, 0, 1, L.H]), boxShadow: '-30px 0 60px rgba(0,0,0,.12)' });
+  const donut = scoreDonut(L.el);
+  const sc = at('score');
+  L.fx = u => {
+    L.base.style.opacity = 1; L.base.style.webkitMaskImage = '';
+    const q = E.inOut(P(u, sc + 0.15, sc + 1.15));
+    donut(lerp(74, 34, q), E.inOut(P(u, sc + 0.55, sc + 0.8)), E.out(P(u, sc + 0.95, sc + 1.25)));
+  };
+}
+// 04 — Access graph: push in on the Sites resource node (Customer PII is reachable)
+{
+  const L = LAYERS['04'] = layer('04');
+  L.add([
+    ['slideD', 0, [0, 0, 1400, 31], { rad: 0 }], ['slideR', 0, [981, 31, 419, 60], { rad: 0 }], ['fade', 0, [985, 78, 210, 26], { rad: 0 }],
+    ['wipeD', 0, [985, 105, 410, 600], { rad: 0, d: 1.3 }], ['fade', 0, [108, 142, 610, 26], { rad: 0 }],
+    ['scale', 0, [113, 166, 46, 46], {}], ['pop', 0, [217, 169, 152, 68], {}],
+    ...[245, 308, 371, 434].map(y => ['slideU', 0, [219, y, 150, 62], { rad: 4 }]), ['fade', 0, [219, 487, 150, 22], { rad: 4 }],
+    ...[170, 216, 261, 307, 352, 398].map(y => ['slideU', 0, [434, y, 150, 44], { rad: 4 }]),
+    ['pop', 0, [433, 441, 151, 26], {}], ['fade', 0, [434, 485, 150, 36], { rad: 4 }],
+    ...[[171, 86], [266, 86], [360, 72], [438, 68], [515, 68]].map(([y, h]) => ['pop', 0, [649, y - 2, 151, h], {}]),
+    ['fade', 0, [649, 590, 151, 24], { rad: 4 }], ['scale', 0, [455, 671, 70, 24], { rad: 4 }],
+  ]);
+  L.wave(-LEAD, 0.8);
+  // the change: Sites gains the Customer PII tag once the camera is there
+  const sites = L.find([649, 169, 151, 86]), rel = ([x, y, w, h]) => R([x - 649, y - 169, w, h]);
+  $('div', sites.el, { ...rel([711.5, 201, 65, 18.5]), background: '#fff' });
+  const tag = L.slice([715, 204.5, 58, 13.5], sites.el);
+  Object.assign(tag.style, rel([715, 204.5, 58, 13.5]), { borderRadius: '7px' });
+  const st = at('sites');
+  L.fx = u => {
+    const q = P(u, st + 0.2, st + 0.6);
+    tag.style.opacity = P(u, st + 0.2, st + 0.32);
+    tag.style.transform = `scale(${lerp(0.5, 1, E.back(q))})`;
+  };
+}
+// 05 — Threat center: a critical threat slides in on top of the list, the others shift down
+{
+  const L = LAYERS['05'] = layer('05');
+  L.add([
+    ['slideD', 0, [0, 0, 1400, 40], { rad: 0 }], ['fade', 0, [0, 52, 1400, 36], { rad: 0 }],
+    ...[13, 359, 705, 1050].map(x => ['flip', 0, [x, 93, 337, 98], { d: 0.8 }]),
+    ['fade', 0, [10, 200, 285, 30], { rad: 0 }], ...rows(8, 13, 236, 62.8, 268, 57, 'fade'),
+    ['fade', 0, [305, 205, 1095, 46], { rad: 0 }], ['wipeD', 0, [312, 265, 795, 100], { rad: 0, d: 0.8 }], ['fade', 0, [312, 398, 795, 46], { rad: 0 }],
+    ['wipeL', 0, [318, 452, 784, 22], { rad: 0, d: 0.6 }], ...rows(5, 318, 474, 33, 784, 33),
+    ['fade', 0, [970, 643, 135, 26], { rad: 0 }], ['slideR', 0, [1112, 268, 285, 315], { rad: 0, d: 0.8 }],
+  ]);
+  L.wave(-LEAD, 0.8);
+  const T1 = L.find([13, 236, 268, 57]), rest = [1, 2, 3, 4, 5, 6, 7].map(i => L.find([13, 236 + i * 62.8, 268, 57]));
+  const gap = $('div', L.el, { ...R([12, 236 + 7 * 62.8 - 3, 270, 75]), background: '#fff' });
+  L.el.insertBefore(gap, T1.el);
+  const th = at('threat'), drop = u => E.inOut(P(u, th + 0.1, th + 0.6));
+  rest.forEach(it => it.fx = u => ({ dy: -62.8 * (1 - drop(u)), op: 1 }));
+  T1.fx = u => ({ dy: 0, op: u >= th + 0.05 ? 1 : 0 });   // revealed by the list moving down
+  const pick = $('div', L.el, { ...R([13, 233, 268, 60]), borderRadius: '7px', background: PICKED, opacity: 0 });
+  const cur = cursor(L.el);
+  L.fx = u => {
+    gap.style.opacity = 1 - drop(u);
+    glide(cur, u, th + 0.6, [230, 330], [150, 262], 99);
+    pick.style.opacity = E.out(P(u, th + 0.97, th + 1.15));
+  };
+}
+// 06 — Integrations: Jira — "Add Connection" is clicked, it connects (Entra's connected status + footer take over)
+{
+  const L = LAYERS['06'] = layer('06');
+  const cols = [222, 458, 693, 929, 1165], ys = [244, 393, 541];
+  L.add([
+    ['slideD', 0, [0, 0, 1400, 50], { rad: 0 }], ['slideL', 0, [0, 60, 205, 215], { rad: 0 }],
+    ['fade', 0, [210, 70, 1190, 110], { rad: 0 }], ['fade', 0, [210, 196, 1190, 44], { rad: 0 }],
+    ...ys.flatMap(y => cols.map(x => ['card', 0, [x, y, 217, 131], { rad: 8, d: 0.75 }])),
+  ]);
+  L.wave(-LEAD, 0.8);
+  const DX = -471.6;
+  const press = $('div', L.el, { ...R([694, 487, 214.5, 34.5]), background: 'rgba(24,24,27,.07)', opacity: 0 });
+  const spin = $('div', L.el, { ...R([845, 415.3, 6, 6]), borderRadius: '50%', border: '0.9px solid #d4d4d8', borderTopColor: GREEN, background: '#fff', opacity: 0 });
+  const status = L.slice([1288, 405, 90, 26]), foot = L.slice([1165.5, 486.5, 215.3, 35]);
+  status.style.left = 1288 + DX + 'px'; foot.style.left = 1165.5 + DX + 'px'; status.style.borderRadius = foot.style.borderRadius = '0';
+  const cur = cursor(L.el);
+  const pr = at('press'), on = at('connected');
+  L.fx = u => {
+    const c = E.inOut(P(u, pr - 0.35, pr + 0.05));
+    cur.style.opacity = u > pr - 0.4 && u < on + 0.3 ? 1 : 0;
+    cur.style.left = lerp(870, 810, c) + 'px'; cur.style.top = lerp(470, 504, c) + 'px';
+    cur.style.transform = `scale(${1 - 0.15 * Math.sin(Math.PI * P(u, pr + 0.05, pr + 0.22))})`;
+    press.style.opacity = Math.sin(Math.PI * P(u, pr + 0.05, pr + 0.45));
+    const sp = P(u, pr + 0.15, on);
+    spin.style.opacity = sp > 0 && sp < 1 ? 1 : 0; spin.style.transform = `rotate(${sp * 720}deg)`;
+    status.style.opacity = E.out(P(u, on, on + 0.25)); status.style.transform = `scale(${lerp(0.9, 1, E.back(P(u, on, on + 0.4)))})`;
+    foot.style.opacity = E.out(P(u, on + 0.1, on + 0.4)); foot.style.transform = `translateY(${4 * (1 - E.out5(P(u, on + 0.1, on + 0.6)))}px)`;
+  };
+}
+// 07 — Assessment: the vendor reply — New answers counts 4 → 20, the cursor clicks "Review reply"
+{
+  const L = LAYERS['07'] = layer('07');
+  L.add([
+    ['slideD', 0, [0, 0, 1400, 38], { rad: 0 }], ['fade', 0, [17, 60, 970, 40], { box: true }],
+    ...[[110, 56], [196, 56], [256, 42], [297, 52], [380, 52]].map(([y, h]) => ['slideU', 0, [228, y, 560, h], { rad: 0 }]),
+    ['wipeL', 0, [228, 172, 560, 18], { rad: 0 }], ['wipeL', 0, [228, 355, 560, 18], { rad: 0 }],
+    ['pop', 0, [233, 441, 367, 188], { rad: 14, box: true }], ['slideU', 0, [233, 641, 534, 42], { rad: 8 }],
+    ['slideR', 0, [995, 60, 392, 40], { rad: 0 }], ['pop', 0, [1008, 110, 366, 92], { box: true }], ['fade', 0, [1008, 205, 366, 40], { box: true }],
+    ['conic', 0, [1046, 254, 114, 114], { rad: 57, d: 1.0 }], ...rows(5, 1192, 237, 29, 170, 29, 'slideR'),
+    ['pop', 0, [1008, 400, 366, 120], { box: true }], ['pop', 0, [1008, 525, 366, 110], { box: true }],
+  ]);
+  L.wave(-LEAD, 0.8);
+  const agent = L.find([233, 441, 367, 188]);
+  const num = $('div', agent.el, { ...R([349.4 - 233, 551.7 - 441, 17, 14]), background: '#fff', font: '500 11.6px Geist', color: '#09090b', lineHeight: '14px', paddingLeft: '0.4px' });   // matched to the screenshot's "20" (red-overlay check)
+  const click = $('div', L.el, { ...R([262.5, 599.4, 77.9, 20.1]), borderRadius: '4px', background: 'rgba(255,255,255,.25)', opacity: 0 });
+  const cur = cursor(L.el);
+  const ct = at('count'), cu = at('cursor'), ck = at('click');
+  L.fx = u => {
+    const n = Math.round(lerp(4, 20, E.inOut(P(u, ct + 0.1, ct + 0.8))));
+    num.textContent = n;   // stays on screen — no hand-off back to the screenshot's digits, so nothing can jump
+    const c = E.inOut(P(u, cu, cu + 0.45));
+    cur.style.opacity = u > cu - 0.05 ? 1 : 0;
+    cur.style.left = lerp(372, 302, c) + 'px'; cur.style.top = lerp(640, 611, c) + 'px';
+    cur.style.transform = `scale(${1 - 0.15 * Math.sin(Math.PI * P(u, ck, ck + 0.18))})`;
+    click.style.opacity = Math.sin(Math.PI * P(u, ck + 0.02, ck + 0.4));
+  };
+}
+
+// ---------------------------------------------------------------- end: the Shift mark draws on
+const endEl = document.getElementById('end'), endImg = endEl.querySelector('img'), endWord = endEl.querySelector('span'), endSub = document.getElementById('sub');
+// the mark and the subtitle type in like the captions: Shift first (slower, it is big), then the subtitle, one block cursor that moves along and lingers
+const END_WORD_AT = 0.4, END_WORD_CPS = 14, END_SUB_GAP = 0.2, END_SUB_CPS = 60, END_CURSOR_HOLD = 1.0;
+const splitChars = el => { const t = el.textContent; el.replaceChildren(); return [...t].map(ch => { const sp = document.createElement('span'); sp.textContent = ch; sp.style.cssText = 'display:inline;opacity:0;margin:0'; el.append(sp); return sp; }); };
+const endChars = [...splitChars(endWord), ...splitChars(endSub)], nWord = 5;
+endWord.style.opacity = endSub.style.opacity = 1;
+const subAt = END_WORD_AT + nWord / END_WORD_CPS + END_SUB_GAP;
+endChars.forEach((sp, i) => { sp._at = i < nWord ? END_WORD_AT + i / END_WORD_CPS : subAt + (i - nWord) / END_SUB_CPS; });
+const endTypedBy = endChars[endChars.length - 1]._at;
+const endCur = document.createElement('span'); endCur.className = 'cur'; endCur.innerHTML = '<i></i>';
+const drawEnd = u => {
+  const a = E.back(P(u, 0.05, 0.6));
+  endImg.style.opacity = P(u, 0.05, 0.25); endImg.style.transform = `scale(${lerp(0.5, 1, a)})`;
+  let n = 0; endChars.forEach(sp => { const on = u >= sp._at; sp.style.opacity = on ? 1 : 0; if (on) n++; });
+  if (n) endChars[n - 1].after(endCur); else endChars[0].before(endCur);
+  const idle = u - endTypedBy;
+  endCur.style.opacity = u < END_WORD_AT - 0.05 ? 0 : idle < 0.05 ? 1 : idle < END_CURSOR_HOLD ? (Math.floor(idle * BLINK * 2) % 2 === 0 ? 1 : 0) : 0;
+};
+
+// ---------------------------------------------------------------- card: camera views → card push, screen changes → flips
+const KB = 1560 / 1400, BAR = 40, PADC = 12, CENTER = 540, FLIP = 0.75, INTRO = 1.4, OUTRO = 0.9;   // the card rests centred in the frame
+const page = document.getElementById('page'), cardEl = document.getElementById('card'), screenEl = document.getElementById('screen'), floorEl = document.getElementById('floor');
+const grp = i => { const s = SHOTS[i][0]; return s === '03' ? '02' : s; };
+const FLIPS = [];
+for (let i = 1; i < SHOTS.length; i++) if (grp(i) !== grp(i - 1) && grp(i - 1) !== 'blank') FLIPS.push([starts[i], FLIPS.length % 2 ? 'x' : 'y']);
+const shotAt = t => { let i = 0; while (i < SHOTS.length - 1 && t >= starts[i + 1]) i++; return i; };
+const hOf = i => (SCREENS[SHOTS[i][0]] || SCREENS['01'])[1];
+const viewOf = i => { const v = SHOTS[i][2]; return v === W ? { cx: 700, cy: hOf(i) / 2, s: 1 } : v; };
+function viewAt(i, u) {
+  let v = viewOf(i);
+  const [, dur, , kind, o = {}] = SHOTS[i];
+  if (kind === 'move' && i > 0) {
+    const a = viewOf(i - 1), e = E.inOut(Math.min(1, u / dur));
+    let ls = Math.log(a.s) + (Math.log(v.s) - Math.log(a.s)) * e;
+    if (o.hop) ls -= (Math.min(Math.log(a.s), Math.log(v.s)) - Math.log(o.hop)) * Math.sin(Math.PI * e);
+    v = { cx: a.cx + (v.cx - a.cx) * e, cy: a.cy + (v.cy - a.cy) * e, s: Math.exp(ls) };
+  }
+  return v;
+}
+function showFace(i, t) {
+  const key = SHOTS[i][0];
+  for (const k in LAYERS) LAYERS[k].el.style.display = k === key ? 'block' : 'none';
+  endEl.style.display = key === 'end' ? 'flex' : 'none';
+  if (LAYERS[key]) LAYERS[key].render(t - firstOf(key));
+  if (key === 'end') drawEnd(t - firstOf('end'));
+}
+window.render = t => {
+  let i = shotAt(t), face = i, ft = t, v = viewAt(i, t - starts[i]), ang = 0, axis = 'y', angRaw = null;
+  const f = FLIPS.find(([T]) => Math.abs(t - T) < FLIP / 2);
+  if (f) {
+    const [T, ax] = f, q = E.inOut5(P(t, T - FLIP / 2, T + FLIP / 2));
+    axis = ax; ang = 180 * q; angRaw = ang;
+    if (ang < 90) { face = shotAt(T - 0.001); const vA = viewAt(face, SHOTS[face][1]), k = clamp(2 * q);   // the zoom releases while turning away
+      v = { cx: lerp(vA.cx, 700, k), cy: lerp(vA.cy, hOf(face) / 2, k), s: Math.exp(lerp(Math.log(vA.s), 0, k)) }; ft = Math.min(t, T - 0.001); }
+    else { face = shotAt(T + 0.001); v = viewAt(face, 0); ang -= 180; }
+  }
+  showFace(face, ft);
+  const h = hOf(face), Wc = 1560 + 2 * PADC, Hc = h * KB + BAR + 2 * PADC;
+  const g0 = starts[SHOTS.findIndex((_, k) => grp(k) === grp(face))], pu = P(t, g0, g0 + 5);
+  const zk = clamp((v.s - 1) / 0.8), calm = 1 - 0.75 * zk;
+  let RX = (6 - 2 * E.sine(pu)) * calm, RY = (-10 + 13 * E.sine(pu)) * calm;
+  if (axis === 'x') RX += ang; else RY += ang;
+  const lift = Math.sin(Math.PI * Math.abs(ang) / 180);
+  let s = v.s * (1 - 0.08 * lift * (1 - zk)), z = -200 * lift * (1 - 0.8 * zk);
+  const cy0 = CENTER, qx = (v.cx - 700) * KB * s, qy = ((v.cy - h / 2) * KB + BAR / 2) * s;
+  let dx = -qx, dy = -qy + (540 - cy0) * zk;
+  const from = { RX: RX + 180, RY: RY - 24, z: 1900, dy: -120 };
+  if (t < INTRO) { const r = 1 - E.out(P(t, 0, INTRO)); RX = lerp(RX, from.RX, r); RY = lerp(RY, from.RY, r); z = lerp(z, from.z, r); dy = lerp(dy, from.dy, r); }
+  if (t > DURATION - OUTRO) { const r = E.in(P(t, DURATION - OUTRO, DURATION)); RX = lerp(RX, from.RX - 360, r); RY = lerp(RY, from.RY, r); z = lerp(z, from.z, r); dy = lerp(dy, from.dy, r); }
+  const back = Math.cos(RX * Math.PI / 180) * Math.cos(RY * Math.PI / 180) < 0;
+  page.style.visibility = endEl.style.visibility = back ? 'hidden' : 'visible';
+  window.cardState = { W: Wc, H: Hc, RX, RY, z, s, dx, dy, px: qx, py: qy, screen: [1560, h * KB + BAR], zk, cy: cy0, ...(angRaw != null ? { ang: angRaw, axis } : {}) };   // read by blender/export-final.mjs
+  Object.assign(cardEl.style, { width: Wc + 'px', height: Hc + 'px', left: 960 - Wc / 2 + 'px', top: cy0 - Hc / 2 + 'px',
+    transform: `translate3d(${dx}px,${dy}px,${z}px) translate(${qx}px,${qy}px) rotateX(${RX}deg) rotateY(${RY}deg) translate(${-qx}px,${-qy}px) scale(${s})` });
+  Object.assign(screenEl.style, { width: '1560px', height: h * KB + BAR + 'px' });
+  page.style.transform = `scale(${KB})`;
+  const wx = Math.abs(Math.cos(RY * Math.PI / 180));
+  floorEl.style.top = cy0 + Hc / 2 - 22 + 'px';
+  floorEl.style.transform = `scale(${(Wc / 1600) * Math.min(s, 1.2) * Math.max(wx, 0.06)}, ${0.8 + 0.2 * Math.abs(Math.cos(RX * Math.PI / 180))})`;
+  floorEl.style.opacity = (1 - zk) * (0.6 + 0.4 * wx) * (1 - Math.min(1, Math.abs(z) / 1400) * 0.85);
+};
+// ---------------------------------------------------------------- captions (copy + type from the Claude Design canvas): lines rise in just after each flip lands, hold CAP_HOLD s
+// The last line of each caption is the hook (bold, Shift violet). Copy is still a draft awaiting Amit's approval.
+const CAP_LAG = 0.1, CAP_HOLD = 2.6, CAP_OUT = 0.3, CPS = 75, CAP_START = 0.1, LINE_PAUSE = 0, BLINK = 2.4, CURSOR_HOLD = 1.0;   // typed at CPS characters/s, LINE_PAUSE = extra char-times at each line end
+const CAPS = [
+  ['01', ['See every vendor,', 'including the ones', 'nobody told you about.']],
+  ['02', ['Every vendor, digitized.', 'One click to', 'the full picture.']],
+  ['04', ['See exactly', 'what each vendor', 'can reach.']],
+  ['05', ['A vendor’s vendor', 'gets breached.', 'You know first.']],
+  ['06', ['Connect your stack', 'in a click.']],
+  ['07', ['Vendors answer.', 'The agent reads.', 'You approve.']],
+].map(([key, lines]) => ({ lines, start: key === '01' ? INTRO - 0.2 : firstOf(key) + FLIP / 2 + CAP_LAG }));   // 01: the intro tumble has settled by ~1.2 s (its ease runs on to 1.4)
+const washEl = document.getElementById('wash'), txtEl = document.getElementById('txt');
+const capsOn = new URLSearchParams(location.search).get('cap') !== '0';
+let capShown = null, chars = [], curEl = null;
+const baseRender = window.render;
+window.render = t => {
+  baseRender(t); digiUpdate(t);
+  const c = capsOn && CAPS.find(c => t >= c.start && t < c.start + CAP_HOLD + CAP_OUT);
+  if (c !== capShown) {
+    capShown = c; txtEl.replaceChildren(); chars = [];
+    if (c) {
+      curEl = document.createElement('span'); curEl.className = 'cur'; curEl.innerHTML = '<i></i>';
+      let k = 0;
+      c.lines.forEach((l, i) => {
+        const d = document.createElement('div'); if (i === c.lines.length - 1) d.className = 'hook';
+        for (const ch of l) { const sp = document.createElement('span'); sp.className = 'ch'; sp.textContent = ch; sp.dataset.at = (CAP_START + (k++ + i * LINE_PAUSE) / CPS).toFixed(3); d.append(sp); chars.push(sp); }
+        txtEl.append(d);
+      });
+      c.typedBy = CAP_START + (chars.length - 1 + (c.lines.length - 1) * LINE_PAUSE) / CPS;
+    }
+  }
+  if (!c) { washEl.style.opacity = 0; return; }
+  const u = t - c.start, out = 1 - E.in(clamp((u - CAP_HOLD) / CAP_OUT));
+  washEl.style.opacity = Math.min(E.out(clamp(u / 0.5)), out);
+  const p = clamp(u / (CAP_HOLD + CAP_OUT));   // the block drifts up and swells very slightly for the whole caption
+  txtEl.style.transformOrigin = '0 100%'; txtEl.style.transform = `translateY(${-10 * p}px) scale(${1 + 0.03 * p})`;
+  let n = 0; chars.forEach(sp => { const on = u >= +sp.dataset.at; sp.style.opacity = on ? out : 0; if (on) n++; });
+  // the cursor sits after the last typed character and is removed once typing is done
+  (n ? chars[n - 1].after(curEl) : chars[0].before(curEl));
+  // the block takes the hook's violet once it reaches the last line, and keeps it while it blinks out
+  curEl.firstChild.style.background = (n ? chars[n - 1] : chars[0]).parentNode.classList.contains('hook') ? '#7c5cd6' : '';
+  // solid while typing, then it lingers CURSOR_HOLD s (blinking) after the last character and goes
+  const idle = u - c.typedBy;
+  curEl.style.opacity = (idle < 0.05 ? 1 : idle < CURSOR_HOLD ? (Math.floor(idle * BLINK * 2) % 2 === 0 ? 1 : 0) : 0) * out;
+};
+window.CAPS = CAPS;
+window.DURATION = DURATION;
+window.BEATS = SHOTS.map((s, i) => ({ name: s[0] === 'blank' ? 'Intro' : s[0] === 'end' ? 'End' : (s[0] === '03' ? '02' : s[0]), start: +starts[i].toFixed(2) }))
+  .filter((b, i, a) => i === 0 || b.name !== a[i - 1].name);
+// ---------------------------------------------------------------- digital background (layout from the Claude Design canvas; every flip/blink is a pure function of t)
+const digi = document.createElement('div'); digi.id = 'digi';
+{ const grid = document.createElement('div'); grid.className = 'grid'; digi.append(grid);
+  let seed = 7; const rnd = () => { seed = (seed * 16807) % 2147483647; return seed / 2147483647; };
+  for (let i = 0; i < 48 * 27; i++) {
+    const r = rnd(), r2 = rnd(), r3 = rnd(), el = document.createElement('div');
+    el.className = 'cell'; el.style.left = (i % 48) * 40 + 'px'; el.style.top = Math.floor(i / 48) * 40 + 'px';
+    el._tier = r < 0.07 ? 2 : r < 0.3 ? 1 : 0; el._d = 1.4 + r2 * 3.2; el._l = r3 * 4;
+    grid.append(el);
+  }
+  const decor = document.createElement('div'); decor.innerHTML = `<div style="position: absolute; left: 0; top: 0; width: 1920px; height: 130px; background: repeating-linear-gradient(90deg, rgba(124,92,214,0.0) 0px, rgba(124,92,214,0.0) 39px, rgba(124,92,214,0.4) 39px, rgba(124,92,214,0.4) 40px); -webkit-mask-image: linear-gradient(180deg, rgba(0,0,0,0) 62%, #000 62%, #000 72%, rgba(0,0,0,0) 72%); mask-image: linear-gradient(180deg, rgba(0,0,0,0) 62%, #000 62%, #000 72%, rgba(0,0,0,0) 72%)"></div>
+<div style="position: absolute; left: 40px; right: 40px; top: 104px; height: 1px; background: rgba(124,92,214,0.45)"></div>
+<div style="position: absolute; left: 40px; right: 40px; bottom: 104px; height: 1px; background: rgba(124,92,214,0.45)"></div>
+<div style="position: absolute; left: 64px; top: 40px; bottom: 40px; width: 1px; background: repeating-linear-gradient(180deg, rgba(124,92,214,0.5) 0px, rgba(124,92,214,0.5) 6px, rgba(124,92,214,0) 6px, rgba(124,92,214,0) 14px)"></div>
+<div style="position: absolute; right: 64px; top: 40px; bottom: 40px; width: 1px; background: repeating-linear-gradient(180deg, rgba(124,92,214,0.5) 0px, rgba(124,92,214,0.5) 6px, rgba(124,92,214,0) 6px, rgba(124,92,214,0) 14px)"></div>
+
+<div style="position: absolute; left: 24px; top: 24px; width: 48px; height: 48px; border-left: 2px solid #7c5cd6; border-top: 2px solid #7c5cd6; opacity: 0.7"></div>
+<div style="position: absolute; right: 24px; top: 24px; width: 48px; height: 48px; border-right: 2px solid #7c5cd6; border-top: 2px solid #7c5cd6; opacity: 0.7"></div>
+<div style="position: absolute; left: 24px; bottom: 24px; width: 48px; height: 48px; border-left: 2px solid #7c5cd6; border-bottom: 2px solid #7c5cd6; opacity: 0.7"></div>
+<div style="position: absolute; right: 24px; bottom: 24px; width: 48px; height: 48px; border-right: 2px solid #7c5cd6; border-bottom: 2px solid #7c5cd6; opacity: 0.7"></div>
+
+<div style="position: absolute; left: 200px; top: 98px; width: 14px; height: 14px; opacity: 0.8"><div style="position: absolute; left: 6px; top: 0; width: 2px; height: 14px; background: #7c5cd6"></div><div style="position: absolute; left: 0; top: 6px; width: 14px; height: 2px; background: #7c5cd6"></div></div>
+<div style="position: absolute; left: 1706px; top: 98px; width: 14px; height: 14px; opacity: 0.8"><div style="position: absolute; left: 6px; top: 0; width: 2px; height: 14px; background: #7c5cd6"></div><div style="position: absolute; left: 0; top: 6px; width: 14px; height: 2px; background: #7c5cd6"></div></div>
+<div style="position: absolute; left: 200px; top: 968px; width: 14px; height: 14px; opacity: 0.8"><div style="position: absolute; left: 6px; top: 0; width: 2px; height: 14px; background: #7c5cd6"></div><div style="position: absolute; left: 0; top: 6px; width: 14px; height: 2px; background: #7c5cd6"></div></div>
+<div style="position: absolute; left: 1706px; top: 968px; width: 14px; height: 14px; opacity: 0.8"><div style="position: absolute; left: 6px; top: 0; width: 2px; height: 14px; background: #7c5cd6"></div><div style="position: absolute; left: 0; top: 6px; width: 14px; height: 2px; background: #7c5cd6"></div></div>
+
+<div class="sq" style="left: 96px; top: 300px; animation-delay: -0.4s"></div>
+<div class="sq" style="left: 96px; top: 316px; width: 6px; height: 6px; animation-delay: -1.5s"></div>
+<div class="sq" style="left: 1814px; top: 720px; animation-delay: -0.9s"></div>
+<div class="sq" style="left: 1822px; top: 736px; width: 6px; height: 6px; animation-delay: -1.9s"></div>
+<div class="sq" style="left: 880px; top: 60px; animation-delay: -1.1s"></div>
+<div class="sq" style="left: 1040px; top: 1010px; animation-delay: -0.2s"></div>
+
+<div style="position: absolute; right: 120px; bottom: 36px; height: 28px; display: flex; align-items: flex-end; gap: 4px">
+<div class="bar" style="height: 10px; animation-delay: -0.2s"></div>
+<div class="bar" style="height: 22px; animation-delay: -1.1s"></div>
+<div class="bar" style="height: 16px; animation-delay: -2.1s"></div>
+<div class="bar" style="height: 28px; animation-delay: -0.7s"></div>
+<div class="bar" style="height: 12px; animation-delay: -1.7s"></div>
+<div class="bar" style="height: 20px; animation-delay: -2.6s"></div>
+</div>`;
+  digi.append(...decor.children);
+  const scan = document.createElement('div'); scan.style.cssText = 'position:absolute;left:0;top:0;width:1920px;height:2px;background:linear-gradient(90deg,rgba(124,92,214,0) 0%,rgba(124,92,214,.35) 50%,rgba(124,92,214,0) 100%)'; digi.append(scan);
+  digi._grid = [...grid.children]; digi._scan = scan;
+  digi._blink = [...digi.querySelectorAll('.sq, .bar')].map(el => ({ el, off: -parseFloat(el.style.animationDelay || 0), period: el.className === 'sq' ? 2.2 : 3 })); }
+document.getElementById('frame').prepend(digi);
+const wave = ph => (1 - Math.cos(2 * Math.PI * ph)) / 2;
+function digiUpdate(t) {
+  for (const el of digi._grid) {
+    const ph = ((t + el._l) % el._d) / el._d, ch = ph < 0.5 ? '0' : '1';
+    if (el._ch !== ch) { el.textContent = ch; el._ch = ch; }
+    el.style.opacity = el._tier === 2 ? 0.18 + 0.52 * wave(((t + el._l) % 2.8) / 2.8) : el._tier === 1 ? 0.22 : 0.1;
+  }
+  for (const b of digi._blink) b.el.style.opacity = 0.15 + 0.7 * wave(((t + b.off) % b.period) / b.period) * (b.el.className === 'bar' ? 0.75 : 1);
+  digi._scan.style.transform = `translateY(${-120 + 1320 * ((t % 9) / 9)}px)`;
+}
+const TONES = { shift: ['#7c5cd6', .26, 'color'], lav: ['#8f86d4', .30, 'color'], cool: ['#98a2b3', .38, 'color'], light: ['#ffffff', .32, 'soft-light'] };
+const toneKey = new URLSearchParams(location.search).get('tone') || 'shift';   // default: the warm olive of the plate swapped for Shift's faint violet; ?tone=off keeps the original
+if (TONES[toneKey]) { const [c, o, m] = TONES[toneKey], d = document.createElement('div');
+  d.style.cssText = `position:absolute;inset:0;background:${c};opacity:${o};mix-blend-mode:${m};pointer-events:none`; document.getElementById('frame').prepend(d); }
+const BG = new URLSearchParams(location.search).get('bg') || '/scripts/shift-motion/bg-test.jpg';
+document.getElementById('frame').style.backgroundImage = `url(${BG})`;
+window.ready = (async () => {
+  await Promise.all([...Object.values(SCREENS).map(([f]) => IMG + f), BG].map(src => { const i = new Image(); i.src = src; return i.decode(); }));
+  await Promise.all(['400', '500', '600'].map(w => document.fonts.load(`${w} 100px Geist`)).concat(['500', '700'].map(w => document.fonts.load(`${w} 80px 'Overused Grotesk'`))));
+  window.render(parseFloat(new URLSearchParams(location.search).get('t') || '0'));
+  return true;
+})();
+
+// ?play — review player (space, scrub, ←/→ one frame)
+if (new URLSearchParams(location.search).has('play')) window.ready.then(() => {
+  const fr = document.getElementById('frame');
+  document.documentElement.style.cssText = document.body.style.cssText = 'width:100%;height:100%;overflow:hidden;background:#1b1b1f';
+  const bar = $('div', document.body);
+  bar.style.cssText = 'position:fixed;left:0;right:0;bottom:0;height:64px;padding:8px 16px;font:12px/1.2 ui-monospace,monospace;color:#ddd;background:#111;z-index:9;user-select:none';
+  bar.innerHTML = '<div style="display:flex;gap:12px;align-items:center;height:20px"><button id="pp" style="font:inherit;width:64px">pause</button><span id="tc"></span></div><div id="tl" style="position:relative;height:24px;margin-top:6px;background:#222;cursor:pointer"><div id="hd" style="position:absolute;top:0;bottom:0;width:2px;background:#fff;z-index:2"></div></div>';
+  const tl = bar.querySelector('#tl'), hd = bar.querySelector('#hd'), tc = bar.querySelector('#tc'), pp = bar.querySelector('#pp');
+  const X = s => (s / DURATION * 100) + '%';
+  const KC = { build: '#3a3a44', hold: '#2a2a30', move: '#4b6a9b', moment: '#c96' };
+  SHOTS.forEach((s, i) => { const m = $('div', tl); m.style.cssText = `position:absolute;bottom:0;height:6px;left:${X(starts[i])};width:calc(${X(s[1])} - 1px);background:${KC[s[3]]}`; });
+  for (const c of CAPS) { const m = $('div', tl); m.style.cssText = `position:absolute;top:12px;height:6px;left:${X(c.start)};width:${X(CAP_HOLD + CAP_OUT)};background:#e8e8ee;opacity:.85`; m.title = c.lines.join(" "); }
+  for (const b of BEATS) { const m = $('div', tl); m.style.cssText = `position:absolute;top:0;bottom:6px;left:${X(b.start)};border-left:1px solid #9cf;padding-left:3px;color:#9cf;font-size:10px;white-space:nowrap`; m.textContent = b.name; }
+  const fit = () => { const k = Math.min(innerWidth / 1920, (innerHeight - 64) / 1080);
+    fr.style.cssText += `;transform-origin:0 0;transform:translate(${(innerWidth - 1920 * k) / 2}px,0) scale(${k})`; };
+  fit(); addEventListener('resize', fit);
+  let t = 0, playing = true, last = performance.now();
+  const upd = () => { window.render(t); hd.style.left = X(t); tc.textContent = `${t.toFixed(2)}s / ${DURATION.toFixed(1)}s  ·  f${Math.round(t * 30)}`; pp.textContent = playing ? 'pause' : 'play'; };
+  const loop = now => { if (playing) { t = (t + (now - last) / 1000) % DURATION; upd(); } last = now; requestAnimationFrame(loop); };
+  requestAnimationFrame(loop);
+  const seek = e => { const r = tl.getBoundingClientRect(); t = clamp((e.clientX - r.left) / r.width) * DURATION; upd(); };
+  tl.addEventListener('pointerdown', e => { seek(e); tl.setPointerCapture(e.pointerId); tl.onpointermove = seek; });
+  tl.addEventListener('pointerup', () => { tl.onpointermove = null; });
+  pp.onclick = () => { playing = !playing; upd(); };
+  addEventListener('keydown', e => {
+    if (e.code === 'Space') { e.preventDefault(); playing = !playing; }
+    if (e.code === 'ArrowRight' || e.code === 'ArrowLeft') { playing = false; t = clamp(t + (e.code === 'ArrowRight' ? 1 : -1) / 30, 0, DURATION); }
+    upd();
+  });
+});
+</script>
+</body>
+</html>
