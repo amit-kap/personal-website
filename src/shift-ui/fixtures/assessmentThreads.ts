@@ -78,7 +78,6 @@ const trimbox: ThreadItem[] = [
     time: '10:09',
     decision: true,
     blocks: [
-      { p: 'Here is where that leaves us.' },
       { verdict: 'Approve with conditions' },
       { p: 'The risk score stays at **38 (High)** until the conditions are met. The 2 open questions are the penetration test and the breach statement.' },
       { p: '**Conditions**' },
