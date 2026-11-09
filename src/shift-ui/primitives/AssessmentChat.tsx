@@ -1,4 +1,4 @@
-import { useEffect, useRef, type ReactNode } from 'react'
+import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { AgentGlyph, Check, CubeLoader, ExternalLink, Eye, FileText, Gavel, Inbox, Info, MoreHorizontal, PaperPlane, User } from '../icons'
 import { resultTone, statusLabel, type ActiveAssessment } from '../fixtures/assessmentCenter'
 import { closedThread, threadFor, type Block, type EventKind, type ThreadItem } from '../fixtures/assessmentThreads'
@@ -28,7 +28,15 @@ export function AssessmentChat({
 }) {
   const row = vendors.find((v) => v.name === assessment.vendor)
   const pct = assessment.total ? Math.round((assessment.answered / assessment.total) * 100) : 0
-  const items = result ? closedThread(assessment.vendor, result) : threadFor(assessment)
+  const base = result ? closedThread(assessment.vendor, result) : threadFor(assessment)
+  const [sent, setSent] = useState<ThreadItem[]>([])
+  const items = [...base, ...sent]
+  const send = (text: string) => {
+    const t = text.trim()
+    if (!t) return
+    const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })
+    setSent((prev) => [...prev, { kind: 'user', text: t, time } as ThreadItem])
+  }
   const open = assessment.total - assessment.answered
   /* The next step, not a repeat of the list's tag. */
   const status = assessment.status === 'review' ? (open > 0 ? `${open} open · decision pending` : 'Decision pending') : statusLabel[assessment.status]
@@ -38,7 +46,7 @@ export function AssessmentChat({
   useEffect(() => {
     const el = thread.current
     if (el) el.scrollTop = el.scrollHeight
-  }, [])
+  }, [items.length])
   return (
     <section className="s-ac-chat" aria-label={`${assessment.vendor} assessment`}>
       <header className="s-ac-head">
@@ -115,13 +123,13 @@ export function AssessmentChat({
       <div ref={thread} className="s-ac-thread" data-lenis-prevent>
         <div className="s-ac-thread-inner">
           {items.map((item, i) => (
-            <ThreadEntry key={i} item={item} />
+            <ThreadEntry key={i} item={item} latest={i === items.length - 1} />
           ))}
         </div>
       </div>
 
       <div className="s-ac-foot">
-        {result ? <p className="s-ac-closed">This assessment is closed.</p> : <Composer onSend={() => {}} placeholder={`Message the agent about ${assessment.vendor}`} />}
+        {result ? <p className="s-ac-closed">This assessment is closed.</p> : <Composer onSend={send} placeholder={`Message the agent about ${assessment.vendor}`} />}
       </div>
     </section>
   )
@@ -199,7 +207,8 @@ function Entry({ icon, tone, title, time, children }: { icon: ReactNode; tone: s
   )
 }
 
-function ThreadEntry({ item }: { item: ThreadItem }) {
+function ThreadEntry({ item, latest }: { item: ThreadItem; latest: boolean }) {
+  const [dismissed, setDismissed] = useState(false)
   if (item.kind === 'day') {
     return (
       <div className="s-ac-day">
@@ -216,8 +225,12 @@ function ThreadEntry({ item }: { item: ThreadItem }) {
     )
   }
   if (item.kind === 'working') {
+    if (!latest) return null
     return (
       <Entry icon={<AgentGlyph size={14} />} tone="agent" title="Shift agent" time="">
+        <p>
+          <strong>Public evidence gathering has started.</strong>
+        </p>
         <p className="s-ac-working">
           <CubeLoader />
           Working on it
@@ -229,10 +242,10 @@ function ThreadEntry({ item }: { item: ThreadItem }) {
     const body = (
       <>
         <Blocks blocks={item.blocks} />
-        {item.actions && (
+        {item.actions && latest && !dismissed && (
           <div className="s-ac-actions">
             {item.actions.map((a) => (
-              <button key={a.label} type="button" className={{ primary: 's-dark', ghost: 's-ghost', text: 's-ac-dismiss' }[a.look]}>
+              <button key={a.label} type="button" className={{ primary: 's-dark', ghost: 's-ghost', text: 's-ac-dismiss' }[a.look]} onClick={a.look === 'text' ? () => setDismissed(true) : undefined}>
                 {a.icon === 'eye' && <Eye size={14} />}
                 {a.icon === 'gavel' && <Gavel size={14} />}
                 {a.label}
