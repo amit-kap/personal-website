@@ -27,7 +27,7 @@ export function VendorInfoPanel({
           <header className="s-ac-panel-head">
             <h3>Vendor information</h3>
             <button type="button" className="s-icon-btn" aria-label="Close vendor information" onClick={onClose}>
-              <Close size={14} />
+              <Close size={16} />
             </button>
           </header>
           <div className="s-ac-panel-body" data-lenis-prevent>

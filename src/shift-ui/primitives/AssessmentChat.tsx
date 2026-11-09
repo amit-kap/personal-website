@@ -1,9 +1,10 @@
 import { useEffect, useRef, type ReactNode } from 'react'
-import { AgentGlyph, Check, CubeLoader, ExternalLink, Eye, FileText, Gavel, Inbox, Info, PaperPlane, User } from '../icons'
+import { AgentGlyph, Check, CubeLoader, ExternalLink, Eye, FileText, Gavel, Inbox, Info, MoreHorizontal, PaperPlane, User } from '../icons'
 import { resultTone, statusLabel, type ActiveAssessment } from '../fixtures/assessmentCenter'
 import { closedThread, threadFor, type Block, type EventKind, type ThreadItem } from '../fixtures/assessmentThreads'
 import { vendors } from '../fixtures/vendors'
 import { Composer } from './Composer'
+import { Menu } from './Menu'
 import { VendorLogo } from './VendorLogo'
 
 /* Middle column: the selected assessment's channel. A header with progress, the
@@ -91,6 +92,23 @@ export function AssessmentChat({
           >
             <Info size={16} />
           </button>
+          <Menu
+            below
+            label="Assessment views"
+            trigger={({ open, toggle }) => (
+              <button type="button" className="s-icon-btn" aria-haspopup="menu" aria-expanded={open} aria-label="More" onClick={toggle}>
+                <MoreHorizontal size={16} />
+              </button>
+            )}
+          >
+            {(close) =>
+              ['Questions', 'Inquiries'].map((l) => (
+                <button key={l} type="button" role="menuitem" className="s-menu-item" onClick={close}>
+                  {l}
+                </button>
+              ))
+            }
+          </Menu>
         </div>
       </header>
 
