@@ -35,7 +35,7 @@ export function ArtifactsPanel({
           <header className="s-ac-panel-head">
             <h3>Artifacts</h3>
             <button type="button" className="s-icon-btn" aria-label="Close artifacts" onClick={onClose}>
-              <Close size={14} />
+              <Close size={16} />
             </button>
           </header>
           <div className="s-ac-docs-bar">
