@@ -3086,8 +3086,12 @@
 .shift-ui .s-ac-actions {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 8px;
   margin-top: 4px;
+}
+.shift-ui .s-ac-actions button {
+  white-space: nowrap;
 }
 .shift-ui .s-dark {
   display: inline-flex;
