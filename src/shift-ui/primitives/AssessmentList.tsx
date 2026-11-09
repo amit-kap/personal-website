@@ -1,5 +1,5 @@
-import { useRef, useState, type ReactNode } from 'react'
-import { CubeLoader, MoreHorizontal, Search } from '../icons'
+import { useEffect, useRef, useState, type ReactNode } from 'react'
+import { CubeLoader, MoreHorizontal, Plus, Search } from '../icons'
 import {
   activeAssessments,
   compareHistory,
@@ -39,13 +39,15 @@ export function AssessmentList({
   const [searching, setSearching] = useState(false)
   const field = useRef<HTMLInputElement>(null)
   const searchButton = useRef<HTMLButtonElement>(null)
-  const toggleSearch = () => {
-    if (searching) {
-      setQuery('')
-      searchButton.current?.focus({ preventScroll: true })
-    } else window.setTimeout(() => field.current?.focus({ preventScroll: true }), 200)
-    setSearching(!searching)
+  /* The Search row becomes the field; closing puts the row back. */
+  const closeSearch = () => {
+    setQuery('')
+    setSearching(false)
+    window.setTimeout(() => searchButton.current?.focus({ preventScroll: true }), 0)
   }
+  useEffect(() => {
+    if (searching) field.current?.focus({ preventScroll: true })
+  }, [searching])
   const q = query.trim().toLowerCase()
   const matches = (vendor: string) => !q || vendor.toLowerCase().includes(q)
   const past = resolvedAssessments.filter((r) => matches(r.vendor)).sort(compareHistory[sort])
@@ -55,6 +57,33 @@ export function AssessmentList({
 
   return (
     <aside className="s-ac-list" aria-label="Assessments" style={{ width }}>
+      <nav className="s-ac-nav" aria-label="Assessment shortcuts">
+        <button type="button" className="s-ac-nav-item">
+          <Plus size={16} />
+          New
+        </button>
+        {searching ? (
+          <label className="s-ac-nav-item s-ac-nav-field">
+            <Search size={16} />
+            <input
+              ref={field}
+              type="search"
+              placeholder="Search"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              onBlur={() => !query && setSearching(false)}
+              onKeyDown={(e) => e.key === 'Escape' && (e.stopPropagation(), closeSearch())}
+              aria-label="Search assessments"
+            />
+          </label>
+        ) : (
+          <button ref={searchButton} type="button" className="s-ac-nav-item" onClick={() => setSearching(true)}>
+            <Search size={16} />
+            Search
+          </button>
+        )}
+      </nav>
+
       <div className="s-ac-bar">
         <Picker
           label="View"
@@ -71,9 +100,6 @@ export function AssessmentList({
           <Picker label="Sort history" value={sort} options={historySorts} onChange={setSort} />
         )}
         <span className="s-ac-bar-end">
-          <button ref={searchButton} type="button" className="s-ghost s-ac-more" aria-label="Search assessments" aria-expanded={searching} aria-controls="s-ac-search" onClick={toggleSearch}>
-            <Search size={16} />
-          </button>
           <Menu
             below
             label="Assessment actions"
@@ -84,7 +110,7 @@ export function AssessmentList({
             )}
           >
             {(close) =>
-              ['Start assessment', 'Export list'].map((l) => (
+              ['Export list'].map((l) => (
                 <button key={l} type="button" role="menuitem" className="s-menu-item" onClick={close}>
                   {l}
                 </button>
@@ -92,17 +118,6 @@ export function AssessmentList({
             }
           </Menu>
         </span>
-      </div>
-
-      <div id="s-ac-search" className="s-ac-search" data-open={searching} inert={!searching}>
-        <div className="s-ac-search-clip">
-          <div className="s-ac-search-field">
-            <label className="s-search">
-              <Search size={14} />
-              <input ref={field} type="search" placeholder="Search..." value={query} onChange={(e) => setQuery(e.target.value)} onKeyDown={(e) => e.key === 'Escape' && (e.stopPropagation(), toggleSearch())} aria-label="Search assessments" />
-            </label>
-          </div>
-        </div>
       </div>
 
       <div className="s-ac-scroll" data-lenis-prevent>

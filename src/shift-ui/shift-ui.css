@@ -2318,6 +2318,60 @@
   min-width: 0;
   background: #fff;
 }
+.shift-ui .s-ac-nav {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  gap: 2px;
+  padding: 8px;
+  border-bottom: 1px solid var(--s-line-soft);
+}
+.shift-ui .s-ac-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  height: 32px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 4px;
+  background: none;
+  color: var(--s-ink);
+  font: inherit;
+  font-size: 12px;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 140ms ease;
+}
+.shift-ui .s-ac-nav-item svg {
+  flex: none;
+}
+.shift-ui .s-ac-nav-item:hover,
+.shift-ui .s-ac-nav-field {
+  background: #f1f1f3;
+}
+.shift-ui .s-ac-nav-field {
+  cursor: text;
+}
+.shift-ui .s-ac-nav-field input {
+  flex: 1;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--s-ink);
+  font: inherit;
+}
+.shift-ui .s-ac-nav-field input:focus {
+  outline: none;
+}
+.shift-ui .s-ac-nav-field input::placeholder {
+  color: var(--s-ink);
+}
+.shift-ui .s-ac-nav-item:focus-visible {
+  outline: 2px solid var(--s-agent);
+  outline-offset: -2px;
+}
 .shift-ui .s-ac-bar {
   display: flex;
   flex: none;
