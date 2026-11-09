@@ -1,0 +1,17 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "cramped-padding",
+        "value": "*",
+        "files": [
+          "presentations/agentic-assessments/v2-preview.html"
+        ],
+        "createdAt": "2026-11-08T20:53:28.354Z",
+        "reason": "Editorial hairline rows on slides: text is flush-left to full-width rule lines by design, with large vertical space; not bordered boxes"
+      }
+    ]
+  }
+}

@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Agentic Assessments · v2 direction</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Inter+Tight:wght@500;600;700&family=JetBrains+Mono:wght@500;600&display=swap">
+<style>
+:root{--ink:#141416;--ink-2:#3A3A44;--ink-3:#6B6B78;--paper:#F7F6F3;--line:#DEDCD6;--violet:#7858D4;--violet-deep:#6244BC;--violet-tint:#EFEAFD;--violet-ink:#4B32A8}
+*{margin:0;box-sizing:border-box}
+html,body{height:100%;background:#0E0E10;font-family:Inter,Arial,sans-serif;color:var(--ink);overflow:hidden}
+#stage{position:absolute;left:50%;top:50%;width:1920px;height:1080px}
+.slide{position:absolute;inset:0;overflow:hidden;opacity:0;pointer-events:none;transition:opacity .3s ease;background:var(--paper)}
+.slide.active{opacity:1;pointer-events:auto}
+.mono{font-family:"JetBrains Mono",ui-monospace,monospace;font-weight:500;letter-spacing:.08em;text-transform:uppercase}
+.display{font-family:"Inter Tight",Inter,sans-serif;font-weight:600}
+aside{display:none}
+#hud{position:fixed;right:20px;bottom:16px;color:#8a8a96;font:500 14px Inter,sans-serif}
+
+/* ---------- 1 · Cover ---------- */
+#cover{background:var(--violet);color:#FBFBFF;padding:112px 128px 104px;display:flex;flex-direction:column}
+#cover .top{display:flex;justify-content:space-between;font-size:22px;color:#E4DCFB}
+#cover .field{position:absolute;right:128px;top:200px}
+#cover .field-cap{position:absolute;right:128px;top:500px;width:640px;font-size:18px;color:#D6CCF7;text-align:right}
+#cover h1{margin-top:auto;font-size:176px;line-height:.95;letter-spacing:-6px;color:#FFFFFF}
+#cover .strip{margin-top:72px;display:grid;grid-template-columns:420px 1fr 420px;gap:56px;border-top:1px solid rgba(255,255,255,.35);padding-top:36px}
+#cover .strip .mono{font-size:18px;color:#D6CCF7;margin-bottom:14px}
+#cover .strip p{font-size:34px;line-height:1.3;color:#FFFFFF}
+#cover .strip .big{font-family:"Inter Tight",Inter,sans-serif;font-weight:600;font-size:44px;letter-spacing:-1px;line-height:1.1}
+#cover .est{color:#FFE3A3}
+
+/* ---------- 2 · Overview ---------- */
+#summary{padding:112px 128px;display:flex;flex-direction:column}
+#summary .head{display:flex;justify-content:space-between;align-items:baseline}
+#summary h2{font-size:84px;letter-spacing:-2.5px;line-height:1}
+#summary .head .mono{font-size:20px;color:var(--ink-3)}
+#summary .lead{margin-top:72px;display:grid;grid-template-columns:260px 1fr;gap:48px;padding-top:28px;border-top:2px solid var(--ink)}
+#summary .lead .mono{font-size:20px;color:var(--violet);padding-top:12px}
+#summary .lead p{font-family:"Inter Tight",Inter,sans-serif;font-weight:500;font-size:50px;line-height:1.18;letter-spacing:-1px;color:var(--ink)}
+#summary .cols{margin-top:auto;display:grid;grid-template-columns:repeat(3,1fr);gap:56px}
+#summary .col{border-top:1px solid var(--line);padding-top:24px}
+#summary .col .n{font-size:20px;color:var(--violet)}
+#summary .col h3{font-size:32px;font-weight:600;margin:14px 0 12px;letter-spacing:-.3px}
+#summary .col p{font-size:28px;line-height:1.42;color:var(--ink-2)}
+
+/* ---------- 3 · Problem ---------- */
+#problem{padding:104px 128px 96px;display:flex;flex-direction:column}
+#problem h2{font-size:84px;line-height:1.04;letter-spacing:-2.5px}
+#problem h2 span{color:var(--violet)}
+#problem .body{margin-top:64px;display:grid;grid-template-columns:960px 1fr;gap:96px;flex:1}
+#problem .flow{position:relative;height:600px}
+#problem .node{position:absolute;width:290px;height:96px;border:2px solid var(--ink);border-radius:14px;background:#FFFFFF;display:flex;flex-direction:column;justify-content:center;padding:0 24px}
+#problem .node .mono{font-size:16px;color:var(--ink-3);margin-bottom:6px}
+#problem .node b{font-size:28px;font-weight:600;letter-spacing:-.3px}
+#problem .node.decide{background:var(--ink);color:#fff;border-color:var(--ink)}
+#problem .node.decide .mono{color:#C4B8F8}
+#problem .zone{position:absolute;left:-24px;top:178px;width:1008px;height:262px;border-radius:24px;background:var(--violet-tint)}
+#problem .zone-label{position:absolute;left:680px;top:402px;width:280px;text-align:right;font-size:17px;color:var(--violet-ink)}
+#problem .loop-label{position:absolute;left:250px;top:362px;width:460px;text-align:center;white-space:nowrap;font-size:24px;color:var(--violet-ink);font-weight:500}
+#problem .exit-label{position:absolute;left:164px;top:470px;font-size:16px;color:var(--ink-3)}
+#problem .side{display:flex;flex-direction:column}
+#problem .side .mono{font-size:18px;color:var(--violet)}
+#problem .stat{font-family:"Inter Tight",Inter,sans-serif;font-weight:600;font-size:120px;letter-spacing:-4px;line-height:1;margin-top:16px}
+#problem .stat-cap{font-size:24px;color:var(--ink-3);margin-top:6px}
+#problem .side p.t{font-size:28px;line-height:1.42;color:var(--ink-2);margin-top:18px}
+#problem .side hr{border:0;border-top:1px solid var(--line);margin:40px 0}
+#problem .foot{margin-top:auto;font-size:22px;color:var(--ink-3);line-height:1.45}
+#problem .todo{color:#9A4A0B}
+
+/* ---------- shared system (slides 5+) ---------- */
+.std{padding:112px 128px;display:flex;flex-direction:column}
+.hd{padding-bottom:36px;border-bottom:2px solid var(--ink)}
+.t{font-family:"Inter Tight",Inter,sans-serif;font-weight:600;font-size:84px;letter-spacing:-2.5px;line-height:1}
+.eb{font-family:"JetBrains Mono",ui-monospace,monospace;font-weight:500;letter-spacing:.08em;text-transform:uppercase;font-size:20px;color:var(--violet)}
+.eb.g{color:var(--ink-3)}
+.h{font-family:"Inter Tight",Inter,sans-serif;font-weight:600;font-size:32px;letter-spacing:-.6px;line-height:1.2;color:var(--ink)}
+.b{font-size:32px;line-height:1.4;color:var(--ink-2)}
+.s{font-size:24px;line-height:1.45;color:var(--ink-2)}
+.st{font-family:"Inter Tight",Inter,sans-serif;font-weight:600;font-size:56px;letter-spacing:-1.5px;line-height:1.05;color:var(--ink)}
+.bd{padding-top:48px;flex:1;display:flex;flex-direction:column;min-height:0}
+.rule{border-top:1px solid var(--line)}
+.e{color:#9A4A0B}
+.dark{background:var(--violet);color:#fff}
+.dark .t,.dark .st,.dark .h{color:#fff} .dark .eb{color:#E4DCFB} .dark .b,.dark .s{color:#F3EFFE}
+.row{display:grid;align-items:baseline;padding:28px 0;border-top:1px solid var(--line)}
+</style></head>
+<body>
+<div id="stage">
+
+<section class="slide" id="cover">
+  <div style="flex:1;display:grid;grid-template-columns:1fr 1fr;gap:96px;align-items:center">
+    <div>
+      <h1 class="display" style="margin:0;font-size:136px;letter-spacing:-4.5px">Agentic<br>Assessments</h1>
+      <p style="margin-top:48px;font-size:32px;line-height:1.32;color:#fff">An AI agent that runs third-party vendor assessments end to end, while your security team supervises its work and makes the decisions.</p>
+    </div>
+    <div></div>
+  </div>
+  <svg id="field" width="912" height="1080" style="position:absolute;left:1008px;top:0" aria-label="Field of dots: each dot a vendor; a few highlighted ones need a human decision"></svg>
+  <aside>Open with the decision. We are not asking for the whole vision today, only Phase 1: a contained, customer-visible slice that tests whether enterprise customers trust an agent that talks to their vendors.</aside>
+</section>
+
+<section class="slide" id="summary">
+  <div class="head" style="padding-bottom:36px;border-bottom:2px solid var(--ink)"><h2 class="display">The problem</h2></div>
+  <ul style="margin:0;list-style:none;padding:0;display:flex;flex-direction:column;flex:1">
+    <li style="display:flex;flex-direction:column;justify-content:flex-start;gap:14px;flex:1;padding:48px 0 0"><span class="mono" style="font-size:20px;color:var(--violet)">Cause</span><span style="font-family:'Inter Tight',Inter,sans-serif;font-weight:500;font-size:56px;letter-spacing:-1.2px;line-height:1.15">Vendor assessments are scattered across spreadsheets and email, so gaps and stale assessments slip through unnoticed</span></li>
+    <li style="display:flex;flex-direction:column;justify-content:flex-start;gap:14px;flex:1;padding:48px 0 0;border-top:1px solid var(--line)"><span class="mono" style="font-size:20px;color:var(--violet)">Cost</span><span style="font-family:'Inter Tight',Inter,sans-serif;font-weight:500;font-size:56px;letter-spacing:-1.2px;line-height:1.15">Onboarding and keeping each assessment up to date takes hundreds of hours of manual work</span></li>
+    <li style="display:flex;flex-direction:column;justify-content:flex-start;gap:14px;flex:1;padding:48px 0 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)"><span class="mono" style="font-size:20px;color:var(--violet)">Risk</span><span style="font-family:'Inter Tight',Inter,sans-serif;font-weight:500;font-size:56px;letter-spacing:-1.2px;line-height:1.15">Enterprises hold thousands of vendors, each one a possible breach path compromising security</span></li>
+  </ul>
+  <aside>Start with the problem in plain terms: thousands of vendors, hundreds of hours of manual work, and an outdated process of Excel sheets and email.</aside>
+</section>
+
+<section class="slide" id="answer" style="padding:112px 128px;display:flex;flex-direction:column">
+  <div style="padding-bottom:36px;border-bottom:2px solid var(--ink)"><h2 class="display" style="font-size:84px;letter-spacing:-2.5px;line-height:1">Our approach</h2></div>
+  <div style="display:grid;grid-template-columns:1.45fr 1fr;gap:112px;align-items:start">
+    <div style="display:flex;flex-direction:column;padding-top:48px">
+      <span class="mono" style="font-size:20px;color:var(--violet)">Core idea</span>
+      <h3 style="font-family:'Inter Tight',Inter,sans-serif;font-weight:600;font-size:136px;line-height:.95;letter-spacing:-5px;margin:28px 0 36px">Agent does<br>the work</h3>
+      <p style="font-size:32px;line-height:1.38;color:var(--ink-2)">An agent does the repetitive assessment work. A human reviews exceptions and stays accountable for decisions.</p>
+    </div>
+    <div style="display:flex;flex-direction:column">
+      <div style="padding:48px 0 40px">
+        <span class="mono" style="font-size:20px;color:var(--violet)">First step</span>
+        <h3 style="font-family:'Inter Tight',Inter,sans-serif;font-weight:600;font-size:32px;letter-spacing:-.8px;margin:16px 0 12px">Follow-ups first</h3>
+        <p style="font-size:24px;line-height:1.42;color:var(--ink-2)">The agent drafts vendor follow-ups for approval, then turns replies into proposed verdict changes.</p>
+      </div>
+      <div style="border-top:1px solid var(--line);padding-top:40px">
+        <span class="mono" style="font-size:20px;color:var(--violet)">Success measure</span>
+        <h3 style="font-family:'Inter Tight',Inter,sans-serif;font-weight:600;font-size:32px;letter-spacing:-.8px;margin:16px 0 12px">Coverage per analyst</h3>
+        <p style="font-size:24px;line-height:1.42;color:var(--ink-2)">How many vendors one analyst can keep fully assessed, without lowering the quality of each assessment.</p>
+      </div>
+    </div>
+  </div>
+  <aside>Land the shift first: the agent does the work, a person stays accountable. The first step and the success measure support it.</aside>
+</section>
+
+<section class="slide" id="problem">
+  <h2 class="display">Most assessment work is repetitive.<br><span>The decisions are not.</span></h2>
+  <div style="position:relative;height:480px;margin:auto 0">
+    <div style="position:absolute;left:362px;top:0;width:940px;height:480px;border-radius:28px;background:var(--violet-tint)"></div>
+    <svg width="1664" height="600" viewBox="0 0 1664 600" style="position:absolute;left:0;top:0;overflow:visible" aria-label="Flow: pick framework enters a cycle of send questionnaire, wait for response, map to framework controls and assess; if more evidence is needed the cycle repeats; if able to decide, it exits to approve or reject">
+      <defs><marker id="ah4" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#141416"/></marker><marker id="av4" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#7858D4"/></marker></defs>
+      <g fill="none" stroke="#141416" stroke-width="3"><path d="M140,315 V395 H382" marker-end="url(#ah4)"/><path d="M1282,395 H1524 V315" marker-end="url(#ah4)"/></g>
+      <g fill="none" stroke="#7858D4" stroke-width="3" stroke-linecap="round"><line x1="542" y1="320" x2="542" y2="160" marker-end="url(#av4)"/><line x1="702" y1="85" x2="962" y2="85" marker-end="url(#av4)"/><line x1="1122" y1="160" x2="1122" y2="320" marker-end="url(#av4)"/><line x1="962" y1="395" x2="702" y2="395" marker-end="url(#av4)"/></g>
+    </svg>
+    <div style="position:absolute;left:0px;top:175px;width:280px;height:130px;border:2px solid var(--ink);border-radius:16px;background:#FFFFFF;color:var(--ink);display:flex;flex-direction:column;justify-content:center;padding:0 24px"><span class="mono" style="font-size:20px;color:var(--ink-3);margin-bottom:6px">Start</span><b style="font-size:24px;font-weight:600;letter-spacing:-.3px;line-height:1.2">Pick framework</b></div>
+    <div style="position:absolute;left:392px;top:330px;width:300px;height:130px;border:2px solid var(--ink);border-radius:16px;background:#FFFFFF;color:var(--ink);display:flex;flex-direction:column;justify-content:center;padding:0 24px"><span class="mono" style="font-size:20px;color:var(--ink-3);margin-bottom:6px">Step 1</span><b style="font-size:24px;font-weight:600;letter-spacing:-.3px;line-height:1.2">Send questionnaire</b></div>
+    <div style="position:absolute;left:392px;top:20px;width:300px;height:130px;border:2px solid var(--ink);border-radius:16px;background:#FFFFFF;color:var(--ink);display:flex;flex-direction:column;justify-content:center;padding:0 24px"><span class="mono" style="font-size:20px;color:var(--ink-3);margin-bottom:6px">Step 2</span><b style="font-size:24px;font-weight:600;letter-spacing:-.3px;line-height:1.2">Wait for response</b></div>
+    <div style="position:absolute;left:972px;top:20px;width:300px;height:130px;border:2px solid var(--ink);border-radius:16px;background:#FFFFFF;color:var(--ink);display:flex;flex-direction:column;justify-content:center;padding:0 24px"><span class="mono" style="font-size:20px;color:var(--ink-3);margin-bottom:6px">Step 3</span><b style="font-size:24px;font-weight:600;letter-spacing:-.3px;line-height:1.2">Map to framework controls</b></div>
+    <div style="position:absolute;left:972px;top:330px;width:300px;height:130px;border:2px solid var(--violet);border-radius:16px;background:#FFFFFF;color:var(--ink);display:flex;flex-direction:column;justify-content:center;padding:0 24px"><span class="mono" style="font-size:20px;color:var(--violet);margin-bottom:6px">Step 4</span><b style="font-size:24px;font-weight:600;letter-spacing:-.3px;line-height:1.2">Assess: enough evidence?</b></div>
+    <div style="position:absolute;left:1384px;top:175px;width:280px;height:130px;border:2px solid var(--ink);border-radius:16px;background:var(--ink);color:#fff;display:flex;flex-direction:column;justify-content:center;padding:0 24px"><span class="mono" style="font-size:20px;color:#C4B8F8;margin-bottom:6px">Exit</span><b style="font-size:24px;font-weight:600;letter-spacing:-.3px;line-height:1.2">Approve / reject</b></div>
+    <p class="mono" style="position:absolute;left:694px;top:356px;width:276px;text-align:center;font-size:20px;color:var(--ink-3)">No</p>
+    <p class="mono" style="position:absolute;left:1350px;top:356px;width:100px;text-align:center;font-size:20px;color:var(--ink-3)">Yes</p>
+    <div style="position:absolute;left:362px;top:0;width:940px;height:480px;display:flex;align-items:center;justify-content:center;pointer-events:none"><span style="background:var(--violet);color:#fff;border-radius:999px;padding:12px 24px;font-size:24px;font-weight:600;white-space:nowrap">~20h per assessment</span></div>
+    
+  </div>
+  <aside>Walk the real flow left to right. The hours go into the loop of chasing vendors. The decision at the end is where a person matters.</aside>
+</section>
+
+<section class="slide std" id="whynow"><div class="hd"><h2 class="t">The category is moving to AI</h2></div>
+<div class="bd" style="display:grid;grid-template-columns:1fr 480px;gap:72px">
+<div style="display:flex;flex-direction:column;gap:16px;min-height:0"><span class="eb">TPRM vendors</span><ul style="list-style:none;padding:0;margin:0;flex:1;display:flex;flex-direction:column"><li style="flex:1;display:grid;grid-template-columns:260px 1fr;gap:32px;align-items:center;border-top:1px solid var(--line)"><span class="h">Vanta, Drata</span><span class="b">AI added to an established workflow product</span></li><li style="flex:1;display:grid;grid-template-columns:260px 1fr;gap:32px;align-items:center;border-top:1px solid var(--line)"><span class="h">Whistic</span><span class="b">Agents presented for assessments</span></li><li style="flex:1;display:grid;grid-template-columns:260px 1fr;gap:32px;align-items:center;border-top:1px solid var(--line)"><span class="h">SAFE</span><span class="b">An autonomous TPRM model</span></li><li style="flex:1;display:grid;grid-template-columns:260px 1fr;gap:32px;align-items:center;border-top:1px solid var(--line);border-bottom:1px solid var(--line)"><span class="h">Lema</span><span class="b">Positioned around risk engineering</span></li></ul></div>
+<div style="background:var(--violet-tint);border-radius:20px;padding:40px;display:flex;flex-direction:column"><span class="eb">Proven elsewhere</span><div style="flex:1;display:flex;flex-direction:column;justify-content:space-evenly"><div style="display:flex;flex-direction:column;gap:6px"><span class="h">Dropzone AI</span><span class="s" style="color:var(--ink-3)">SOC</span></div><div style="display:flex;flex-direction:column;gap:6px"><span class="h">Harvey</span><span class="s" style="color:var(--ink-3)">Legal</span></div><div style="display:flex;flex-direction:column;gap:6px"><span class="h">Devin, Claude Code</span><span class="s" style="color:var(--ink-3)">Engineering</span></div></div></div>
+</div>
+<aside>Everyone is reaching for AI, but they disagree on what AI should own. Dropzone AI is the closest analog. Re-verify competitor positioning the week of the meeting.</aside></section>
+<section class="slide std dark" id="angle">
+<span class="eb">Our angle</span>
+<h2 class="t" style="margin-top:28px;line-height:1.05">Others add an assistant to the analyst’s workspace. We build the workspace for the person supervising the agent.</h2>
+<div style="margin-top:auto;display:grid;grid-template-columns:1fr 1fr;gap:32px">
+ <div style="background:#6244BC;border-radius:20px;padding:44px 48px;display:flex;flex-direction:column;gap:20px;min-height:340px"><span class="eb">Them</span><p class="st" style="color:#E4DCFB">The analyst completes the assessment. AI helps.</p></div>
+ <div style="background:#FBFAFF;border-radius:20px;padding:44px 48px;display:flex;flex-direction:column;gap:20px;min-height:340px"><span class="eb" style="color:var(--violet)">Us</span><p class="st" style="color:var(--ink)">The agent completes the assessment. <span style="color:var(--violet)">The supervisor decides.</span></p></div>
+</div>
+<aside>This is the wedge. It is an operating-model choice, not a feature.</aside></section>
+<section class="slide std" id="product"><div class="hd"><h2 class="t">Three connected surfaces</h2></div>
+<div class="bd"><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:72px"><div style="display:flex;flex-direction:column;gap:14px"><span class="h">Fleet view</span><p class="b">An operations console for every assessment in flight, grouped by whether a person needs to step in.</p></div><div style="display:flex;flex-direction:column;gap:14px"><span class="h">Assessment channel</span><p class="b">One two-way thread per assessment: evidence, questions, follow-ups, proposed verdicts and decisions.</p></div><div style="display:flex;flex-direction:column;gap:14px"><span class="h">Command bar</span><p class="b">“Start onboarding for 6sense.com.” “Why is the Trimbox assessment blocked?”</p></div></div>
+<div style="margin-top:auto;border-top:1px solid var(--line);padding-top:36px;display:flex;flex-direction:column;gap:20px"><span class="eb">One flow</span><div style="display:flex;align-items:center;gap:20px"><span class="s" style="color:var(--ink);font-weight:500;background:#fff;border:1.5px solid var(--ink);border-radius:12px;padding:14px 22px">Agent flags AC-04</span><span class="s" style="color:var(--ink-3)">→</span><span class="s" style="color:var(--ink);font-weight:500;background:#fff;border:1.5px solid var(--ink);border-radius:12px;padding:14px 22px">Supervisor asks why</span><span class="s" style="color:var(--ink-3)">→</span><span class="s" style="color:var(--ink);font-weight:500;background:#fff;border:1.5px solid var(--ink);border-radius:12px;padding:14px 22px">Sees the contract clause</span><span class="s" style="color:var(--ink-3)">→</span><span class="s" style="color:var(--ink);font-weight:500;background:var(--ink);color:#fff;border:1.5px solid var(--ink);border-radius:12px;padding:14px 22px">Decides</span></div></div></div>
+<aside>The channel absorbed six things we used to design separately. It is two-way: the supervisor interrogates the agent rather than watching a feed.</aside></section>
+<section class="slide std" id="demo"><div class="hd"><h2 class="t">What the supervisor sees</h2></div>
+<div class="bd" style="display:grid;grid-template-columns:1fr 1fr;gap:48px;align-content:start">
+ <div style="display:flex;flex-direction:column;gap:20px"><img src="fleet-dashboard.webp" alt="Fleet view: assessments in flight, human decisions required, and the fleet agent answering what is blocked" style="width:100%;aspect-ratio:2/1;object-fit:cover;object-position:top left;border:1px solid var(--line);border-radius:12px;background:#fff"><p class="s"><b style="color:var(--ink)">Fleet view.</b> Seven decisions waiting, ranked by urgency and agent confidence.</p></div>
+ <div style="display:flex;flex-direction:column;gap:20px"><img src="channel-per-assessment.webp" alt="Assessment channel: the agent’s running record for one vendor, with verdicts across 47 controls" style="width:100%;aspect-ratio:2/1;object-fit:cover;object-position:top left;border:1px solid var(--line);border-radius:12px;background:#fff"><p class="s"><b style="color:var(--ink)">Assessment channel.</b> The agent’s work for one vendor, with every verdict open to questions.</p></div>
+</div>
+<aside>Prototype screens. If time allows, switch to the live prototype and run the AC-04 flow.</aside></section>
+<section class="slide std" id="control"><div class="hd"><h2 class="t">People set the rules and own the decisions</h2></div>
+<div class="bd" style="display:grid;grid-template-columns:1fr 1fr;gap:96px;align-content:start">
+ <div><span class="h">Policy in plain language</span><div style="margin-top:16px"><div style="display:flex;flex-direction:column;gap:8px;padding:22px 0;border-top:1px solid var(--line)"><span class="eb g">Global</span><p class="s" style="color:var(--ink)">“Require legal review before approving a subprocessor that handles personal data.”</p></div><div style="display:flex;flex-direction:column;gap:8px;padding:22px 0;border-top:1px solid var(--line)"><span class="eb g">Vendor class</span><p class="s" style="color:var(--ink)">“For AI vendors, check training-data sources and opt-outs.”</p></div><div style="display:flex;flex-direction:column;gap:8px;padding:22px 0;border-top:1px solid var(--line)"><span class="eb g">One assessment</span><p class="s" style="color:var(--ink)">“The company is being acquired; account for the ownership change.”</p></div></div></div>
+ <div><span class="h">Human decisions stay visible</span><div style="margin-top:16px"><div style="padding:22px 0;border-top:1px solid var(--line)" class="s">Incomplete or ambiguous evidence</div><div style="padding:22px 0;border-top:1px solid var(--line)" class="s">Policy exceptions and risk acceptance</div><div style="padding:22px 0;border-top:1px solid var(--line)" class="s">Conflicts between evidence sources</div><div style="padding:22px 0;border-top:1px solid var(--line)" class="s">Calls that affect many vendors</div></div><p class="s" style="padding-top:22px;border-top:1px solid var(--line);color:var(--ink)">Pinned, with evidence in view, and signed off by a person.</p></div>
+</div>
+<p class="s" style="color:var(--ink)"><b>Every agent action and human decision is auditable.</b> Corrections can be saved as reviewable rules.</p>
+<aside>Who is accountable? The person is. Policy is versioned and human-editable, so supervisors guide the agent without code.</aside></section>
+<section class="slide std" id="validation"><div class="hd"><h2 class="t">What we know, and what we’re betting on</h2></div>
+<div class="bd"><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:72px"><div style="display:flex;flex-direction:column;gap:14px"><span class="eb">We know</span><p class="b">Competitors are moving to agent-led work. Our internal experiments show the capability works.</p></div><div style="display:flex;flex-direction:column;gap:14px"><span class="eb">We’re betting</span><p class="b">Enterprise customers will trust an agent that communicates with their vendors.</p></div><div style="display:flex;flex-direction:column;gap:14px"><span class="eb">Phase 1 tests it</span><p class="b">A person approves every follow-up. We learn where trust holds before asking for more.</p></div></div>
+<div style="margin-top:auto;border-top:1px solid var(--line);padding-top:36px;display:flex;flex-direction:column;gap:24px"><span class="eb g">Phase 1 validation targets <span class="e">(est.)</span></span><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:72px"><div style="display:flex;flex-direction:column;gap:8px"><span class="st">5</span><p class="s">design partners signed</p></div><div style="display:flex;flex-direction:column;gap:8px"><span class="st">200</span><p class="s">agent-drafted follow-ups reviewed</p></div><div style="display:flex;flex-direction:column;gap:8px"><span class="st">90 days</span><p class="s">of override data</p></div></div></div></div>
+<aside>Capability is proven, trust is not. That is why Phase 1 is shaped the way it is.</aside></section>
+<section class="slide std" id="impact"><div class="hd"><h2 class="t">Business impact</h2></div>
+<div class="bd"><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:72px"><div style="display:flex;flex-direction:column;gap:14px;padding-top:28px;border-top:1px solid var(--line)"><span class="eb g">Conservative</span><span class="st">$0.25M</span><p class="s">ARR impact <span class="e">(est.)</span></p><p class="s" style="color:var(--ink)">30% analyst hours saved<br>1.3× vendors per supervisor</p></div><div style="display:flex;flex-direction:column;gap:14px;padding-top:28px;border-top:4px solid var(--violet)"><span class="eb">Base</span><span class="st">$0.45M</span><p class="s">ARR impact <span class="e">(est.)</span></p><p class="s" style="color:var(--ink)">50% analyst hours saved<br>2× vendors per supervisor</p></div><div style="display:flex;flex-direction:column;gap:14px;padding-top:28px;border-top:1px solid var(--line)"><span class="eb g">Upside</span><span class="st">$0.6M</span><p class="s">ARR impact <span class="e">(est.)</span></p><p class="s" style="color:var(--ink)">70% analyst hours saved<br>3× vendors per supervisor</p></div></div>
+<div style="margin-top:auto;display:grid;grid-template-columns:repeat(3,1fr);gap:72px;border-top:1px solid var(--line);padding-top:32px"><div style="display:flex;flex-direction:column;gap:8px"><span class="h">Efficiency</span><p class="s">Same team covers more vendors at the same depth.</p></div><div style="display:flex;flex-direction:column;gap:8px"><span class="h">Revenue</span><p class="s">Add-on or tier uplift, and stronger deals against AI-first peers.</p></div><div style="display:flex;flex-direction:column;gap:8px"><span class="h">Retention</span><p class="s">Customers stay instead of moving to a vendor selling autonomy.</p></div></div></div>
+<p style="font-size:20px;color:#9A4A0B;margin-top:28px">Est. = planning figures, not measured. ARR assumes 50 enterprise customers, a $25k/yr add-on, and 20% / 35% / 50% attach.</p>
+<aside>Planning estimates to frame the range, not data. ARR is new add-on revenue only. Ask finance to replace with the real customer count and pricing.</aside></section>
+<section class="slide std" id="kpis"><div class="hd"><h2 class="t">How we’ll measure success</h2></div>
+<div class="bd" style="padding-top:32px"><div style="display:flex;flex-direction:column;gap:10px"><span class="eb">Success measure</span><p class="b" style="color:var(--ink)">How many vendors one analyst can keep fully assessed, without lowering the quality of each assessment.</p></div>
+<div style="margin-top:28px;border-bottom:1px solid var(--line)"><div style="display:grid;grid-template-columns:220px 1fr 380px;align-items:center;padding:0 16px;height:58px;border-top:1px solid var(--line);"><span class="eb g">Efficiency</span><span class="s" style="color:var(--ink)">Analyst hours per assessment</span><span class="s" style="color:var(--ink);font-weight:600">−50% <span class="e">(est.)</span></span></div><div style="display:grid;grid-template-columns:220px 1fr 380px;align-items:center;padding:0 16px;height:58px;border-top:1px solid var(--line);"><span class="eb g">Efficiency</span><span class="s" style="color:var(--ink)">Vendor reply → updated verdict</span><span class="s" style="color:var(--ink);font-weight:600">Same day</span></div><div style="display:grid;grid-template-columns:220px 1fr 380px;align-items:center;padding:0 16px;height:58px;border-top:1px solid var(--line);background:var(--violet-tint);"><span class="eb">Trust</span><span class="s" style="color:var(--ink)">Follow-up drafts approved unedited</span><span class="s" style="color:var(--ink);font-weight:600">≥ 80% <span class="e">(est.)</span></span></div><div style="display:grid;grid-template-columns:220px 1fr 380px;align-items:center;padding:0 16px;height:58px;border-top:1px solid var(--line);background:var(--violet-tint);"><span class="eb">Trust</span><span class="s" style="color:var(--ink)">Agent verdicts overridden by people</span><span class="s" style="color:var(--ink);font-weight:600">≤ 10%, falling <span class="e">(est.)</span></span></div><div style="display:grid;grid-template-columns:220px 1fr 380px;align-items:center;padding:0 16px;height:58px;border-top:1px solid var(--line);background:var(--violet-tint);"><span class="eb">Trust</span><span class="s" style="color:var(--ink)">Critical findings missed (audit sample)</span><span class="s" style="color:var(--ink);font-weight:600">Zero</span></div><div style="display:grid;grid-template-columns:220px 1fr 380px;align-items:center;padding:0 16px;height:58px;border-top:1px solid var(--line);"><span class="eb g">Adoption</span><span class="s" style="color:var(--ink)">New assessments run by the agent</span><span class="s" style="color:var(--ink);font-weight:600">≥ 60% at 6 months <span class="e">(est.)</span></span></div><div style="display:grid;grid-template-columns:220px 1fr 380px;align-items:center;padding:0 16px;height:58px;border-top:1px solid var(--line);"><span class="eb g">Business</span><span class="s" style="color:var(--ink)">Win rate against AI-first competitors</span><span class="s" style="color:var(--ink);font-weight:600">+10 pts <span class="e">(est.)</span></span></div><div style="display:grid;grid-template-columns:220px 1fr 380px;align-items:center;padding:0 16px;height:58px;border-top:1px solid var(--line);"><span class="eb g">Cost</span><span class="s" style="color:var(--ink)">Model cost per assessment</span><span class="s" style="color:var(--ink);font-weight:600">≤ $15 <span class="e">(est.)</span></span></div></div>
+<p class="s" style="margin-top:auto">Speed and accuracy are always reported together. Override rates are how customers decide to extend autonomy.</p></div>
+<aside>Trust rows are highlighted because they gate every phase. Estimates are proposed targets to agree on in this room.</aside></section>
+<section class="slide std" id="tech"><div class="hd"><h2 class="t">Technical approach and cost</h2></div>
+<div class="bd" style="display:grid;grid-template-columns:1fr 1fr;column-gap:96px;row-gap:48px;align-content:start"><div style="display:flex;flex-direction:column;gap:12px;padding-top:28px;border-top:1px solid var(--line)"><span class="h">Agent pipeline</span><p class="b">Evidence intake, mapping to controls, drafting follow-ups, parsing replies into proposed verdicts.</p></div><div style="display:flex;flex-direction:column;gap:12px;padding-top:28px;border-top:1px solid var(--line)"><span class="h">Security of the feature</span><p class="b">Vendor data handling, tenant isolation, and outbound email sent on the customer’s behalf.</p></div><div style="display:flex;flex-direction:column;gap:12px;padding-top:28px;border-top:1px solid var(--line)"><span class="h">Evaluation as a product surface</span><p class="b">Track where the agent is right, where it fails, and where people override it. Show it to customers.</p></div><div style="display:flex;flex-direction:column;gap:12px;padding-top:28px;border-top:1px solid var(--line)"><span class="h">Cost</span><p class="b">Model cost per assessment and margin impact: <span class="e">$5–15 per assessment (est.)</span>, under 2% of the add-on price. Confirmed in Phase 1.</p></div></div>
+<aside>The hard part is evaluation and safe outbound communication. Phase 1 keeps the agent’s output behind human approval.</aside></section>
+<section class="slide std" id="plan"><div class="hd"><h2 class="t">Earn trust in three phases</h2></div>
+<div class="bd" style="display:grid;grid-template-columns:repeat(3,1fr);gap:72px;align-content:stretch;padding-bottom:8px"><div style="display:flex;flex-direction:column;gap:14px;padding-top:28px;border-top:4px solid var(--violet)"><span class="eb">Phase 1 · ask today</span><span class="h">Follow-up wedge</span><p class="s">Agent drafts vendor follow-ups; a person approves; replies become proposed verdicts. 8 people, one quarter <span class="e">(est.)</span>.</p><div style="margin-top:auto;padding:20px 22px;border-radius:12px;background:var(--violet-tint)"><span class="eb g" style="font-size:20px">Gate</span><p class="s" style="color:var(--ink);margin-top:6px">≥ 80% drafts approved unedited, overrides ≤ 10%, after 90 days with design partners.</p></div></div><div style="display:flex;flex-direction:column;gap:14px;padding-top:28px;border-top:1px solid var(--line)"><span class="eb g">Phase 2</span><span class="h">Fleet and channel</span><p class="s">The agent runs whole assessments; people review exceptions in the fleet view and channels.</p><div style="margin-top:auto;padding:20px 22px;border-radius:12px;background:#EFEDE8"><span class="eb g" style="font-size:20px">Gate</span><p class="s" style="color:var(--ink);margin-top:6px">Analyst hours −50%, zero critical findings missed in audit samples.</p></div></div><div style="display:flex;flex-direction:column;gap:14px;padding-top:28px;border-top:1px solid var(--line)"><span class="eb g">Phase 3</span><span class="h">Policy and autonomy</span><p class="s">Plain-language policy; autonomy expands only where measured results support it.</p><div style="margin-top:auto;padding:20px 22px;border-radius:12px;background:#EFEDE8"><span class="eb g" style="font-size:20px">Gate</span><p class="s" style="color:var(--ink);margin-top:6px">Per-customer override and accuracy data.</p></div></div></div>
+<aside>We are only asking for Phase 1 today. Each later phase needs its gate met and comes back to this group.</aside></section>
+<section class="slide std" id="risks"><div class="hd"><h2 class="t">Risks and mitigations</h2></div>
+<div class="bd"><div style="display:grid;grid-template-columns:1fr 1fr;gap:72px;padding-bottom:12px"><span class="eb g">Risk</span><span class="eb g">Mitigation</span></div>
+<div style="border-bottom:1px solid var(--line)"><div class="row" style="grid-template-columns:1fr 1fr;gap:72px;padding:26px 0"><span class="h">Customers won’t trust the agent emailing vendors</span><span class="s" style="color:var(--ink)">A person approves every draft in Phase 1</span></div><div class="row" style="grid-template-columns:1fr 1fr;gap:72px;padding:26px 0"><span class="h">Wrong verdicts</span><span class="s" style="color:var(--ink)">The agent only proposes; people decide; overrides are tracked</span></div><div class="row" style="grid-template-columns:1fr 1fr;gap:72px;padding:26px 0"><span class="h">Model cost and latency</span><span class="s" style="color:var(--ink)">Measure cost per assessment in Phase 1 before scaling</span></div><div class="row" style="grid-template-columns:1fr 1fr;gap:72px;padding:26px 0"><span class="h">Compliance and audit</span><span class="s" style="color:var(--ink)">Full decision history lives in the assessment channel</span></div></div>
+<div class="dark" style="margin-top:auto;border-radius:16px;padding:32px 40px;display:flex;flex-direction:column;gap:12px"><span class="eb">Stop criteria</span><p class="b" style="color:#fff">Draft approval stays below 80% <span style="color:#FFE3A3">(est.)</span> after two tuning cycles, or a critical finding is missed in production.</p></div></div>
+<aside>Name the stop criteria out loud. It makes approving Phase 1 a lower-risk decision.</aside></section>
+<section class="slide std dark" id="decision">
+<span class="eb">Decision</span>
+<h2 class="t" style="margin-top:28px">Approve Phase 1 of Agentic Assessments</h2>
+<div style="margin-top:auto;display:grid;grid-template-columns:repeat(3,1fr);gap:72px"><div style="display:flex;flex-direction:column;gap:14px;padding-top:28px;border-top:1px solid rgba(255,255,255,.4)"><span class="eb">Scope</span><p class="b">Agent-drafted follow-ups with human approval; replies parsed into proposed verdicts.</p></div><div style="display:flex;flex-direction:column;gap:14px;padding-top:28px;border-top:1px solid rgba(255,255,255,.4)"><span class="eb">Team</span><p class="b">6 engineers, a PM and a designer for one quarter, with 5 design partners <span style="color:#FFE3A3">(est.)</span>.</p></div><div style="display:flex;flex-direction:column;gap:14px;padding-top:28px;border-top:1px solid rgba(255,255,255,.4)"><span class="eb">Review</span><p class="b">Back to this group in March 2027 <span style="color:#FFE3A3">(est.)</span> with the gate metrics.</p></div></div>
+<p class="s" style="margin-top:56px">Next steps: staff the squad (CTO, 2 weeks) · sign design partners (CPO, 4 weeks) · set the eval baseline (eng lead, 4 weeks)</p>
+<aside>Restate the ask and stop talking. If there is pushback, offer a 6-week technical spike on reply parsing only.</aside></section>
+<section class="slide std" id="appendix"><div class="hd"><h2 class="t">Appendix</h2></div>
+<div class="bd" style="padding-top:12px"><div style="border-bottom:1px solid var(--line)"><div class="row" style="grid-template-columns:1fr;padding:22px 0;border-top:0"><span class="b" style="color:var(--ink)">Full competitor scan: Vanta, Drata, Whistic, SAFE, Lema and adjacent agent products</span></div><div class="row" style="grid-template-columns:1fr;padding:22px 0"><span class="b" style="color:var(--ink)">Assessment walkthrough: framework to approval, with time per step</span></div><div class="row" style="grid-template-columns:1fr;padding:22px 0"><span class="b" style="color:var(--ink)">Directions we rejected: approval queue, per-assessment timeline</span></div><div class="row" style="grid-template-columns:1fr;padding:22px 0"><span class="b" style="color:var(--ink)">Agent policy model: global, vendor class, assessment notes</span></div><div class="row" style="grid-template-columns:1fr;padding:22px 0"><span class="b" style="color:var(--ink)">Cost model: model spend per assessment, by depth</span></div><div class="row" style="grid-template-columns:1fr;padding:22px 0"><span class="b" style="color:var(--ink)">KPI definitions and how each is measured</span></div></div></div>
+<aside>Backup slides; bring them up when a question needs them.</aside></section>
+</div>
+<div id="hud"></div>
+<script>
+// cover dot field: each dot a vendor, a few need a human decision
+(function(){const s=document.getElementById('field'),cols=22,rows=26,gx=912/cols,gy=1080/rows,hot=new Set([[2,5],[5,15],[5,9],[7,19],[9,3],[10,12],[12,7],[13,17],[15,1],[16,10],[18,20],[19,6],[21,14],[23,3],[24,18]].map(([r,c])=>r*22+c));let h='';
+for(let r=0;r<rows;r++)for(let c=0;c<cols;c++){const k=r*cols+c,x=c*gx+gx/2,y=r*gy+gy/2;
+ h+=hot.has(k)?`<circle cx="${x}" cy="${y}" r="10" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="2"/><circle cx="${x}" cy="${y}" r="6" fill="#fff"/>`:`<circle cx="${x}" cy="${y}" r="4" fill="#fff" fill-opacity=".28"/>`}
+s.innerHTML=h})();
+const slides=[...document.querySelectorAll('.slide')];let i=0;const stage=document.getElementById('stage'),hud=document.getElementById('hud');
+function fit(){const s=Math.min(innerWidth/1920,innerHeight/1080);stage.style.transform=`translate(-50%,-50%) scale(${s})`}
+function show(n){i=Math.max(0,Math.min(slides.length-1,n));slides.forEach((s,k)=>s.classList.toggle('active',k===i));hud.textContent=`${i+1} / ${slides.length}`;history.replaceState(null,'','#'+(i+1))}
+addEventListener('resize',fit);
+addEventListener('hashchange',()=>{const n=(parseInt(location.hash.slice(1))||1)-1;if(n!==i)show(n)});
+addEventListener('keydown',e=>{if(['ArrowRight','PageDown',' '].includes(e.key)){e.preventDefault();show(i+1)}else if(['ArrowLeft','PageUp'].includes(e.key)){e.preventDefault();show(i-1)}else if(e.key==='f'){document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen()}});
+addEventListener('click',e=>show(e.clientX>innerWidth/3?i+1:i-1));
+fit();show((parseInt(location.hash.slice(1))||1)-1);
+</script>
+</body></html>
