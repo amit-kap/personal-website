@@ -111,6 +111,8 @@ interface Profile {
   backed?: number
   claims?: string[]
   contact?: string
+  /* The user stops to inspect what came back before closing anything. */
+  inspect?: boolean
 }
 
 const profile: Record<string, Profile> = {
@@ -125,6 +127,7 @@ const profile: Record<string, Profile> = {
     backed: 6,
     claims: ['Encryption at rest: "AES-256", no report attached', 'Access reviews: "quarterly", no log', 'Incident response: "within 48 hours", no policy', 'Data retention: "90 days", not in the DPA'],
     contact: 'Priya Nair',
+    inspect: true,
   },
   Metaview: {
     found: ['Access to employee and candidate data through a Google Workspace grant', 'Held by a Head of Talent account'],
@@ -181,6 +184,12 @@ function generic(a: ActiveAssessment): ThreadItem[] {
         { ul: p.claims },
         { p: `I recommend closing the ${p.backed} and sending a follow-up for the rest.` },
       ),
+      ...(p.inspect
+        ? [
+            user('10:18', 'I want to inspect the questions received first.'),
+            agent('10:19', { p: `Here are all **${first}** questions with ${p.contact}'s answers and the evidence attached to each. The **${p.backed}** I can close are marked. Tell me when you want me to close them.` }),
+          ]
+        : []),
       user('10:22', `Close the ${p.backed} and send the follow-up.`),
       { kind: 'event', time: '10:30', event: 'sent', title: `Follow-up sent to ${p.contact}`, detail: `Inquiry #2 · ${follow} questions · sent by Sarah K.`, link: 'View inquiry' },
       { kind: 'day', label: 'May 29, 2026', note: 'Waiting on the vendor' },
