@@ -9,6 +9,13 @@
       "autoPort": true
     },
     {
+      "name": "agentic-assessments-deck",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev", "--", "--port", "5180"],
+      "port": 5180,
+      "autoPort": true
+    },
+    {
       "name": "shift-motion-preview",
       "runtimeExecutable": "python3",
       "runtimeArgs": ["-m", "http.server", "8932"],

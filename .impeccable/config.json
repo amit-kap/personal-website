@@ -1,0 +1,14 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "overused-font",
+        "value": "inter",
+        "createdAt": "2026-11-08T20:22:36.800Z",
+        "reason": "Deck restyled to match the Figma 'Research Report' template the user asked to follow, which uses an Inter-style sans"
+      }
+    ]
+  }
+}
