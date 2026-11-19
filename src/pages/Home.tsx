@@ -230,7 +230,6 @@ export default function Home() {
             <p className="sub rv" style={{ '--i': 1 } as CSSProperties}>I take what your AI shipped and turn it into a polished experience humans can enjoy.</p>
             <div className="cta rv" style={{ '--i': 2 } as CSSProperties}>
               <a className="btn" href="mailto:amitka111@gmail.com">Let's talk <span aria-hidden="true">→</span></a>
-              <span className="meta">Freelance and fractional</span>
             </div>
           </div>
         </div>

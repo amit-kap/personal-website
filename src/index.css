@@ -2,7 +2,7 @@
 @import "@fontsource-variable/inter";
 
 :root {
-  --background: #ffffff;
+  --background: color-mix(in srgb, var(--primary) 4%, white); /* white with a 4% tint of the primary, about #FEF8F5 */
   --foreground: #111111;
   --ink: #111133;
   --copy: #454542;
@@ -75,7 +75,6 @@ h1 .soft, h1 .line { display: block; }
 h1 .soft { color: #55556a; font-weight: 400; }
 p.sub { margin-top: 2.222cqw; font-size: var(--h-m); line-height: 1.6; color: #2a2a3c; max-width: 38.9cqw; }
 .cta { margin-top: 2.778cqw; display: flex; align-items: center; gap: 1.528cqw; }
-.meta { color: #55556a; font-size: var(--h-s); }
 .hero .btn { font-size: var(--h-m); padding: 0.956cqw 1.764cqw; gap: 0.735cqw; }
 
 .btn { display: inline-flex; align-items: center; gap: 10px; background: var(--primary); color: #fff; font-weight: 500; font-size: var(--fs-m);
@@ -146,8 +145,7 @@ footer { padding: 112px 0 64px; }
   h1 { font-size: var(--fs-xl); line-height: 1.15; }
   p.sub { margin-top: 20px; font-size: var(--fs-m); line-height: 1.5; max-width: none; }
   .cta { margin-top: 28px; gap: 16px; }
-  .meta { font-size: var(--fs-s); }
-  .hero .btn { font-size: var(--fs-m); padding: 12px 22px; gap: 10px; }
+    .hero .btn { font-size: var(--fs-m); padding: 12px 22px; gap: 10px; }
   .column { padding: 0 16px; }
   section.case { padding-top: 72px; }
     section.bio { padding-top: 96px; gap: 20px; }
