@@ -103,9 +103,9 @@ section.case { padding-top: 152px; }
 .pill span { color: var(--primary); }
 
 section.bio { padding-top: 144px; display: flex; gap: 40px; align-items: flex-start; }
-.bio img { width: 64px; height: 64px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
-.bio-text { display: grid; gap: 20px; }
-.bio p { font-size: var(--fs-m); line-height: 1.7; color: var(--copy); max-width: 640px; }
+.bio img { width: 64px; height: 64px; border-radius: 50%; object-fit: cover; flex-shrink: 0; display: none; } /* hidden for now: remove display: none to bring the photo back */
+.bio-text { display: grid; gap: 20px; flex: 1; min-width: 0; }
+.bio p { font-size: var(--fs-m); line-height: 1.7; color: var(--copy); }
 .bio b { color: var(--foreground); font-weight: 500; }
 .bio a { color: var(--primary); text-decoration: none; }
 

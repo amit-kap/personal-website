@@ -253,15 +253,16 @@ export default function Home() {
           <img src={asset('profile.webp')} alt="Amit Kaplinsky" />
           <div className="bio-text">
             <p>
-            <b>Amit Kaplinsky</b>, a designer and a builder in Tel Aviv. 12 years designing complex B2B and cyber products.
-            Founding designer twice, at <Link to="/work/shift">Shift</Link> and <Link to="/work/veriti">Veriti</Link>.
-          </p>
-            <p>
-              I came to product design through advertising, then into high-tech cybersecurity, where I have spent the last twelve years
-              helping companies ship complete product experiences. At Shift I defined how people and AI agents share the work.
+              <b>Amit Kaplinsky</b>, a designer and a builder in Tel Aviv.
             </p>
             <p>
-              Before that I led product design at Onyxia, built the UX team at Semperis, and started at Check Point.
+              I came to product design through advertising, then into
+              high-tech cybersecurity, where I have spent the last twelve years designing complex B2B and cyber products and helping
+              companies ship complete product experiences.
+            </p>
+            <p>
+              I've designed security products from Check Point to AI-native startups, including as founding designer at{' '}
+              <Link to="/work/shift">Shift</Link> and <Link to="/work/veriti">Veriti</Link>.
             </p>
           </div>
         </section>
