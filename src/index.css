@@ -44,6 +44,12 @@ a { color: inherit; }
   translate var(--nudge-time, .6s) var(--nudge-ease, cubic-bezier(.37, 0, .63, 1)) var(--nudge-delay, 0s); }
 /* The nudge moves each title line on its own (the `translate` property, separate from the entrance's
    `transform`); the bottom line follows by --nudge-line-delay. */
+/* Smoother start and stop than a cubic-bezier: "smootherstep" (6t^5 - 15t^4 + 10t^3) has zero speed AND zero
+   acceleration at both ends, so the nudge eases in and settles with no abrupt onset or landing. Falls back to
+   the sine curve where linear() is not supported. */
+@supports (transition-timing-function: linear(0, 1)) {
+  .hero { --nudge-ease: linear(0, 0.0003, 0.0022, 0.0071, 0.0161, 0.0298, 0.0488, 0.0733, 0.1035, 0.1392, 0.18, 0.2255, 0.2752, 0.3283, 0.384, 0.4416, 0.5, 0.5584, 0.616, 0.6717, 0.7248, 0.7745, 0.82, 0.8608, 0.8965, 0.9267, 0.9512, 0.9702, 0.9839, 0.9929, 0.9978, 0.9997, 1); }
+}
 h1.nudged .soft, h1.nudged .line { translate: calc(var(--nudge, 1.5cqw) * -1) 0; }
 h1 .line { --nudge-delay: var(--nudge-line-delay, 0s); }
 h1 .soft, h1 .line { will-change: translate; }
