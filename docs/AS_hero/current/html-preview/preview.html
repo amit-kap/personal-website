@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AS hero home preview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  /* Tokens from Paper (07 — Anti-slop home) */
+  :root {
+    --background: #FFFFFF;
+    --foreground: #111111;
+    --ink: #111133;
+    --copy: #454542;
+    --muted: #70706D;
+    --border: #ECECEC;
+    --primary: #F04A00;
+    --primary-hover: #D63E00;
+    --radius-container: 14px;
+    --column: 800px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--background); }
+  body { font-family: "Inter", system-ui, sans-serif; color: var(--foreground); -webkit-font-smoothing: antialiased; }
+  a { color: inherit; }
+
+  /* Hero: full bleed, no outer padding */
+  /* The hero keeps the video's 16:9 shape, so wide screens show the whole frame instead of cropping it (the old
+     fixed 860px height cropped the top and bottom and moved AS). It never exceeds the screen height. */
+  .hero { position: relative; width: 100%; aspect-ratio: 16 / 9; max-height: 100vh; min-height: 620px; overflow: hidden; }
+  .hero img.art, .hero video.art { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 78% 50%; display: block; }
+  .hero .inner { position: relative; z-index: 3; height: 100%; width: 100%; max-width: 1440px; margin: 0 auto; padding: 0 120px; }
+  header { display: flex; justify-content: space-between; align-items: center; padding-top: 47px; }
+  .logo { display: inline-flex; text-decoration: none; }
+  .logo img { display: block; height: 44px; width: auto; }
+  nav a { color: var(--foreground); text-decoration: none; font-size: 15px; margin-left: 28px; }
+  .copy { margin-top: 128px; max-width: 760px; }
+  h1 { font-size: 59px; line-height: 64px; font-weight: 500; letter-spacing: -0.02em; color: var(--ink); }
+  h1 .soft { display: block; color: #55556A; font-weight: 400; }
+  p.sub { margin-top: 32px; font-size: 21px; line-height: 32px; color: #2A2A3C; max-width: 560px; }
+  .cta { margin-top: 40px; display: flex; align-items: center; gap: 22px; }
+  .btn { display: inline-flex; align-items: center; gap: 10px; background: var(--primary); color: #fff; font-weight: 500; font-size: 17px;
+         padding: 13px 24px; border-radius: 999px; text-decoration: none; }
+  .btn:hover { background: var(--primary-hover); }
+  .meta { color: #55556A; font-size: 15px; }
+  /* Hero text appears one second before AS points at it (see the script). */
+  .hero.wait .copy { opacity: 0; transform: translateY(8px); }
+  .hero .intro { z-index: 1; }
+  /* On-screen grain controls (preview only; delete the .ctl block, its script and the #ctl markup to remove) */
+  .ctl { position: fixed; left: 16px; bottom: 16px; z-index: 20; width: 248px; font: 500 12px/1.3 Inter, system-ui, sans-serif; color: #1a1a24;
+         background: rgba(255,255,255,.94); border-radius: 12px; box-shadow: 0 2px 14px rgba(0,0,0,.18); overflow: hidden; }
+  .ctl summary { list-style: none; cursor: pointer; padding: 10px 12px; font-weight: 600; display: flex; justify-content: space-between; }
+  .ctl summary::-webkit-details-marker { display: none; }
+  .ctl .body { padding: 2px 12px 12px; display: grid; gap: 10px; }
+  .ctl label { display: grid; gap: 4px; }
+  .ctl .row { display: flex; justify-content: space-between; }
+  .ctl .row output { font-variant-numeric: tabular-nums; color: #55556A; }
+  .ctl input[type=range] { width: 100%; accent-color: #F04A00; }
+  .ctl select, .ctl button { font: inherit; padding: 6px 8px; border-radius: 8px; border: 1px solid #d9d9de; background: #fff; cursor: pointer; }
+  .ctl .btns { display: flex; gap: 8px; }
+  .ctl .btns button { flex: 1; }
+  /* Film grain over both videos, under the text. SVG noise tile, jittered in steps so it reads as grain
+     and not a sliding texture. */
+  .hero .grain { position: absolute; inset: -50%; z-index: 2; pointer-events: none; opacity: 0.28; mix-blend-mode: overlay;
+    background-size: 256px 256px;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='256' height='256'><filter id='n' x='0' y='0' width='100%25' height='100%25' color-interpolation-filters='sRGB'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='2.5 0 0 0 -0.75  2.5 0 0 0 -0.75  2.5 0 0 0 -0.75  0 0 0 0 1'/></filter><rect width='256' height='256' filter='url(%23n)'/></svg>");
+    animation: grain .8s steps(4) infinite; }
+  @keyframes grain { 0% { transform: translate(0, 0); } 25% { transform: translate(-3%, 2%); } 50% { transform: translate(2%, -3%); } 75% { transform: translate(-2%, -1%); } 100% { transform: translate(0, 0); } }
+  @media (prefers-reduced-motion: reduce) { .hero .grain { animation: none; } }
+  .hero.is-looping .intro { visibility: hidden; }
+  .hero .copy { transition: opacity .6s ease, transform .6s ease; }
+  @media (prefers-reduced-motion: reduce) { .hero .copy { transition: none; } }
+
+  /* Editorial column */
+  .column { width: 100%; max-width: var(--column); margin: 0 auto; }
+  section.case { padding-top: 152px; }
+  .eyebrow { font-size: 13px; color: var(--muted); }
+  .cover { margin-top: 16px; border-radius: var(--radius-container); overflow: hidden; aspect-ratio: 800 / 440; }
+  .cover img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .case-row { margin-top: 24px; display: flex; justify-content: space-between; align-items: flex-start; gap: 24px; }
+  .case-row h2 { font-size: 23px; line-height: 30px; font-weight: 500; letter-spacing: -0.01em; }
+  .case-row p { margin-top: 8px; font-size: 15px; line-height: 22px; color: var(--copy); }
+  .pill { flex-shrink: 0; display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--border); border-radius: 999px;
+          padding: 9px 16px; font-size: 14px; font-weight: 500; text-decoration: none; }
+  .pill span { color: var(--primary); }
+
+  section.bio { padding-top: 144px; display: flex; gap: 40px; align-items: flex-start; }
+  .bio img { width: 64px; height: 64px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
+  .bio p { font-size: 20px; line-height: 34px; color: var(--copy); max-width: 640px; }
+  .bio b { color: var(--foreground); font-weight: 500; }
+  .bio a { color: var(--primary); text-decoration: none; }
+
+  section.closing { padding-top: 192px; display: flex; justify-content: space-between; align-items: flex-end; gap: 32px; }
+  .closing h2 { font-size: 46px; line-height: 52px; font-weight: 500; letter-spacing: -0.02em; max-width: 560px; }
+  .closing p { margin-top: 24px; font-size: 15px; color: var(--copy); }
+  footer { padding: 112px 0 64px; display: flex; justify-content: space-between; align-items: center; }
+  .links { display: flex; gap: 22px; }
+  .links a { display: inline-flex; width: 22px; height: 22px; align-items: center; justify-content: center; text-decoration: none; }
+  .links svg { width: 18px; height: 18px; }
+  .city { font-size: 13px; color: var(--muted); }
+
+  .switch { position: fixed; right: 16px; bottom: 16px; display: flex; gap: 6px; background: rgba(255,255,255,.92);
+            padding: 6px; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,.15); z-index: 9; }
+  .switch button { border: 0; background: #F4F4F2; padding: 8px 12px; border-radius: 8px; font: 500 14px Inter, sans-serif; cursor: pointer; }
+  .switch button[aria-pressed="true"] { background: var(--ink); color: #fff; }
+
+  @media (max-width: 860px) {
+    .hero .inner { padding: 0 16px; }
+    .copy { margin-top: 64px; }
+    h1 { font-size: 36px; line-height: 42px; }
+    p.sub { font-size: 17px; line-height: 26px; }
+    .column { padding: 0 16px; }
+    section.case { padding-top: 96px; }
+    section.bio { padding-top: 96px; gap: 20px; }
+    .bio p { font-size: 17px; line-height: 28px; }
+    section.closing { padding-top: 120px; flex-direction: column; align-items: flex-start; }
+    .closing h2 { font-size: 34px; line-height: 40px; }
+    .case-row { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+<section class="hero wait" id="hero">
+  <!-- The idle loop sits underneath on its first frame (= the intro's last frame). The intro plays once on top;
+       when it ends, it is hidden and the loop starts, so there is no jump. -->
+  <video class="art loop" id="loop" src="../video-tests/001/final/loop-bytedance-1080p.mp4" muted playsinline loop preload="auto" aria-hidden="true"></video>
+  <video class="art intro" id="art" src="../video-tests/001/final/up-bytedance-1080p.mp4" poster="../video-tests/001/assets/start-frame-v22.png" muted playsinline autoplay preload="auto" aria-label="AS points at the headline from a Browsercity rooftop"></video>
+  <div class="grain" aria-hidden="true"></div>
+  <div class="inner">
+    <header>
+      <a class="logo" href="#" aria-label="AS home"><img src="../badge/as-badge.svg" alt="AS"></a>
+      <nav><a href="#">Work</a><a href="#">About</a></nav>
+    </header>
+    <div class="copy">
+      <h1><span class="soft">AI slop is everywhere.</span>I'm the anti‑slop superhero.</h1>
+      <p class="sub">I take what your AI shipped and turn it into a polished experience humans can enjoy.</p>
+      <div class="cta"><a class="btn" href="#">Let's talk <span aria-hidden="true">→</span></a><span class="meta">Freelance and fractional</span></div>
+    </div>
+  </div>
+</section>
+
+<main>
+  <section class="case column">
+    <div class="eyebrow">Case study</div>
+    <div class="cover"><img src="cover.webp" alt="Designing for the supervisor cover"></div>
+    <div class="case-row">
+      <div>
+        <h2>Designing for the supervisor</h2>
+        <p>How people oversee AI agents, understand their reasoning and step in when it matters.</p>
+      </div>
+      <a class="pill" href="#">Read <span aria-hidden="true">↗</span></a>
+    </div>
+  </section>
+
+  <section class="bio column">
+    <img src="profile.jpg" alt="Amit Kaplinsky">
+    <p><b>Amit Kaplinsky</b>, a designer and a builder in Tel Aviv. 12 years designing complex B2B and cyber products. Founding designer twice, at <a href="#">Shift</a> and <a href="#">Veriti</a>.</p>
+  </section>
+
+  <section class="closing column">
+    <div>
+      <h2>Building something that doesn't feel right yet?</h2>
+      <p>Available for freelance and fractional work.</p>
+    </div>
+    <a class="btn" href="#">Let's talk <span aria-hidden="true">→</span></a>
+  </section>
+
+  <footer class="column">
+    <div class="links" aria-label="Links">
+      <a href="#" aria-label="Email"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4 20-7z"/></svg></a>
+      <a href="#" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9h4v12H3zM9 9h3.8v1.7h.1c.5-1 1.8-2 3.8-2 4 0 4.8 2.6 4.8 6V21h-4v-5.4c0-1.3 0-3-1.8-3s-2.1 1.4-2.1 2.9V21H9z"/></svg></a>
+      <a href="#" aria-label="GitHub"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.9a3.4 3.4 0 0 0-.9-2.6c3.1-.4 6.4-1.5 6.4-6.9a5.4 5.4 0 0 0-1.5-3.7 5 5 0 0 0-.1-3.7s-1.2-.4-3.9 1.4a13.4 13.4 0 0 0-7 0C6.3 1.8 5.1 2.2 5.1 2.2a5 5 0 0 0-.1 3.7A5.4 5.4 0 0 0 3.5 9.6c0 5.4 3.3 6.5 6.4 6.9a3.4 3.4 0 0 0-.9 2.6V22"/></svg></a>
+      <a href="#" aria-label="CV"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg></a>
+    </div>
+    <div class="city">Tel Aviv</div>
+  </footer>
+</main>
+
+<details class="ctl" id="ctl" open>
+  <summary>Grain <span>controls</span></summary>
+  <div class="body">
+    <label><span class="row">Strength <output data-for="opacity"></output></span><input type="range" id="c-opacity" min="0" max="0.6" step="0.01"></label>
+    <label><span class="row">Fineness <output data-for="freq"></output></span><input type="range" id="c-freq" min="0.2" max="1.6" step="0.01"></label>
+    <label><span class="row">Tile size <output data-for="tile"></output></span><input type="range" id="c-tile" min="64" max="512" step="8"></label>
+    <label><span class="row">Jitter speed <output data-for="speed"></output></span><input type="range" id="c-speed" min="0" max="5" step="0.25"></label>
+    <label><span class="row">Blend</span>
+      <select id="c-blend"><option>overlay</option><option>soft-light</option><option>multiply</option><option>screen</option><option>normal</option></select></label>
+    <div class="btns"><button type="button" id="c-reset">Reset</button><button type="button" id="c-copy">Copy values</button></div>
+  </div>
+</details>
+<noscript><style>.hero.wait .copy { opacity: 1; transform: none; }</style></noscript>
+<script>
+  const art = document.getElementById("art");
+  const hero = document.getElementById("hero");
+  // In the clip AS starts raising his arm at about 10.25 s and points at 10.5-10.75 s.
+  // The text starts fading in at 8.5 s and is fully visible by 9.1 s, over a second before he points.
+  const REVEAL_AT = 8.5;
+  const loop = document.getElementById("loop");
+  const reveal = () => hero.classList.remove("wait");
+  const startLoop = () => { loop.currentTime = 0; loop.play().catch(() => {}); hero.classList.add("is-looping"); };
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    // No motion: show the last frame and the text at once.
+    art.removeAttribute("autoplay"); art.poster = "variant-18.png"; loop.removeAttribute("loop"); reveal();
+  } else {
+    // timeupdate fires only about 4 times a second but also in a background tab; the per-frame
+    // check below is exact while the tab is visible.
+    art.addEventListener("timeupdate", () => { if (art.currentTime >= REVEAL_AT) reveal(); });
+    const watch = () => { if (art.currentTime >= REVEAL_AT) reveal(); else requestAnimationFrame(watch); };
+    requestAnimationFrame(watch);
+    art.addEventListener("ended", () => { reveal(); startLoop(); });
+    art.addEventListener("error", reveal);
+    setTimeout(reveal, 20000); // safety: never leave the text hidden
+  }
+</script>
+
+<script>
+  // Grain controls. Defaults match the CSS in .hero .grain.
+  (() => {
+    const g = document.querySelector(".hero .grain");
+    const D = { opacity: 0.28, freq: 0.85, tile: 256, speed: 1.25, blend: "overlay" };
+    const KEY = "as-hero-grain";
+    let v = { ...D };
+    try { Object.assign(v, JSON.parse(localStorage.getItem(KEY) || "{}")); } catch (e) {}
+    const svg = (f, t) => "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='" + t + "' height='" + t + "'>"
+      + "<filter id='n' x='0' y='0' width='100%25' height='100%25' color-interpolation-filters='sRGB'><feTurbulence type='fractalNoise' baseFrequency='" + f
+      + "' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='2.5 0 0 0 -0.75  2.5 0 0 0 -0.75  2.5 0 0 0 -0.75  0 0 0 0 1'/></filter>"
+      + "<rect width='" + t + "' height='" + t + "' filter='url(%23n)'/></svg>\")";
+    const $ = (id) => document.getElementById(id);
+    const apply = () => {
+      g.style.opacity = v.opacity;
+      g.style.mixBlendMode = v.blend;
+      g.style.backgroundSize = v.tile + "px " + v.tile + "px";
+      g.style.backgroundImage = svg(v.freq, v.tile);
+      g.style.animationDuration = v.speed > 0 ? (1 / v.speed).toFixed(3) + "s" : "0s";
+      g.style.animationPlayState = v.speed > 0 ? "running" : "paused";
+      if (v.speed === 0) g.style.animation = "none"; else g.style.animation = "grain " + (1 / v.speed).toFixed(3) + "s steps(4) infinite";
+      document.querySelector('[data-for=opacity]').textContent = (+v.opacity).toFixed(2);
+      document.querySelector('[data-for=freq]').textContent = (+v.freq).toFixed(2);
+      document.querySelector('[data-for=tile]').textContent = v.tile + " px";
+      document.querySelector('[data-for=speed]').textContent = v.speed === 0 ? "still" : (1 / v.speed).toFixed(2) + " s";
+      try { localStorage.setItem(KEY, JSON.stringify(v)); } catch (e) {}
+    };
+    const bind = (id, key, num = true) => {
+      const el = $(id); el.value = v[key];
+      el.addEventListener("input", () => { v[key] = num ? +el.value : el.value; apply(); });
+    };
+    bind("c-opacity", "opacity"); bind("c-freq", "freq"); bind("c-tile", "tile"); bind("c-speed", "speed"); bind("c-blend", "blend", false);
+    $("c-reset").addEventListener("click", () => { v = { ...D }; ["opacity","freq","tile","speed","blend"].forEach((k) => { $("c-" + k).value = v[k]; }); apply(); });
+    $("c-copy").addEventListener("click", () => {
+      const t = "opacity: " + v.opacity + "; mix-blend-mode: " + v.blend + "; background-size: " + v.tile + "px " + v.tile + "px; baseFrequency: " + v.freq
+        + "; animation: grain " + (v.speed ? (1 / v.speed).toFixed(2) + "s" : "none") + " steps(4) infinite;";
+      (navigator.clipboard ? navigator.clipboard.writeText(t) : Promise.reject()).then(() => { $("c-copy").textContent = "Copied"; setTimeout(() => { $("c-copy").textContent = "Copy values"; }, 1200); }).catch(() => { prompt("Grain values", t); });
+    });
+    apply();
+  })();
+</script>
+</body>
+</html>

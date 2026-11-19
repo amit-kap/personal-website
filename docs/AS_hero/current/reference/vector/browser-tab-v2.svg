@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900">
+  <defs>
+    <filter id="grain" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="4" result="n"/>
+      <feColorMatrix type="matrix" values="0 0 0 0 0.19  0 0 0 0 0.25  0 0 0 0 0.27  0 0 0 0.10 0" in="n" result="g"/>
+      <feComposite in="g" in2="SourceGraphic" operator="in"/>
+    </filter>
+  </defs>
+  <!-- sky -->
+  <rect width="1600" height="900" fill="#FCEDDC"/>
+
+  <!-- ===== Tower: front face 1000 wide, side face 260 ===== -->
+  <g transform="translate(300,140)">
+    <!-- teal offset shadow (print layer out of register) -->
+    <rect x="18" y="14" width="1000" height="760" fill="#30616F" opacity="0.55"/>
+
+    <!-- roof: rim + rooftop box -->
+    <rect x="0" y="-36" width="1000" height="36" fill="#F1DCC4"/>
+    <rect x="22" y="-30" width="956" height="24" fill="#E5CEB6"/>
+    <rect x="640" y="-96" width="170" height="66" fill="#4F5D5E"/>
+    <rect x="640" y="-96" width="170" height="14" fill="#73898A"/>
+
+    <!-- title bar (dark teal) -->
+    <rect x="0" y="0" width="1000" height="96" fill="#3D5358"/>
+    <!-- window dots -->
+    <circle cx="48" cy="48" r="13" fill="#D56A35"/>
+    <circle cx="90" cy="48" r="13" fill="#4B8958"/>
+    <circle cx="132" cy="48" r="13" fill="#A93F29"/>
+
+    <!-- active tab: rounded top, flared shoulders into the toolbar (same colour as toolbar) -->
+    <path d="M168 96 C192 96 196 88 198 72 L202 36 C204 22 214 16 228 16 L492 16 C506 16 516 22 518 36 L522 72 C524 88 528 96 552 96 Z" fill="#AEB8B3"/>
+    <!-- favicon -->
+    <rect x="236" y="38" width="30" height="30" rx="7" fill="#D15E2B"/>
+    <rect x="244" y="46" width="14" height="14" rx="3" fill="#F1DCC4"/>
+    <!-- tab label -->
+    <rect x="282" y="46" width="150" height="14" rx="7" fill="#3D5358"/>
+    <!-- close x -->
+    <rect x="466" y="50" width="22" height="6" rx="3" fill="#73898A" transform="rotate(45 477 53)"/>
+    <rect x="466" y="50" width="22" height="6" rx="3" fill="#73898A" transform="rotate(-45 477 53)"/>
+
+    <!-- inactive tab (darker, no shoulders) -->
+    <rect x="566" y="26" width="250" height="58" rx="12" fill="#4F6468"/>
+    <rect x="590" y="44" width="24" height="24" rx="6" fill="#73898A"/>
+    <rect x="628" y="50" width="120" height="12" rx="6" fill="#73898A"/>
+    <!-- new-tab plus -->
+    <rect x="840" y="50" width="28" height="7" rx="3" fill="#73898A"/>
+    <rect x="850.5" y="39.5" width="7" height="28" rx="3" fill="#73898A"/>
+
+    <!-- toolbar -->
+    <rect x="0" y="96" width="1000" height="110" fill="#AEB8B3"/>
+    <!-- address pill -->
+    <rect x="32" y="122" width="936" height="58" rx="29" fill="#FDF0DD"/>
+    <circle cx="66" cy="151" r="10" fill="#73898A"/>
+    <rect x="92" y="144" width="300" height="14" rx="7" fill="#E5CEB6"/>
+    <!-- divider under toolbar -->
+    <rect x="0" y="206" width="1000" height="8" fill="#30616F"/>
+
+    <!-- walls: plain teal and cream panels -->
+    <rect x="0" y="214" width="1000" height="560" fill="#728687"/>
+    <rect x="0" y="214" width="250" height="560" fill="#FAE4CC"/>
+    <rect x="250" y="214" width="6" height="560" fill="#5F7476"/>
+    <rect x="500" y="214" width="6" height="560" fill="#5F7476"/>
+    <rect x="750" y="214" width="6" height="560" fill="#5F7476"/>
+    <rect x="0" y="480" width="1000" height="10" fill="#5F7476"/>
+
+    <!-- peach print rim on the lit left edge, slightly out of register -->
+    <rect x="-8" y="-30" width="8" height="804" fill="#FAC68B"/>
+
+  </g>
+  <rect width="1600" height="900" filter="url(#grain)" fill="#000"/>
+</svg>

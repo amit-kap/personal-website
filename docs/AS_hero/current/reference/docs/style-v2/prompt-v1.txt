@@ -1,0 +1,9 @@
+{{res:98bb48d6-ceeb-4847-b71a-d733f5f185dc}} is a layout guide only: keep the position of every shape, the camera angle and the framing. Do not use its grey colours or its plain look.
+{{res:cc78e6b9-0f4c-45d8-b503-b32698dc1c7f}} defines the colours, light and texture. Do not copy its shapes or composition.
+
+AS is a masked superhero with a cape and the letters "AS" on his chest. He stands on a rooftop on the right, pointing toward the left, and looks at the viewer.
+Browsercity is a city whose towers look like browser windows. The tall shapes in {{res:98bb48d6-ceeb-4847-b71a-d733f5f185dc}} are browser towers; the left side is open sky above a low skyline.
+
+A playful flat cartoon illustration, light and airy, with lots of open space.
+
+No text except the letters on his chest.

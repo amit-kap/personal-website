@@ -1,0 +1,18 @@
+opening-v3.png: node=node_z1kby7x5n0 submit=747462e3-c838-4b08-beb5-552757971919
+endframe-v4.png: node=node_9g773m4n5z submit=979c21a0-0775-46bf-840c-061d019b5580
+point v1: node=node_3h7zepkcgy submit=f59ceb49-4fb8-47ea-b924-ca94d01c44e2
+endframe v5: node=node_vb2r0edt5t submit=1506cf2f-5c88-423f-a25d-cef66e940bb9
+point v2: node=node_pa09m09jxb submit=4dccea18-0ac8-42d7-b55c-8537306d1459
+style v2 4 variants: node=node_q7yj3zk77d
+style v2 round 2: node=node_hf0wfdet1r submit=7907350c-f09d-4bac-8dae-a27ccaf32847
+style v2 round 3: node=node_nf5d3358sv submit=54e23dfb-8153-48bd-acfd-1542a301b225
+style v2 round 4: node=node_yvx8q1g1m2 submit=82d068fa-b905-4d74-ac01-11096d7bb9b0
+style v2 round 5b: node=node_g1jg8jnejk submit=4c794ebc-160d-4f9d-8861-909c253fb6b6
+style v2 round 6: node=node_5hwgtzfvpm submit=2b4670d3-5afb-43a2-8e81-637670cf8376
+style v2 round 7 nano banana 2.1: node=node_r0nhr9eq0f submit=acbd5c4b-cf34-4d50-9826-d4e8c889753f
+style v2 round 8: node=node_8vnzs3tz5j submit=c1d43060-c52a-4d2b-9004-5fa8c471c9e5
+style v2 round 9: node=node_1pad48tqk7 submit=81d5c905-a8fe-48b3-ba9c-b03b9ff76b0e
+style v2 round 10: node=node_2ck63eh8mf submit=9f85bc05-7542-4855-a488-53568b76870e
+style v2 opening v1: node=node_my4c02xq4t submit=db6de9ae-4fa3-4371-b69a-0d5581e7f0ad
+style v2 opening v2: node=node_2sej67na8g submit=82721c23-c655-4386-bfc4-34b848bcfd94
+style v2 opening v3: node=node_a0q6wq7fgw submit=66c1a6da-fcde-4899-ad7b-42604ba57140

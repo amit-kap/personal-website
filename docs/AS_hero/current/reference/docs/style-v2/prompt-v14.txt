@@ -1,0 +1,9 @@
+{{res:94bf6e41-cbc8-488e-ab9d-b1cd87d0f794}} is a layout guide only: keep the position of every shape, the camera angle and the framing. Do not use its grey colours or its plain look.
+{{res:7beb1ed3-f09d-4f8f-aaa6-f76be78cbebd}} defines the style: the drawing and line work, the colours, the warm light, the haze and the light rays, and how AS and the browser towers are drawn. Do not copy its composition or camera angle.
+
+AS is the superhero in {{res:7beb1ed3-f09d-4f8f-aaa6-f76be78cbebd}}: draw him exactly as he is drawn there, with the same costume, mask, shield, cape and proportions. He stands on a rooftop on the right, pointing toward the left, and looks at the viewer.
+Browsercity is a city whose towers look like browser windows. The tall shapes in {{res:94bf6e41-cbc8-488e-ab9d-b1cd87d0f794}} are browser towers; the left side is open sky above a low skyline.
+
+Lots of open space.
+
+No text except the letters on his shield.
