@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState, type CSSProperties, type RefObject } from 'react'
 import { Link } from 'react-router-dom'
-import { CV_PDF_URL } from '@/lib/cvPdf'
 import anim from '@/lib/titlesAnimation.json'
 
 const base = import.meta.env.BASE_URL
@@ -241,7 +240,7 @@ export default function Home() {
       <main>
         <section className="case column" id="work">
           <div className="eyebrow">Case study</div>
-          <div className="cover"><img src={asset('cover.webp')} alt="Designing for the supervisor cover" /></div>
+          <div className="cover" role="img" aria-label="Cover image placeholder" />
           <div className="case-row">
             <div>
               <h2>Designing for the supervisor</h2>
@@ -270,10 +269,12 @@ export default function Home() {
 
         <section className="closing column">
           <div>
-            <h2>Building something that doesn't feel right yet?</h2>
-            <p>Available for freelance and fractional work.</p>
+            <h2>Send me what your AI shipped.</h2>
+            <p className="status"><span className="dot" aria-hidden="true" />Available for new projects</p>
           </div>
-          <a className="btn" href="mailto:amitka111@gmail.com">Let's talk <span aria-hidden="true">→</span></a>
+          <div className="closing-actions">
+            <a className="btn" href="mailto:amitka111@gmail.com">Let's talk <span aria-hidden="true">→</span></a>
+          </div>
         </section>
 
         <footer className="column">
@@ -281,7 +282,7 @@ export default function Home() {
           <div className="links" aria-label="Links">
             <a href="https://www.linkedin.com/in/amitkaplinsky" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9h4v12H3zM9 9h3.8v1.7h.1c.5-1 1.8-2 3.8-2 4 0 4.8 2.6 4.8 6V21h-4v-5.4c0-1.3 0-3-1.8-3s-2.1 1.4-2.1 2.9V21H9z" /></svg></a>
             <a href="https://github.com/amit-kap" aria-label="GitHub"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.9a3.4 3.4 0 0 0-.9-2.6c3.1-.4 6.4-1.5 6.4-6.9a5.4 5.4 0 0 0-1.5-3.7 5 5 0 0 0-.1-3.7s-1.2-.4-3.9 1.4a13.4 13.4 0 0 0-7 0C6.3 1.8 5.1 2.2 5.1 2.2a5 5 0 0 0-.1 3.7A5.4 5.4 0 0 0 3.5 9.6c0 5.4 3.3 6.5 6.4 6.9a3.4 3.4 0 0 0-.9 2.6V22" /></svg></a>
-            <a href={CV_PDF_URL} aria-label="Download CV"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><path d="m7 10 5 5 5-5" /><path d="M12 15V3" /></svg></a>
+            <a href="mailto:amitka111@gmail.com" aria-label="Email"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="16" x="2" y="4" rx="2" /><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" /></svg></a>
           </div>
           <div className="city">Tel Aviv, <time>{time}</time></div>
           </div>
