@@ -53,6 +53,9 @@ h1:not(.nudged) { --nudge-time: var(--nudge-back-time, 0.93s); }
 .hero.wait .rv { opacity: 0; transform: translateY(calc(var(--push) * -1)); }
 h1 { font-size: 4.097cqw; line-height: 4.444cqw; font-weight: 500; letter-spacing: -0.02em; color: var(--ink); }
 h1 .soft, h1 .line { display: block; }
+/* Letters disco: one or more letters at a time light up in the primary colour (set by Home.tsx). */
+.ch { transition: color var(--disco-out, .15s) ease-out; }
+.ch.on { color: var(--primary); transition: color var(--disco-in, .04s) ease-out; }
 h1 .soft { color: #55556a; font-weight: 400; }
 p.sub { margin-top: 2.222cqw; font-size: 1.458cqw; line-height: 2.222cqw; color: #2a2a3c; max-width: 38.9cqw; }
 .cta { margin-top: 2.778cqw; display: flex; align-items: center; gap: 1.528cqw; }

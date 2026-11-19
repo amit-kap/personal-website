@@ -56,7 +56,8 @@ function titlesAnimationPlugin(): Plugin {
   const previewFile = path.resolve(__dirname, 'docs/AS_hero/current/titles-preview.html')
   const limits: Record<string, [number, number]> = {
     gap: [0, 3], fade: [0, 5], move: [0, 5], push: [0, 10], lineOffset: [0, 3],
-    nudgeAfter: [0, 30], nudgeDistance: [0, 10], nudgeLength: [0.05, 5], nudgeHold: [0, 30], nudgeLineDelay: [0, 3],
+    nudgeAfter: [0, 30], nudgeDistance: [0, 10], nudgeLength: [0.05, 5], nudgeBackLength: [0.05, 5], nudgeHold: [0, 30], nudgeLineDelay: [0, 3],
+    discoStep: [0.02, 2], discoIn: [0, 1], discoOut: [0, 2], discoCount: [1, 6],
   }
   return {
     name: 'titles-animation-link',

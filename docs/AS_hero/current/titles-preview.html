@@ -19,8 +19,11 @@
   h1 { font-size: 4.097cqw; line-height: 4.444cqw; font-weight: 500; letter-spacing: -0.02em; color: var(--ink); }
   h1.nudged .soft, h1.nudged .line { translate: calc(var(--nudge) * -1) 0; }
   h1 .line { --nudge-delay: var(--nudge-line-delay); }
+  /* Letters disco: one letter at a time lights up in the primary colour. */
+  .ch { transition: color var(--d-out, .15s) ease-out; }
+  .ch.on { color: var(--primary); transition: color var(--d-in, .04s) ease-out; }
   h1 .soft, h1 .line { will-change: translate; }
-  h1:not(.nudged) { --nudge-time: .93s; }
+  h1:not(.nudged) { --nudge-time: var(--nudge-back-time, .93s); }
   h1 .soft, h1 .line { display: block; }
   h1 .soft { color: #55556a; font-weight: 400; }
   p.sub { margin-top: 2.222cqw; font-size: 1.458cqw; line-height: 2.222cqw; color: #2a2a3c; max-width: 38.9cqw; }
@@ -67,9 +70,15 @@
   <label><span class="row">Offset of line 2 <output id="o-off"></output></span><input type="range" id="off" min="0" max="0.6" step="0.01" value="0"></label>
   <label><span class="row">Nudge starts after in <output id="o-nd"></output></span><input type="range" id="nd" min="0" max="8" step="0.1" value="3.5"></label>
   <label><span class="row">Nudge distance <output id="o-nx"></output></span><input type="range" id="nx" min="0" max="5" step="0.1" value="1.5"></label>
+  <label><span class="row">Nudge return length <output id="o-nb"></output></span><input type="range" id="nb" min="0.2" max="2.5" step="0.05" value="0.93"></label>
+  <div style="display:flex;justify-content:space-between"><span>Total nudge, start to home</span><output id="o-total" style="color:#55556a"></output></div>
   <label><span class="row">Bottom line delay <output id="o-nl"></output></span><input type="range" id="nl" min="0" max="1" step="0.05" value="0.2"></label>
   <label><span class="row">Nudge length <output id="o-nt"></output></span><input type="range" id="nt" min="0.2" max="1.5" step="0.05" value="0.6"></label>
   <label><span class="row">Hold <output id="o-nh"></output></span><input type="range" id="nh" min="0" max="5" step="0.1" value="2"></label>
+  <label><span class="row">Disco: letters at once <output id="o-dn"></output></span><input type="range" id="dn" min="1" max="6" step="1" value="2"></label>
+  <label><span class="row">Disco: time per letter <output id="o-ds"></output></span><input type="range" id="ds" min="0.04" max="0.4" step="0.01" value="0.12"></label>
+  <label><span class="row">Disco: light-on fade <output id="o-di"></output></span><input type="range" id="di" min="0" max="0.2" step="0.01" value="0.04"></label>
+  <label><span class="row">Disco: light-off fade <output id="o-do"></output></span><input type="range" id="do" min="0" max="0.5" step="0.01" value="0.15"></label>
   <label><span class="row">Fade length <output id="o-fade"></output></span><input type="range" id="fade" min="0.2" max="2" step="0.05" value="0.8"></label>
   <label><span class="row">Push length <output id="o-move"></output></span><input type="range" id="move" min="0.2" max="2" step="0.05" value="0.9"></label>
   <label><span class="row">Push distance <output id="o-push"></output></span><input type="range" id="push" min="0" max="4" step="0.1" value="1.1"></label>
@@ -91,6 +100,15 @@
     hero.style.setProperty('--nudge-time', $('nt').value + 's');
     hero.style.setProperty('--nudge-line-delay', $('nl').value + 's');
     $('o-nl').textContent = $('nl').value + ' s';
+    hero.style.setProperty('--d-in', $('di').value + 's');
+    hero.style.setProperty('--d-out', $('do').value + 's');
+    $('o-dn').textContent = $('dn').value;
+    $('o-ds').textContent = $('ds').value + ' s';
+    $('o-di').textContent = $('di').value + ' s';
+    $('o-do').textContent = $('do').value + ' s';
+    hero.style.setProperty('--nudge-back-time', $('nb').value + 's');
+    $('o-nb').textContent = $('nb').value + ' s';
+    $('o-total').textContent = (+$('nt').value + +$('nh').value + +$('nb').value + +$('nl').value).toFixed(2) + ' s';
     $('o-nd').textContent = $('nd').value + ' s';
     $('o-nx').textContent = $('nx').value + ' cqw (~' + Math.round($('nx').value * 14.4) + ' px at 1440)';
     $('o-nt').textContent = $('nt').value + ' s';
@@ -101,9 +119,32 @@
     $('o-push').textContent = $('push').value + ' cqw (~' + Math.round($('push').value * 14.4) + ' px at 1440)';
   };
   const h1 = document.querySelector('h1');
+  // Split the title lines into one span per letter (spaces and punctuation stay plain).
+  const letters = [];
+  h1.querySelectorAll('.soft, .line').forEach((line) => {
+    const text = line.textContent; line.textContent = '';
+    for (const c of text) {
+      if (/[A-Za-z]/.test(c)) { const sp = document.createElement('span'); sp.className = 'ch'; sp.textContent = c; line.append(sp); letters.push(sp); }
+      else line.append(c);
+    }
+  });
+  let disco = null, last = [];
+  const startDisco = (seconds) => {
+    stopDisco();
+    const tick = () => {
+      last.forEach((el) => el.classList.remove('on'));
+      const pool = letters.filter((el) => !last.includes(el));
+      const next = [];
+      for (let i = 0; i < +$('dn').value; i++) next.push(pool.splice(Math.floor(Math.random() * pool.length), 1)[0]);
+      next.forEach((el) => el.classList.add('on')); last = next;
+    };
+    tick(); disco = setInterval(tick, +$('ds').value * 1000);
+    timers.push(setTimeout(stopDisco, seconds * 1000));
+  };
+  const stopDisco = () => { clearInterval(disco); disco = null; last.forEach((el) => el.classList.remove('on')); last = []; };
   let timers = [];
   const replay = () => {
-    timers.forEach(clearTimeout); timers = [];
+    timers.forEach(clearTimeout); timers = []; stopDisco();
     h1.classList.remove('nudged');
     hero.classList.add('wait', 'reset');
     void hero.offsetWidth;                       // commit the hidden state with no transition
@@ -112,10 +153,13 @@
     timers.push(setTimeout(() => {
       hero.classList.remove('wait');
       timers.push(setTimeout(() => h1.classList.add('nudged'), +$('nd').value * 1000));
+      // Disco runs from the nudge start until the nudge stops (bottom line fully back home).
+      const back = +$('nb').value;
+      timers.push(setTimeout(() => startDisco(+$('nt').value + +$('nh').value + back + +$('nl').value), +$('nd').value * 1000));
       timers.push(setTimeout(() => h1.classList.remove('nudged'), (+$('nd').value + +$('nt').value + +$('nh').value) * 1000));
     }, 400));
   };
-  ['gap', 'off', 'fade', 'move', 'push', 'nd', 'nx', 'nt', 'nh', 'nl'].forEach((id) => $(id).addEventListener('input', apply));
+  ['gap', 'off', 'fade', 'move', 'push', 'nd', 'nx', 'nt', 'nh', 'nl', 'ds', 'di', 'do', 'dn', 'nb'].forEach((id) => $(id).addEventListener('input', apply));
   $('replay').addEventListener('click', replay);
   $('copy').addEventListener('click', () => {
     const t = `--gap: ${$('gap').value}s; line 2 offset: ${$('off').value}s; nudge after in: ${$('nd').value}s, distance ${$('nx').value}cqw, length ${$('nt').value}s, hold ${$('nh').value}s; fade: ${$('fade').value}s; move: ${$('move').value}s; --push: ${$('push').value}cqw`;
@@ -123,7 +167,7 @@
   });
   // Linked to the site: values load from src/lib/titlesAnimation.json and every change is saved back to it
   // (only works through the site's dev server: /__titles/preview). The site reads the same file.
-  const KEYS = { gap: 'gap', off: 'lineOffset', fade: 'fade', move: 'move', push: 'push', nd: 'nudgeAfter', nx: 'nudgeDistance', nt: 'nudgeLength', nh: 'nudgeHold', nl: 'nudgeLineDelay' };
+  const KEYS = { gap: 'gap', off: 'lineOffset', fade: 'fade', move: 'move', push: 'push', nd: 'nudgeAfter', nx: 'nudgeDistance', nt: 'nudgeLength', nh: 'nudgeHold', nl: 'nudgeLineDelay', ds: 'discoStep', di: 'discoIn', do: 'discoOut', dn: 'discoCount', nb: 'nudgeBackLength' };
   const status = $('status');
   let saveTimer;
   const save = () => {

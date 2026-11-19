@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type CSSProperties } from 'react'
+import { useEffect, useRef, useState, type CSSProperties, type RefObject } from 'react'
 import { Link } from 'react-router-dom'
 import { CV_PDF_URL } from '@/lib/cvPdf'
 import anim from '@/lib/titlesAnimation.json'
@@ -43,12 +43,16 @@ function useHeroReveal() {
       loopEl.play().catch(() => {})
       setLooping(true)
     }
+    // timeupdate fires only about 4 times a second but also in a background tab, where requestAnimationFrame stops.
+    const onTime = () => { if (art.currentTime >= REVEAL_AT) reveal() }
+    art.addEventListener('timeupdate', onTime)
     art.addEventListener('ended', onEnded)
     art.addEventListener('error', reveal)
     const safety = setTimeout(reveal, 20000) // never leave the text hidden
     return () => {
       cancelAnimationFrame(raf)
       clearTimeout(safety)
+      art.removeEventListener('timeupdate', onTime)
       art.removeEventListener('ended', onEnded)
       art.removeEventListener('error', reveal)
     }
@@ -69,22 +73,53 @@ const heroStyle = {
   '--nudge': `${anim.nudgeDistance}cqw`,
   '--nudge-time': `${anim.nudgeLength}s`,
   '--nudge-line-delay': `${anim.nudgeLineDelay}s`,
+  '--nudge-back-time': `${anim.nudgeBackLength}s`,
+  '--disco-in': `${anim.discoIn}s`,
+  '--disco-out': `${anim.discoOut}s`,
 } as CSSProperties
 
-function useTitleNudge(waiting: boolean) {
+/* Letters disco: from the nudge start until the nudge stops, `discoCount` random letters at a time light
+   up in the primary colour, then jump to others. Toggles a class directly, with no React re-render. */
+function startDisco(h1: HTMLElement, seconds: number) {
+  const letters = Array.from(h1.querySelectorAll<HTMLElement>('.ch'))
+  let lit: HTMLElement[] = []
+  const tick = () => {
+    lit.forEach((el) => el.classList.remove('on'))
+    const pool = letters.filter((el) => !lit.includes(el))
+    lit = []
+    for (let i = 0; i < anim.discoCount && pool.length; i++) lit.push(pool.splice(Math.floor(Math.random() * pool.length), 1)[0])
+    lit.forEach((el) => el.classList.add('on'))
+  }
+  tick()
+  const interval = setInterval(tick, anim.discoStep * 1000)
+  const stop = setTimeout(() => { clearInterval(interval); lit.forEach((el) => el.classList.remove('on')); lit = [] }, seconds * 1000)
+  return () => { clearInterval(interval); clearTimeout(stop); lit.forEach((el) => el.classList.remove('on')) }
+}
+
+function useTitleNudge(waiting: boolean, h1: RefObject<HTMLHeadingElement | null>) {
   const [nudged, setNudged] = useState(false)
   useEffect(() => {
     if (waiting || matchMedia('(prefers-reduced-motion: reduce)').matches) return
-    const out = setTimeout(() => setNudged(true), anim.nudgeAfter * 1000)
+    let stopDisco = () => {}
+    const out = setTimeout(() => {
+      setNudged(true)
+      if (h1.current) stopDisco = startDisco(h1.current, anim.nudgeLength + anim.nudgeHold + anim.nudgeBackLength + anim.nudgeLineDelay)
+    }, anim.nudgeAfter * 1000)
     const back = setTimeout(() => setNudged(false), (anim.nudgeAfter + anim.nudgeLength + anim.nudgeHold) * 1000)
-    return () => { clearTimeout(out); clearTimeout(back) }
-  }, [waiting])
+    return () => { clearTimeout(out); clearTimeout(back); stopDisco() }
+  }, [waiting, h1])
   return nudged
+}
+
+/* A title line, split into one span per letter so the disco can light them. Spaces and punctuation stay plain. */
+function Letters({ text }: { text: string }) {
+  return <>{Array.from(text).map((c, i) => (/[A-Za-z]/.test(c) ? <span key={i} className="ch">{c}</span> : c))}</>
 }
 
 export default function Home() {
   const { intro, loop, waiting, looping } = useHeroReveal()
-  const nudged = useTitleNudge(waiting)
+  const h1 = useRef<HTMLHeadingElement>(null)
+  const nudged = useTitleNudge(waiting, h1)
   const heroClass = ['hero', waiting ? 'wait' : '', looping ? 'is-looping' : ''].filter(Boolean).join(' ')
 
   return (
@@ -112,9 +147,9 @@ export default function Home() {
             <nav><a href="#work">Work</a><a href="#about">About</a></nav>
           </header>
           <div className="copy">
-            <h1 className={nudged ? 'nudged' : undefined}>
-              <span className="soft rv" style={{ '--i': 0 } as CSSProperties}>AI slop is everywhere.</span>
-              <span className="line rv" style={{ '--i': 0 } as CSSProperties}>I'm the anti‑slop superhero.</span>
+            <h1 ref={h1} className={nudged ? 'nudged' : undefined}>
+              <span className="soft rv" style={{ '--i': 0 } as CSSProperties}><Letters text="AI slop is everywhere." /></span>
+              <span className="line rv" style={{ '--i': 0 } as CSSProperties}><Letters text="I'm the anti‑slop superhero." /></span>
             </h1>
             <p className="sub rv" style={{ '--i': 1 } as CSSProperties}>I take what your AI shipped and turn it into a polished experience humans can enjoy.</p>
             <div className="cta rv" style={{ '--i': 2 } as CSSProperties}>
