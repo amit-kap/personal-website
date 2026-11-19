@@ -1,0 +1,3 @@
+submit=33b92353-86b5-4689-ad46-9798bcbfee82
+project=0c7d6f22-9e0b-45fd-95db-3124149b926d node=node_3stbg6v2b9 platform=dreamina model=seedance_2.5_draft 480p
+resource=4482e76e-0017-443c-80db-fc740479a821 (sample, keep max 7 days from 17 Nov)

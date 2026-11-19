@@ -1,0 +1,3 @@
+Kling 4.0 ref: kling/v4/reference-to-video  request 01a1ef09-b2d1-7c42-80ad-c4409f681fda
+Wan 3.0 Prime ref: alibaba/wan-3.0-prime/reference-to-video  request 01a1ef09-b32e-78c2-9ede-cf1068ce4ce8
+Uploads (checksums match local): n11LzB9DIxzmBTkpIO5PQ_ref-v16-camera-16x9.mp4, s28e7zQitR0fvnALaten__still-f144-point-v2-approved.png, quO8KMSt2nOyNCC4ONJWE_still-f001-v3-approved.png

@@ -1,0 +1,9 @@
+{{res:98bb48d6-ceeb-4847-b71a-d733f5f185dc}} is a layout guide only: keep the position of every shape, the camera angle and the framing. Do not use its grey colours or its plain look.
+{{res:cc78e6b9-0f4c-45d8-b503-b32698dc1c7f}} defines the colours, light, texture and drawing style (line weight and shading). Do not copy its shapes or composition.
+
+AS is a realistic adult superhero with true human proportions and a cape. His suit's base colour is a bright red-orange (#F04A00). His head is bald and faceless: smooth, with no hair, ears, nose or mouth, only an eye mask: a narrow domino mask across the eyes, its outer edges sweeping up into points, with two almond-shaped white eye openings and no visible eyes behind them. On the left side of his chest, over his heart, he wears a small badge with the letters "AS" inside it. He stands on a rooftop on the right, pointing toward the left, and looks at the viewer.
+Browsercity is a city whose towers look like browser windows. The tall shapes in {{res:98bb48d6-ceeb-4847-b71a-d733f5f185dc}} are browser towers; the left side is open sky above a low skyline.
+
+A flat illustration with realistic proportions and perspective, light and airy, with lots of open space. Not a cartoon: no oversized head, no rounded toy-like body.
+
+No text except the letters on his badge.

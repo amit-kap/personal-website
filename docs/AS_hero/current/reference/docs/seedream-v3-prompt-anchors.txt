@@ -1,0 +1,9 @@
+REFERENCES: Figure 1 = the hero's locked model sheet (front, three-quarter, side and back views; ignore the ground ovals and the cream background). Figure 2 = the finished art style, lighting and world. Use them only for identity, style and world; do not copy their compositions.
+
+HERO (identical in every frame): the hero "AS" exactly as in Figure 1. Smooth bald cream-coloured head, faceless: no mouth, no nose, no hair. A blue eye mask painted onto the face with white eye slits; the mask has NO strap and nothing on the back of the head. Orange zip-up jacket-style suit with a high orange collar, blue side panels down the torso, arms and legs, blue wrist cuffs. White shield-shaped chest badge with the letters AS in orange and blue. Orange gloves. Orange boots with blue cuffs. Long blue cape gathered at both shoulders, reaching the calves. Athletic build with normal human proportions, about 7.5 heads tall, head small relative to broad shoulders. Empty relaxed hands, no props.
+
+STYLE (identical in every frame): exactly the look of Figure 2: soft 2D editorial illustration, thin dark ink outlines, flat muted fills in slate blue, cream, peach and pale grey, subtle paper grain. Warm low sun near the horizon with soft sun rays and cream haze; sky graded from pale blue at the top to warm cream at the horizon.
+
+WORLD (identical in every frame): a city of skyscrapers shaped like browser windows, exactly like Figure 2: rounded window-frame tops, grey address-bar slots, small red, amber and green traffic-light dots, flat rooftops with small boxes.
+
+NEVER: no other people or characters, no text, letters or numbers except the AS badge, no logos, no binary code, no props, no frames or borders.

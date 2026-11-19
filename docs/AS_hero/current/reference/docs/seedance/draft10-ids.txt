@@ -1,0 +1,3 @@
+submit=f57d5c36-5da3-418d-855e-839c52aed42e
+project=0c7d6f22-9e0b-45fd-95db-3124149b926d node=node_b9nmbarj6d platform=dreamina model=seedance_2.5_draft 480p 13s
+res=1febf748-bbe6-4aa9-bed0-1ec0d94558c2

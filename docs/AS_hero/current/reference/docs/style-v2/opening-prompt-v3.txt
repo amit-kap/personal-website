@@ -1,0 +1,7 @@
+{{res:173cc5c4-1753-4670-a6c7-12e8f4493dbc}} is a layout guide only: keep the position of every shape, the camera angle and the framing. Do not use its grey colours or its plain look.
+{{res:bb1c3ea9-7a0c-49b3-b0df-ac946bb09b04}} defines the style: the drawing and line work, the colours, the warm light, the haze and the light rays, and how the browser towers are drawn. Do not copy its composition, its camera angle or the figure.
+
+Browsercity is a city whose towers look like browser windows. Every box in {{res:173cc5c4-1753-4670-a6c7-12e8f4493dbc}} is a browser tower; the dark lines between them are streets far below.
+Strong, sharp volumetric light rays: the sun sits low behind the skyline at the end of the centre street, and crisp, clearly edged beams fan out from it toward the viewer, through the gaps between the towers and across the haze.
+
+No people in this shot. No text.
