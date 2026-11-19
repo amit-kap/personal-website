@@ -1,0 +1,12 @@
+{
+  "gap": 0.5,
+  "fade": 0.8,
+  "move": 0.9,
+  "push": 1.1,
+  "lineOffset": 0,
+  "nudgeAfter": 2.4,
+  "nudgeDistance": 3,
+  "nudgeLength": 0.8,
+  "nudgeHold": 1.8,
+  "nudgeLineDelay": 0.2
+}

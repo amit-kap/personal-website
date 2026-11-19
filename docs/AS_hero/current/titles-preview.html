@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hero titles animation preview</title>
+<style>
+  /* Same CSS as src/index.css (hero text only). Sizes in cqw = 1% of the stage width. */
+  :root { --ink: #111133; --primary: #f04a00; --primary-hover: #d63e00; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: "Inter", system-ui, sans-serif; background: #fff; color: #111; -webkit-font-smoothing: antialiased; }
+  .hero { position: relative; width: 100%; container-type: inline-size; --push: 1.1cqw; --gap: .45s; --fade: .8s; --move: .9s; --ease: cubic-bezier(.2,.7,.2,1); --line-offset: 0s; --nudge: 1.5cqw; --nudge-time: .6s; --nudge-line-delay: .2s; }
+  .stage { position: relative; width: 100%; aspect-ratio: 16 / 9; overflow: hidden; background: #fbf6ea; }
+  .inner { position: absolute; inset: 0; padding: 0 8.333cqw; }
+  header { display: flex; justify-content: space-between; align-items: center; padding-top: 3.264cqw; }
+  .logo { height: 3.056cqw; width: 3.056cqw; border-radius: 50%; background: #d9d9d4; }
+  nav a { color: #111; text-decoration: none; font-size: 1.042cqw; margin-left: 1.944cqw; }
+  .copy { margin-top: 6.389cqw; max-width: 52.8cqw; }
+  h1 { font-size: 4.097cqw; line-height: 4.444cqw; font-weight: 500; letter-spacing: -0.02em; color: var(--ink); }
+  h1.nudged .soft, h1.nudged .line { translate: calc(var(--nudge) * -1) 0; }
+  h1 .line { --nudge-delay: var(--nudge-line-delay); }
+  h1 .soft, h1 .line { will-change: translate; }
+  h1:not(.nudged) { --nudge-time: .93s; }
+  h1 .soft, h1 .line { display: block; }
+  h1 .soft { color: #55556a; font-weight: 400; }
+  p.sub { margin-top: 2.222cqw; font-size: 1.458cqw; line-height: 2.222cqw; color: #2a2a3c; max-width: 38.9cqw; }
+  .cta { margin-top: 2.778cqw; display: flex; align-items: center; gap: 1.528cqw; }
+  .meta { color: #55556a; font-size: 1.042cqw; }
+  .btn { display: inline-flex; align-items: center; gap: .694cqw; background: var(--primary); color: #fff; font-weight: 500; font-size: 1.181cqw;
+         padding: .903cqw 1.667cqw; border-radius: 999px; text-decoration: none; }
+
+  .rv { --extra: 0s; transition: opacity var(--fade) ease-out calc(var(--i) * var(--gap) + var(--extra)), transform var(--move) var(--ease) calc(var(--i) * var(--gap) + var(--extra)),
+    translate var(--nudge-time) cubic-bezier(.37, 0, .63, 1) var(--nudge-delay, 0s); }
+  .hero.wait .rv { opacity: 0; transform: translateY(calc(var(--push) * -1)); }
+  .hero.reset .rv { transition: none; }
+
+  .panel { position: fixed; right: 16px; bottom: 16px; width: 280px; background: rgba(255,255,255,.96); border-radius: 12px;
+           box-shadow: 0 2px 16px rgba(0,0,0,.2); padding: 12px; font: 500 12px/1.3 Inter, system-ui, sans-serif; display: grid; gap: 10px; }
+  .panel label { display: grid; gap: 4px; }
+  .panel .row { display: flex; justify-content: space-between; }
+  .panel output { color: #55556a; font-variant-numeric: tabular-nums; }
+  .panel input[type=range] { width: 100%; accent-color: #f04a00; }
+  .panel .btns { display: flex; gap: 8px; }
+  .panel button { flex: 1; font: inherit; padding: 8px; border-radius: 8px; border: 1px solid #d9d9de; background: #fff; cursor: pointer; }
+  .panel button.go { background: #111133; color: #fff; border-color: #111133; }
+</style>
+</head>
+<body>
+<section class="hero wait reset" id="hero">
+  <div class="stage">
+    <div class="inner">
+      <header class="rv" style="--i:3"><div class="logo"></div><nav><a href="#">Work</a><a href="#">About</a></nav></header>
+      <div class="copy">
+        <h1>
+          <span class="soft rv" style="--i:0">AI slop is everywhere.</span>
+          <span class="line rv" style="--i:0; --extra: var(--line-offset)">I'm the anti‑slop superhero.</span>
+        </h1>
+        <p class="sub rv" style="--i:1">I take what your AI shipped and turn it into a polished experience humans can enjoy.</p>
+        <div class="cta rv" style="--i:2"><a class="btn" href="#">Let's talk <span aria-hidden="true">→</span></a><span class="meta">Freelance and fractional</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="panel">
+  <label><span class="row">Gap between pieces <output id="o-gap"></output></span><input type="range" id="gap" min="0.1" max="1.2" step="0.05" value="0.45"></label>
+  <label><span class="row">Offset of line 2 <output id="o-off"></output></span><input type="range" id="off" min="0" max="0.6" step="0.01" value="0"></label>
+  <label><span class="row">Nudge starts after in <output id="o-nd"></output></span><input type="range" id="nd" min="0" max="8" step="0.1" value="3.5"></label>
+  <label><span class="row">Nudge distance <output id="o-nx"></output></span><input type="range" id="nx" min="0" max="5" step="0.1" value="1.5"></label>
+  <label><span class="row">Bottom line delay <output id="o-nl"></output></span><input type="range" id="nl" min="0" max="1" step="0.05" value="0.2"></label>
+  <label><span class="row">Nudge length <output id="o-nt"></output></span><input type="range" id="nt" min="0.2" max="1.5" step="0.05" value="0.6"></label>
+  <label><span class="row">Hold <output id="o-nh"></output></span><input type="range" id="nh" min="0" max="5" step="0.1" value="2"></label>
+  <label><span class="row">Fade length <output id="o-fade"></output></span><input type="range" id="fade" min="0.2" max="2" step="0.05" value="0.8"></label>
+  <label><span class="row">Push length <output id="o-move"></output></span><input type="range" id="move" min="0.2" max="2" step="0.05" value="0.9"></label>
+  <label><span class="row">Push distance <output id="o-push"></output></span><input type="range" id="push" min="0" max="4" step="0.1" value="1.1"></label>
+  <div id="status" style="color:#55556a">Loading…</div>
+  <div class="btns"><button class="go" id="replay">Replay</button><button id="copy">Copy values</button></div>
+</div>
+
+<script>
+  const hero = document.getElementById('hero');
+  const $ = (id) => document.getElementById(id);
+  const apply = () => {
+    hero.style.setProperty('--gap', $('gap').value + 's');
+    hero.style.setProperty('--fade', $('fade').value + 's');
+    hero.style.setProperty('--move', $('move').value + 's');
+    hero.style.setProperty('--push', $('push').value + 'cqw');
+    hero.style.setProperty('--line-offset', $('off').value + 's');
+    $('o-off').textContent = $('off').value + ' s';
+    hero.style.setProperty('--nudge', $('nx').value + 'cqw');
+    hero.style.setProperty('--nudge-time', $('nt').value + 's');
+    hero.style.setProperty('--nudge-line-delay', $('nl').value + 's');
+    $('o-nl').textContent = $('nl').value + ' s';
+    $('o-nd').textContent = $('nd').value + ' s';
+    $('o-nx').textContent = $('nx').value + ' cqw (~' + Math.round($('nx').value * 14.4) + ' px at 1440)';
+    $('o-nt').textContent = $('nt').value + ' s';
+    $('o-nh').textContent = $('nh').value + ' s';
+    $('o-gap').textContent = $('gap').value + ' s';
+    $('o-fade').textContent = $('fade').value + ' s';
+    $('o-move').textContent = $('move').value + ' s';
+    $('o-push').textContent = $('push').value + ' cqw (~' + Math.round($('push').value * 14.4) + ' px at 1440)';
+  };
+  const h1 = document.querySelector('h1');
+  let timers = [];
+  const replay = () => {
+    timers.forEach(clearTimeout); timers = [];
+    h1.classList.remove('nudged');
+    hero.classList.add('wait', 'reset');
+    void hero.offsetWidth;                       // commit the hidden state with no transition
+    hero.classList.remove('reset');
+    // "In" = the moment the first title starts to fade in. The nudge starts nd seconds later, holds, then returns.
+    timers.push(setTimeout(() => {
+      hero.classList.remove('wait');
+      timers.push(setTimeout(() => h1.classList.add('nudged'), +$('nd').value * 1000));
+      timers.push(setTimeout(() => h1.classList.remove('nudged'), (+$('nd').value + +$('nt').value + +$('nh').value) * 1000));
+    }, 400));
+  };
+  ['gap', 'off', 'fade', 'move', 'push', 'nd', 'nx', 'nt', 'nh', 'nl'].forEach((id) => $(id).addEventListener('input', apply));
+  $('replay').addEventListener('click', replay);
+  $('copy').addEventListener('click', () => {
+    const t = `--gap: ${$('gap').value}s; line 2 offset: ${$('off').value}s; nudge after in: ${$('nd').value}s, distance ${$('nx').value}cqw, length ${$('nt').value}s, hold ${$('nh').value}s; fade: ${$('fade').value}s; move: ${$('move').value}s; --push: ${$('push').value}cqw`;
+    (navigator.clipboard ? navigator.clipboard.writeText(t) : Promise.reject()).then(() => { $('copy').textContent = 'Copied'; setTimeout(() => { $('copy').textContent = 'Copy values'; }, 1200); }).catch(() => prompt('Values', t));
+  });
+  // Linked to the site: values load from src/lib/titlesAnimation.json and every change is saved back to it
+  // (only works through the site's dev server: /__titles/preview). The site reads the same file.
+  const KEYS = { gap: 'gap', off: 'lineOffset', fade: 'fade', move: 'move', push: 'push', nd: 'nudgeAfter', nx: 'nudgeDistance', nt: 'nudgeLength', nh: 'nudgeHold', nl: 'nudgeLineDelay' };
+  const status = $('status');
+  let saveTimer;
+  const save = () => {
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(() => {
+      const body = {}; for (const [id, key] of Object.entries(KEYS)) body[key] = +$(id).value;
+      fetch('/__titles/config', { method: 'POST', body: JSON.stringify(body) })
+        .then((r) => { status.textContent = r.ok ? 'Saved to the site' : 'Not saved (' + r.status + ')'; })
+        .catch(() => { status.textContent = 'Not linked: open this page from the site dev server'; });
+    }, 300);
+  };
+  Object.keys(KEYS).forEach((id) => $(id).addEventListener('input', save));
+  fetch('/__titles/config').then((r) => r.json()).then((c) => {
+    for (const [id, key] of Object.entries(KEYS)) $(id).value = c[key];
+    status.textContent = 'Linked to the site';
+  }).catch(() => { status.textContent = 'Not linked: open this page from the site dev server'; }).finally(() => { apply(); replay(); });
+</script>
+</body>
+</html>

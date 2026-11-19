@@ -1,9 +1,123 @@
-/* Vite entry — framework imports only.
-   Glaze's globals.css brings Tailwind, the token contract and the base layer;
-   the site's theme is the generated Glaze theme "personal-website".
-   The site's own design system (fonts, type scale, motion, utilities) lives
-   in portfolio-theme.css. */
-@import "@amit-kap/glaze/globals.css";
-@import "./theme/personal-website.css";
-@import "lenis/dist/lenis.css";
-@import "./portfolio-theme.css";
+/* Tokens from Paper (07 — Anti-slop home). Plain CSS; no framework. */
+@import "@fontsource-variable/inter";
+
+:root {
+  --background: #ffffff;
+  --foreground: #111111;
+  --ink: #111133;
+  --copy: #454542;
+  --muted: #70706d;
+  --border: #ececec;
+  --primary: #f04a00;
+  --primary-hover: #d63e00;
+  --radius-container: 14px;
+  --column: 800px;
+  --font: "Inter Variable", "Inter", system-ui, sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { background: var(--background); }
+body { font-family: var(--font); color: var(--foreground); -webkit-font-smoothing: antialiased; }
+a { color: inherit; }
+
+/* Hero: a fixed 16:9 stage. On wide screens the videos and the text share it, and every size, gap and
+   position is in container units (cqw, 1cqw = 1% of the stage width), so text and film scale together and
+   stay in sync at any screen size. The numbers are the 1440px design divided by 14.4. */
+.hero { position: relative; width: 100%; container-type: inline-size; }
+.hero .stage { position: relative; width: 100%; aspect-ratio: 16 / 9; overflow: hidden; }
+.hero .art { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: fill; display: block; }
+.hero .intro { z-index: 1; }
+.hero.is-looping .intro { visibility: hidden; }
+.hero .inner { position: absolute; inset: 0; z-index: 3; padding: 0 8.333cqw; }
+.hero header { display: flex; justify-content: space-between; align-items: center; padding-top: 3.264cqw; }
+.logo { display: inline-flex; text-decoration: none; }
+.logo img { display: block; height: 3.056cqw; width: auto; }
+.hero nav a { text-decoration: none; font-size: 1.042cqw; margin-left: 1.944cqw; }
+.copy { margin-top: 6.389cqw; max-width: 52.8cqw; }
+
+/* Cinematic entrance: each piece fades in and settles down into place, one after another
+   (--i is its beat: both title lines together, paragraph, button, then the top bar). */
+/* The numbers come from src/lib/titlesAnimation.json, set on the hero by Home.tsx (--gap, --fade, --move,
+   --push-d, --line-offset, --nudge, --nudge-time). */
+.hero { --push: var(--push-d, 1.1cqw); }
+.hero .rv { --extra: 0s; transition: opacity var(--fade, .8s) ease-out calc(var(--i) * var(--gap, .45s) + var(--extra)), transform var(--move, .9s) cubic-bezier(.2, .7, .2, 1) calc(var(--i) * var(--gap, .45s) + var(--extra)),
+  translate var(--nudge-time, .6s) var(--nudge-ease, cubic-bezier(.37, 0, .63, 1)) var(--nudge-delay, 0s); }
+/* The nudge moves each title line on its own (the `translate` property, separate from the entrance's
+   `transform`); the bottom line follows by --nudge-line-delay. */
+h1.nudged .soft, h1.nudged .line { translate: calc(var(--nudge, 1.5cqw) * -1) 0; }
+h1 .line { --nudge-delay: var(--nudge-line-delay, 0s); }
+h1 .soft, h1 .line { will-change: translate; }
+/* The return is a little slower than the move out, so it settles softly. */
+h1:not(.nudged) { --nudge-time: var(--nudge-back-time, 0.93s); }
+.hero .line { --extra: var(--line-offset, 0s); }
+.hero.wait .rv { opacity: 0; transform: translateY(calc(var(--push) * -1)); }
+h1 { font-size: 4.097cqw; line-height: 4.444cqw; font-weight: 500; letter-spacing: -0.02em; color: var(--ink); }
+h1 .soft, h1 .line { display: block; }
+h1 .soft { color: #55556a; font-weight: 400; }
+p.sub { margin-top: 2.222cqw; font-size: 1.458cqw; line-height: 2.222cqw; color: #2a2a3c; max-width: 38.9cqw; }
+.cta { margin-top: 2.778cqw; display: flex; align-items: center; gap: 1.528cqw; }
+.meta { color: #55556a; font-size: 1.042cqw; }
+.hero .btn { font-size: 1.181cqw; padding: 0.903cqw 1.667cqw; gap: 0.694cqw; }
+
+.btn { display: inline-flex; align-items: center; gap: 10px; background: var(--primary); color: #fff; font-weight: 500; font-size: 17px;
+       padding: 13px 24px; border-radius: 999px; text-decoration: none; }
+.btn:hover { background: var(--primary-hover); }
+
+/* Film grain over both videos, under the text. */
+.hero .grain { position: absolute; inset: -50%; z-index: 2; pointer-events: none; opacity: 0.28; mix-blend-mode: overlay;
+  background-size: 256px 256px;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='256' height='256'><filter id='n' x='0' y='0' width='100%25' height='100%25' color-interpolation-filters='sRGB'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='2.5 0 0 0 -0.75  2.5 0 0 0 -0.75  2.5 0 0 0 -0.75  0 0 0 0 1'/></filter><rect width='256' height='256' filter='url(%23n)'/></svg>");
+  animation: grain .8s steps(4) infinite; }
+@keyframes grain { 0% { transform: translate(0, 0); } 25% { transform: translate(-3%, 2%); } 50% { transform: translate(2%, -3%); } 75% { transform: translate(-2%, -1%); } 100% { transform: translate(0, 0); } }
+@media (prefers-reduced-motion: reduce) { .hero .grain { animation: none; } .hero .rv { transition: none; } }
+
+/* Editorial column */
+.column { width: 100%; max-width: var(--column); margin: 0 auto; }
+section.case { padding-top: 152px; }
+.eyebrow { font-size: 13px; color: var(--muted); }
+.cover { margin-top: 16px; border-radius: var(--radius-container); overflow: hidden; aspect-ratio: 800 / 440; }
+.cover img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.case-row { margin-top: 24px; display: flex; justify-content: space-between; align-items: flex-start; gap: 24px; }
+.case-row h2 { font-size: 23px; line-height: 30px; font-weight: 500; letter-spacing: -0.01em; }
+.case-row p { margin-top: 8px; font-size: 15px; line-height: 22px; color: var(--copy); }
+.pill { flex-shrink: 0; display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--border); border-radius: 999px;
+        padding: 9px 16px; font-size: 14px; font-weight: 500; text-decoration: none; }
+.pill span { color: var(--primary); }
+
+section.bio { padding-top: 144px; display: flex; gap: 40px; align-items: flex-start; }
+.bio img { width: 64px; height: 64px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
+.bio p { font-size: 20px; line-height: 34px; color: var(--copy); max-width: 640px; }
+.bio b { color: var(--foreground); font-weight: 500; }
+.bio a { color: var(--primary); text-decoration: none; }
+
+section.closing { padding-top: 192px; display: flex; justify-content: space-between; align-items: flex-end; gap: 32px; }
+.closing h2 { font-size: 46px; line-height: 52px; font-weight: 500; letter-spacing: -0.02em; max-width: 560px; }
+.closing p { margin-top: 24px; font-size: 15px; color: var(--copy); }
+footer { padding: 112px 0 64px; display: flex; justify-content: space-between; align-items: center; }
+.links { display: flex; gap: 22px; }
+.links a { display: inline-flex; width: 22px; height: 22px; align-items: center; justify-content: center; text-decoration: none; }
+.links svg { width: 18px; height: 18px; }
+.city { font-size: 13px; color: var(--muted); }
+
+@media (max-width: 860px) {
+  /* Phones: the film keeps its 16:9 shape on top and the text sits below it, at normal reading sizes. */
+  .hero { container-type: normal; --push: 12px; }
+  h1.nudged .soft, h1.nudged .line { translate: none; }
+  .hero .inner { position: static; padding: 0 16px; }
+  .hero header { position: absolute; top: 0; left: 0; right: 0; z-index: 3; padding: 14px 16px 0; }
+  .logo img { height: 32px; }
+  .hero nav a { font-size: 14px; margin-left: 20px; }
+  .copy { margin-top: 32px; max-width: none; }
+  h1 { font-size: 36px; line-height: 42px; }
+  p.sub { margin-top: 20px; font-size: 17px; line-height: 26px; max-width: none; }
+  .cta { margin-top: 28px; gap: 16px; }
+  .meta { font-size: 14px; }
+  .hero .btn { font-size: 16px; padding: 12px 22px; gap: 10px; }
+  .column { padding: 0 16px; }
+  section.case { padding-top: 72px; }
+  section.bio { padding-top: 96px; gap: 20px; }
+  .bio p { font-size: 17px; line-height: 28px; }
+  section.closing { padding-top: 120px; flex-direction: column; align-items: flex-start; }
+  .closing h2 { font-size: 34px; line-height: 40px; }
+  .case-row { flex-direction: column; }
+}

@@ -48,10 +48,73 @@ function contentPlugin(): Plugin {
   }
 }
 
+/* Dev only: links the titles animation preview to the site. The preview page (docs/AS_hero/current/
+   titles-preview.html) is served at /__titles/preview, and every slider change is written to
+   src/lib/titlesAnimation.json, which Home reads. So the preview and the page share one set of values. */
+function titlesAnimationPlugin(): Plugin {
+  const jsonFile = path.resolve(__dirname, 'src/lib/titlesAnimation.json')
+  const previewFile = path.resolve(__dirname, 'docs/AS_hero/current/titles-preview.html')
+  const limits: Record<string, [number, number]> = {
+    gap: [0, 3], fade: [0, 5], move: [0, 5], push: [0, 10], lineOffset: [0, 3],
+    nudgeAfter: [0, 30], nudgeDistance: [0, 10], nudgeLength: [0.05, 5], nudgeHold: [0, 30], nudgeLineDelay: [0, 3],
+  }
+  return {
+    name: 'titles-animation-link',
+    apply: 'serve',
+    // The entrance only plays on load, so a saved change reloads the page to replay the whole movie.
+    handleHotUpdate({ file, server }) {
+      if (file !== jsonFile) return
+      server.ws.send({ type: 'full-reload' })
+      return []
+    },
+    configureServer(server) {
+      server.middlewares.use('/__titles', (req, res) => {
+        const url = req.url ?? ''
+        if (req.method === 'GET' && url.startsWith('/preview')) {
+          res.setHeader('Content-Type', 'text/html; charset=utf-8')
+          res.end(fs.readFileSync(previewFile, 'utf8'))
+          return
+        }
+        if (url.startsWith('/config')) {
+          if (req.method === 'GET') {
+            res.setHeader('Content-Type', 'application/json')
+            res.end(fs.readFileSync(jsonFile, 'utf8'))
+            return
+          }
+          if (req.method === 'POST') {
+            let body = ''
+            req.on('data', (chunk) => (body += chunk))
+            req.on('end', () => {
+              try {
+                const input = JSON.parse(body) as Record<string, unknown>
+                const out: Record<string, number> = {}
+                for (const [key, [lo, hi]] of Object.entries(limits)) {
+                  const value = Number(input[key])
+                  if (!Number.isFinite(value) || value < lo || value > hi) throw new Error(`bad ${key}`)
+                  out[key] = value
+                }
+                fs.writeFileSync(jsonFile, JSON.stringify(out, null, 2) + '\n')
+                res.statusCode = 204
+                res.end()
+              } catch {
+                res.statusCode = 400
+                res.end('bad values')
+              }
+            })
+            return
+          }
+        }
+        res.statusCode = 404
+        res.end()
+      })
+    },
+  }
+}
+
 export default defineConfig({
   // Cloudflare Pages serves from the domain root, so dev and build agree.
   base: '/',
-  plugins: [react(), tailwindcss(), contentPlugin()],
+  plugins: [react(), tailwindcss(), contentPlugin(), titlesAnimationPlugin()],
   server: {
     port: process.env.PORT ? Number(process.env.PORT) : 5175,
   },
