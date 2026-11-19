@@ -111,6 +111,78 @@ function useTitleNudge(waiting: boolean, h1: RefObject<HTMLHeadingElement | null
   return nudged
 }
 
+/* Scroll shrink: the first stretch of scrolling (one screen high) shrinks the whole hero, as one block, from
+   full width down to the 800px editorial column while it stays pinned at the top. The page below only starts
+   to move once that is done. Desktop only, and not with reduced motion. */
+const COLUMN = 800
+const COLUMN_RADIUS = 14
+
+function useHeroShrink(track: RefObject<HTMLDivElement | null>, hero: RefObject<HTMLElement | null>) {
+  useEffect(() => {
+    const wrap = track.current
+    const el = hero.current
+    if (!wrap || !el) return
+    const desktop = matchMedia('(min-width: 861px)')
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)')
+    let distance = 1
+    let endScale = 1
+    const reset = () => {
+      wrap.style.height = ''
+      wrap.style.marginBottom = ''
+      el.style.transform = ''
+      el.style.borderRadius = ''
+    }
+    // Scroll events already arrive once per frame, so paint straight from the handler (no rAF needed).
+    const paint = () => {
+      const p = Math.min(1, Math.max(0, window.scrollY / distance))
+      const s = 1 - p * (1 - endScale)
+      el.style.transform = `scale(${s})`
+      el.style.borderRadius = `${(COLUMN_RADIUS / s) * p}px`
+    }
+    const measure = () => {
+      if (!desktop.matches || reduced.matches) { reset(); return }
+      const heroH = el.offsetHeight
+      distance = window.innerHeight
+      endScale = Math.min(1, COLUMN / document.documentElement.clientWidth)
+      wrap.style.height = `${distance + heroH}px`
+      // A scale does not shrink the box, so pull what follows up by the space the card no longer fills.
+      wrap.style.marginBottom = `${-(1 - endScale) * heroH}px`
+      paint()
+    }
+
+    measure()
+    window.addEventListener('scroll', paint, { passive: true })
+    window.addEventListener('resize', measure)
+    desktop.addEventListener('change', measure)
+    reduced.addEventListener('change', measure)
+    return () => {
+      window.removeEventListener('scroll', paint)
+      window.removeEventListener('resize', measure)
+      desktop.removeEventListener('change', measure)
+      reduced.removeEventListener('change', measure)
+      reset()
+    }
+  }, [track, hero])
+}
+
+/* Local time in Tel Aviv, 24-hour, refreshed on the minute. */
+const telAvivTime = () =>
+  new Intl.DateTimeFormat('en-GB', { timeZone: 'Asia/Jerusalem', hour: '2-digit', minute: '2-digit', hour12: false }).format(new Date())
+
+function useTelAvivTime() {
+  const [time, setTime] = useState(telAvivTime)
+  useEffect(() => {
+    let timer: ReturnType<typeof setTimeout>
+    const tick = () => {
+      setTime(telAvivTime())
+      timer = setTimeout(tick, 60000 - (Date.now() % 60000) + 50) // next minute change
+    }
+    timer = setTimeout(tick, 60000 - (Date.now() % 60000) + 50)
+    return () => clearTimeout(timer)
+  }, [])
+  return time
+}
+
 /* A title line, split into one span per letter so the disco can light them. Spaces and punctuation stay plain. */
 function Letters({ text }: { text: string }) {
   return <>{Array.from(text).map((c, i) => (/[A-Za-z]/.test(c) ? <span key={i} className="ch">{c}</span> : c))}</>
@@ -119,12 +191,17 @@ function Letters({ text }: { text: string }) {
 export default function Home() {
   const { intro, loop, waiting, looping } = useHeroReveal()
   const h1 = useRef<HTMLHeadingElement>(null)
+  const time = useTelAvivTime()
+  const track = useRef<HTMLDivElement>(null)
+  const hero = useRef<HTMLElement>(null)
+  useHeroShrink(track, hero)
   const nudged = useTitleNudge(waiting, h1)
   const heroClass = ['hero', waiting ? 'wait' : '', looping ? 'is-looping' : ''].filter(Boolean).join(' ')
 
   return (
     <>
-      <section className={heroClass} style={heroStyle}>
+      <div className="hero-track" ref={track}>
+      <section className={heroClass} style={heroStyle} ref={hero}>
         <div className="stage">
         {/* The idle loop sits underneath on its first frame (= the intro's last frame). */}
         <video className="art loop" ref={loop} src={asset('loop.mp4')} muted playsInline loop preload="auto" aria-hidden="true" />
@@ -159,6 +236,7 @@ export default function Home() {
           </div>
         </div>
       </section>
+      </div>
 
       <main>
         <section className="case column" id="work">
@@ -174,11 +252,20 @@ export default function Home() {
         </section>
 
         <section className="bio column" id="about">
-          <img src={`${base}profile.jpg`} alt="Amit Kaplinsky" />
-          <p>
+          <img src={asset('profile.webp')} alt="Amit Kaplinsky" />
+          <div className="bio-text">
+            <p>
             <b>Amit Kaplinsky</b>, a designer and a builder in Tel Aviv. 12 years designing complex B2B and cyber products.
             Founding designer twice, at <Link to="/work/shift">Shift</Link> and <Link to="/work/veriti">Veriti</Link>.
           </p>
+            <p>
+              I came to product design through advertising, then into high-tech cybersecurity, where I have spent the last twelve years
+              helping companies ship complete product experiences. At Shift I defined how people and AI agents share the work.
+            </p>
+            <p>
+              Before that I led product design at Onyxia, built the UX team at Semperis, and started at Check Point.
+            </p>
+          </div>
         </section>
 
         <section className="closing column">
@@ -190,13 +277,14 @@ export default function Home() {
         </section>
 
         <footer className="column">
+          <div className="footer-inner">
           <div className="links" aria-label="Links">
-            <a href="mailto:amitka111@gmail.com" aria-label="Email"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 2 11 13" /><path d="M22 2 15 22l-4-9-9-4 20-7z" /></svg></a>
             <a href="https://www.linkedin.com/in/amitkaplinsky" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9h4v12H3zM9 9h3.8v1.7h.1c.5-1 1.8-2 3.8-2 4 0 4.8 2.6 4.8 6V21h-4v-5.4c0-1.3 0-3-1.8-3s-2.1 1.4-2.1 2.9V21H9z" /></svg></a>
             <a href="https://github.com/amit-kap" aria-label="GitHub"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.9a3.4 3.4 0 0 0-.9-2.6c3.1-.4 6.4-1.5 6.4-6.9a5.4 5.4 0 0 0-1.5-3.7 5 5 0 0 0-.1-3.7s-1.2-.4-3.9 1.4a13.4 13.4 0 0 0-7 0C6.3 1.8 5.1 2.2 5.1 2.2a5 5 0 0 0-.1 3.7A5.4 5.4 0 0 0 3.5 9.6c0 5.4 3.3 6.5 6.4 6.9a3.4 3.4 0 0 0-.9 2.6V22" /></svg></a>
-            <a href={CV_PDF_URL} aria-label="CV"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><path d="M14 2v6h6" /></svg></a>
+            <a href={CV_PDF_URL} aria-label="Download CV"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><path d="m7 10 5 5 5-5" /><path d="M12 15V3" /></svg></a>
           </div>
-          <div className="city">Tel Aviv</div>
+          <div className="city">Tel Aviv, <time>{time}</time></div>
+          </div>
         </footer>
       </main>
     </>

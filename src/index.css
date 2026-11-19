@@ -23,7 +23,9 @@ a { color: inherit; }
 /* Hero: a fixed 16:9 stage. On wide screens the videos and the text share it, and every size, gap and
    position is in container units (cqw, 1cqw = 1% of the stage width), so text and film scale together and
    stay in sync at any screen size. The numbers are the 1440px design divided by 14.4. */
-.hero { position: relative; width: 100%; container-type: inline-size; }
+.hero-track { position: relative; }
+/* Pinned while the scroll shrink runs (Home.tsx). It is one block: film, text and top bar scale together. */
+.hero { position: sticky; top: 0; width: 100%; container-type: inline-size; transform-origin: 50% 0; overflow: hidden; will-change: transform; }
 .hero .stage { position: relative; width: 100%; aspect-ratio: 16 / 9; overflow: hidden; }
 .hero .art { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: fill; display: block; }
 .hero .intro { z-index: 1; }
@@ -95,18 +97,22 @@ section.case { padding-top: 152px; }
 
 section.bio { padding-top: 144px; display: flex; gap: 40px; align-items: flex-start; }
 .bio img { width: 64px; height: 64px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
+.bio-text { display: grid; gap: 20px; }
 .bio p { font-size: 20px; line-height: 34px; color: var(--copy); max-width: 640px; }
 .bio b { color: var(--foreground); font-weight: 500; }
 .bio a { color: var(--primary); text-decoration: none; }
 
-section.closing { padding-top: 192px; display: flex; justify-content: space-between; align-items: flex-end; gap: 32px; }
-.closing h2 { font-size: 46px; line-height: 52px; font-weight: 500; letter-spacing: -0.02em; max-width: 560px; }
+section.closing { padding-top: 192px; display: flex; flex-direction: column; align-items: flex-start; gap: 32px; }
+.closing h2 { font-size: 46px; line-height: 52px; font-weight: 500; letter-spacing: -0.02em; }
 .closing p { margin-top: 24px; font-size: 15px; color: var(--copy); }
-footer { padding: 112px 0 64px; display: flex; justify-content: space-between; align-items: center; }
+footer { padding: 112px 0 64px; }
+/* The links and the city are grouped in one row under a top border. */
+.footer-inner { border-top: 1px solid var(--border); padding-top: 24px; display: flex; justify-content: space-between; align-items: center; }
 .links { display: flex; gap: 22px; }
 .links a { display: inline-flex; width: 22px; height: 22px; align-items: center; justify-content: center; text-decoration: none; }
 .links svg { width: 18px; height: 18px; }
 .city { font-size: 13px; color: var(--muted); }
+.city time { font-variant-numeric: tabular-nums; }
 
 @media (max-width: 860px) {
   /* Phones: the film keeps its 16:9 shape on top and the text sits below it, at normal reading sizes. */
