@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useRef, useState } from 'react'
+import { lazy, Suspense, useEffect, useRef, useState, type CSSProperties } from 'react'
 import { Link } from 'react-router-dom'
 import { ArrowLeft, ArrowRight, Maximize2, X } from 'lucide-react'
 import './home01.css'
@@ -10,11 +10,23 @@ const base = import.meta.env.BASE_URL
 // The live Shift app loads on demand; the dashboard screenshot stands in until it does.
 const ShiftApp = lazy(() => import('@/shift-ui/prototypes/ShiftAppPrototype'))
 
+/* One card per screen of the live app, with the decision behind it; clicking one switches the app to that screen. */
 const BUILT = [
-  { name: 'A design system from zero', desc: 'Tokens, components and density rules for a data-heavy security product.' },
-  { name: 'Onboarding', desc: 'From first login to connected data sources and a vendor inventory with real context.' },
-  { name: 'The core surfaces', desc: 'Home, vendor inventory, access graph and assessments in one product a supervisor can navigate.' },
-  { name: 'Human-agent supervision', desc: 'Where the agent acts, where it asks, and what a person sees before deciding.' },
+  { name: 'Home', screen: 'Home', desc: 'Starts from one question: what needs me today? Counts and urgent work come first, details one click away.' },
+  { name: 'Inventory', screen: 'Inventory', desc: "Every vendor is a living record of evidence, access and exposure, so an assessment starts from what's already known." },
+  { name: 'Assessments', screen: 'Assessments', desc: 'The agent works in one thread per vendor. People question its verdicts and make the final call.' },
+]
+
+/* The bento: the product film as the large tile, then screenshots. Each tile zooms into one readable detail (focus
+   point x/y in % of the image, zoom z); clicking a tile opens the whole thing. */
+const FILM = { src: `${base}shift-motion-v2.mp4`, poster: `${base}shift-motion-poster.webp` }
+const SCREENS = [
+  { file: '03-inventory-vendors-card.webp', alt: 'Vendor card: security score', x: 38, y: 30.5, z: 6.5 },
+  { file: '07-assessment-flow-1.webp', alt: "Assessment: the agent's recommendation", x: 19.5, y: 75.75, z: 5 },
+  { file: '04-vendor-access-graph.webp', alt: 'Access graph: a resource and the sensitive data it holds', x: 52.4, y: 25.8, z: 3.6 },
+  { file: '05-threat-center.webp', alt: 'Threat center: an alert', x: 0.6, y: 34.7, z: 4.4 },
+  { file: '06-integrations-grid.webp', alt: 'Integrations', x: 60.7, y: 96.6, z: 3.1 },
+  { file: '00-login.webp', alt: 'Login', x: 5, y: 39.5, z: 2 },
 ]
 
 /* The Shift work page in the case study's centered column, with the home page's type: the title, the live product,
@@ -25,6 +37,12 @@ export default function ShiftPage() {
   const dialog = useRef<HTMLDialogElement>(null)
   const [screen, setScreen] = useState('Home')
   const [large, setLarge] = useState(false)
+  const viewer = useRef<HTMLDialogElement>(null)
+  const [shown, setShown] = useState<{ src: string; alt: string; video?: boolean } | null>(null)
+  const show = (item: { src: string; alt: string; video?: boolean }) => {
+    setShown(item)
+    viewer.current?.showModal()
+  }
 
   useEffect(() => {
     const update = () => {
@@ -63,17 +81,14 @@ export default function ShiftPage() {
           <span className="h01-role">2024-2026</span>
         </p>
 
+        <p className="h01-text h01-intro">
+          I joined Shift as its first designer, when the team was five people, and stayed as it grew past twenty. Together
+          we turned a pile of Excel sheets and long email correspondence into a workflow that saves security teams time and improves their security,
+          used by our design partners and early customers.
+        </p>
+
         {/* The real product, live: click the sidebar to move between Home, Inventory and Assessments. Enlarge opens it
             over the page; both views share the current screen. */}
-        <div className="h01-app" role="group" aria-label="Shift product, interactive">
-          <Suspense fallback={hero ? <img src={hero.src} width={hero.width} height={hero.height} alt="Shift home dashboard" /> : null}>
-            {large ? (
-              hero && <img src={hero.src} width={hero.width} height={hero.height} alt="" />
-            ) : (
-              <ShiftApp screen={screen} onScreen={setScreen} />
-            )}
-          </Suspense>
-        </div>
         <button
           type="button"
           className="h01-enlarge"
@@ -84,6 +99,15 @@ export default function ShiftPage() {
         >
           <Maximize2 size={16} strokeWidth={1.5} aria-hidden /> Enlarge
         </button>
+        <div className="h01-app" role="group" aria-label="Shift product, interactive">
+          <Suspense fallback={hero ? <img src={hero.src} width={hero.width} height={hero.height} alt="Shift home dashboard" /> : null}>
+            {large ? (
+              hero && <img src={hero.src} width={hero.width} height={hero.height} alt="" />
+            ) : (
+              <ShiftApp screen={screen} onScreen={setScreen} />
+            )}
+          </Suspense>
+        </div>
         <dialog
           ref={dialog}
           className="h01-lightbox"
@@ -103,22 +127,65 @@ export default function ShiftPage() {
           )}
         </dialog>
 
-        <p className="h01-text h01-intro">
-          I joined Shift as its first designer. I helped define the human-agent operating model, then built the design
-          system, onboarding, and core workflows connecting vendor evidence, access, exposure, and risk decisions.
-        </p>
-
-        <section className="h01-group">
-          <div className="h01-label">What I built</div>
-          <ul className="h01-cards">
-            {BUILT.map((b) => (
-              <li key={b.name}>
+        {/* Tabs for the live app: each names a screen and the decision behind it; the active one has an accent line. */}
+        <ul className="h01-tabs" aria-label="Shift screens">
+          {BUILT.map((b) => (
+            <li key={b.name}>
+              <button
+                type="button"
+                className="h01-tab"
+                aria-pressed={screen === b.screen}
+                onClick={() => {
+                  setScreen(b.screen)
+                  const app = document.querySelector('.h01-app')
+                  if (app && app.getBoundingClientRect().top < 0) app.scrollIntoView({ behavior: 'smooth', block: 'center' })
+                }}
+              >
                 <span className="h01-name">{b.name}</span>
                 <span className="h01-desc">{b.desc}</span>
-              </li>
-            ))}
+              </button>
+            </li>
+          ))}
+        </ul>
+
+        <section className="h01-group">
+          <div className="h01-label">Screens</div>
+          <ul className="h01-bento">
+            <li>
+              <button type="button" aria-label="Play the Shift product film" onClick={() => show({ src: FILM.src, alt: 'Shift product film', video: true })}>
+                <video src={FILM.src} poster={FILM.poster} autoPlay muted loop playsInline preload="metadata" aria-hidden="true" />
+              </button>
+            </li>
+            {SCREENS.map((sc) => {
+              const img = work?.bodyImages[sc.file]
+              return img ? (
+                <li key={sc.file}>
+                  <button type="button" aria-label={`${sc.alt}, open full screen`} onClick={() => show({ src: img.src, alt: sc.alt })}>
+                    <img
+                      src={img.src}
+                      width={img.width}
+                      height={img.height}
+                      alt=""
+                      loading="lazy"
+                      style={{ '--x': `${sc.x}%`, '--y': `${sc.y}%`, '--z': sc.z } as CSSProperties}
+                    />
+                  </button>
+                </li>
+              ) : null
+            })}
           </ul>
         </section>
+
+        <dialog ref={viewer} className="h01-lightbox" aria-label={shown?.alt} onClose={() => setShown(null)} onClick={(e) => e.target === e.currentTarget && viewer.current?.close()}>
+          <button type="button" className="h01-lightbox-close" aria-label="Close" onClick={() => viewer.current?.close()}>
+            <X size={20} strokeWidth={1.5} aria-hidden />
+          </button>
+          {shown?.video ? (
+            <video className="h01-shown" src={shown.src} autoPlay muted loop playsInline controls />
+          ) : shown ? (
+            <img className="h01-shown" src={shown.src} alt={shown.alt} />
+          ) : null}
+        </dialog>
 
         <section className="h01-group">
           <div className="h01-label">Case study</div>

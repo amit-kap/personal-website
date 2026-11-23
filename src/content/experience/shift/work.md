@@ -1,5 +1,5 @@
 ---
-productTitle: Agent-led third-party security, with people accountable for the decisions.
+productTitle: Vendor security reviews, run by an AI agent and decided by people.
 blurb: A third-party security platform connecting agent-led assessment, vendor access, exposure, and human judgment.
 order: 1
 hero: 01-shift-dashboard
