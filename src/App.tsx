@@ -2,6 +2,7 @@ import { Routes, Route, Navigate } from 'react-router-dom'
 import Home from '@/pages/Home'
 import HomeAS from '@/pages/HomeAS'
 import Placeholder from '@/pages/Placeholder'
+import AgentView from '@/pages/AgentView'
 
 /* Home is the new version (3d-screens-back). HomeAS keeps the anti-slop
    superhero home on the side; dev only, not prerendered or in the sitemap. */
@@ -10,6 +11,7 @@ export default function App() {
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/as-hero" element={<HomeAS />} />
+      <Route path="/agent" element={<AgentView />} />
       {/* Placeholders until these pages are designed. */}
       <Route path="/cv" element={<Placeholder title="CV" />} />
       <Route path="/work/checkpoint" element={<Placeholder title="Check Point" />} />

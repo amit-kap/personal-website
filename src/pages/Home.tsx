@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { ArrowUpRight, Send } from 'lucide-react'
 import './home01.css'
 import ScreenWall from './ScreenWall'
+import SiteFooter from './SiteFooter'
 
 const base = import.meta.env.BASE_URL
 
@@ -48,12 +50,7 @@ function useTypedWord() {
 }
 
 function Arrow() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <path d="M5 12h14" />
-      <path d="m12 5 7 7-7 7" />
-    </svg>
-  )
+  return <ArrowUpRight size={16} strokeWidth={2} aria-hidden />
 }
 
 export default function Home() {
@@ -122,10 +119,7 @@ export default function Home() {
 
         <nav className="h01-icons" aria-label="Links">
           <a href="mailto:amitka111@gmail.com" aria-label="Email">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <path d="M9.69 14.458a0.334 0.334 0 0 0 0.625-0.016l4.334-12.668a0.33 0.33 90 0 0-0.423-0.423l-12.668 4.334a0.334 0.334 0 0 0-0.016 0.625l5.288 2.12a1.334 1.334 0 0 1 0.74 0.74z" />
-              <path d="M14.57 1.431l-7.294 7.293" />
-            </svg>
+            <Send size={16} strokeWidth={1.8} aria-hidden />
           </a>
           <a href="https://www.linkedin.com/in/amitkaplinsky" aria-label="LinkedIn">
             <svg width="22" height="22" viewBox="0 0 22 22" fill="currentColor" aria-hidden="true">
@@ -139,6 +133,8 @@ export default function Home() {
             </svg>
           </a>
         </nav>
+
+        <SiteFooter />
       </main>
 
       <aside className="h01-wall" aria-label="Product screens">

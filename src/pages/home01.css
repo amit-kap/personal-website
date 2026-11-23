@@ -9,6 +9,8 @@
   --h01-caption: #8a8a87; /* section labels, lighter than the role line */
   --h01-rail: #f2f2ef;
   --h01-accent: var(--primary); /* #F04A00 */
+  --h01-tile: #f4f4f2;
+  --h01-hair: rgb(0 0 0 / .08);
   --h01-meta: 14px;
   --h01-title: 28px;
 
@@ -25,8 +27,23 @@
   line-height: 18px;
 }
 
+/* Dark theme: set by the footer toggle (or the system, until the visitor picks), on <html data-theme>. */
+html[data-theme='dark'] .h01 {
+  --h01-bg: #111111;
+  --h01-text: #f2f2f0;
+  --h01-name: #ffffff;
+  --h01-copy: #b4b4b0;
+  --h01-label: #a0a09c;
+  --h01-caption: #7c7c78;
+  --h01-rail: #222222;
+  --h01-tile: #1c1c1c;
+  --h01-hair: rgb(255 255 255 / .1);
+  color-scheme: dark;
+}
+
 /* White behind the page, also when the window bounces past the top or bottom. */
 html:has(.h01), body:has(.h01) { background: #fff; }
+html[data-theme='dark']:has(.h01), html[data-theme='dark'] body:has(.h01) { background: #111; }
 
 /* The 80px strip on the left; empty for now ("shader frame" in Paper). */
 .h01-rail { border-right: 1px solid var(--h01-rail); min-height: 100%; }
@@ -83,7 +100,7 @@ html:has(.h01), body:has(.h01) { background: #fff; }
 .h01-group + .h01-group { margin-top: 40px; }
 .h01-label { color: var(--h01-caption); }
 .h01-link { display: inline-flex; align-items: center; gap: 4px; text-decoration: none; color: var(--h01-text); }
-.h01-link svg { width: 16px; height: 16px; rotate: -45deg; stroke: var(--h01-accent); flex-shrink: 0; transition: translate .2s ease; }
+.h01-link svg { width: 16px; height: 16px; color: var(--h01-accent); flex-shrink: 0; transition: translate .2s ease; }
 .h01-link:hover svg { translate: 2px -2px; }
 
 /* Pushed to the bottom: availability, the closing line and the icons. */
@@ -151,8 +168,8 @@ html:has(.h01), body:has(.h01) { background: #fff; }
   border: 0;
   border-radius: 8px;
   overflow: hidden;
-  background: #f4f4f2;
-  box-shadow: 0 0 0 1px rgb(0 0 0 / .08); /* a hairline edge only, no drop shadow */
+  background: var(--h01-tile);
+  box-shadow: 0 0 0 1px var(--h01-hair); /* a hairline edge only, no drop shadow */
   cursor: zoom-in;
   transition: box-shadow .25s ease;
 }
@@ -168,8 +185,8 @@ html:has(.h01), body:has(.h01) { background: #fff; }
   inset: 0;
   pointer-events: none;
   background:
-    linear-gradient(90deg, var(--h01-bg) 0%, rgb(255 255 255 / 0) 24%),
-    linear-gradient(180deg, var(--h01-bg) 0%, rgb(255 255 255 / 0) 16%, rgb(255 255 255 / 0) 84%, var(--h01-bg) 100%);
+    linear-gradient(90deg, var(--h01-bg) 0%, transparent 24%),
+    linear-gradient(180deg, var(--h01-bg) 0%, transparent 16%, transparent 84%, var(--h01-bg) 100%);
 }
 
 /* Lightbox: a native dialog over a light, blurred page. */
@@ -183,7 +200,7 @@ html:has(.h01), body:has(.h01) { background: #fff; }
   margin: 0;
   padding: 0;
   border: 0;
-  background: rgb(255 255 255 / .92);
+  background: color-mix(in srgb, var(--h01-bg) 92%, transparent);
   backdrop-filter: blur(12px);
   color: var(--h01-text);
   font-family: var(--font);
@@ -199,8 +216,8 @@ html:has(.h01), body:has(.h01) { background: #fff; }
   max-height: 76vh;
   object-fit: contain;
   border-radius: 12px;
-  background: #f4f4f2;
-  box-shadow: 0 0 0 1px rgb(0 0 0 / .06), 0 40px 120px -20px rgb(0 0 0 / .3);
+  background: var(--h01-tile);
+  box-shadow: 0 0 0 1px var(--h01-hair), 0 40px 120px -20px rgb(0 0 0 / .3);
 }
 .lightbox figcaption { display: flex; align-items: center; gap: 12px; margin-top: 16px; color: var(--h01-label); }
 .lightbox figcaption b { color: var(--h01-text); font-weight: 600; }
@@ -217,8 +234,8 @@ html:has(.h01), body:has(.h01) { background: #fff; }
   height: 56px;
   border: 0;
   border-radius: 50%;
-  background: #fff;
-  box-shadow: 0 0 0 1px rgb(0 0 0 / .08), 0 8px 24px -8px rgb(0 0 0 / .2);
+  background: var(--h01-bg);
+  box-shadow: 0 0 0 1px var(--h01-hair), 0 8px 24px -8px rgb(0 0 0 / .2);
   color: var(--h01-text);
   font-size: 20px;
   cursor: pointer;
@@ -235,7 +252,7 @@ html:has(.h01), body:has(.h01) { background: #fff; }
 @media (max-width: 900px) {
   .h01-wall { position: relative; height: 480px; }
   .wall { inset: -40% -40% -40% -10%; }
-  .wall-shade { background: linear-gradient(180deg, var(--h01-bg) 0%, rgb(255 255 255 / 0) 20%, rgb(255 255 255 / 0) 80%, var(--h01-bg) 100%); }
+  .wall-shade { background: linear-gradient(180deg, var(--h01-bg) 0%, transparent 20%, transparent 80%, var(--h01-bg) 100%); }
   .lb-arrow { top: auto; bottom: 24px; translate: none; }
 }
 
@@ -252,13 +269,58 @@ html:has(.h01), body:has(.h01) { background: #fff; }
 .h01-center .h01-col > * { pointer-events: auto; }
 .h01-center .wall-shade {
   background:
-    linear-gradient(90deg, var(--h01-bg) 0, var(--h01-bg) 480px, rgb(255 255 255 / 0) 920px), /* solid white behind the text, clearing to the right */
-    linear-gradient(180deg, var(--h01-bg) 0%, rgb(255 255 255 / 0) 16%, rgb(255 255 255 / 0) 84%, var(--h01-bg) 100%);
+    /* Solid page colour behind the text, then a long eased fade so it never reads as an edge (light and dark). */
+    linear-gradient(90deg,
+      var(--h01-bg) 0, var(--h01-bg) 480px,
+      color-mix(in srgb, var(--h01-bg) 92%, transparent) 600px, color-mix(in srgb, var(--h01-bg) 78%, transparent) 720px, color-mix(in srgb, var(--h01-bg) 58%, transparent) 840px,
+      color-mix(in srgb, var(--h01-bg) 36%, transparent) 960px, color-mix(in srgb, var(--h01-bg) 18%, transparent) 1080px, color-mix(in srgb, var(--h01-bg) 6%, transparent) 1200px, transparent 1320px),
+    linear-gradient(180deg, var(--h01-bg) 0%, transparent 16%, transparent 84%, var(--h01-bg) 100%);
 }
 
 @media (max-width: 900px) {
   .h01-center .h01-col { margin-left: 0; }
   .h01-center .h01-wall { position: relative; inset: auto; height: 480px; }
   .h01-center .wall { inset: -40% -40% -40% -40%; }
-  .h01-center .wall-shade { background: linear-gradient(180deg, var(--h01-bg) 0%, rgb(255 255 255 / 0) 20%, rgb(255 255 255 / 0) 80%, var(--h01-bg) 100%); }
+  .h01-center .wall-shade { background: linear-gradient(180deg, var(--h01-bg) 0%, transparent 20%, transparent 80%, var(--h01-bg) 100%); }
 }
+
+/* Footer: name, Tel Aviv time, the human / agent switch and the theme toggle. */
+.h01-footer {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  align-self: stretch;
+  margin-top: 48px;
+  padding-top: 16px;
+  border-top: 1px solid var(--h01-hair);
+  color: var(--h01-caption);
+}
+.h01-footer-name { color: var(--h01-text); }
+.h01-footer time { font-variant-numeric: tabular-nums; }
+.h01-grow { flex: 1; }
+.h01-switch { display: flex; gap: 4px; }
+.h01-switch a, .h01-theme {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border: 0;
+  border-radius: 8px;
+  background: none;
+  color: var(--h01-caption);
+  cursor: pointer;
+  transition: color .15s ease, background .15s ease;
+}
+.h01-switch a:hover, .h01-theme:hover { color: var(--h01-accent); }
+.h01-switch a.on { color: var(--h01-text); background: var(--h01-tile); }
+
+/* Agent view: the plain-text site, set simply in the text column. */
+.h01-agent { max-width: 760px; }
+.h01-md { margin-top: 48px; color: var(--h01-copy); line-height: 22px; }
+.h01-md h1, .h01-md h2, .h01-md h3 { margin: 32px 0 8px; color: var(--h01-text); font-size: 18px; line-height: 24px; font-weight: 600; }
+.h01-md p, .h01-md ul, .h01-md ol { margin: 0 0 12px; }
+.h01-md ul, .h01-md ol { padding-left: 20px; }
+.h01-md a, .h01-role a { color: var(--h01-accent); text-decoration: none; }
+.h01-md a:hover, .h01-role a:hover { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+.h01-md code { font-size: 13px; }
+.h01-placeholder .h01-footer { margin-top: auto; } /* pinned to the bottom of short pages */

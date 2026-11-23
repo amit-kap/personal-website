@@ -25,6 +25,14 @@
 
     <meta name="author" content="Amit Kaplinsky" />
     <meta name="theme-color" content="#FEF8F5" />
+    <!-- Set the light / dark theme before the first paint, so the page never flashes the wrong one. -->
+    <script>
+      try {
+        var t = localStorage.getItem('theme')
+        if (t !== 'light' && t !== 'dark') t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+        document.documentElement.dataset.theme = t
+      } catch (e) {}
+    </script>
 
     <script type="application/ld+json">
       {

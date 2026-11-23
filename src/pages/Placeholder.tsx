@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import './home01.css'
+import SiteFooter from './SiteFooter'
 
 const base = import.meta.env.BASE_URL
 
@@ -17,6 +18,7 @@ export default function Placeholder({ title }: { title: string }) {
         <Link className="h01-link h01-back" to="/">
           <span>Back home</span>
         </Link>
+        <SiteFooter />
       </main>
     </div>
   )
