@@ -69,6 +69,12 @@ html[data-theme='dark']:has(.h01), html[data-theme='dark'] body:has(.h01) { back
   color: var(--h01-text);
 }
 .h01-title b { font-weight: 600; }
+/* The home hero is the page's one statement, so it runs larger than the work page titles. */
+.h01-center:not(.h01-case) .h01-title { font-size: 36px; line-height: 40px; }
+/* Each line stays whole on wide screens (the first runs a little past the 468px text column). */
+@media (min-width: 901px) { .h01-center:not(.h01-case) .h01-title .h01-line { white-space: nowrap; } }
+/* Hero to Bio: more than the 40px between sections, so the hero still stands apart, but part of the same column. */
+.h01-center:not(.h01-case) .h01-title + .h01-group { margin-top: 56px; }
 .h01-title .h01-line { display: block; }
 
 /* The rotating word: one word at a time, a short fade and lift between them. */
@@ -152,9 +158,9 @@ html[data-theme='dark']:has(.h01), html[data-theme='dark'] body:has(.h01) { back
 
 .h01 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 
-/* The screen wall (ScreenWall.tsx), in the right side of the page. After herdr.dev's hero:
-   one tilted plane of three columns drifting up and down, faded into the page at its edges. */
-.h01-wall { position: sticky; top: 0; height: 100vh; overflow: hidden; }
+/* The screen wall (ScreenWall.tsx), in the right side of the page: a flat background of three columns drifting
+   up and down in a loop on one tilted plane, faded into the page at its edges. No hover, no clicks. */
+.h01-wall { position: sticky; top: 0; height: 100vh; overflow: hidden; pointer-events: none; }
 .wall-wrap { position: absolute; inset: 0; }
 .wall {
   position: absolute;
@@ -170,25 +176,9 @@ html[data-theme='dark']:has(.h01), html[data-theme='dark'] body:has(.h01) { back
 /* Half the list plus half a gap: the second copy lands exactly where the first began. */
 @keyframes wall-up { from { translate: 0 0; } to { translate: 0 calc(-50% - 12px); } }
 @keyframes wall-down { from { translate: 0 calc(-50% - 12px); } to { translate: 0 0; } }
-.wall-col:has(.wall-tile:hover), .wall-col:focus-within { animation-play-state: paused; }
 
-.wall-tile {
-  flex: 0 0 auto;
-  aspect-ratio: 16 / 10;
-  padding: 0;
-  border: 0;
-  border-radius: 8px;
-  overflow: hidden;
-  background: var(--h01-tile);
-  box-shadow: 0 0 0 1px var(--h01-hair); /* a hairline edge only, no drop shadow */
-  cursor: zoom-in;
-  transition: box-shadow .25s ease;
-}
-/* Screens sit in greyscale at 50%; the one you hover (or focus) comes back to full colour and strength. */
-.wall-tile img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 0 0; filter: grayscale(1); opacity: .5; transition: filter .3s ease, opacity .3s ease; }
-.wall-tile:hover img, .wall-tile:focus-visible img { filter: none; opacity: 1; }
-/* Hover only highlights: colour back on and a 1px primary edge, no scaling. */
-.wall-tile:hover, .wall-tile:focus-visible { box-shadow: 0 0 0 1px var(--h01-accent); outline: none; }
+.wall-tile { flex: 0 0 auto; aspect-ratio: 16 / 10; border-radius: 8px; overflow: hidden; background: var(--h01-tile); box-shadow: 0 0 0 1px var(--h01-hair); }
+.wall-tile img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 0 0; opacity: .5; }
 
 /* Fades the wall into the white page: hard on the left edge (towards the text), soft at top and bottom. */
 .wall-shade {
@@ -200,71 +190,14 @@ html[data-theme='dark']:has(.h01), html[data-theme='dark'] body:has(.h01) { back
     linear-gradient(180deg, var(--h01-bg) 0%, transparent 16%, transparent 84%, var(--h01-bg) 100%);
 }
 
-/* Lightbox: a native dialog over a light, blurred page. */
-.lightbox {
-  position: fixed;
-  inset: 0;
-  width: 100%;
-  max-width: none;
-  height: 100%;
-  max-height: none;
-  margin: 0;
-  padding: 0;
-  border: 0;
-  background: color-mix(in srgb, var(--h01-bg) 92%, transparent);
-  backdrop-filter: blur(12px);
-  color: var(--h01-text);
-  font-family: var(--font);
-  font-size: 14px;
-  line-height: 18px;
-}
-.lightbox[open] { display: grid; place-items: center; }
-.lightbox::backdrop { background: transparent; }
-.lightbox figure { width: min(1400px, 84vw); margin: 0; }
-.lightbox figure img {
-  display: block;
-  width: 100%;
-  max-height: 76vh;
-  object-fit: contain;
-  border-radius: 12px;
-  background: var(--h01-tile);
-  box-shadow: 0 0 0 1px var(--h01-hair), 0 40px 120px -20px rgb(0 0 0 / .3);
-}
-.lightbox figcaption { display: flex; align-items: center; gap: 12px; margin-top: 16px; color: var(--h01-label); }
-.lightbox figcaption b { color: var(--h01-text); font-weight: 600; }
-.lightbox .lb-grow { flex: 1; }
-.lightbox figcaption a { color: var(--h01-text); text-decoration: none; }
-.lightbox figcaption a:hover { color: var(--h01-accent); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
-.lb-close { position: fixed; top: 24px; right: 28px; border: 0; background: none; color: var(--h01-label); font: inherit; cursor: pointer; }
-.lb-close:hover { color: var(--h01-accent); }
-.lb-arrow {
-  position: fixed;
-  top: 50%;
-  translate: 0 -50%;
-  width: 56px;
-  height: 56px;
-  border: 0;
-  border-radius: 50%;
-  background: var(--h01-bg);
-  box-shadow: 0 0 0 1px var(--h01-hair), 0 8px 24px -8px rgb(0 0 0 / .2);
-  color: var(--h01-text);
-  font-size: 20px;
-  cursor: pointer;
-}
-.lb-arrow:hover { color: var(--h01-accent); }
-.lb-arrow.prev { left: 3vw; }
-.lb-arrow.next { right: 3vw; }
-
 @media (prefers-reduced-motion: reduce) {
   .wall-col, .wall-col.down { animation: none; }
-  .wall-tile { transition: none; }
 }
 
 @media (max-width: 900px) {
   .h01-wall { position: relative; height: 480px; }
   .wall { inset: -40% -40% -40% -10%; }
   .wall-shade { background: linear-gradient(180deg, var(--h01-bg) 0%, transparent 20%, transparent 80%, var(--h01-bg) 100%); }
-  .lb-arrow { top: auto; bottom: 24px; translate: none; }
 }
 
 /* Layered layout (Home): a centred 1024px frame (Paper used 1440), as in Paper. The text sits at x 120 inside it, on top of
