@@ -1,5 +1,6 @@
 import { useEffect, useRef, type CSSProperties } from 'react'
 import { Link, Navigate, useParams } from 'react-router-dom'
+import { ArrowLeft } from 'lucide-react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import './home01.css'
@@ -50,6 +51,7 @@ export default function CaseStudy() {
             <circle className="h01-ring" cx="32" cy="32" r="30" />
           </svg>
           <img src={`${base}home01/ak-logo.svg`} alt="" width={36} height={20} />
+          <ArrowLeft className="h01-corner-arrow" size={20} strokeWidth={2} aria-hidden />
         </Link>
 
         <article className="h01-article">
@@ -62,19 +64,21 @@ export default function CaseStudy() {
             remarkPlugins={[remarkGfm]}
             components={{
               hr: () => null,
+              // A paragraph that holds only images is a figure, or a row of figures; anything else is a normal paragraph.
+              p: ({ node, children }) => {
+                const kids = (node?.children ?? []).filter((c) => !(c.type === 'text' && !c.value.trim()))
+                const onlyImages = kids.length > 0 && kids.every((c) => c.type === 'element' && c.tagName === 'img')
+                return onlyImages ? <div className={kids.length > 1 ? 'h01-figrow' : 'h01-figs'}>{children}</div> : <p>{children}</p>
+              },
               img: ({ src = '', alt }) => {
-                const file = decodeURIComponent(src)
-                const image = study.bodyImages[file]
-                return image ? (
-                  <img
-                    src={image.src}
-                    width={image.width}
-                    height={image.height}
-                    alt={alt}
-                    loading="lazy"
-                    style={{ '--ar': image.width / image.height } as CSSProperties}
-                  />
-                ) : null
+                const image = study.bodyImages[decodeURIComponent(src)]
+                if (!image) return null
+                return (
+                  <figure style={{ '--ar': image.width / image.height } as CSSProperties}>
+                    <img src={image.src} width={image.width} height={image.height} alt={alt} loading="lazy" />
+                    {alt ? <figcaption>{alt}</figcaption> : null}
+                  </figure>
+                )
               },
               a: ({ href = '', children }) => (
                 <a href={href} target="_blank" rel="noreferrer">
