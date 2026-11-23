@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { ArrowRight, ArrowUpRight, Send } from 'lucide-react'
 import './home01.css'
@@ -50,6 +50,57 @@ function useTypedWord() {
   return { text: word.slice(0, length), word, holding }
 }
 
+/* The block cursor with a trail, after a terminal smear cursor: the inline block only holds the cursor's place;
+   the visible block is drawn over it and, on each move, stretches from where it was to where it is and then snaps
+   shut on the new spot. Each move also leaves a soft afterglow that fades and blurs away. All of it sits behind
+   the letters, so the text stays readable as the cursor runs over it. */
+const BLOCK = 16
+function Caret({ text, holding }: { text: string; holding: boolean }) {
+  const slot = useRef<HTMLSpanElement>(null)
+  const block = useRef<HTMLSpanElement>(null)
+  const last = useRef<number | null>(null)
+  const id = useRef(0)
+  const [ghosts, setGhosts] = useState<{ id: number; x: number; w: number }[]>([])
+
+  useLayoutEffect(() => {
+    const el = slot.current
+    const b = block.current
+    if (!el || !b) return
+    const x = el.offsetLeft
+    b.style.left = `${x}px`
+    b.style.top = `${el.offsetTop}px`
+    const from = last.current
+    last.current = x
+    if (from === null || from === x || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    const left = Math.min(from, x)
+    const w = Math.abs(x - from) + BLOCK
+    b.animate(
+      [
+        { left: `${left}px`, width: `${w}px` },
+        { left: `${x}px`, width: `${BLOCK}px` },
+      ],
+      { duration: 160, easing: 'cubic-bezier(.2, .8, .2, 1)' },
+    )
+    setGhosts((g) => [...g.slice(-10), { id: ++id.current, x: left, w }])
+  }, [text])
+
+  return (
+    <>
+      {ghosts.map((g) => (
+        <span
+          key={g.id}
+          className="h01-caret-glow"
+          style={{ left: g.x, top: slot.current?.offsetTop, width: g.w }}
+          aria-hidden="true"
+          onAnimationEnd={() => setGhosts((all) => all.filter((t) => t.id !== g.id))}
+        />
+      ))}
+      <span ref={block} className={`h01-caret-block${holding ? ' blink' : ''}`} aria-hidden="true" />
+      <span ref={slot} className="h01-caret" aria-hidden="true" />
+    </>
+  )
+}
+
 function Arrow() {
   return <ArrowUpRight size={16} strokeWidth={2} aria-hidden />
 }
@@ -82,7 +133,7 @@ export default function Home() {
             <span className="h01-word">
               <span className="sr-only">{word}</span>
               <span aria-hidden="true">{text}</span>
-              <span className={`h01-caret${holding ? ' blink' : ''}`} aria-hidden="true" />
+              <Caret text={text} holding={holding} />
             </span>
           </b>
         </h1>

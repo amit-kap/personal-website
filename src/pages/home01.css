@@ -79,18 +79,33 @@ html[data-theme='dark']:has(.h01), html[data-theme='dark'] body:has(.h01) { back
 
 /* The rotating word: one word at a time, a short fade and lift between them. */
 /* The typed word and its block cursor, which blinks only while the word holds. */
-.h01-word { white-space: nowrap; }
+.h01-word { position: relative; white-space: nowrap; }
 .h01-caret {
   display: inline-block;
   width: 16px; /* about one letter wide, on the 4px grid */
   height: 24px;
   margin-left: 4px;
   vertical-align: -0.08em;
-  background: var(--h01-accent);
+  visibility: hidden; /* holds the place; the block below is what you see */
 }
-.h01-caret.blink { animation: h01-blink 1s steps(1) infinite; }
+/* The visible cursor and its trail sit behind the letters (z-index -1 inside the column's stacking context). */
+.h01-caret-block, .h01-caret-glow {
+  position: absolute;
+  z-index: -1;
+  height: 24px;
+  background: var(--h01-accent);
+  pointer-events: none;
+}
+.h01-caret-block { width: 16px; }
+.h01-caret-block.blink { animation: h01-blink 1s steps(1) infinite; }
 @keyframes h01-blink { 50% { opacity: 0; } }
-@media (prefers-reduced-motion: reduce) { .h01-caret.blink { animation: none; } }
+/* The afterglow of each move: a soft copy of the stretched block that fades, blurs and settles. */
+.h01-caret-glow { animation: h01-glow .6s cubic-bezier(.2, .8, .2, 1) forwards; }
+@keyframes h01-glow {
+  from { opacity: .35; filter: blur(0); scale: 1 1; }
+  to { opacity: 0; filter: blur(6px); scale: 1 .5; }
+}
+@media (prefers-reduced-motion: reduce) { .h01-caret-block.blink { animation: none; } .h01-caret-glow { display: none; } }
 
 /* Spacing is always a multiple of 4: tight inside a group, wide between groups.
    Logo → headline 40, headline → bio 48, inside the bio 4 / 24 / 16, bio → case study 80,
