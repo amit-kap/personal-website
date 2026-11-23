@@ -286,7 +286,7 @@ html[data-theme='dark']:has(.h01), html[data-theme='dark'] body:has(.h01) { back
 .h01-center .wall-wrap { left: max(0px, calc(50% - 720px)); }
 .h01-center .wall { inset: -30% -6% -30% 14%; } /* starts under the right part of the text */
 /* The column lets clicks through to the screens; only its text and links take them. Text at x 120, as in Paper. */
-.h01-center .h01-col { position: relative; z-index: 1; width: min(100%, 548px); margin-left: max(80px, calc(50% - 640px)); pointer-events: none; }
+.h01-center .h01-col { position: relative; z-index: 1; width: min(100%, 548px); margin-left: max(0px, calc(50% - 720px)); pointer-events: none; }
 .h01-center .h01-col > * { pointer-events: auto; }
 .h01-center .wall-shade {
   background:
@@ -318,7 +318,7 @@ html[data-theme='dark']:has(.h01), html[data-theme='dark'] body:has(.h01) { back
   gap: 16px;
   height: 56px;
   margin: 0;
-  padding: 0 max(120px, calc(50% - 600px)); /* the same inset both sides: starts with the headline, ends 120px inside the 1440 frame; also clears the old global footer padding */
+  padding: 0 max(40px, calc(50% - 680px)); /* the same inset both sides: starts with the headline, ends 40px inside the 1440 frame; also clears the old global footer padding */
   background: var(--h01-bg);
   color: var(--h01-caption);
   font-size: var(--h01-meta);
@@ -366,4 +366,48 @@ html[data-theme='dark']:has(.h01), html[data-theme='dark'] body:has(.h01) { back
 @media (max-width: 480px) {
   .h01-footer { gap: 8px; font-size: 12px; }
   .h01-switch a, .h01-switch button { width: 24px; height: 24px; }
+}
+
+/* Case study: the home column without the screen wall, set as a long read. Text is a 640px measure at 17px/28px; figures
+   run to the full 800px. Headings 22px, section gaps 80px, spacing on the 4px grid. */
+.h01-case { display: block; }
+.h01-case .h01-col { pointer-events: auto; margin-left: auto; margin-right: auto; width: min(100%, 880px); padding-top: 128px; padding-bottom: 136px; }
+/* The AK mark, fixed in the top left corner, is the way back home. A ring around it fills as you read (--read, 0 to 1). */
+.h01-corner { position: fixed; top: 24px; left: 24px; z-index: 3; display: grid; place-items: center; width: 64px; height: 64px; border-radius: 50%; background: var(--h01-bg); }
+.h01-corner > * { grid-area: 1 / 1; }
+.h01-corner img { display: block; width: 36px; height: auto; }
+.h01-corner svg { width: 64px; height: 64px; rotate: -90deg; fill: none; stroke-width: 2; }
+.h01-ring-track { stroke: var(--h01-hair); }
+.h01-ring { stroke: var(--h01-accent); stroke-dasharray: 188.5; stroke-dashoffset: calc(188.5 * (1 - var(--read, 0))); }
+.h01-article { width: 100%; font-size: 17px; line-height: 28px; }
+.h01-article .h01-title { margin-top: 0; font-size: 40px; line-height: 48px; font-weight: 600; letter-spacing: -.02em; }
+.h01-article .h01-sub { margin-top: 12px; font-size: 20px; line-height: 28px; color: var(--h01-label); }
+.h01-meta { margin-top: 24px; margin-bottom: 48px; font-size: 14px; line-height: 20px; color: var(--h01-caption); }
+.h01-article p { margin-top: 20px; }
+.h01-article h3 { margin-top: 80px; font-size: 22px; line-height: 28px; font-weight: 600; letter-spacing: -.01em; }
+.h01-article h3 + p { margin-top: 16px; }
+.h01-article a { color: inherit; text-decoration: underline; text-decoration-color: var(--h01-caption); text-decoration-thickness: 1px; text-underline-offset: 4px; }
+.h01-article a:hover { text-decoration-color: var(--h01-accent); }
+/* The one pull quote is the loud moment: large, with a short accent bar above instead of a side rule. */
+.h01-article blockquote { margin: 56px 0; font-size: 26px; line-height: 36px; font-weight: 500; letter-spacing: -.01em; }
+.h01-article blockquote::before { content: ""; display: block; width: 24px; height: 2px; margin-bottom: 20px; background: var(--h01-accent); }
+.h01-article blockquote p { margin-top: 0; }
+.h01-article ul { margin: 20px 0 0; padding-left: 24px; display: flex; flex-direction: column; gap: 8px; }
+.h01-article li::marker { color: var(--h01-caption); }
+/* Figures run the full 800px, wider than the text. */
+.h01-article img { display: block; width: 100%; max-width: 800px; height: auto; margin: 48px 0; border-radius: 8px; background: var(--h01-tile); }
+/* Images written side by side in the markdown sit in one row at the text width (640px), all the same height:
+   each takes a share of the row in proportion to its shape. */
+.h01-article p:has(> img + img) { display: flex; gap: 8px; width: 100%; max-width: 100%; margin: 48px 0; }
+.h01-article p:has(> img + img) img { flex: var(--ar) 1 0; min-width: 0; width: auto; margin: 0; border-radius: 4px; }
+/* In the dark theme the long copy is a step softer than the headings, to cut glare. */
+html[data-theme='dark'] .h01-article p, html[data-theme='dark'] .h01-article li { color: var(--h01-copy); }
+html[data-theme='dark'] .h01-article img { box-shadow: inset 0 0 0 1px var(--h01-hair); }
+@media (max-width: 720px) {
+  .h01-corner { top: 8px; left: 8px; }
+  .h01-case .h01-col { padding-top: 96px; }
+  .h01-article { font-size: 16px; line-height: 26px; }
+  .h01-article .h01-title { font-size: 32px; line-height: 40px; }
+  .h01-article .h01-sub { font-size: 18px; line-height: 26px; }
+  .h01-article h3 { margin-top: 64px; font-size: 20px; line-height: 28px; }
 }
