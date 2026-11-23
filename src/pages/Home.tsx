@@ -4,31 +4,46 @@ import './home01.css'
 
 const base = import.meta.env.BASE_URL
 
-/* What the 20% adds. "enjoyable" is last and stays longest. */
+/* What the 20% adds, typed in and deleted with a cursor line. "enjoyable" is last and stays longest. */
 const WORDS = ['clear', 'simple', 'precise', 'fast', 'enjoyable']
-const HOLD = 2200
-const HOLD_LAST = 4000
-const FADE = 280
+const TYPE = 90 // ms per letter typed
+const DELETE = 45 // ms per letter deleted
+const HOLD = 1800
+const HOLD_LAST = 3600
+const PAUSE = 300 // empty, before the next word
 
-function useRotatingWord() {
+function useTypedWord() {
   const [index, setIndex] = useState(0)
-  const [out, setOut] = useState(false)
+  const [length, setLength] = useState(WORDS[0].length)
+  const [deleting, setDeleting] = useState(false)
+  const word = WORDS[index]
+  const holding = !deleting && length === word.length
 
   useEffect(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
-    let timer: ReturnType<typeof setTimeout>
-    const hold = index === WORDS.length - 1 ? HOLD_LAST : HOLD
-    timer = setTimeout(() => {
-      setOut(true)
-      timer = setTimeout(() => {
+    let wait: number
+    let next: () => void
+    if (holding) {
+      wait = index === WORDS.length - 1 ? HOLD_LAST : HOLD
+      next = () => setDeleting(true)
+    } else if (deleting && length > 0) {
+      wait = DELETE
+      next = () => setLength((l) => l - 1)
+    } else if (deleting) {
+      wait = PAUSE
+      next = () => {
+        setDeleting(false)
         setIndex((i) => (i + 1) % WORDS.length)
-        setOut(false)
-      }, FADE)
-    }, hold)
+      }
+    } else {
+      wait = TYPE
+      next = () => setLength((l) => l + 1)
+    }
+    const timer = setTimeout(next, wait)
     return () => clearTimeout(timer)
-  }, [index])
+  }, [index, length, deleting, holding])
 
-  return { word: WORDS[index], out }
+  return { text: word.slice(0, length), word, holding }
 }
 
 function Arrow() {
@@ -41,7 +56,7 @@ function Arrow() {
 }
 
 export default function Home() {
-  const { word, out } = useRotatingWord()
+  const { text, word, holding } = useTypedWord()
 
   return (
     <div className="h01">
@@ -55,7 +70,12 @@ export default function Home() {
         <h1 className="h01-title">
           <span className="h01-line">AI gets you 80% of the way.</span>
           <b className="h01-line">
-            My 20% makes it <span className={`h01-word${out ? ' out' : ''}`} aria-live="polite">{word}</span>
+            My 20% makes it{' '}
+            <span className="h01-word">
+              <span className="sr-only">{word}</span>
+              <span aria-hidden="true">{text}</span>
+              <span className={`h01-caret${holding ? ' blink' : ''}`} aria-hidden="true" />
+            </span>
           </b>
         </h1>
 

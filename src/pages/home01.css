@@ -50,9 +50,19 @@
 .h01-title .h01-line { display: block; }
 
 /* The rotating word: one word at a time, a short fade and lift between them. */
-.h01-word { display: inline-block; transition: opacity .28s ease, translate .28s ease; }
-.h01-word.out { opacity: 0; translate: 0 -6px; }
-@media (prefers-reduced-motion: reduce) { .h01-word { transition: none; } }
+/* The typed word and its cursor line, which blinks only while the word holds. */
+.h01-word { white-space: nowrap; }
+.h01-caret {
+  display: inline-block;
+  width: 2px;
+  height: 1em;
+  margin-left: 2px;
+  vertical-align: -0.12em;
+  background: var(--h01-accent);
+}
+.h01-caret.blink { animation: h01-blink 1s steps(1) infinite; }
+@keyframes h01-blink { 50% { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .h01-caret.blink { animation: none; } }
 
 /* Bio, spaced as in the Paper "home" frame: name, role (4px), then two paragraphs (28px, 24px). */
 .h01-bio { margin-top: 26px; max-width: 468px; color: var(--h01-text); }
@@ -61,7 +71,6 @@
 .h01-para { margin-top: 28px; }
 .h01-para + .h01-para { margin-top: 24px; }
 .h01-bio a { color: var(--h01-accent); text-decoration: none; }
-.h01-bio a:hover { text-decoration: underline; text-underline-offset: 3px; }
 
 .h01-group { margin-top: 51px; display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
 .h01-group + .h01-group { margin-top: 53px; }
@@ -69,7 +78,6 @@
 .h01-link { display: inline-flex; align-items: center; gap: 2px; text-decoration: none; color: var(--h01-text); }
 .h01-link svg { width: 16px; height: 16px; rotate: -45deg; stroke: var(--h01-accent); flex-shrink: 0; transition: translate .2s ease; }
 .h01-link:hover svg { translate: 2px -2px; }
-.h01-link:hover span { text-decoration: underline; text-underline-offset: 3px; }
 
 /* Pushed to the bottom: availability, the closing line and the icons. */
 .h01-status { margin-top: auto; padding-top: 64px; display: flex; align-items: center; gap: 8px; color: var(--h01-accent); }
@@ -80,7 +88,6 @@
 
 .h01-closing { margin-top: 16px; max-width: 431px; font-size: var(--h01-title); line-height: 34px; font-weight: 400; }
 .h01-closing a { font-weight: 600; text-decoration: none; }
-.h01-closing a:hover { color: var(--h01-accent); }
 
 .h01-icons { margin-top: 51px; display: flex; align-items: center; gap: 24px; }
 .h01-icons a { display: flex; color: var(--h01-text); }
@@ -98,3 +105,11 @@
 .h01-placeholder { grid-template-columns: 80px minmax(0, 1fr); }
 .h01-placeholder .h01-role { margin-top: 8px; }
 .h01-back { margin-top: 32px; }
+
+/* One hover for every text link: primary colour with a line under. */
+.h01 a { transition: color .15s ease; }
+.h01-bio a:hover,
+.h01-closing a:hover,
+.h01-link:hover span { color: var(--h01-accent); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+
+.h01 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
