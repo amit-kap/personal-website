@@ -267,24 +267,24 @@ html[data-theme='dark']:has(.h01), html[data-theme='dark'] body:has(.h01) { back
   .lb-arrow { top: auto; bottom: 24px; translate: none; }
 }
 
-/* Layered layout (Home): a centred 1440px frame, as in Paper. The text sits at x 120 inside it, on top of
+/* Layered layout (Home): a centred 1024px frame (Paper used 1440), as in Paper. The text sits at x 120 inside it, on top of
    the screen wall, which comes in from the right, passes under the text and bleeds off the window's right edge.
-   Wider than 1440 the frame stays centred; narrower, it starts at the window's left edge. */
+   Wider than 1024 the frame stays centred; narrower, it starts at the window's left edge. */
 .h01-center { display: block; }
 .h01-center .h01-wall { position: fixed; inset: 0; height: auto; z-index: 0; }
-/* The wall and its fade start where the 1440 frame starts. */
-.h01-center .wall-wrap { left: max(0px, calc(50% - 720px)); }
+/* The wall and its fade start where the 1024 frame starts. */
+.h01-center .wall-wrap { left: max(0px, calc(50% - 512px)); }
 .h01-center .wall { inset: -30% -6% -30% 14%; } /* starts under the right part of the text */
 /* The column lets clicks through to the screens; only its text and links take them. Text at x 120, as in Paper. */
-.h01-center .h01-col { position: relative; z-index: 1; width: min(100%, 548px); margin-left: max(0px, calc(50% - 720px)); pointer-events: none; }
+.h01-center .h01-col { position: relative; z-index: 1; width: min(100%, 548px); margin-left: max(0px, calc(50% - 512px)); pointer-events: none; }
 .h01-center .h01-col > * { pointer-events: auto; }
 .h01-center .wall-shade {
   background:
     /* Solid page colour behind the text, then a long eased fade so it never reads as an edge (light and dark). */
     linear-gradient(90deg,
-      var(--h01-bg) 0, var(--h01-bg) 480px,
-      color-mix(in srgb, var(--h01-bg) 92%, transparent) 600px, color-mix(in srgb, var(--h01-bg) 78%, transparent) 720px, color-mix(in srgb, var(--h01-bg) 58%, transparent) 840px,
-      color-mix(in srgb, var(--h01-bg) 36%, transparent) 960px, color-mix(in srgb, var(--h01-bg) 18%, transparent) 1080px, color-mix(in srgb, var(--h01-bg) 6%, transparent) 1200px, transparent 1320px),
+      color-mix(in srgb, var(--h01-bg) 94%, transparent) 0, color-mix(in srgb, var(--h01-bg) 90%, transparent) 440px,
+      color-mix(in srgb, var(--h01-bg) 70%, transparent) 600px, color-mix(in srgb, var(--h01-bg) 42%, transparent) 760px,
+      color-mix(in srgb, var(--h01-bg) 18%, transparent) 920px, transparent 1120px),
     linear-gradient(180deg, var(--h01-bg) 0%, transparent 16%, transparent 84%, var(--h01-bg) 100%);
 }
 
@@ -296,7 +296,7 @@ html[data-theme='dark']:has(.h01), html[data-theme='dark'] body:has(.h01) { back
 }
 
 /* Footer: a fixed bar along the bottom of the window, the full width of the view. Its text starts where
-   the headline starts (x 120 inside the centred 1440 frame) and ends the same distance from the frame's right edge, so both sides match. The page scrolls under it. One grey for all its text, 14px. */
+   the headline starts (x 120 inside the centred 1024 frame) and ends the same distance from the frame's right edge, so both sides match. The page scrolls under it. One grey for all its text, 14px. */
 .h01-footer {
   position: fixed;
   left: 0;
@@ -308,7 +308,7 @@ html[data-theme='dark']:has(.h01), html[data-theme='dark'] body:has(.h01) { back
   gap: 16px;
   height: 56px;
   margin: 0;
-  padding: 0 max(40px, calc(50% - 680px)); /* the same inset both sides: starts with the headline, ends 40px inside the 1440 frame; also clears the old global footer padding */
+  padding: 0 max(40px, calc(50% - 472px)); /* the same inset both sides: starts with the headline, ends 40px inside the 1024 frame; also clears the old global footer padding */
   background: var(--h01-bg);
   color: var(--h01-caption);
   font-size: var(--h01-meta);
