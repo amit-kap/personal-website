@@ -284,18 +284,28 @@ html[data-theme='dark']:has(.h01), html[data-theme='dark'] body:has(.h01) { back
   .h01-center .wall-shade { background: linear-gradient(180deg, var(--h01-bg) 0%, transparent 20%, transparent 80%, var(--h01-bg) 100%); }
 }
 
-/* Footer: name, Tel Aviv time, the human / agent switch and the theme toggle. */
+/* Footer: a fixed bar along the bottom of the window, as wide as the centred 1440 frame, with
+   its text at x 120 like the headline, 40px from the right edge. The page scrolls under it. One grey for all its text, 14px. */
 .h01-footer {
+  position: fixed;
+  left: max(0px, calc(50% - 720px));
+  width: min(100%, 1440px);
+  bottom: 0;
+  z-index: 2;
   display: flex;
   align-items: center;
   gap: 16px;
-  align-self: stretch;
-  margin-top: 48px;
-  padding-top: 16px;
-  border-top: 1px solid var(--h01-hair);
+  height: 56px;
+  margin: 0;
+  padding: 0 40px 0 120px; /* left lines up with the text at x 120; also clears the old global footer padding */
+  background: var(--h01-bg);
   color: var(--h01-caption);
+  font-size: var(--h01-meta);
 }
-.h01-footer-name { color: var(--h01-text); }
+/* The top line spans only the content, from the text's left edge to the right padding. */
+.h01-footer::before { content: ""; position: absolute; top: 0; left: 120px; right: 40px; border-top: 1px solid var(--h01-hair); }
+/* Room at the end of the text so the last lines clear the fixed footer. */
+.h01-col { padding-bottom: 136px; }
 .h01-footer time { font-variant-numeric: tabular-nums; }
 .h01-grow { flex: 1; }
 .h01-switch { display: flex; gap: 4px; }
@@ -323,4 +333,17 @@ html[data-theme='dark']:has(.h01), html[data-theme='dark'] body:has(.h01) { back
 .h01-md a, .h01-role a { color: var(--h01-accent); text-decoration: none; }
 .h01-md a:hover, .h01-role a:hover { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
 .h01-md code { font-size: 13px; }
-.h01-placeholder .h01-footer { margin-top: auto; } /* pinned to the bottom of short pages */
+
+@media (max-width: 900px) {
+  .h01-footer { padding: 0 16px; gap: 12px; }
+  .h01-footer::before { left: 16px; right: 16px; }
+  .h01-col { padding-bottom: 104px; }
+}
+.h01-footer > span { white-space: nowrap; }
+@media (max-width: 900px) {
+  .h01-placeholder { grid-template-columns: 1fr; } /* no side strip on phones, the text gets the full width */
+}
+@media (max-width: 480px) {
+  .h01-footer { gap: 8px; font-size: 12px; }
+  .h01-switch a, .h01-theme { width: 24px; height: 24px; }
+}

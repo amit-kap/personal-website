@@ -63,7 +63,7 @@ export default function SiteFooter() {
 
   return (
     <footer className="h01-footer">
-      <span className="h01-footer-name">Amit Kaplinsky</span>
+      <span>© 2026 Amit Kaplinsky</span>
       <span>
         Tel Aviv <time>{time}</time>
       </span>
