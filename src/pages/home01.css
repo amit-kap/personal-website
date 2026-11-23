@@ -83,16 +83,16 @@ html[data-theme='dark']:has(.h01), html[data-theme='dark'] body:has(.h01) { back
 .h01-caret {
   display: inline-block;
   width: 16px; /* about one letter wide, on the 4px grid */
-  height: 24px;
+  height: .73em; /* Inter's cap height: the block runs from the top of the capitals to the baseline */
   margin-left: 4px;
-  vertical-align: -0.08em;
+  vertical-align: baseline;
   visibility: hidden; /* holds the place; the block below is what you see */
 }
 /* The visible cursor and its trail sit behind the letters (z-index -1 inside the column's stacking context). */
 .h01-caret-block, .h01-caret-glow {
   position: absolute;
   z-index: -1;
-  height: 24px;
+  height: .73em;
   background: var(--h01-accent);
   pointer-events: none;
 }
