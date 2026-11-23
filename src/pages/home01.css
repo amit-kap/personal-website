@@ -12,9 +12,9 @@
   --h01-meta: 14px;
   --h01-title: 28px;
 
-  position: fixed;
-  inset: 0;
-  overflow-y: auto;
+  /* The page scrolls the window itself (not an inner box), so trackpad and wheel scrolling stay smooth. */
+  position: relative;
+  min-height: 100vh;
   display: grid;
   grid-template-columns: 80px minmax(0, 1fr) minmax(0, 1.4fr);
   grid-auto-rows: max-content; /* rows grow with the text instead of squeezing to the window */
@@ -24,6 +24,9 @@
   font-size: var(--h01-meta);
   line-height: 18px;
 }
+
+/* White behind the page, also when the window bounces past the top or bottom. */
+html:has(.h01), body:has(.h01) { background: #fff; }
 
 /* The 80px strip on the left; empty for now ("shader frame" in Paper). */
 .h01-rail { border-right: 1px solid var(--h01-rail); min-height: 100%; }
