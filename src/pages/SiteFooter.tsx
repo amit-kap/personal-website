@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router-dom'
 import { Bot, Moon, Sun, User } from 'lucide-react'
 
 /* The small footer at the end of the new pages: name, local time in Tel Aviv,
-   the human / agent view switch and the light / dark toggle. */
+   the human / agent view switch and the light / dark switch. */
 
 /* Local time in Tel Aviv, 24-hour, refreshed on the minute. */
 const telAvivTime = () =>
@@ -44,8 +44,7 @@ function useTheme() {
   useEffect(() => {
     document.documentElement.dataset.theme = theme
   }, [theme])
-  const toggle = () => {
-    const next = theme === 'dark' ? 'light' : 'dark'
+  const pick = (next: Theme) => {
     try {
       localStorage.setItem(STORAGE_KEY, next)
     } catch {
@@ -53,20 +52,17 @@ function useTheme() {
     }
     setTheme(next)
   }
-  return { theme, toggle }
+  return { theme, setTheme: pick }
 }
 
 export default function SiteFooter() {
   const time = useTelAvivTime()
-  const { theme, toggle } = useTheme()
+  const { theme, setTheme } = useTheme()
   const agent = useLocation().pathname === '/agent'
 
   return (
     <footer className="h01-footer">
       <span>© 2026 Amit Kaplinsky</span>
-      <span>
-        Tel Aviv <time>{time}</time>
-      </span>
       <span className="h01-grow" />
       <nav className="h01-switch" aria-label="View">
         <Link to="/" className={agent ? undefined : 'on'} aria-current={agent ? undefined : 'page'} aria-label="Human view" title="Human view">
@@ -76,15 +72,17 @@ export default function SiteFooter() {
           <Bot size={16} strokeWidth={1.75} aria-hidden />
         </Link>
       </nav>
-      <button
-        type="button"
-        className="h01-theme"
-        onClick={toggle}
-        aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
-        title={theme === 'dark' ? 'Light mode' : 'Dark mode'}
-      >
-        {theme === 'dark' ? <Sun size={16} strokeWidth={1.75} aria-hidden /> : <Moon size={16} strokeWidth={1.75} aria-hidden />}
-      </button>
+      <div className="h01-switch" role="group" aria-label="Theme">
+        <button type="button" className={theme === 'light' ? 'on' : undefined} aria-pressed={theme === 'light'} onClick={() => setTheme('light')} aria-label="Light mode" title="Light mode">
+          <Sun size={16} strokeWidth={1.75} aria-hidden />
+        </button>
+        <button type="button" className={theme === 'dark' ? 'on' : undefined} aria-pressed={theme === 'dark'} onClick={() => setTheme('dark')} aria-label="Dark mode" title="Dark mode">
+          <Moon size={16} strokeWidth={1.75} aria-hidden />
+        </button>
+      </div>
+      <span>
+        Tel Aviv · <time>{time}</time>
+      </span>
     </footer>
   )
 }

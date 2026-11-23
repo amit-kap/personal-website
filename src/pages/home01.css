@@ -27,7 +27,7 @@
   line-height: 18px;
 }
 
-/* Dark theme: set by the footer toggle (or the system, until the visitor picks), on <html data-theme>. */
+/* Dark theme: set by the footer switch (or the system, until the visitor picks), on <html data-theme>. */
 html[data-theme='dark'] .h01 {
   --h01-bg: #111111;
   --h01-text: #f2f2f0;
@@ -119,6 +119,9 @@ html[data-theme='dark']:has(.h01), html[data-theme='dark'] body:has(.h01) { back
 .h01-icons { margin-top: 48px; display: flex; align-items: center; gap: 24px; }
 .h01-icons a { display: flex; color: var(--h01-text); }
 .h01-icons a:hover { color: var(--h01-accent); }
+/* "Email me" is a word, not an icon: body size, the link hover of the page. */
+.h01-icons .h01-email { font-size: 14px; line-height: 20px; text-decoration: none; }
+.h01-icons .h01-email:hover { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
 
 /* Narrow screens: one column. */
 @media (max-width: 900px) {
@@ -284,12 +287,12 @@ html[data-theme='dark']:has(.h01), html[data-theme='dark'] body:has(.h01) { back
   .h01-center .wall-shade { background: linear-gradient(180deg, var(--h01-bg) 0%, transparent 20%, transparent 80%, var(--h01-bg) 100%); }
 }
 
-/* Footer: a fixed bar along the bottom of the window, as wide as the centred 1440 frame, with
-   its text at x 120 like the headline, 40px from the right edge. The page scrolls under it. One grey for all its text, 14px. */
+/* Footer: a fixed bar along the bottom of the window, the full width of the view. Its text starts where
+   the headline starts (x 120 inside the centred 1440 frame) and ends 40px inside the frame's right edge, not at the window edge. The page scrolls under it. One grey for all its text, 14px. */
 .h01-footer {
   position: fixed;
-  left: max(0px, calc(50% - 720px));
-  width: min(100%, 1440px);
+  left: 0;
+  right: 0;
   bottom: 0;
   z-index: 2;
   display: flex;
@@ -297,19 +300,19 @@ html[data-theme='dark']:has(.h01), html[data-theme='dark'] body:has(.h01) { back
   gap: 16px;
   height: 56px;
   margin: 0;
-  padding: 0 40px 0 120px; /* left lines up with the text at x 120; also clears the old global footer padding */
+  padding: 0 max(40px, calc(50% - 680px)) 0 max(120px, calc(50% - 600px)); /* text starts with the headline and ends 40px inside the 1440 frame; also clears the old global footer padding */
   background: var(--h01-bg);
   color: var(--h01-caption);
   font-size: var(--h01-meta);
 }
-/* The top line spans only the content, from the text's left edge to the right padding. */
-.h01-footer::before { content: ""; position: absolute; top: 0; left: 120px; right: 40px; border-top: 1px solid var(--h01-hair); }
+/* The top line runs the full width of the view. */
+.h01-footer::before { content: ""; position: absolute; top: 0; left: 0; right: 0; border-top: 1px solid var(--h01-hair); }
 /* Room at the end of the text so the last lines clear the fixed footer. */
 .h01-col { padding-bottom: 136px; }
 .h01-footer time { font-variant-numeric: tabular-nums; }
 .h01-grow { flex: 1; }
 .h01-switch { display: flex; gap: 4px; }
-.h01-switch a, .h01-theme {
+.h01-switch a, .h01-switch button {
   display: grid;
   place-items: center;
   width: 28px;
@@ -321,8 +324,8 @@ html[data-theme='dark']:has(.h01), html[data-theme='dark'] body:has(.h01) { back
   cursor: pointer;
   transition: color .15s ease, background .15s ease;
 }
-.h01-switch a:hover, .h01-theme:hover { color: var(--h01-accent); }
-.h01-switch a.on { color: var(--h01-text); background: var(--h01-tile); }
+.h01-switch a:hover, .h01-switch button:hover { color: var(--h01-accent); }
+.h01-switch .on, .h01-switch .on:hover { color: var(--h01-text); background: var(--h01-tile); }
 
 /* Agent view: the plain-text site, set simply in the text column. */
 .h01-agent { max-width: 760px; }
@@ -336,7 +339,6 @@ html[data-theme='dark']:has(.h01), html[data-theme='dark'] body:has(.h01) { back
 
 @media (max-width: 900px) {
   .h01-footer { padding: 0 16px; gap: 12px; }
-  .h01-footer::before { left: 16px; right: 16px; }
   .h01-col { padding-bottom: 104px; }
 }
 .h01-footer > span { white-space: nowrap; }
@@ -345,5 +347,5 @@ html[data-theme='dark']:has(.h01), html[data-theme='dark'] body:has(.h01) { back
 }
 @media (max-width: 480px) {
   .h01-footer { gap: 8px; font-size: 12px; }
-  .h01-switch a, .h01-theme { width: 24px; height: 24px; }
+  .h01-switch a, .h01-switch button { width: 24px; height: 24px; }
 }
