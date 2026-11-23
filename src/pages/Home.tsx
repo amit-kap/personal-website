@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { ArrowUpRight, Send } from 'lucide-react'
+import { ArrowRight, ArrowUpRight, Send } from 'lucide-react'
 import './home01.css'
 import ScreenWall from './ScreenWall'
 import SiteFooter from './SiteFooter'
@@ -91,21 +91,34 @@ export default function Home() {
         </div>
 
         <section className="h01-group">
-          <div className="h01-label">Case Study</div>
-          <Link className="h01-link" to="/case-studies/designing-for-the-supervisor">
-            <span>Designing for the supervisor</span> <Arrow />
-          </Link>
+          <div className="h01-label">Case study</div>
+          <ul className="h01-items">
+            <li>
+              <Link className="h01-link" to="/case-studies/designing-for-the-supervisor">
+                <span>Designing for the supervisor</span> <ArrowRight size={16} strokeWidth={2} aria-hidden />
+              </Link>
+              <span className="h01-desc">How risk analysts oversee AI agents at Shift</span>
+            </li>
+          </ul>
         </section>
 
         <section className="h01-group">
-          <div className="h01-label">Projects</div>
+          <div className="h01-label">Side projects</div>
           {/* TODO: real links for Glaze and Monocle. */}
-          <a className="h01-link" href="#">
-            <span>Glaze - Components Library</span> <Arrow />
-          </a>
-          <a className="h01-link" href="#">
-            <span>Monocle - md file editor</span> <Arrow />
-          </a>
+          <ul className="h01-items">
+            <li>
+              <a className="h01-link" href="#">
+                <span>Glaze</span> <Arrow />
+              </a>
+              <span className="h01-desc">Component library</span>
+            </li>
+            <li>
+              <a className="h01-link" href="#">
+                <span>Monocle</span> <Arrow />
+              </a>
+              <span className="h01-desc">Markdown editor</span>
+            </li>
+          </ul>
         </section>
 
         <p className="h01-status">

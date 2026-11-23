@@ -98,10 +98,16 @@ html[data-theme='dark']:has(.h01), html[data-theme='dark'] body:has(.h01) { back
 
 .h01-group { margin-top: 80px; display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
 .h01-group + .h01-group { margin-top: 40px; }
-.h01-label { color: var(--h01-caption); }
+/* Section labels read as small caps headings, so they never look like the grey line under each item. */
+.h01-label { margin-bottom: 8px; color: var(--h01-caption); font-size: 12px; line-height: 16px; letter-spacing: .06em; text-transform: uppercase; }
+/* Each item is its name (with the arrow) and a grey line under it, like the name and role at the top. */
+.h01-items { display: flex; flex-direction: column; gap: 16px; margin: 0; padding: 0; list-style: none; }
+.h01-items li { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
+.h01-desc { color: var(--h01-label); }
 .h01-link { display: inline-flex; align-items: center; gap: 4px; text-decoration: none; color: var(--h01-text); }
 .h01-link svg { width: 16px; height: 16px; color: var(--h01-accent); flex-shrink: 0; transition: translate .2s ease; }
 .h01-link:hover svg { translate: 2px -2px; }
+.h01-link:hover svg.lucide-arrow-right { translate: 2px 0; }
 
 /* Pushed to the bottom: availability, the closing line and the icons. */
 .h01-status { margin-top: auto; padding-top: 80px; display: flex; align-items: center; gap: 8px; color: var(--h01-accent); }
