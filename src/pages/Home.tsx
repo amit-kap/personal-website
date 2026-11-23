@@ -8,7 +8,8 @@ import SiteFooter from './SiteFooter'
 const base = import.meta.env.BASE_URL
 
 /* What the 20% adds, typed in and deleted with a cursor line. "enjoyable" is last and stays longest. */
-const WORDS = ['clear', 'simple', 'precise', 'fast', 'enjoyable']
+// Design words, then the business ones: each finishes "My 20% makes it …".
+const WORDS = ['clear', 'simple', 'precise', 'fast', 'trusted', 'sell', 'stick', 'scale', 'enjoyable']
 const TYPE = 90 // ms per letter typed
 const DELETE = 45 // ms per letter deleted
 const HOLD = 1800
