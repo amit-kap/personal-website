@@ -59,9 +59,14 @@ export default function Home() {
   return (
     <div className="h01 h01-center">
       <main className="h01-col">
-        <Link className="h01-logo" to="/" aria-label="Amit Kaplinsky, home">
-          <img src={`${base}home01/ak-logo.svg`} alt="" width={80} height={45} />
-        </Link>
+        {/* The AK mark and the name sit together at the top, above the headline. */}
+        <header className="h01-head">
+          <img src={`${base}home01/ak-logo.svg`} alt="" width={72} height={40} />
+          <div>
+            <p className="h01-name">Amit Kaplinsky</p>
+            <p className="h01-role">A designer and a builder, based in Tel Aviv.</p>
+          </div>
+        </header>
 
         <h1 className="h01-title">
           <span className="h01-line">AI gets you 80% of the way.</span>
@@ -77,8 +82,6 @@ export default function Home() {
 
         {/* Bio from the Paper "home" frame. The links go to placeholder pages for now. */}
         <div className="h01-bio">
-          <p className="h01-name">Amit Kaplinsky</p>
-          <p className="h01-role">A designer and a builder, based in Tel Aviv.</p>
           <p className="h01-para">
             My path took me from design school to the advertising industry, then into high-tech cybersecurity, where
             I've spent the <Link to="/cv">last twelve years</Link> helping companies ship complete product experiences

@@ -91,6 +91,11 @@ html[data-theme='dark']:has(.h01), html[data-theme='dark'] body:has(.h01) { back
    case study → projects 40, closing → icons 48. */
 .h01-bio { margin-top: 48px; max-width: 468px; color: var(--h01-text); }
 .h01-name { font-weight: 500; }
+/* Home: the AK mark beside the name and role, at the top above the headline. The bio then opens with its paragraphs. */
+.h01-head { display: flex; align-items: center; gap: 16px; }
+.h01 .h01-head + .h01-title { margin-top: 48px; }
+.h01-head img { display: block; width: 72px; height: auto; flex-shrink: 0; }
+.h01-bio > .h01-para:first-child { margin-top: 0; }
 .h01-role { margin-top: 4px; color: var(--h01-label); }
 .h01-para { margin-top: 24px; }
 .h01-para + .h01-para { margin-top: 16px; }
