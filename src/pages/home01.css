@@ -89,6 +89,16 @@ html[data-theme='dark']:has(.h01), html[data-theme='dark'] body:has(.h01) { back
 /* Spacing is always a multiple of 4: tight inside a group, wide between groups.
    Logo → headline 40, headline → bio 48, inside the bio 4 / 24 / 16, bio → case study 80,
    case study → projects 40, closing → icons 48. */
+.h01-fold { margin-top: 16px; }
+.h01-clip { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .3s ease; }
+.h01-fold[data-open="true"] .h01-clip { grid-template-rows: 1fr; }
+.h01-clip > .h01-bio { min-height: 0; overflow: hidden; margin-top: 0; opacity: 0; transition: opacity .3s ease; }
+.h01-fold[data-open="true"] .h01-bio { opacity: 1; }
+.h01-bio::before { content: ''; display: block; height: 32px; }
+.h01-more { display: block; margin-top: 0; padding: 0; border: 0; background: none; font: inherit; color: var(--h01-label); cursor: pointer; }
+.h01-fold[data-open="true"] .h01-more { margin-top: 16px; }
+.h01-fold[data-open="false"] + .h01-group { margin-top: 48px; }
+@media (prefers-reduced-motion: reduce) { .h01-clip, .h01-bio { transition: none; } }
 .h01-bio { margin-top: 48px; max-width: 468px; color: var(--h01-text); }
 .h01-name { font-weight: 500; }
 /* Home: the AK mark beside the name and role, at the top above the headline. The bio then opens with its paragraphs. */
