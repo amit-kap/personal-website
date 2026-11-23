@@ -119,9 +119,6 @@ html[data-theme='dark']:has(.h01), html[data-theme='dark'] body:has(.h01) { back
 .h01-icons { margin-top: 48px; display: flex; align-items: center; gap: 24px; }
 .h01-icons a { display: flex; color: var(--h01-text); }
 .h01-icons a:hover { color: var(--h01-accent); }
-/* "Email me" is a word, not an icon: body size, the link hover of the page. */
-.h01-icons .h01-email { font-size: 14px; line-height: 20px; text-decoration: none; }
-.h01-icons .h01-email:hover { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
 
 /* Narrow screens: one column. */
 @media (max-width: 900px) {

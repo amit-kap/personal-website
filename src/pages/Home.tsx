@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { ArrowUpRight } from 'lucide-react'
+import { ArrowUpRight, Send } from 'lucide-react'
 import './home01.css'
 import ScreenWall from './ScreenWall'
 import SiteFooter from './SiteFooter'
@@ -118,8 +118,8 @@ export default function Home() {
         </p>
 
         <nav className="h01-icons" aria-label="Links">
-          <a className="h01-email" href="mailto:amitka111@gmail.com">
-            Email me
+          <a href="mailto:amitka111@gmail.com" aria-label="Email">
+            <Send size={16} strokeWidth={1.8} aria-hidden />
           </a>
           <a href="https://www.linkedin.com/in/amitkaplinsky" aria-label="LinkedIn">
             <svg width="22" height="22" viewBox="0 0 22 22" fill="currentColor" aria-hidden="true">
