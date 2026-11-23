@@ -1,293 +1,127 @@
-import { useEffect, useRef, useState, type CSSProperties, type RefObject } from 'react'
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import anim from '@/lib/titlesAnimation.json'
+import './home01.css'
 
 const base = import.meta.env.BASE_URL
-const asset = (name: string) => `${base}home/${name}`
 
-/* In the intro AS points at about 10.5 s. The first title starts fading in at 8 s,
-   per Amit, and the rest follow 0.45 s apart. */
-const REVEAL_AT = 8
+/* What the 20% adds. "enjoyable" is last and stays longest. */
+const WORDS = ['clear', 'simple', 'precise', 'fast', 'enjoyable']
+const HOLD = 2200
+const HOLD_LAST = 4000
+const FADE = 280
 
-function useHeroReveal() {
-  const intro = useRef<HTMLVideoElement>(null)
-  const loop = useRef<HTMLVideoElement>(null)
-  const [waiting, setWaiting] = useState(true)
-  const [looping, setLooping] = useState(false)
+function useRotatingWord() {
+  const [index, setIndex] = useState(0)
+  const [out, setOut] = useState(false)
 
   useEffect(() => {
-    const art = intro.current
-    const loopEl = loop.current
-    if (!art || !loopEl) return
-    const reveal = () => setWaiting(false)
-
-    if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      art.removeAttribute('autoplay')
-      art.pause()
-      loopEl.removeAttribute('loop')
-      art.poster = asset('last-frame.webp')
-      reveal()
-      return
-    }
-
-    let raf = 0
-    const check = () => {
-      if (art.currentTime >= REVEAL_AT) reveal()
-      else raf = requestAnimationFrame(check)
-    }
-    raf = requestAnimationFrame(check)
-    const onEnded = () => {
-      reveal()
-      loopEl.currentTime = 0
-      loopEl.play().catch(() => {})
-      setLooping(true)
-    }
-    // timeupdate fires only about 4 times a second but also in a background tab, where requestAnimationFrame stops.
-    const onTime = () => { if (art.currentTime >= REVEAL_AT) reveal() }
-    art.addEventListener('timeupdate', onTime)
-    art.addEventListener('ended', onEnded)
-    art.addEventListener('error', reveal)
-    const safety = setTimeout(reveal, 20000) // never leave the text hidden
-    return () => {
-      cancelAnimationFrame(raf)
-      clearTimeout(safety)
-      art.removeEventListener('timeupdate', onTime)
-      art.removeEventListener('ended', onEnded)
-      art.removeEventListener('error', reveal)
-    }
-  }, [])
-
-  return { intro, loop, waiting, looping }
-}
-
-/* The numbers for the titles' entrance and nudge live in src/lib/titlesAnimation.json, shared with the
-   titles preview (dev only: /__titles/preview). Times are seconds from the moment the first title starts to
-   fade in. */
-const heroStyle = {
-  '--gap': `${anim.gap}s`,
-  '--fade': `${anim.fade}s`,
-  '--move': `${anim.move}s`,
-  '--push-d': `${anim.push}cqw`,
-  '--line-offset': `${anim.lineOffset}s`,
-  '--nudge': `${anim.nudgeDistance}cqw`,
-  '--nudge-time': `${anim.nudgeLength}s`,
-  '--nudge-line-delay': `${anim.nudgeLineDelay}s`,
-  '--nudge-back-time': `${anim.nudgeBackLength}s`,
-  '--disco-in': `${anim.discoIn}s`,
-  '--disco-out': `${anim.discoOut}s`,
-} as CSSProperties
-
-/* Letters disco: from the nudge start until the nudge stops, `discoCount` random letters at a time light
-   up in the primary colour, then jump to others. Toggles a class directly, with no React re-render. */
-function startDisco(h1: HTMLElement, seconds: number) {
-  const letters = Array.from(h1.querySelectorAll<HTMLElement>('.ch'))
-  let lit: HTMLElement[] = []
-  const tick = () => {
-    lit.forEach((el) => el.classList.remove('on'))
-    const pool = letters.filter((el) => !lit.includes(el))
-    lit = []
-    for (let i = 0; i < anim.discoCount && pool.length; i++) lit.push(pool.splice(Math.floor(Math.random() * pool.length), 1)[0])
-    lit.forEach((el) => el.classList.add('on'))
-  }
-  tick()
-  const interval = setInterval(tick, anim.discoStep * 1000)
-  const stop = setTimeout(() => { clearInterval(interval); lit.forEach((el) => el.classList.remove('on')); lit = [] }, seconds * 1000)
-  return () => { clearInterval(interval); clearTimeout(stop); lit.forEach((el) => el.classList.remove('on')) }
-}
-
-function useTitleNudge(waiting: boolean, h1: RefObject<HTMLHeadingElement | null>) {
-  const [nudged, setNudged] = useState(false)
-  useEffect(() => {
-    if (waiting || matchMedia('(prefers-reduced-motion: reduce)').matches) return
-    let stopDisco = () => {}
-    const out = setTimeout(() => {
-      setNudged(true)
-      if (h1.current) stopDisco = startDisco(h1.current, anim.nudgeLength + anim.nudgeHold + anim.nudgeBackLength + anim.nudgeLineDelay)
-    }, anim.nudgeAfter * 1000)
-    const back = setTimeout(() => setNudged(false), (anim.nudgeAfter + anim.nudgeLength + anim.nudgeHold) * 1000)
-    return () => { clearTimeout(out); clearTimeout(back); stopDisco() }
-  }, [waiting, h1])
-  return nudged
-}
-
-/* Scroll shrink: the first stretch of scrolling (one screen high) shrinks the whole hero, as one block, from
-   full width down to the 800px editorial column while it stays pinned at the top. The page below only starts
-   to move once that is done. Desktop only, and not with reduced motion. */
-const COLUMN = 800
-const COLUMN_RADIUS = 14
-
-function useHeroShrink(track: RefObject<HTMLDivElement | null>, hero: RefObject<HTMLElement | null>) {
-  useEffect(() => {
-    const wrap = track.current
-    const el = hero.current
-    if (!wrap || !el) return
-    const desktop = matchMedia('(min-width: 861px)')
-    const reduced = matchMedia('(prefers-reduced-motion: reduce)')
-    let distance = 1
-    let endScale = 1
-    const reset = () => {
-      wrap.style.height = ''
-      wrap.style.marginBottom = ''
-      el.style.transform = ''
-      el.style.borderRadius = ''
-    }
-    // Scroll events already arrive once per frame, so paint straight from the handler (no rAF needed).
-    const paint = () => {
-      const p = Math.min(1, Math.max(0, window.scrollY / distance))
-      const s = 1 - p * (1 - endScale)
-      el.style.transform = `scale(${s})`
-      el.style.borderRadius = `${(COLUMN_RADIUS / s) * p}px`
-    }
-    const measure = () => {
-      if (!desktop.matches || reduced.matches) { reset(); return }
-      const heroH = el.offsetHeight
-      distance = window.innerHeight
-      endScale = Math.min(1, COLUMN / document.documentElement.clientWidth)
-      wrap.style.height = `${distance + heroH}px`
-      // A scale does not shrink the box, so pull what follows up by the space the card no longer fills.
-      wrap.style.marginBottom = `${-(1 - endScale) * heroH}px`
-      paint()
-    }
-
-    measure()
-    window.addEventListener('scroll', paint, { passive: true })
-    window.addEventListener('resize', measure)
-    desktop.addEventListener('change', measure)
-    reduced.addEventListener('change', measure)
-    return () => {
-      window.removeEventListener('scroll', paint)
-      window.removeEventListener('resize', measure)
-      desktop.removeEventListener('change', measure)
-      reduced.removeEventListener('change', measure)
-      reset()
-    }
-  }, [track, hero])
-}
-
-/* Local time in Tel Aviv, 24-hour, refreshed on the minute. */
-const telAvivTime = () =>
-  new Intl.DateTimeFormat('en-GB', { timeZone: 'Asia/Jerusalem', hour: '2-digit', minute: '2-digit', hour12: false }).format(new Date())
-
-function useTelAvivTime() {
-  const [time, setTime] = useState(telAvivTime)
-  useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
     let timer: ReturnType<typeof setTimeout>
-    const tick = () => {
-      setTime(telAvivTime())
-      timer = setTimeout(tick, 60000 - (Date.now() % 60000) + 50) // next minute change
-    }
-    timer = setTimeout(tick, 60000 - (Date.now() % 60000) + 50)
+    const hold = index === WORDS.length - 1 ? HOLD_LAST : HOLD
+    timer = setTimeout(() => {
+      setOut(true)
+      timer = setTimeout(() => {
+        setIndex((i) => (i + 1) % WORDS.length)
+        setOut(false)
+      }, FADE)
+    }, hold)
     return () => clearTimeout(timer)
-  }, [])
-  return time
+  }, [index])
+
+  return { word: WORDS[index], out }
 }
 
-/* A title line, split into one span per letter so the disco can light them. Spaces and punctuation stay plain. */
-function Letters({ text }: { text: string }) {
-  return <>{Array.from(text).map((c, i) => (/[A-Za-z]/.test(c) ? <span key={i} className="ch">{c}</span> : c))}</>
+function Arrow() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M5 12h14" />
+      <path d="m12 5 7 7-7 7" />
+    </svg>
+  )
 }
 
 export default function Home() {
-  const { intro, loop, waiting, looping } = useHeroReveal()
-  const h1 = useRef<HTMLHeadingElement>(null)
-  const time = useTelAvivTime()
-  const track = useRef<HTMLDivElement>(null)
-  const hero = useRef<HTMLElement>(null)
-  useHeroShrink(track, hero)
-  const nudged = useTitleNudge(waiting, h1)
-  const heroClass = ['hero', waiting ? 'wait' : '', looping ? 'is-looping' : ''].filter(Boolean).join(' ')
+  const { word, out } = useRotatingWord()
 
   return (
-    <>
-      <div className="hero-track" ref={track}>
-      <section className={heroClass} style={heroStyle} ref={hero}>
-        <div className="stage">
-        {/* The idle loop sits underneath on its first frame (= the intro's last frame). */}
-        <video className="art loop" ref={loop} src={asset('loop.mp4')} muted playsInline loop preload="auto" aria-hidden="true" />
-        <video
-          className="art intro"
-          ref={intro}
-          src={asset('intro.mp4')}
-          poster={asset('poster.webp')}
-          muted
-          playsInline
-          autoPlay
-          preload="auto"
-          aria-label="AS points at the headline from a Browsercity rooftop"
-        />
-        <div className="grain" aria-hidden="true" />
+    <div className="h01">
+      <div className="h01-rail" aria-hidden="true" />
+
+      <main className="h01-col">
+        <Link className="h01-logo" to="/" aria-label="Amit Kaplinsky, home">
+          <img src={`${base}home01/ak-logo.svg`} alt="" width={80} height={45} />
+        </Link>
+
+        <h1 className="h01-title">
+          <span className="h01-line">AI gets you 80% of the way.</span>
+          <b className="h01-line">
+            My 20% makes it <span className={`h01-word${out ? ' out' : ''}`} aria-live="polite">{word}</span>
+          </b>
+        </h1>
+
+        {/* Bio from the Paper "home" frame. The links go to placeholder pages for now. */}
+        <div className="h01-bio">
+          <p className="h01-name">Amit Kaplinsky</p>
+          <p className="h01-role">A designer and a builder, based in Tel Aviv.</p>
+          <p className="h01-para">
+            My path took me from design school to the advertising industry, then into high-tech cybersecurity, where
+            I've spent the <Link to="/cv">last twelve years</Link> helping companies ship complete product experiences
+            to their users.
+          </p>
+          <p className="h01-para">
+            I've designed security products from <Link to="/work/checkpoint">Check Point</Link> to AI-native startups, including as founding designer
+            at <Link to="/work/shift">Shift</Link> and <Link to="/work/veriti">Veriti</Link>.
+          </p>
         </div>
-        <div className="inner">
-          <header className="rv" style={{ '--i': 3 } as CSSProperties}>
-            <Link className="logo" to="/" aria-label="AS home"><img src={asset('as-badge.svg')} alt="AS" /></Link>
-            <nav><a href="#work">Work</a><a href="#about">About</a></nav>
-          </header>
-          <div className="copy">
-            <h1 ref={h1} className={nudged ? 'nudged' : undefined}>
-              <span className="soft rv" style={{ '--i': 0 } as CSSProperties}><Letters text="AI slop is everywhere." /></span>
-              <span className="line rv" style={{ '--i': 0 } as CSSProperties}><Letters text="I'm the anti‑slop superhero." /></span>
-            </h1>
-            <p className="sub rv" style={{ '--i': 1 } as CSSProperties}>I take what your AI shipped and turn it into a polished experience humans can enjoy.</p>
-            <div className="cta rv" style={{ '--i': 2 } as CSSProperties}>
-              <a className="btn" href="mailto:amitka111@gmail.com">Let's talk <span aria-hidden="true">→</span></a>
-            </div>
-          </div>
-        </div>
-      </section>
-      </div>
 
-      <main>
-        <section className="case column" id="work">
-          <div className="eyebrow">Case study</div>
-          <div className="cover" role="img" aria-label="Cover image placeholder" />
-          <div className="case-row">
-            <div>
-              <h2>Designing for the supervisor</h2>
-              <p>How people oversee AI agents, understand their reasoning and step in when it matters.</p>
-            </div>
-            <Link className="pill" to="/case-studies/designing-for-the-supervisor">Read <span aria-hidden="true">↗</span></Link>
-          </div>
+        <section className="h01-group">
+          <div className="h01-label">Case Study</div>
+          <Link className="h01-link" to="/case-studies/designing-for-the-supervisor">
+            <span>Designing for the supervisor</span> <Arrow />
+          </Link>
         </section>
 
-        <section className="bio column" id="about">
-          <img src={asset('profile.webp')} alt="Amit Kaplinsky" />
-          <div className="bio-text">
-            <p>
-              <b>Amit Kaplinsky</b>, a designer and a builder in Tel Aviv.
-            </p>
-            <p>
-              I came to product design through advertising, then into
-              high-tech cybersecurity, where I have spent the last twelve years designing complex B2B and cyber products and helping
-              companies ship complete product experiences.
-            </p>
-            <p>
-              I've designed security products from Check Point to AI-native startups, including as founding designer at{' '}
-              <Link to="/work/shift">Shift</Link> and <Link to="/work/veriti">Veriti</Link>.
-            </p>
-          </div>
+        <section className="h01-group">
+          <div className="h01-label">Projects</div>
+          {/* TODO: real links for Glaze and Monocle. */}
+          <a className="h01-link" href="#">
+            <span>Glaze - Components Library</span> <Arrow />
+          </a>
+          <a className="h01-link" href="#">
+            <span>Monocle - md file editor</span> <Arrow />
+          </a>
         </section>
 
-        <section className="closing column">
-          <div>
-            <h2>Send me what your AI shipped.</h2>
-            <p className="status"><span className="dot" aria-hidden="true" />Available for new projects</p>
-          </div>
-          <div className="closing-actions">
-            <a className="btn" href="mailto:amitka111@gmail.com">Let's talk <span aria-hidden="true">→</span></a>
-          </div>
-        </section>
+        <p className="h01-status">
+          <span className="h01-dot" aria-hidden="true" />
+          Available for new projects
+        </p>
 
-        <footer className="column">
-          <div className="footer-inner">
-          <div className="links" aria-label="Links">
-            <a href="https://www.linkedin.com/in/amitkaplinsky" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9h4v12H3zM9 9h3.8v1.7h.1c.5-1 1.8-2 3.8-2 4 0 4.8 2.6 4.8 6V21h-4v-5.4c0-1.3 0-3-1.8-3s-2.1 1.4-2.1 2.9V21H9z" /></svg></a>
-            <a href="https://github.com/amit-kap" aria-label="GitHub"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.9a3.4 3.4 0 0 0-.9-2.6c3.1-.4 6.4-1.5 6.4-6.9a5.4 5.4 0 0 0-1.5-3.7 5 5 0 0 0-.1-3.7s-1.2-.4-3.9 1.4a13.4 13.4 0 0 0-7 0C6.3 1.8 5.1 2.2 5.1 2.2a5 5 0 0 0-.1 3.7A5.4 5.4 0 0 0 3.5 9.6c0 5.4 3.3 6.5 6.4 6.9a3.4 3.4 0 0 0-.9 2.6V22" /></svg></a>
-            <a href="mailto:amitka111@gmail.com" aria-label="Email"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="16" x="2" y="4" rx="2" /><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" /></svg></a>
-          </div>
-          <div className="city">Tel Aviv, <time>{time}</time></div>
-          </div>
-        </footer>
+        <p className="h01-closing">
+          Building something that doesn't feel right yet? <a href="mailto:amitka111@gmail.com">Let's talk.</a>
+        </p>
+
+        <nav className="h01-icons" aria-label="Links">
+          <a href="mailto:amitka111@gmail.com" aria-label="Email">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M9.69 14.458a0.334 0.334 0 0 0 0.625-0.016l4.334-12.668a0.33 0.33 90 0 0-0.423-0.423l-12.668 4.334a0.334 0.334 0 0 0-0.016 0.625l5.288 2.12a1.334 1.334 0 0 1 0.74 0.74z" />
+              <path d="M14.57 1.431l-7.294 7.293" />
+            </svg>
+          </a>
+          <a href="https://www.linkedin.com/in/amitkaplinsky" aria-label="LinkedIn">
+            <svg width="22" height="22" viewBox="0 0 22 22" fill="currentColor" aria-hidden="true">
+              <path fillRule="evenodd" d="M18.945 18.945L15.68 18.945 15.68 13.384C15.68 11.86 15.101 11.007 13.894 11.007 12.581 11.007 11.895 11.895 11.895 13.384L11.895 18.945 8.749 18.945 8.749 8.352 11.895 8.352 11.895 9.779C11.895 9.779 12.842 8.028 15.09 8.028 17.336 8.028 18.945 9.4 18.945 12.238L18.945 18.945ZM4.996 6.965C3.924 6.965 3.056 6.09 3.056 5.01 3.056 3.931 3.924 3.056 4.996 3.056 6.067 3.056 6.935 3.931 6.935 5.01 6.935 6.09 6.067 6.965 4.996 6.965ZM3.371 18.945L6.651 18.945 6.651 8.352 3.371 8.352 3.371 18.945Z" />
+            </svg>
+          </a>
+          <a href="https://github.com/amit-kap" aria-label="GitHub">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M10 14.667v-2.667a3.2 3.2 0 0 0-0.667-2.333c2 0 4-1.333 4-3.667 0.053-0.833-0.18-1.653-0.666-2.333 0.187-0.767 0.187-1.567 0-2.334 0 0-0.667 0-2 1-1.760-0.333-3.573-0.333-5.334 0C4 1.333 3.333 1.333 3.333 1.333c-0.2 0.767-0.2 1.567 0 2.334A3.602 3.602 0 0 0 2.667 6c0 2.333 2 3.667 4 3.667-0.26 0.327-0.453 0.7-0.567 1.1-0.113 0.4-0.147 0.82-0.1 1.233v2.667" />
+              <path d="M6 12c-3.007 1.333-3.333-1.333-4.667-1.333" />
+            </svg>
+          </a>
+        </nav>
       </main>
-    </>
+
+    </div>
   )
 }

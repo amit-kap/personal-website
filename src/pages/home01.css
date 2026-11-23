@@ -1,0 +1,100 @@
+/* home-01 (Paper, "peronal-website" file): the new home. Everything is scoped under .h01 so the
+   superhero home (HomeAS, index.css) keeps its look. Values are the Paper frame's, 1440×960. */
+.h01 {
+  --h01-bg: #ffffff;
+  --h01-text: #000000;
+  --h01-name: #111111;
+  --h01-copy: #545454;
+  --h01-label: #646464;
+  --h01-rail: #f2f2ef;
+  --h01-accent: var(--primary); /* #F04A00 */
+  --h01-meta: 14px;
+  --h01-title: 28px;
+
+  position: fixed;
+  inset: 0;
+  overflow-y: auto;
+  display: grid;
+  grid-template-columns: 80px minmax(0, 1fr) minmax(0, 1.4fr);
+  background: var(--h01-bg);
+  color: var(--h01-text);
+  font-family: var(--font);
+  font-size: var(--h01-meta);
+  line-height: 18px;
+}
+
+/* The 80px strip on the left; empty for now ("shader frame" in Paper). */
+.h01-rail { border-right: 1px solid var(--h01-rail); min-height: 100%; }
+
+/* The text column: 40px in from the rail, top and bottom 80px, as in Paper. */
+.h01-col {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-height: 100vh;
+  padding: 80px 40px 80px 40px;
+}
+
+.h01-logo { display: block; width: 80px; height: 45px; }
+.h01-logo img { display: block; width: 100%; height: 100%; }
+
+.h01 .h01-title {
+  margin-top: 38px;
+  font-size: var(--h01-title);
+  line-height: 34px;
+  font-weight: 400;
+  letter-spacing: 0;
+  color: var(--h01-text);
+}
+.h01-title b { font-weight: 600; }
+.h01-title .h01-line { display: block; }
+
+/* The rotating word: one word at a time, a short fade and lift between them. */
+.h01-word { display: inline-block; transition: opacity .28s ease, translate .28s ease; }
+.h01-word.out { opacity: 0; translate: 0 -6px; }
+@media (prefers-reduced-motion: reduce) { .h01-word { transition: none; } }
+
+/* Bio, spaced as in the Paper "home" frame: name, role (4px), then two paragraphs (28px, 24px). */
+.h01-bio { margin-top: 26px; max-width: 468px; color: var(--h01-text); }
+.h01-name { font-weight: 500; }
+.h01-role { margin-top: 4px; color: var(--h01-label); }
+.h01-para { margin-top: 28px; }
+.h01-para + .h01-para { margin-top: 24px; }
+.h01-bio a { color: var(--h01-accent); text-decoration: none; }
+.h01-bio a:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+.h01-group { margin-top: 51px; display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
+.h01-group + .h01-group { margin-top: 53px; }
+.h01-label { color: var(--h01-label); }
+.h01-link { display: inline-flex; align-items: center; gap: 2px; text-decoration: none; color: var(--h01-text); }
+.h01-link svg { width: 16px; height: 16px; rotate: -45deg; stroke: var(--h01-accent); flex-shrink: 0; transition: translate .2s ease; }
+.h01-link:hover svg { translate: 2px -2px; }
+.h01-link:hover span { text-decoration: underline; text-underline-offset: 3px; }
+
+/* Pushed to the bottom: availability, the closing line and the icons. */
+.h01-status { margin-top: auto; padding-top: 64px; display: flex; align-items: center; gap: 8px; color: var(--h01-accent); }
+.h01-dot { position: relative; width: 12px; height: 12px; flex-shrink: 0; }
+.h01-dot::before, .h01-dot::after { content: ""; position: absolute; border-radius: 50%; background: var(--h01-accent); }
+.h01-dot::before { inset: 0; opacity: .35; }
+.h01-dot::after { width: 6px; height: 6px; left: 3px; top: 3px; }
+
+.h01-closing { margin-top: 16px; max-width: 431px; font-size: var(--h01-title); line-height: 34px; font-weight: 400; }
+.h01-closing a { font-weight: 600; text-decoration: none; }
+.h01-closing a:hover { color: var(--h01-accent); }
+
+.h01-icons { margin-top: 51px; display: flex; align-items: center; gap: 24px; }
+.h01-icons a { display: flex; color: var(--h01-text); }
+.h01-icons a:hover { color: var(--h01-accent); }
+
+/* Narrow screens: one column. */
+@media (max-width: 900px) {
+  .h01 { grid-template-columns: 1fr; }
+  .h01-rail { display: none; }
+  .h01-col { min-height: auto; padding: 48px 16px; }
+  .h01-status { margin-top: 64px; padding-top: 0; }
+}
+
+/* Placeholder inner pages: just the text column. */
+.h01-placeholder { grid-template-columns: 80px minmax(0, 1fr); }
+.h01-placeholder .h01-role { margin-top: 8px; }
+.h01-back { margin-top: 32px; }
