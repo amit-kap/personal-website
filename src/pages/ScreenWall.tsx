@@ -36,16 +36,22 @@ const SCREENS: Screen[] = [
    alternating up and down. */
 const DURATIONS = ['510s', '480s', '570s', '450s', '540s']
 
-/* The middle column is mainly Shift with two Veriti screens (a Veriti after every three Shift);
-   everything else is dealt round-robin into the other columns. */
+/* Shift and Veriti lead, on the side the text covers least. The right column is Shift and Veriti, alternating;
+   the middle one has the other Shift screens, each followed by another product; the left column takes the rest.
+   Everything outside Shift is first mixed product by product, so no product repeats down a column. */
 const columnsOf = (n: number) => {
   const shift = SCREENS.filter((s) => s.product === 'shift')
-  const veriti = SCREENS.filter((s) => s.product === 'veriti').slice(0, 2)
-  const middle = shift.flatMap((s, k) => (k % 3 === 2 && veriti[(k - 2) / 3] ? [s, veriti[(k - 2) / 3]] : [s]))
-  const rest = SCREENS.filter((s) => !middle.includes(s))
-  const mid = Math.floor(n / 2)
-  const sides = Array.from({ length: n - 1 }, (_, c) => rest.filter((_, i) => i % (n - 1) === c))
-  return [...sides.slice(0, mid), middle, ...sides.slice(mid)]
+  const others = SCREENS.filter((s) => s.product !== 'shift')
+  const byProduct = ['veriti', 'checkpoint', 'onyxia'].map((p) => others.filter((s) => s.product === p))
+  const mixed = Array.from({ length: Math.max(...byProduct.map((g) => g.length)) }, (_, i) => byProduct.map((g) => g[i])).flat().filter(Boolean) as Screen[]
+  const veriti = mixed.filter((s) => s.product === 'veriti').slice(0, Math.ceil(shift.length / 2))
+  const right = shift.filter((_, i) => i % 2 === 0).flatMap((s, k) => [s, veriti[k]]).filter(Boolean)
+  const rest = mixed.filter((s) => !veriti.includes(s))
+  const middleShift = shift.filter((_, i) => i % 2 === 1)
+  const middle = middleShift.flatMap((s, k) => [s, rest[k]]).filter(Boolean)
+  const left = rest.slice(middleShift.length)
+  const sides = Array.from({ length: n - 2 }, (_, c) => left.filter((_, i) => i % (n - 2) === c))
+  return [...sides, middle, right]
 }
 
 export default function ScreenWall({ columns = 3 }: { columns?: number }) {

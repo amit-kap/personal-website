@@ -105,12 +105,6 @@ function Arrow() {
   return <ArrowUpRight size={16} strokeWidth={2} aria-hidden />
 }
 
-const WORK = [
-  { name: 'Shift', to: '/work/shift', desc: 'Vendor security reviews run by an AI agent' },
-  { name: 'Veriti', to: '/work/veriti', desc: "Security fixes across every vendor's controls" },
-  { name: 'Check Point', to: '/work/checkpoint', desc: 'Enterprise security management' },
-]
-
 export default function Home() {
   const { text, word, holding } = useTypedWord()
 
@@ -138,23 +132,24 @@ export default function Home() {
           </b>
         </h1>
 
-        {/* The work first: one row per company, each to its work page. */}
+        {/* About, as the first section (Paper "home" frame): the companies are linked in the sentence. */}
         <section className="h01-group">
-          <div className="h01-label">Recent work</div>
-          <ul className="h01-items">
-            {WORK.map((w) => (
-              <li key={w.to}>
-                <Link className="h01-link" to={w.to}>
-                  <span>{w.name}</span> <ArrowRight size={16} strokeWidth={2} aria-hidden />
-                </Link>
-                <span className="h01-desc">{w.desc}</span>
-              </li>
-            ))}
-          </ul>
+          <div className="h01-label">About</div>
+          <div className="h01-bio">
+            <p className="h01-para">
+              My path took me from design school to the advertising industry, then into high-tech cybersecurity, where
+              I've spent the <Link to="/cv">last twelve years</Link> helping companies ship complete product experiences
+              to their users.
+            </p>
+            <p className="h01-para">
+              I've designed security products from <Link to="/work/checkpoint">Check Point</Link> to AI-native startups, including as founding designer
+              at <Link to="/work/shift">Shift</Link> and <Link to="/work/veriti">Veriti</Link>.
+            </p>
+          </div>
         </section>
 
         <section className="h01-group">
-          <div className="h01-label">Case study</div>
+          <div className="h01-label">Latest case study</div>
           <ul className="h01-items">
             <li>
               <Link className="h01-link" to="/case-studies/designing-for-the-supervisor">
@@ -182,22 +177,6 @@ export default function Home() {
               <span className="h01-desc">Markdown editor</span>
             </li>
           </ul>
-        </section>
-
-        {/* About comes after the work; the companies are linked in the list above, so only the CV link stays here. */}
-        <section className="h01-group">
-          <div className="h01-label">About</div>
-          <div className="h01-bio">
-            <p className="h01-para">
-              My path took me from design school to the advertising industry, then into high-tech cybersecurity, where
-              I've spent the <Link to="/cv">last twelve years</Link> helping companies ship complete product experiences
-              to their users.
-            </p>
-            <p className="h01-para">
-              I've designed security products from Check Point to AI-native startups, including as founding designer
-              at Shift and Veriti.
-            </p>
-          </div>
         </section>
 
         <p className="h01-status">
