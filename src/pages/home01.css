@@ -6,6 +6,7 @@
   --h01-name: #111111;
   --h01-copy: #545454;
   --h01-label: #646464;
+  --h01-caption: #8a8a87; /* section labels, lighter than the role line */
   --h01-rail: #f2f2ef;
   --h01-accent: var(--primary); /* #F04A00 */
   --h01-meta: 14px;
@@ -16,6 +17,7 @@
   overflow-y: auto;
   display: grid;
   grid-template-columns: 80px minmax(0, 1fr) minmax(0, 1.4fr);
+  grid-auto-rows: max-content; /* rows grow with the text instead of squeezing to the window */
   background: var(--h01-bg);
   color: var(--h01-text);
   font-family: var(--font);
@@ -39,7 +41,7 @@
 .h01-logo img { display: block; width: 100%; height: 100%; }
 
 .h01 .h01-title {
-  margin-top: 38px;
+  margin-top: 40px;
   font-size: var(--h01-title);
   line-height: 34px;
   font-weight: 400;
@@ -56,7 +58,7 @@
   display: inline-block;
   width: 2px;
   height: 1em;
-  margin-left: 2px;
+  margin-left: 4px;
   vertical-align: -0.12em;
   background: var(--h01-accent);
 }
@@ -64,32 +66,34 @@
 @keyframes h01-blink { 50% { opacity: 0; } }
 @media (prefers-reduced-motion: reduce) { .h01-caret.blink { animation: none; } }
 
-/* Bio, spaced as in the Paper "home" frame: name, role (4px), then two paragraphs (28px, 24px). */
-.h01-bio { margin-top: 26px; max-width: 468px; color: var(--h01-text); }
+/* Spacing is always a multiple of 4: tight inside a group, wide between groups.
+   Logo → headline 40, headline → bio 48, inside the bio 4 / 24 / 16, bio → case study 80,
+   case study → projects 40, closing → icons 48. */
+.h01-bio { margin-top: 48px; max-width: 468px; color: var(--h01-text); }
 .h01-name { font-weight: 500; }
 .h01-role { margin-top: 4px; color: var(--h01-label); }
-.h01-para { margin-top: 28px; }
-.h01-para + .h01-para { margin-top: 24px; }
+.h01-para { margin-top: 24px; }
+.h01-para + .h01-para { margin-top: 16px; }
 .h01-bio a { color: var(--h01-accent); text-decoration: none; }
 
-.h01-group { margin-top: 51px; display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
-.h01-group + .h01-group { margin-top: 53px; }
-.h01-label { color: var(--h01-label); }
-.h01-link { display: inline-flex; align-items: center; gap: 2px; text-decoration: none; color: var(--h01-text); }
+.h01-group { margin-top: 80px; display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
+.h01-group + .h01-group { margin-top: 40px; }
+.h01-label { color: var(--h01-caption); }
+.h01-link { display: inline-flex; align-items: center; gap: 4px; text-decoration: none; color: var(--h01-text); }
 .h01-link svg { width: 16px; height: 16px; rotate: -45deg; stroke: var(--h01-accent); flex-shrink: 0; transition: translate .2s ease; }
 .h01-link:hover svg { translate: 2px -2px; }
 
 /* Pushed to the bottom: availability, the closing line and the icons. */
-.h01-status { margin-top: auto; padding-top: 64px; display: flex; align-items: center; gap: 8px; color: var(--h01-accent); }
+.h01-status { margin-top: auto; padding-top: 80px; display: flex; align-items: center; gap: 8px; color: var(--h01-accent); }
 .h01-dot { position: relative; width: 12px; height: 12px; flex-shrink: 0; }
 .h01-dot::before, .h01-dot::after { content: ""; position: absolute; border-radius: 50%; background: var(--h01-accent); }
 .h01-dot::before { inset: 0; opacity: .35; }
-.h01-dot::after { width: 6px; height: 6px; left: 3px; top: 3px; }
+.h01-dot::after { width: 6px; height: 6px; inset: 0; margin: auto; }
 
 .h01-closing { margin-top: 16px; max-width: 431px; font-size: var(--h01-title); line-height: 34px; font-weight: 400; }
 .h01-closing a { font-weight: 600; text-decoration: none; }
 
-.h01-icons { margin-top: 51px; display: flex; align-items: center; gap: 24px; }
+.h01-icons { margin-top: 48px; display: flex; align-items: center; gap: 24px; }
 .h01-icons a { display: flex; color: var(--h01-text); }
 .h01-icons a:hover { color: var(--h01-accent); }
 
