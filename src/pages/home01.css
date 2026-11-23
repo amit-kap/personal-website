@@ -362,6 +362,8 @@ html[data-theme='dark']:has(.h01), html[data-theme='dark'] body:has(.h01) { back
    run to the full 800px. Headings 22px, section gaps 80px, spacing on the 4px grid. */
 .h01-case { display: block; }
 .h01-case .h01-col { pointer-events: auto; margin-left: auto; margin-right: auto; width: min(100%, 880px); padding-top: 128px; padding-bottom: 136px; }
+/* When the window is wide enough that the corner mark can't overlap the column, the title starts higher. */
+@media (min-width: 1040px) { .h01-case .h01-col { padding-top: 80px; } }
 /* The AK mark, fixed in the top left corner, is the way back home. A ring around it fills as you read (--read, 0 to 1). */
 .h01-corner { position: fixed; top: 24px; left: 24px; z-index: 3; display: grid; place-items: center; width: 64px; height: 64px; border-radius: 50%; background: var(--h01-bg); }
 .h01-corner > * { grid-area: 1 / 1; }
@@ -500,3 +502,12 @@ html[data-theme='dark'] .h01-app { box-shadow: 0 0 0 1px var(--h01-hair), 0 4px 
   .h01-bento li:first-child { grid-column: span 2; aspect-ratio: 16 / 9; }
   .h01-shown { max-width: calc(100vw - 32px); }
 }
+
+/* The case study preview: title, opening paragraph and Read more, all one link. Read more works like the home links:
+   black text with an accent arrow, the text turning accent and underlined on hover. */
+.h01-story { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; text-decoration: none; color: var(--h01-text); }
+.h01-story .h01-desc { max-width: 640px; }
+.h01-readmore { margin-top: 8px; display: inline-flex; align-items: center; gap: 4px; color: var(--h01-text); transition: color .2s ease; }
+.h01-readmore svg { color: var(--h01-accent); transition: translate .2s ease; }
+.h01-story:hover .h01-readmore svg { translate: 2px 0; }
+.h01-story:hover .h01-readmore { color: var(--h01-accent); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }

@@ -15,7 +15,7 @@ Angle: A workspace built for the person supervising the agent, where others adde
 Product: A fleet view, a channel per assessment and a command bar, with a small first step to test trust.
 ```
 
-At Shift, the brief was familiar: improve the vendor risk workspace and help reviewers finish assessments faster. Mapping the work raised a bigger question. If an AI agent can do most of the repetitive work, what is the person there for?
+At Shift, the brief was familiar. Improve the vendor risk workspace and help reviewers finish assessments faster. Mapping the work raised a bigger question. If an AI agent can do most of the repetitive work, what is the person there for?
 
 ### Where the hours go
 

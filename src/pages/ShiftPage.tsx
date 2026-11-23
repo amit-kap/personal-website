@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { ArrowLeft, ArrowRight, Maximize2, X } from 'lucide-react'
 import './home01.css'
 import SiteFooter from './SiteFooter'
-import { getWorkBySlug } from '@/lib/content'
+import { getCaseStudyBySlug, getWorkBySlug } from '@/lib/content'
 
 const base = import.meta.env.BASE_URL
 
@@ -26,13 +26,16 @@ const SCREENS = [
   { file: '04-vendor-access-graph.webp', alt: 'Access graph: a resource and the sensitive data it holds', x: 52.4, y: 25.8, z: 3.6 },
   { file: '05-threat-center.webp', alt: 'Threat center: an alert', x: 0.6, y: 34.7, z: 4.4 },
   { file: '06-integrations-grid.webp', alt: 'Integrations', x: 60.7, y: 96.6, z: 3.1 },
-  { file: '00-login.webp', alt: 'Login', x: 5, y: 39.5, z: 2 },
+  { file: '00-login.webp', alt: 'Login', x: 88.9, y: 46.3, z: 2.9 },
 ]
 
 /* The Shift work page in the case study's centered column, with the home page's type: the title, the live product,
    then the text. */
 export default function ShiftPage() {
   const work = getWorkBySlug('shift')
+  // The case study preview is its opening paragraph: the first block of the markdown that is plain text.
+  const story = getCaseStudyBySlug('designing-for-the-supervisor')
+  const storyLead = story?.body.split(/\n\s*\n/).map((b) => b.trim()).find((b) => b && !/^(#|```|---|!|>|\||-)/.test(b)) ?? ''
   const corner = useRef<HTMLAnchorElement>(null)
   const dialog = useRef<HTMLDialogElement>(null)
   const [screen, setScreen] = useState('Home')
@@ -189,14 +192,15 @@ export default function ShiftPage() {
 
         <section className="h01-group">
           <div className="h01-label">Case study</div>
-          <ul className="h01-items">
-            <li>
-              <Link className="h01-link" to="/case-studies/designing-for-the-supervisor">
-                <span>Designing for the supervisor</span> <ArrowRight size={16} strokeWidth={2} aria-hidden />
-              </Link>
-              <span className="h01-desc">How risk analysts oversee AI agents at Shift</span>
-            </li>
-          </ul>
+          {story && (
+            <Link className="h01-story" to={`/case-studies/${story.slug}`}>
+              <span className="h01-name">{story.title}</span>
+              <span className="h01-desc">{storyLead}</span>
+              <span className="h01-readmore">
+                Read more <ArrowRight size={16} strokeWidth={2} aria-hidden />
+              </span>
+            </Link>
+          )}
         </section>
 
         <SiteFooter />
