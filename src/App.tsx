@@ -1,7 +1,6 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
 import Home from '@/pages/Home'
 import HomeAS from '@/pages/HomeAS'
-import Placeholder from '@/pages/Placeholder'
 import AgentView from '@/pages/AgentView'
 import CaseStudy from '@/pages/CaseStudy'
 import ShiftPage from '@/pages/ShiftPage'
@@ -18,7 +17,6 @@ export default function App() {
       <Route path="/as-hero" element={<HomeAS />} />
       <Route path="/case-studies/:slug" element={<CaseStudy />} />
       <Route path="/agent" element={<AgentView />} />
-      {/* Placeholders until these pages are designed. */}
       <Route path="/cv" element={<CvPage />} />
       <Route path="/work/checkpoint" element={<CheckPointPage />} />
       <Route path="/work/shift" element={<ShiftPage />} />
