@@ -385,37 +385,68 @@ html[data-theme='dark']:has(.h01), html[data-theme='dark'] body:has(.h01) { back
 @media (prefers-reduced-motion: reduce) { .h01-corner img, .h01-corner-arrow { transition: none; } }
 .h01-ring-track { stroke: var(--h01-hair); }
 .h01-ring { stroke: var(--h01-accent); stroke-dasharray: 188.5; stroke-dashoffset: calc(188.5 * (1 - var(--read, 0))); }
-.h01-article { width: 100%; font-size: 17px; line-height: 28px; }
-.h01-article .h01-title { margin-top: 0; font-size: 40px; line-height: 48px; font-weight: 600; letter-spacing: -.02em; }
-.h01-article .h01-sub { margin-top: 12px; font-size: 20px; line-height: 28px; color: var(--h01-label); }
-.h01-meta { margin-top: 24px; margin-bottom: 48px; font-size: 14px; line-height: 20px; color: var(--h01-caption); }
-.h01-article p { margin-top: 20px; }
-.h01-article h3 { margin-top: 80px; font-size: 22px; line-height: 28px; font-weight: 600; letter-spacing: -.01em; }
-.h01-article h3 + p { margin-top: 16px; }
+/* Blog type: 18px body on a 32px line, section headings at 28px with wide space above, so the hierarchy reads at a glance. */
+.h01-article { width: 100%; font-size: 18px; line-height: 32px; }
+.h01-article .h01-title { margin-top: 0; font-size: 48px; line-height: 56px; font-weight: 600; letter-spacing: -.025em; text-wrap: balance; }
+.h01-article .h01-sub { margin-top: 12px; font-size: 22px; line-height: 32px; color: var(--h01-label); text-wrap: balance; }
+.h01-meta { margin-top: 24px; margin-bottom: 40px; font-size: 14px; line-height: 20px; color: var(--h01-caption); }
+.h01-article p { margin-top: 24px; text-wrap: pretty; }
+.h01-article h3 { margin-top: 96px; font-size: 28px; line-height: 36px; font-weight: 600; letter-spacing: -.015em; text-wrap: balance; }
+.h01-article h3 + p, .h01-article h3 + ul { margin-top: 16px; }
+.h01-article strong { font-weight: 600; color: var(--h01-text); }
 .h01-article a { color: inherit; text-decoration: underline; text-decoration-color: var(--h01-caption); text-decoration-thickness: 1px; text-underline-offset: 4px; }
 .h01-article a:hover { color: var(--h01-accent); text-decoration-color: var(--h01-accent); }
+/* The opening paragraph after the summary is the lead, a step larger. */
+.h01-prose > .h01-tldr + p { margin-top: 40px; font-size: 22px; line-height: 36px; color: var(--h01-text); }
+/* The summary box: three labelled lines so a skimmer gets the whole story in ten seconds. */
+.h01-tldr { margin: 0; padding: 24px 32px; border-radius: 12px; background: var(--h01-tile); display: flex; flex-direction: column; gap: 12px; }
+.h01-tldr > div { display: grid; grid-template-columns: 96px 1fr; gap: 16px; }
+.h01-tldr dt { font-weight: 600; color: var(--h01-text); }
+.h01-tldr dd { margin: 0; color: var(--h01-label); }
+/* Key figures: large numbers in the accent, each with a short grey line under it. */
+.h01-article .h01-stats { margin: 48px 0; }
+.h01-stats > div { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 32px; }
+.h01-article .h01-stats p { margin: 0; display: flex; flex-direction: column; gap: 8px; }
+.h01-stats strong { font-size: 56px; line-height: 56px; font-weight: 600; letter-spacing: -.03em; color: var(--h01-accent); font-variant-numeric: tabular-nums; }
+.h01-stats span { font-size: 16px; line-height: 24px; color: var(--h01-label); max-width: 280px; }
+/* Comparison tables: hairline rows, the first column as row labels. */
+.h01-article table { width: 100%; margin: 40px 0; border-collapse: collapse; font-size: 16px; line-height: 24px; }
+.h01-article th, .h01-article td { padding: 12px 16px 12px 0; text-align: left; vertical-align: top; border-bottom: 1px solid var(--h01-hair); }
+.h01-article th { font-weight: 600; color: var(--h01-text); }
+.h01-article td { color: var(--h01-label); }
+.h01-article td:first-child { font-weight: 600; color: var(--h01-text); white-space: nowrap; }
+.h01-article td:last-child, .h01-article th:last-child { padding-right: 0; }
 /* The pull quote is the loud moment: just large type, with space around it. */
-.h01-article blockquote { margin: 56px 0; font-size: 26px; line-height: 36px; font-weight: 500; letter-spacing: -.01em; }
-.h01-article blockquote p { margin-top: 0; }
-.h01-article ul { margin: 20px 0 0; padding-left: 24px; display: flex; flex-direction: column; gap: 8px; }
+.h01-article blockquote { margin: 80px 0 0; font-size: 32px; line-height: 44px; font-weight: 500; letter-spacing: -.015em; text-wrap: balance; }
+.h01-article blockquote p { margin-top: 0; color: var(--h01-text); }
+.h01-article blockquote em { font-style: normal; color: var(--h01-accent); }
+.h01-article ul { margin: 24px 0 0; padding-left: 24px; display: flex; flex-direction: column; gap: 12px; }
 .h01-article li::marker { color: var(--h01-caption); }
-/* Figures run the full 800px, wider than the text. */
+/* Figures run the full 800px. */
 .h01-article img { display: block; width: 100%; max-width: 800px; height: auto; margin: 0; border-radius: 8px; background: var(--h01-tile); box-shadow: 0 0 0 1px var(--h01-hair), 0 4px 16px rgb(0 0 0 / .06); }
 /* Each image is a figure with its alt text as a small grey caption. Images written side by side in the markdown sit in
    one row at the full width, all the same height: each takes a share of the row in proportion to its shape. */
-.h01-article figure { margin: 48px 0; }
+.h01-article figure { margin: 56px 0; }
 .h01-article figcaption { margin-top: 12px; font-size: 14px; line-height: 20px; color: var(--h01-caption); }
-.h01-figrow { display: flex; gap: 8px; margin: 48px 0; }
+.h01-figrow { display: flex; gap: 8px; margin: 56px 0; }
 .h01-figrow figure { flex: var(--ar) 1 0; min-width: 0; margin: 0; }
 .h01-figrow img { border-radius: 4px; }
 /* In the dark theme the long copy is a step softer than the headings, to cut glare. */
 html[data-theme='dark'] .h01-article p, html[data-theme='dark'] .h01-article li { color: var(--h01-copy); }
+html[data-theme='dark'] .h01-prose > .h01-tldr + p, html[data-theme='dark'] .h01-article blockquote p { color: var(--h01-text); }
 html[data-theme='dark'] .h01-article img { box-shadow: 0 0 0 1px var(--h01-hair), 0 4px 16px rgb(0 0 0 / .4); }
 @media (max-width: 720px) {
   .h01-corner { top: 8px; left: 8px; }
   .h01-case .h01-col { padding-top: 96px; }
-  .h01-article { font-size: 16px; line-height: 26px; }
-  .h01-article .h01-title { font-size: 32px; line-height: 40px; }
-  .h01-article .h01-sub { font-size: 18px; line-height: 26px; }
-  .h01-article h3 { margin-top: 64px; font-size: 20px; line-height: 28px; }
+  .h01-article { font-size: 17px; line-height: 28px; }
+  .h01-article .h01-title { font-size: 36px; line-height: 44px; }
+  .h01-article .h01-sub { font-size: 19px; line-height: 28px; }
+  .h01-article h3 { margin-top: 72px; font-size: 24px; line-height: 32px; }
+  .h01-prose > .h01-tldr + p { font-size: 19px; line-height: 30px; }
+  .h01-tldr { padding: 20px; }
+  .h01-tldr > div { grid-template-columns: 1fr; gap: 0; }
+  .h01-stats strong { font-size: 44px; line-height: 48px; }
+  .h01-article blockquote { font-size: 24px; line-height: 34px; }
+  .h01-article table { font-size: 15px; line-height: 22px; }
+  .h01-article td:first-child { white-space: normal; }
 }

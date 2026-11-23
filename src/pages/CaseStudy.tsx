@@ -60,10 +60,51 @@ export default function CaseStudy() {
           <p className="h01-meta">
             {workName(study.workSlug)} · {minutes} min read
           </p>
+          <div className="h01-prose">
           <ReactMarkdown
             remarkPlugins={[remarkGfm]}
             components={{
               hr: () => null,
+              // ```summary and ```stats fences hold "label: text" lines and render as the summary box and the figures row.
+              pre: ({ node, children }) => {
+                const code = node?.children[0]
+                const lang = code?.type === 'element' ? String((code.properties.className as string[] | undefined)?.[0] ?? '') : ''
+                const text = code?.type === 'element' && code.children[0]?.type === 'text' ? code.children[0].value : ''
+                const rows = text.split('\n').filter(Boolean).map((l) => {
+                  const i = l.indexOf(':')
+                  return [l.slice(0, i).trim(), l.slice(i + 1).trim()]
+                })
+                if (lang === 'language-summary')
+                  return (
+                    <dl className="h01-tldr">
+                      {rows.map(([k, v]) => (
+                        <div key={k}>
+                          <dt>{k}</dt>
+                          <dd>{v}</dd>
+                        </div>
+                      ))}
+                    </dl>
+                  )
+                if (lang === 'language-stats') {
+                  const note = rows.find(([k]) => k === 'note')?.[1]
+                  return (
+                    <figure className="h01-stats">
+                      <div>
+                        {rows
+                          .filter(([k]) => k !== 'note')
+                          .map(([k, v]) => (
+                            <p key={k}>
+                              <strong>{k}</strong>
+                              <span>{v}</span>
+                            </p>
+                          ))}
+                      </div>
+                      {note ? <figcaption>{note}</figcaption> : null}
+                    </figure>
+                  )
+                }
+                return <pre>{children}</pre>
+              },
               // A paragraph that holds only images is a figure, or a row of figures; anything else is a normal paragraph.
               p: ({ node, children }) => {
                 const kids = (node?.children ?? []).filter((c) => !(c.type === 'text' && !c.value.trim()))
@@ -89,6 +130,7 @@ export default function CaseStudy() {
           >
             {body}
           </ReactMarkdown>
+          </div>
         </article>
 
         <SiteFooter />
