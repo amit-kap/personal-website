@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import './home01.css'
+import ScreenWall from './ScreenWall'
 
 const base = import.meta.env.BASE_URL
 
@@ -59,9 +60,7 @@ export default function Home() {
   const { text, word, holding } = useTypedWord()
 
   return (
-    <div className="h01">
-      <div className="h01-rail" aria-hidden="true" />
-
+    <div className="h01 h01-center">
       <main className="h01-col">
         <Link className="h01-logo" to="/" aria-label="Amit Kaplinsky, home">
           <img src={`${base}home01/ak-logo.svg`} alt="" width={80} height={45} />
@@ -142,6 +141,9 @@ export default function Home() {
         </nav>
       </main>
 
+      <aside className="h01-wall" aria-label="Product screens">
+        <ScreenWall columns={3} />
+      </aside>
     </div>
   )
 }
