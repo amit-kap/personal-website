@@ -6,6 +6,8 @@ import AgentView from '@/pages/AgentView'
 import CaseStudy from '@/pages/CaseStudy'
 import ShiftPage from '@/pages/ShiftPage'
 import VeritiPage from '@/pages/VeritiPage'
+import CheckPointPage from '@/pages/CheckPointPage'
+import CvPage from '@/pages/CvPage'
 
 /* Home is the new version (3d-screens-back). HomeAS keeps the anti-slop
    superhero home on the side; dev only, not prerendered or in the sitemap. */
@@ -17,8 +19,8 @@ export default function App() {
       <Route path="/case-studies/:slug" element={<CaseStudy />} />
       <Route path="/agent" element={<AgentView />} />
       {/* Placeholders until these pages are designed. */}
-      <Route path="/cv" element={<Placeholder title="CV" />} />
-      <Route path="/work/checkpoint" element={<Placeholder title="Check Point" />} />
+      <Route path="/cv" element={<CvPage />} />
+      <Route path="/work/checkpoint" element={<CheckPointPage />} />
       <Route path="/work/shift" element={<ShiftPage />} />
       <Route path="/work/veriti" element={<VeritiPage />} />
       <Route path="*" element={<Navigate to="/" replace />} />

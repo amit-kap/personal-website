@@ -511,3 +511,18 @@ html[data-theme='dark'] .h01-app { box-shadow: 0 0 0 1px var(--h01-hair), 0 4px 
 .h01-readmore svg { color: var(--h01-accent); transition: translate .2s ease; }
 .h01-story:hover .h01-readmore svg { translate: 2px 0; }
 .h01-story:hover .h01-readmore { color: var(--h01-accent); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+
+/* CV page: contacts under the name, then each entry as a row of dates beside what happened. */
+.h01-cv-contacts { margin-top: 8px; color: var(--h01-label); }
+.h01-cv-contacts a { color: var(--h01-label); text-decoration: underline; text-decoration-color: var(--h01-hair); text-underline-offset: 3px; }
+.h01-cv-contacts a:hover { color: var(--h01-accent); text-decoration-color: var(--h01-accent); }
+.h01-cv-pdf { margin-top: 24px; }
+.h01-cv .h01-intro + .h01-cv-pdf + .h01-group { margin-top: 80px; }
+.h01-cv-list { width: 100%; margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 32px; }
+.h01-cv-row { display: grid; grid-template-columns: 160px 1fr; gap: 24px; }
+.h01-cv-when { color: var(--h01-caption); font-variant-numeric: tabular-nums; }
+.h01-cv-what { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
+.h01-cv-bullets { margin: 8px 0 0; padding-left: 16px; display: flex; flex-direction: column; gap: 8px; max-width: 600px; color: var(--h01-text); }
+.h01-cv-bullets li::marker { color: var(--h01-caption); }
+.h01-cv .h01-group + .h01-group { margin-top: 64px; }
+@media (max-width: 720px) { .h01-cv-row { grid-template-columns: 1fr; gap: 4px; } }

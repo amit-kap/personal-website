@@ -101,8 +101,18 @@ export function useViewer() {
   return { show, dialog }
 }
 
-/** One bento tile: an image file zoomed into a focus point (x/y in % of the image, zoom z). */
-export type Tile = { file: string; alt: string; x: number; y: number; z: number }
+/** One bento tile: an image file zoomed into a focus point (x/y in % of the image, zoom z), or a looping video
+    (`video` and its `poster`, paths under public/) shown whole. */
+export type Tile = { file: string; alt: string; x: number; y: number; z: number } | { video: string; poster: string; alt: string }
+
+/** A muted looping video tile that opens full size when clicked. */
+export function VideoTile({ src, poster, alt, onOpen }: { src: string; poster: string; alt: string; onOpen: (s: Shown) => void }) {
+  return (
+    <button type="button" aria-label={`${alt}, play full screen`} onClick={() => onOpen({ src, alt, video: true })}>
+      <video src={src} poster={poster} autoPlay muted loop playsInline preload="metadata" aria-hidden="true" />
+    </button>
+  )
+}
 
 /** The Screens bento: an optional lead tile (the film), then screenshot tiles; each opens full screen when clicked. */
 export function Bento({ lead, tiles, images, onOpen }: { lead?: ReactNode; tiles: Tile[]; images: Record<string, ContentImage>; onOpen: (s: Shown) => void }) {
@@ -112,6 +122,12 @@ export function Bento({ lead, tiles, images, onOpen }: { lead?: ReactNode; tiles
       <ul className="h01-bento">
         {lead && <li>{lead}</li>}
         {tiles.map((t) => {
+          if ('video' in t)
+            return (
+              <li key={t.video}>
+                <VideoTile src={`${base}${t.video}`} poster={`${base}${t.poster}`} alt={t.alt} onOpen={onOpen} />
+              </li>
+            )
           const img = images[t.file]
           return img ? (
             <li key={t.file}>
