@@ -514,10 +514,21 @@ html[data-theme='dark'] .h01-app { box-shadow: 0 0 0 1px var(--h01-hair), 0 4px 
 
 /* CV page: contacts under the name, then each entry as a row of dates beside what happened. */
 .h01-cv-contacts { margin-top: 8px; color: var(--h01-label); }
+.h01-cv .h01-cv-contacts + .h01-intro { margin-top: 24px; }
 .h01-cv-contacts a { color: var(--h01-label); text-decoration: underline; text-decoration-color: var(--h01-hair); text-underline-offset: 3px; }
 .h01-cv-contacts a:hover { color: var(--h01-accent); text-decoration-color: var(--h01-accent); }
-.h01-cv-pdf { margin-top: 24px; }
-.h01-cv .h01-intro + .h01-cv-pdf + .h01-group { margin-top: 80px; }
+/* The name row stays pinned while the CV scrolls, its center level with the corner mark's (24px + 64px / 2 = 56px, so
+   the 34px row pins at 39px). Once pinned it gets a page-colored backing that runs up to the window top and 16px below,
+   so scrolling text passes cleanly behind; unpinned it has none, so nothing covers the lines under the name. */
+.h01-cv-head { position: sticky; top: 39px; z-index: 2; width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+.h01-cv-head[data-stuck='true']::before { content: ''; position: absolute; z-index: -1; inset: -39px -16px -16px; background: var(--h01-bg); }
+@media (max-width: 720px) {
+  .h01-cv-head { top: 23px; }
+  .h01-cv-head[data-stuck='true']::before { top: -23px; }
+}
+.h01-cv-pdf { flex-shrink: 0; }
+.h01-cv-pdf:hover svg { translate: none; }
+.h01-cv .h01-intro + .h01-group { margin-top: 48px; }
 .h01-cv-list { width: 100%; margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 32px; }
 .h01-cv-row { display: grid; grid-template-columns: 160px 1fr; gap: 24px; }
 .h01-cv-when { color: var(--h01-caption); font-variant-numeric: tabular-nums; }

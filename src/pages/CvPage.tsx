@@ -1,5 +1,6 @@
+import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { ArrowRight, Download } from 'lucide-react'
+import { Download } from 'lucide-react'
 import ReactMarkdown from 'react-markdown'
 import './home01.css'
 import SiteFooter from './SiteFooter'
@@ -9,21 +10,40 @@ import { CornerMark } from './WorkParts'
 const base = import.meta.env.BASE_URL
 const PDF = `${base}Amit Kaplinsky CV 10-2026.pdf`
 
-// Companies with their own work page; the others are plain text.
-const WORK_PAGES = new Set(['shift', 'veriti', 'checkpoint'])
-
 /* The CV, from src/content/cv.md, in the work pages' centered column with the home page's type: the name and contacts,
-   then each role as a row of dates beside company, role and what I did. The PDF in public/ is the download. */
+   then each role as a row of dates beside company, role and what I did. No links out to the work pages. The PDF in public/ is the download. */
 export default function CvPage() {
   const cv = getCV()
   const { header } = cv
+  const head = useRef<HTMLDivElement>(null)
+  const [stuck, setStuck] = useState(false)
+
+  // The name row is pinned once it reaches its sticky offset; only then does it get its backing (see home01.css).
+  useEffect(() => {
+    const el = head.current
+    if (!el) return
+    const check = () => setStuck(el.getBoundingClientRect().top <= parseFloat(getComputedStyle(el).top) + 0.5 && window.scrollY > 0)
+    check()
+    window.addEventListener('scroll', check, { passive: true })
+    window.addEventListener('resize', check)
+    return () => {
+      window.removeEventListener('scroll', check)
+      window.removeEventListener('resize', check)
+    }
+  }, [])
 
   return (
     <div className="h01 h01-center h01-case h01-work h01-cv">
       <main className="h01-col">
         <CornerMark />
 
-        <h1 className="h01-title">{header.name}</h1>
+        {/* The name, with the PDF download at the right end of the same row. */}
+        <div className="h01-cv-head" ref={head} data-stuck={stuck}>
+          <h1 className="h01-title">{header.name}</h1>
+          <a className="h01-link h01-cv-pdf" href={PDF} download>
+            <span>Download</span> <Download size={16} strokeWidth={2} aria-hidden />
+          </a>
+        </div>
         <p className="h01-byline">
           <span className="h01-role">{header.tagline}</span>
         </p>
@@ -39,9 +59,6 @@ export default function CvPage() {
           </ReactMarkdown>
         </div>
         <p className="h01-text h01-intro">{header.intro}</p>
-        <a className="h01-link h01-cv-pdf" href={PDF} download>
-          <span>Download CV (PDF)</span> <Download size={16} strokeWidth={2} aria-hidden />
-        </a>
 
         <section className="h01-group">
           <div className="h01-label">Experience</div>
@@ -50,13 +67,7 @@ export default function CvPage() {
               <li key={e.slug} className="h01-cv-row">
                 <span className="h01-cv-when">{e.period.replace(/ to /, ' – ')}</span>
                 <div className="h01-cv-what">
-                  {WORK_PAGES.has(e.slug) ? (
-                    <Link className="h01-link" to={`/work/${e.slug}`}>
-                      <span>{e.company}</span> <ArrowRight size={16} strokeWidth={2} aria-hidden />
-                    </Link>
-                  ) : (
-                    <span className="h01-name">{e.company}</span>
-                  )}
+                  <span className="h01-name">{e.company}</span>
                   <span className="h01-desc">
                     {e.role}, {e.context}
                   </span>
