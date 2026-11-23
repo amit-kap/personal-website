@@ -5,6 +5,7 @@ import Placeholder from '@/pages/Placeholder'
 import AgentView from '@/pages/AgentView'
 import CaseStudy from '@/pages/CaseStudy'
 import ShiftPage from '@/pages/ShiftPage'
+import VeritiPage from '@/pages/VeritiPage'
 
 /* Home is the new version (3d-screens-back). HomeAS keeps the anti-slop
    superhero home on the side; dev only, not prerendered or in the sitemap. */
@@ -19,7 +20,7 @@ export default function App() {
       <Route path="/cv" element={<Placeholder title="CV" />} />
       <Route path="/work/checkpoint" element={<Placeholder title="Check Point" />} />
       <Route path="/work/shift" element={<ShiftPage />} />
-      <Route path="/work/veriti" element={<Placeholder title="Veriti" />} />
+      <Route path="/work/veriti" element={<VeritiPage />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   )
