@@ -296,7 +296,7 @@ html[data-theme='dark']:has(.h01), html[data-theme='dark'] body:has(.h01) { back
 }
 
 /* Footer: a fixed bar along the bottom of the window, the full width of the view. Its text starts where
-   the headline starts (x 120 inside the centred 1440 frame) and ends 40px inside the frame's right edge, not at the window edge. The page scrolls under it. One grey for all its text, 14px. */
+   the headline starts (x 120 inside the centred 1440 frame) and ends the same distance from the frame's right edge, so both sides match. The page scrolls under it. One grey for all its text, 14px. */
 .h01-footer {
   position: fixed;
   left: 0;
@@ -308,7 +308,7 @@ html[data-theme='dark']:has(.h01), html[data-theme='dark'] body:has(.h01) { back
   gap: 16px;
   height: 56px;
   margin: 0;
-  padding: 0 max(40px, calc(50% - 680px)) 0 max(120px, calc(50% - 600px)); /* text starts with the headline and ends 40px inside the 1440 frame; also clears the old global footer padding */
+  padding: 0 max(120px, calc(50% - 600px)); /* the same inset both sides: starts with the headline, ends 120px inside the 1440 frame; also clears the old global footer padding */
   background: var(--h01-bg);
   color: var(--h01-caption);
   font-size: var(--h01-meta);
