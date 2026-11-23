@@ -55,7 +55,6 @@ function Arrow() {
 
 export default function Home() {
   const { text, word, holding } = useTypedWord()
-  const [more, setMore] = useState(false)
 
   return (
     <div className="h01 h01-center">
@@ -81,25 +80,21 @@ export default function Home() {
           </b>
         </h1>
 
-        {/* Bio from the Paper "home" frame. The links go to placeholder pages for now. */}
-        <div className="h01-fold" data-open={more}>
-          <div className="h01-clip" id="h01-bio" inert={!more}>
-            <div className="h01-bio">
-          <p className="h01-para">
-            My path took me from design school to the advertising industry, then into high-tech cybersecurity, where
-            I've spent the <Link to="/cv">last twelve years</Link> helping companies ship complete product experiences
-            to their users.
-          </p>
-          <p className="h01-para">
-            I've designed security products from <Link to="/work/checkpoint">Check Point</Link> to AI-native startups, including as founding designer
-            at <Link to="/work/shift">Shift</Link> and <Link to="/work/veriti">Veriti</Link>.
-          </p>
-            </div>
+        {/* Bio from the Paper "home" frame, as the first section. */}
+        <section className="h01-group">
+          <div className="h01-label">Bio</div>
+          <div className="h01-bio">
+            <p className="h01-para">
+              My path took me from design school to the advertising industry, then into high-tech cybersecurity, where
+              I've spent the <Link to="/cv">last twelve years</Link> helping companies ship complete product experiences
+              to their users.
+            </p>
+            <p className="h01-para">
+              I've designed security products from <Link to="/work/checkpoint">Check Point</Link> to AI-native startups, including as founding designer
+              at <Link to="/work/shift">Shift</Link> and <Link to="/work/veriti">Veriti</Link>.
+            </p>
           </div>
-          <button className="h01-more" aria-expanded={more} aria-controls="h01-bio" onClick={() => setMore((m) => !m)}>
-            {more ? 'Show less' : 'Show more'}
-          </button>
-        </div>
+        </section>
 
         <section className="h01-group">
           <div className="h01-label">Case study</div>
