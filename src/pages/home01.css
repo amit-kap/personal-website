@@ -52,14 +52,14 @@
 .h01-title .h01-line { display: block; }
 
 /* The rotating word: one word at a time, a short fade and lift between them. */
-/* The typed word and its cursor line, which blinks only while the word holds. */
+/* The typed word and its block cursor, which blinks only while the word holds. */
 .h01-word { white-space: nowrap; }
 .h01-caret {
   display: inline-block;
-  width: 2px;
-  height: 1em;
+  width: 16px; /* about one letter wide, on the 4px grid */
+  height: 24px;
   margin-left: 4px;
-  vertical-align: -0.12em;
+  vertical-align: -0.08em;
   background: var(--h01-accent);
 }
 .h01-caret.blink { animation: h01-blink 1s steps(1) infinite; }
@@ -86,8 +86,11 @@
 /* Pushed to the bottom: availability, the closing line and the icons. */
 .h01-status { margin-top: auto; padding-top: 80px; display: flex; align-items: center; gap: 8px; color: var(--h01-accent); }
 .h01-dot { position: relative; width: 12px; height: 12px; flex-shrink: 0; }
-.h01-dot::before, .h01-dot::after { content: ""; position: absolute; border-radius: 50%; background: var(--h01-accent); }
-.h01-dot::before { inset: 0; opacity: .35; }
+.h01-dot::before, .h01-dot::after { content: ""; position: absolute; background: var(--h01-accent); }
+/* The back dot breathes from 0 to 50% opacity; it rests at 50% when motion is reduced. */
+.h01-dot::before { inset: 0; opacity: .5; animation: h01-pulse .9s ease-in-out infinite alternate; }
+@keyframes h01-pulse { from { opacity: 0; } to { opacity: .5; } }
+@media (prefers-reduced-motion: reduce) { .h01-dot::before { animation: none; } }
 .h01-dot::after { width: 6px; height: 6px; inset: 0; margin: auto; }
 
 .h01-closing { margin-top: 16px; max-width: 431px; font-size: var(--h01-title); line-height: 34px; font-weight: 400; }
