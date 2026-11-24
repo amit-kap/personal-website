@@ -196,7 +196,7 @@ html[data-theme='dark']:has(.h01), html[data-theme='dark'] body:has(.h01) { back
 @keyframes wall-down { from { translate: 0 calc(-50% - 12px); } to { translate: 0 0; } }
 
 .wall-tile { flex: 0 0 auto; aspect-ratio: 16 / 10; border-radius: 8px; overflow: hidden; background: var(--h01-tile); box-shadow: 0 0 0 1px var(--h01-hair); }
-.wall-tile img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 0 0; opacity: .5; }
+.wall-tile img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 0 0; opacity: .35; filter: grayscale(1); }
 
 /* Fades the wall into the white page: hard on the left edge (towards the text), soft at top and bottom. */
 .wall-shade {
@@ -219,13 +219,13 @@ html[data-theme='dark']:has(.h01), html[data-theme='dark'] body:has(.h01) { back
 }
 
 /* Layered layout (Home): a centred 1024px frame (Paper used 1440), as in Paper. The text sits at x 120 inside it, on top of
-   the screen wall, which comes in from the right, passes under the text and bleeds off the window's right edge.
+   the screen wall, which comes in from the right, passes under the text and is trimmed at the frame's right edge.
    Wider than 1024 the frame stays centred; narrower, it starts at the window's left edge. */
 .h01-center { display: block; }
 .h01-center .h01-wall { position: fixed; inset: 0; height: auto; z-index: 0; }
 /* The wall and its fade start where the 1024 frame starts. */
-.h01-center .wall-wrap { left: max(0px, calc(50% - 512px)); }
-.h01-center .wall { inset: -30% -6% -30% 14%; } /* starts under the right part of the text */
+.h01-center .wall-wrap { left: max(0px, calc(50% - 512px)); clip-path: inset(0 max(0px, calc(50vw - 512px)) 0 0); } /* cut at the frame's right edge; the wall keeps its size */
+.h01-center .wall { inset: -30% -6% -30% 14%; translate: -150px 0; } /* starts under the right part of the text */
 /* The column lets clicks through to the screens; only its text and links take them. Text at x 120, as in Paper. */
 .h01-center .h01-col { position: relative; z-index: 1; width: min(100%, 548px); margin-left: max(0px, calc(50% - 512px)); pointer-events: none; }
 .h01-center .h01-col > * { pointer-events: auto; }
