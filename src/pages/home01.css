@@ -471,7 +471,7 @@ html[data-theme='dark'] .h01-app { box-shadow: 0 0 0 1px var(--h01-hair), 0 4px 
 /* The case study preview: title, opening paragraph and Read more, all one link. Read more works like the home links:
    black text with an accent arrow, the text turning accent and underlined on hover. */
 .h01-story { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; text-decoration: none; color: var(--h01-text); }
-.h01-story .h01-desc { max-width: 640px; }
+.h01-story .h01-desc { max-width: none; }
 .h01-readmore { margin-top: 8px; display: inline-flex; align-items: center; gap: 4px; color: var(--h01-text); transition: color .2s ease; }
 .h01-readmore svg { color: var(--h01-accent); transition: translate .2s ease; }
 .h01-story:hover .h01-readmore svg { translate: 2px 0; }
@@ -480,10 +480,12 @@ html[data-theme='dark'] .h01-app { box-shadow: 0 0 0 1px var(--h01-hair), 0 4px 
 /* CV page: contacts under the name, then each entry as a row of dates beside what happened. */
 /* The CV header reads as one block: name and role together (4px), contacts a step below (16px), the intro after
    (32px), then a hairline closes the header before Experience. */
+/* The work pages and the CV run the 1024 frame, so their text lines up with the home page and the footer. Case studies stay 880. */
+.h01-case.h01-work .h01-col { width: min(100%, 1024px); }
 .h01-cv .h01-byline { margin-top: 4px; }
 .h01-cv .h01-byline .h01-role { font-size: 16px; line-height: 24px; color: var(--h01-copy); }
 .h01-cv-contacts { margin-top: 16px; color: var(--h01-label); }
-.h01-cv .h01-cv-contacts + .h01-intro { margin-top: 32px; max-width: 600px; }
+.h01-cv .h01-cv-contacts + .h01-intro { margin-top: 32px; max-width: none; }
 .h01-cv-contacts a { color: var(--h01-label); text-decoration: underline; text-decoration-color: var(--h01-hair); text-underline-offset: 3px; }
 .h01-cv-contacts a:hover { color: var(--h01-accent); text-decoration-color: var(--h01-accent); }
 /* The name row stays pinned while the CV scrolls, its center level with the corner mark's (24px + 64px / 2 = 56px, so
