@@ -1,5 +1,5 @@
 ---
-productTitle: One system, not twenty tabs.
+productTitle: Enterprise security management, reorganized around the administrator's daily work.
 blurb: Enterprise security management reorganized around products, objects, policies, and daily security work.
 order: 5
 ---

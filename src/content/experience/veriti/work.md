@@ -1,5 +1,5 @@
 ---
-productTitle: Knowing is not enough.
+productTitle: Security fixes across every vendor's controls, explained and approved before they go live.
 blurb: Safe, multi-vendor remediation connecting a known exposure to an explained and approved control change.
 order: 3
 ---

@@ -84,7 +84,7 @@ ${writingItems.map(({ route, data, body }) => `- [${heading(body)}](${route.url}
 ## Links
 
 - Website: ${SITE_URL}/
-- About: ${SITE_URL}/about
+- CV: ${SITE_URL}/cv
 - CV (PDF): ${SITE_URL}/Amit%20Kaplinsky%20CV%2010-2026.pdf
 - LinkedIn: https://www.linkedin.com/in/amitkaplinsky
 `

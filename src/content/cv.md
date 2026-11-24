@@ -1,6 +1,6 @@
 # Amit Kaplinsky
 
-**Product Design & Engineering**
+**Senior Product Designer**
 
 Tel Aviv · [amitka111@gmail.com](mailto:amitka111@gmail.com) · [+972 54-4878882](https://wa.me/972544878882) · [LinkedIn](https://www.linkedin.com/in/amitkaplinsky) · [amitkap.com](https://amitkap.com)
 
@@ -42,7 +42,7 @@ From design school to the advertising industry, then to high-tech cybersecurity,
 **UX Expert** · 03/2014 to 08/2020 · Enterprise security management
 
 - Planned and led WatchTower from concept to its 2019 iOS and Android launch: defined the audience with a major partner, set scope, ran usability testing, and adapted an enterprise release process to ship a consumer-style app.
-- Reorganized security management spread across 20+ tabs into one system built around administrators’ daily work, inside an R&D organization of hundreds of developers.
+- Joined the combined effort to redesign security management, from a cluster of 20+ tabs into a modern platform built around administrators’ daily work, inside an R&D organization of hundreds of developers.
 
 ## Certificates
 
@@ -56,30 +56,29 @@ John Bryce · 2010 to 2011
 
 ## Education
 
-### B.A. Economics
-
-Tel Aviv University · 1994 to 1996
-
 ### Diploma, Digital Communications & Media
 
 Camera Obscura School of Arts · 1996 to 2000
+
+### B.A. Economics
+
+Tel Aviv University · 1994 to 1996
 
 ## Skills
 
 ### Skills
 
-- Product design
 - Design systems
-- Problem framing
-- Scope definition
-- Complex data & workflows
-- Stakeholder alignment
-- AI-native workflows
-- Prototyping to production
+- AI and human-agent product design
+- Complex security data & workflows
+- Design team leadership
+- Mobile apps (iOS and Android)
+- Prototyping in code to production
 
 ### Tools
 
 - Figma
+- Paper
 - Cursor
 - Claude Code
 - Codex

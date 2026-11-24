@@ -1,0 +1,17 @@
+{
+  "gap": 0.5,
+  "fade": 0.8,
+  "move": 0.9,
+  "push": 1.1,
+  "lineOffset": 0,
+  "nudgeAfter": 2.6,
+  "nudgeDistance": 3,
+  "nudgeLength": 0.4,
+  "nudgeBackLength": 0.4,
+  "nudgeHold": 2.3,
+  "nudgeLineDelay": 0.2,
+  "discoStep": 0.12,
+  "discoIn": 0.04,
+  "discoOut": 0.15,
+  "discoCount": 2
+}

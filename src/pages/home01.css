@@ -1,0 +1,559 @@
+/* home-01 (Paper, "peronal-website" file): the new home. Everything is scoped under .h01 so the
+   superhero home (HomeAS, index.css) keeps its look. Values are the Paper frame's, 1440×960. */
+.h01 {
+  --h01-bg: #ffffff;
+  --h01-text: #000000;
+  --h01-name: #111111;
+  --h01-copy: #545454;
+  --h01-label: #646464;
+  --h01-caption: #8a8a87; /* section labels, lighter than the role line */
+  --h01-rail: #f2f2ef;
+  --h01-accent: var(--primary); /* #F04A00 */
+  --h01-tile: #f4f4f2;
+  --h01-hair: rgb(0 0 0 / .08);
+  --h01-meta: 14px;
+  --h01-title: 28px;
+
+  /* The page scrolls the window itself (not an inner box), so trackpad and wheel scrolling stay smooth. */
+  position: relative;
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 80px minmax(0, 1fr) minmax(0, 1.4fr);
+  grid-auto-rows: max-content; /* rows grow with the text instead of squeezing to the window */
+  background: var(--h01-bg);
+  color: var(--h01-text);
+  font-family: var(--font);
+  font-size: var(--h01-meta);
+  line-height: 18px;
+}
+
+/* Dark theme: set by the footer switch (or the system, until the visitor picks), on <html data-theme>. */
+html[data-theme='dark'] .h01 {
+  --h01-bg: #111111;
+  --h01-text: #f2f2f0;
+  --h01-name: #ffffff;
+  --h01-copy: #b4b4b0;
+  --h01-label: #a0a09c;
+  --h01-caption: #7c7c78;
+  --h01-rail: #222222;
+  --h01-tile: #1c1c1c;
+  --h01-hair: rgb(255 255 255 / .1);
+  color-scheme: dark;
+}
+
+/* White behind the page, also when the window bounces past the top or bottom. */
+html:has(.h01), body:has(.h01) { background: #fff; }
+html[data-theme='dark']:has(.h01), html[data-theme='dark'] body:has(.h01) { background: #111; }
+
+/* The 80px strip on the left; empty for now ("shader frame" in Paper). */
+.h01-rail { border-right: 1px solid var(--h01-rail); min-height: 100%; }
+
+/* The text column: 40px in from the rail, top and bottom 80px, as in Paper. */
+.h01-col {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-height: 100vh;
+  padding: 80px 40px 80px 40px;
+}
+
+.h01-logo { display: block; width: 80px; height: 45px; }
+.h01-logo img { display: block; width: 100%; height: 100%; }
+
+.h01 .h01-title {
+  margin-top: 40px;
+  font-size: var(--h01-title);
+  line-height: 34px;
+  font-weight: 400;
+  letter-spacing: 0;
+  color: var(--h01-text);
+}
+.h01-title b { font-weight: 600; }
+/* The home hero is the page's one statement, so it runs larger than the work page titles. */
+.h01-center:not(.h01-case) .h01-title { font-size: 36px; line-height: 44px; } /* 1.22, the same ratio as the closing line */
+/* Each line stays whole on wide screens (the first runs a little past the 468px text column). */
+@media (min-width: 901px) { .h01-center:not(.h01-case) .h01-title .h01-line { white-space: nowrap; } }
+/* Home rhythm on the 8px grid: 48px from the header to the hero and between sections, 64px from the hero to the
+   first section so the statement stands apart. Inside every section: 12px label to content, 16px between items. */
+.h01-center:not(.h01-case) .h01-title + .h01-group { margin-top: 64px; }
+.h01-center:not(.h01-case) .h01-group + .h01-group { margin-top: 48px; }
+.h01-title .h01-line { display: block; }
+
+/* The rotating word: one word at a time, a short fade and lift between them. */
+/* The typed word and its block cursor, which blinks only while the word holds. */
+.h01-word { position: relative; white-space: nowrap; }
+.h01-caret {
+  display: inline-block;
+  width: 16px; /* about one letter wide, on the 4px grid */
+  height: .73em; /* Inter's cap height: the block runs from the top of the capitals to the baseline */
+  margin-left: 4px;
+  vertical-align: baseline;
+  visibility: hidden; /* holds the place; the block below is what you see */
+}
+/* The visible cursor and its trail sit behind the letters (z-index -1 inside the column's stacking context). */
+.h01-caret-block, .h01-caret-glow {
+  position: absolute;
+  z-index: -1;
+  height: .73em;
+  background: var(--h01-accent);
+  pointer-events: none;
+}
+.h01-caret-block { width: 16px; }
+.h01-caret-block.blink { animation: h01-blink 1s steps(1) infinite; }
+@keyframes h01-blink { 50% { opacity: 0; } }
+/* The afterglow of each move: a soft copy of the stretched block that fades, blurs and settles. */
+.h01-caret-glow { animation: h01-glow .6s cubic-bezier(.2, .8, .2, 1) forwards; }
+@keyframes h01-glow {
+  from { opacity: .35; filter: blur(0); scale: 1 1; }
+  to { opacity: 0; filter: blur(6px); scale: 1 .5; }
+}
+@media (prefers-reduced-motion: reduce) { .h01-caret-block.blink { animation: none; } .h01-caret-glow { display: none; } }
+
+/* Spacing is always a multiple of 4: tight inside a group, wide between groups.
+   Logo → headline 40, headline → bio 48, inside the bio 4 / 24 / 16, bio → case study 80,
+   case study → projects 40, closing → icons 48. */
+.h01-bio { max-width: 468px; color: var(--h01-text); }
+.h01-name { font-weight: 500; }
+/* Home: the AK mark beside the name and role, at the top above the headline. The bio then opens with its paragraphs. */
+.h01-head { display: flex; align-items: center; gap: 16px; }
+.h01 .h01-head + .h01-title { margin-top: 48px; }
+.h01-head img { display: block; width: 72px; height: auto; flex-shrink: 0; }
+.h01-bio > .h01-para:first-child { margin-top: 0; }
+.h01-role { margin-top: 4px; color: var(--h01-label); }
+.h01-para { margin-top: 24px; }
+.h01-para + .h01-para { margin-top: 16px; }
+.h01-bio a { color: var(--h01-accent); text-decoration: none; }
+
+.h01-group { margin-top: 80px; display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
+.h01-group + .h01-group { margin-top: 40px; }
+/* Section labels read as small caps headings, so they never look like the grey line under each item. */
+.h01-label { margin-bottom: 8px; color: var(--h01-caption); font-size: 12px; line-height: 16px; letter-spacing: .06em; text-transform: uppercase; }
+/* Each item is its name (with the arrow) and a grey line under it, like the name and role at the top. */
+.h01-items { display: flex; flex-direction: column; gap: 16px; margin: 0; padding: 0; list-style: none; }
+.h01-items li { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
+.h01-desc { color: var(--h01-label); }
+.h01-soon { color: var(--h01-text); }
+.h01-link { display: inline-flex; align-items: center; gap: 4px; text-decoration: none; color: var(--h01-text); }
+.h01-link svg { width: 16px; height: 16px; color: var(--h01-accent); flex-shrink: 0; transition: translate .2s ease; }
+.h01-link:hover svg { translate: 2px -2px; }
+.h01-link:hover svg.lucide-arrow-right { translate: 2px 0; }
+
+/* Pushed to the bottom: availability, the closing line and the icons. */
+.h01-status { margin-top: auto; padding-top: 80px; display: flex; align-items: center; gap: 8px; color: var(--h01-accent); }
+.h01-dot { position: relative; width: 12px; height: 12px; flex-shrink: 0; }
+.h01-dot::before, .h01-dot::after { content: ""; position: absolute; background: var(--h01-accent); }
+/* The back dot breathes from 0 to 50% opacity; it rests at 50% when motion is reduced. */
+.h01-dot::before { inset: 0; opacity: .5; animation: h01-pulse .9s ease-in-out infinite alternate; }
+@keyframes h01-pulse { from { opacity: 0; } to { opacity: .5; } }
+@media (prefers-reduced-motion: reduce) { .h01-dot::before { animation: none; } }
+.h01-dot::after { width: 6px; height: 6px; inset: 0; margin: auto; }
+
+.h01-closing { margin-top: 16px; max-width: 431px; font-size: var(--h01-title); line-height: 34px; font-weight: 400; }
+.h01-closing a { font-weight: 600; text-decoration: none; }
+
+.h01-icons { margin-top: 48px; display: flex; align-items: center; gap: 24px; }
+.h01-icons a { display: flex; color: var(--h01-text); }
+.h01-icons a:hover { color: var(--h01-accent); }
+
+/* Narrow screens: one column. */
+@media (max-width: 900px) {
+  .h01 { grid-template-columns: 1fr; }
+  .h01-rail { display: none; }
+  .h01-col { min-height: auto; padding: 48px 16px; }
+  .h01-status { margin-top: 64px; padding-top: 0; }
+}
+
+/* Placeholder inner pages: just the text column. */
+.h01-placeholder { grid-template-columns: 80px minmax(0, 1fr); }
+.h01-placeholder .h01-role { margin-top: 8px; }
+.h01-back { margin-top: 32px; }
+
+/* One hover for every text link: primary colour with a line under. */
+.h01 a { transition: color .15s ease; }
+.h01-bio a:hover,
+.h01-closing a:hover,
+.h01-link:hover span { color: var(--h01-accent); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+
+.h01 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+/* The screen wall (ScreenWall.tsx), in the right side of the page: a flat background of three columns drifting
+   up and down in a loop on one tilted plane, faded into the page at its edges. No hover, no clicks. */
+.h01-wall { position: sticky; top: 0; height: 100vh; overflow: hidden; pointer-events: none; }
+.wall-wrap { position: absolute; inset: 0; }
+.wall {
+  position: absolute;
+  inset: -32% -24% -32% 4%;
+  display: flex;
+  align-items: flex-start; /* each column is as tall as its tiles, so -50% is exactly one half */
+  gap: 24px;
+  transform: perspective(1600px) rotateX(26deg) rotateY(-22deg) rotate(12deg);
+  transform-origin: 50% 40%;
+}
+.wall-col { flex: 1 1 0; display: flex; flex-direction: column; gap: 24px; animation: wall-up var(--d, 100s) linear infinite; will-change: transform; }
+.wall-col.down { animation-name: wall-down; }
+/* Half the list plus half a gap: the second copy lands exactly where the first began. */
+@keyframes wall-up { from { translate: 0 0; } to { translate: 0 calc(-50% - 12px); } }
+@keyframes wall-down { from { translate: 0 calc(-50% - 12px); } to { translate: 0 0; } }
+
+.wall-tile { flex: 0 0 auto; aspect-ratio: 16 / 10; border-radius: 8px; overflow: hidden; background: var(--h01-tile); box-shadow: 0 0 0 1px var(--h01-hair); }
+.wall-tile img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 0 0; opacity: .5; filter: grayscale(1); }
+
+/* Fades the wall into the white page: hard on the left edge (towards the text), soft at top and bottom. */
+.wall-shade {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, var(--h01-bg) 0%, transparent 24%),
+    linear-gradient(180deg, var(--h01-bg) 0%, transparent 16%, transparent 84%, var(--h01-bg) 100%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wall-col, .wall-col.down { animation: none; }
+}
+
+@media (max-width: 900px) {
+  .h01-wall { position: relative; height: 480px; }
+  .wall { inset: -40% -40% -40% -10%; }
+  .wall-shade { background: linear-gradient(180deg, var(--h01-bg) 0%, transparent 20%, transparent 80%, var(--h01-bg) 100%); }
+}
+
+/* Layered layout (Home): a centred 1024px frame (Paper used 1440), as in Paper. The text sits at x 120 inside it, on top of
+   the screen wall, which comes in from the right, passes under the text and is trimmed at the frame's right edge.
+   Wider than 1024 the frame stays centred; narrower, it starts at the window's left edge. */
+.h01-center { display: block; }
+.h01-center .h01-wall { position: fixed; inset: 0; height: auto; z-index: 0; }
+/* The wall and its fade start where the 1024 frame starts. */
+.h01-center .wall-wrap { left: max(0px, calc(50% - 512px)); clip-path: inset(0 max(0px, calc(50vw - 512px)) 0 0); } /* cut at the frame's right edge; the wall keeps its size */
+/* Wider than the frame the wall is laid out as on a 1440 window: a fixed 1232px box from the frame's left edge, cut at the
+   frame's right edge, so it sits in the same place and at the same size on every large screen. */
+@media (min-width: 901px) {
+  .h01-center .wall-wrap { right: auto; width: 1232px; clip-path: inset(0 calc(100% - 1024px) 0 0); }
+}
+.h01-center .wall { inset: -30% -6% -30% 14%; translate: -150px 0; } /* starts under the right part of the text */
+/* Only the centre and right columns show; the left one keeps its place, so the tiles keep their size. */
+.h01-center .wall-col:nth-child(1) { visibility: hidden; }
+/* The column lets clicks through to the screens; only its text and links take them. Text at x 120, as in Paper. */
+.h01-center .h01-col { position: relative; z-index: 1; width: min(100%, 548px); margin-left: max(0px, calc(50% - 512px)); pointer-events: none; }
+.h01-center .h01-col > * { pointer-events: auto; }
+.h01-center .wall-shade {
+  background:
+    /* Page colour behind the text at half strength (was 94% at the left), then a long eased fade so it never reads as an edge (light and dark). */
+    linear-gradient(90deg,
+      color-mix(in srgb, var(--h01-bg) 47%, transparent) 0, color-mix(in srgb, var(--h01-bg) 45%, transparent) 440px,
+      color-mix(in srgb, var(--h01-bg) 35%, transparent) 600px, color-mix(in srgb, var(--h01-bg) 21%, transparent) 760px,
+      color-mix(in srgb, var(--h01-bg) 9%, transparent) 920px, transparent 1120px),
+    linear-gradient(180deg, var(--h01-bg) 0%, transparent 16%, transparent 84%, var(--h01-bg) 100%);
+}
+
+@media (max-width: 900px) {
+  .h01-center .h01-col { margin-left: 0; }
+  .h01-center .h01-wall { position: relative; inset: auto; height: 480px; }
+  .h01-center .wall { inset: -40% -40% -40% -40%; }
+  .h01-center .wall-shade { background: linear-gradient(180deg, var(--h01-bg) 0%, transparent 20%, transparent 80%, var(--h01-bg) 100%); }
+}
+
+/* Footer: a fixed bar along the bottom of the window, the full width of the view. Its text starts where
+   the headline starts (x 120 inside the centred 1024 frame) and ends the same distance from the frame's right edge, so both sides match. The page scrolls under it. One grey for all its text, 14px. */
+.h01-footer {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  height: 56px;
+  margin: 0;
+  padding: 0 max(40px, calc(50% - 472px)); /* the same inset both sides: starts with the headline, ends 40px inside the 1024 frame; also clears the old global footer padding */
+  background: var(--h01-bg);
+  color: var(--h01-caption);
+  font-size: var(--h01-meta);
+}
+/* The top line runs the full width of the view. */
+.h01-footer::before { content: ""; position: absolute; top: 0; left: 0; right: 0; border-top: 1px solid var(--h01-hair); }
+/* Room at the end of the text so the last lines clear the fixed footer. */
+.h01-col { padding-bottom: 136px; }
+.h01-footer time { font-variant-numeric: tabular-nums; }
+.h01-grow { flex: 1; }
+.h01-switch { display: flex; gap: 4px; }
+.h01-switch a, .h01-switch button {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border: 0;
+  border-radius: 8px;
+  background: none;
+  color: var(--h01-caption);
+  cursor: pointer;
+  transition: color .15s ease, background .15s ease;
+}
+.h01-switch a:hover, .h01-switch button:hover { color: var(--h01-accent); }
+.h01-switch .on, .h01-switch .on:hover { color: var(--h01-text); background: var(--h01-tile); }
+
+/* Agent view: the plain-text site, set simply in the text column. */
+.h01-agent { max-width: 760px; }
+.h01-md { margin-top: 48px; color: var(--h01-copy); line-height: 22px; }
+.h01-md h1, .h01-md h2, .h01-md h3 { margin: 32px 0 8px; color: var(--h01-text); font-size: 18px; line-height: 24px; font-weight: 600; }
+.h01-md p, .h01-md ul, .h01-md ol { margin: 0 0 12px; }
+.h01-md ul, .h01-md ol { padding-left: 20px; }
+.h01-md a, .h01-role a { color: var(--h01-accent); text-decoration: none; }
+.h01-md a:hover, .h01-role a:hover { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+.h01-md code { font-size: 13px; }
+
+@media (max-width: 900px) {
+  .h01-footer { padding: 0 16px; gap: 12px; }
+  .h01-col { padding-bottom: 104px; }
+}
+.h01-footer > span { white-space: nowrap; }
+@media (max-width: 900px) {
+  .h01-placeholder { grid-template-columns: 1fr; } /* no side strip on phones, the text gets the full width */
+}
+@media (max-width: 480px) {
+  .h01-footer { gap: 8px; font-size: 12px; }
+  .h01-switch a, .h01-switch button { width: 24px; height: 24px; }
+}
+
+/* Case study: the home column without the screen wall, set as a long read. Text is a 640px measure at 17px/28px; figures
+   run to the full 800px. Headings 22px, section gaps 80px, spacing on the 4px grid. */
+.h01-case { display: block; }
+.h01-case .h01-col { pointer-events: auto; margin-left: auto; margin-right: auto; width: min(100%, 880px); padding-top: 128px; padding-bottom: 136px; }
+/* When the window is wide enough that the corner mark can't overlap the column, the title starts higher. */
+@media (min-width: 1040px) { .h01-case .h01-col { padding-top: 80px; } }
+/* The AK mark, fixed in the top left corner, is the way back home. A ring around it fills as you read (--read, 0 to 1). */
+.h01-corner { position: fixed; top: 24px; left: 24px; z-index: 3; display: grid; place-items: center; width: 64px; height: 64px; border-radius: 50%; background: var(--h01-bg); }
+.h01-corner > * { grid-area: 1 / 1; }
+.h01-corner img { display: block; width: 36px; height: auto; }
+.h01-corner svg:not(.h01-corner-arrow) { width: 64px; height: 64px; rotate: -90deg; fill: none; stroke-width: 2; }
+.h01-corner img, .h01-corner-arrow { transition: opacity .2s ease, translate .2s ease; }
+.h01-corner-arrow { opacity: 0; translate: 8px 0; color: var(--h01-accent); }
+/* On hover (or keyboard focus) the mark slides out and a left arrow slides in. */
+.h01-corner:hover img, .h01-corner:focus-visible img { opacity: 0; translate: -8px 0; }
+.h01-corner:hover .h01-corner-arrow, .h01-corner:focus-visible .h01-corner-arrow { opacity: 1; translate: 0 0; }
+@media (prefers-reduced-motion: reduce) { .h01-corner img, .h01-corner-arrow { transition: none; } }
+.h01-ring-track { stroke: var(--h01-hair); }
+.h01-ring { stroke: var(--h01-accent); stroke-dasharray: 188.5; stroke-dashoffset: calc(188.5 * (1 - var(--read, 0))); }
+/* Blog type: 18px body on a 32px line, section headings at 28px with wide space above, so the hierarchy reads at a glance. */
+.h01-article { width: 100%; font-size: 18px; line-height: 32px; }
+.h01-article .h01-title { margin-top: 0; font-size: 48px; line-height: 56px; font-weight: 600; letter-spacing: -.025em; text-wrap: balance; }
+.h01-article .h01-sub { margin-top: 12px; font-size: 22px; line-height: 32px; color: var(--h01-label); text-wrap: balance; }
+.h01-meta { margin-top: 24px; margin-bottom: 40px; font-size: 14px; line-height: 20px; color: var(--h01-caption); }
+.h01-article p { margin-top: 24px; text-wrap: pretty; }
+.h01-article h3 { margin-top: 96px; font-size: 28px; line-height: 36px; font-weight: 600; letter-spacing: -.015em; text-wrap: balance; }
+.h01-article h3 + p, .h01-article h3 + ul { margin-top: 16px; }
+.h01-article strong { font-weight: 600; color: var(--h01-text); }
+.h01-article a { color: inherit; text-decoration: underline; text-decoration-color: var(--h01-caption); text-decoration-thickness: 1px; text-underline-offset: 4px; }
+.h01-article a:hover { color: var(--h01-accent); text-decoration-color: var(--h01-accent); }
+/* The opening paragraph after the summary is the lead, a step larger. */
+.h01-prose > .h01-tldr + p { margin-top: 40px; font-size: 22px; line-height: 36px; color: var(--h01-text); }
+/* The summary box: three labelled lines so a skimmer gets the whole story in ten seconds. */
+.h01-tldr { margin: 0; padding: 24px 32px; border-radius: 12px; background: var(--h01-tile); display: flex; flex-direction: column; gap: 12px; }
+.h01-tldr > div { display: grid; grid-template-columns: 96px 1fr; gap: 16px; }
+.h01-tldr dt { font-weight: 600; color: var(--h01-text); }
+.h01-tldr dd { margin: 0; color: var(--h01-label); }
+/* Key figures: large numbers in the accent, each with a short grey line under it. */
+.h01-article .h01-stats { margin: 48px 0; }
+.h01-stats > div { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 32px; }
+.h01-article .h01-stats p { margin: 0; display: flex; flex-direction: column; gap: 8px; }
+.h01-stats strong { font-size: 56px; line-height: 56px; font-weight: 600; letter-spacing: -.03em; color: var(--h01-accent); font-variant-numeric: tabular-nums; }
+.h01-stats span { font-size: 16px; line-height: 24px; color: var(--h01-label); max-width: 280px; }
+/* Comparison tables: hairline rows, the first column as row labels. */
+.h01-article table { width: 100%; margin: 40px 0; border-collapse: collapse; font-size: 16px; line-height: 24px; }
+.h01-article th, .h01-article td { padding: 12px 16px 12px 0; text-align: left; vertical-align: top; border-bottom: 1px solid var(--h01-hair); }
+.h01-article th { font-weight: 600; color: var(--h01-text); }
+.h01-article td { color: var(--h01-label); }
+.h01-article td:first-child { font-weight: 600; color: var(--h01-text); white-space: nowrap; }
+.h01-article td:last-child, .h01-article th:last-child { padding-right: 0; }
+/* The pull quote is the loud moment: just large type, with space around it. */
+.h01-article blockquote { margin: 80px 0 0; font-size: 32px; line-height: 44px; font-weight: 500; letter-spacing: -.015em; text-wrap: balance; }
+.h01-article blockquote p { margin-top: 0; color: var(--h01-text); }
+.h01-article blockquote em { font-style: normal; color: var(--h01-accent); }
+.h01-article ul { margin: 24px 0 0; padding-left: 24px; display: flex; flex-direction: column; gap: 12px; }
+.h01-article li::marker { color: var(--h01-caption); }
+/* Figures run the full 800px. */
+.h01-article img { display: block; width: 100%; max-width: 800px; height: auto; margin: 0; border-radius: 8px; background: var(--h01-tile); box-shadow: 0 0 0 1px var(--h01-hair), 0 4px 16px rgb(0 0 0 / .06); }
+/* Each image is a figure with its alt text as a small grey caption. Images written side by side in the markdown sit in
+   one row at the full width, all the same height: each takes a share of the row in proportion to its shape. */
+.h01-article figure { margin: 56px 0; }
+.h01-article figcaption { margin-top: 12px; font-size: 14px; line-height: 20px; color: var(--h01-caption); }
+.h01-figrow { display: flex; gap: 8px; margin: 56px 0; }
+.h01-figrow figure { flex: var(--ar) 1 0; min-width: 0; margin: 0; }
+.h01-figrow img { border-radius: 4px; }
+/* In the dark theme the long copy is a step softer than the headings, to cut glare. */
+html[data-theme='dark'] .h01-article p, html[data-theme='dark'] .h01-article li { color: var(--h01-copy); }
+html[data-theme='dark'] .h01-prose > .h01-tldr + p, html[data-theme='dark'] .h01-article blockquote p { color: var(--h01-text); }
+html[data-theme='dark'] .h01-article img { box-shadow: 0 0 0 1px var(--h01-hair), 0 4px 16px rgb(0 0 0 / .4); }
+@media (max-width: 720px) {
+  .h01-corner { top: 8px; left: 8px; }
+  .h01-case .h01-col { padding-top: 96px; }
+  .h01-article { font-size: 17px; line-height: 28px; }
+  .h01-article .h01-title { font-size: 36px; line-height: 44px; }
+  .h01-article .h01-sub { font-size: 19px; line-height: 28px; }
+  .h01-article h3 { margin-top: 72px; font-size: 24px; line-height: 32px; }
+  .h01-prose > .h01-tldr + p { font-size: 19px; line-height: 30px; }
+  .h01-tldr { padding: 20px; }
+  .h01-tldr > div { grid-template-columns: 1fr; gap: 0; }
+  .h01-stats strong { font-size: 44px; line-height: 48px; }
+  .h01-article blockquote { font-size: 24px; line-height: 34px; }
+  .h01-article table { font-size: 15px; line-height: 22px; }
+  .h01-article td:first-child { white-space: normal; }
+}
+
+/* Work pages (Shift): the case study's centered column with the home page's type. The live product sits under the title. */
+.h01-work .h01-title { margin-top: 0; text-wrap: balance; }
+.h01-byline { margin-top: 12px; display: flex; flex-wrap: wrap; gap: 8px; }
+.h01-byline .h01-role { margin-top: 0; }
+.h01-app { width: 100%; margin-top: 12px; border-radius: 8px; overflow: hidden; background: var(--h01-tile); box-shadow: 0 0 0 1px var(--h01-hair), 0 4px 16px rgb(0 0 0 / .06); }
+.h01-app > img { display: block; width: 100%; height: auto; }
+/* While the live app loads: an empty frame of the same shape (2880:1452) with a small spinner, then the app fades in over it. */
+.h01-app-loading { aspect-ratio: 2880 / 1452; display: grid; place-items: center; color: var(--h01-caption); }
+.h01-app-loading svg { animation: h01-spin 1s linear infinite; }
+.h01-app > div:not(.h01-app-loading) { animation: h01-app-in .35s ease both; }
+@keyframes h01-spin { to { rotate: 360deg; } }
+@keyframes h01-app-in { from { opacity: 0; } to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .h01-app-loading svg, .h01-app > div:not(.h01-app-loading) { animation: none; } }
+/* Enlarge sits on the right above the app; the intro runs across the full column. */
+.h01-enlarge { align-self: flex-end; margin-top: 32px; display: inline-flex; align-items: center; gap: 8px; padding: 0; border: 0; background: none; font: inherit; color: var(--h01-label); cursor: pointer; }
+.h01-enlarge:hover { color: var(--h01-accent); }
+.h01-intro { margin-top: 32px; }
+.h01-work .h01-tabs + .h01-lightbox + .h01-group, .h01-work .h01-tabs + .h01-group { margin-top: 80px; }
+/* Tabs under the live app: a hairline on top of each, the name and the decision. The active tab's line is the accent
+   and its text black; the others stay grey and darken on hover. */
+.h01-tabs { width: 100%; margin: 16px 0 0; padding: 0; list-style: none; display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 24px; }
+.h01-tabs li { display: flex; }
+.h01-tab { flex: 1; display: flex; flex-direction: column; align-items: flex-start; gap: 4px; padding: 16px 0 0; border: 0; border-top: 2px solid var(--h01-hair); background: none; font: inherit; text-align: left; cursor: pointer; transition: border-color .2s ease; }
+.h01-tab .h01-name, .h01-tab .h01-desc { color: var(--h01-caption); transition: color .2s ease; }
+.h01-tab:hover { border-top-color: var(--h01-label); }
+.h01-tab:hover .h01-name { color: var(--h01-text); }
+.h01-tab:hover .h01-desc { color: var(--h01-label); }
+.h01-soon { color: var(--h01-text); }
+.h01-tab[aria-pressed='true'] { border-top-color: var(--h01-accent); }
+.h01-tab[aria-pressed='true'] .h01-name { color: var(--h01-text); }
+.h01-tab[aria-pressed='true'] .h01-desc { color: var(--h01-label); }
+.h01-soon { color: var(--h01-text); }
+@media (max-width: 720px) { .h01-tabs { grid-auto-flow: row; gap: 16px; } }
+/* The enlarged app: as big as the window allows at the screen's shape, over a dimmed page. */
+.h01-lightbox { width: 100vw; height: 100vh; max-width: none; max-height: none; margin: 0; padding: 0; border: 0; background: transparent; display: none; place-items: center; }
+.h01-lightbox[open] { display: grid; }
+.h01-lightbox::backdrop { background: rgb(0 0 0 / .6); }
+.h01-app-large { width: calc(100vw - 144px); height: calc(100vh - 80px); margin: 0; }
+@media (max-width: 720px) { .h01-app-large { width: calc(100vw - 32px); height: calc(100vh - 128px); } }
+.h01-lightbox-close { position: fixed; top: 16px; right: 16px; width: 40px; height: 40px; display: grid; place-items: center; border: 0; border-radius: 50%; background: #fff; color: #000; cursor: pointer; }
+html[data-theme='dark'] .h01-app { box-shadow: 0 0 0 1px var(--h01-hair), 0 4px 16px rgb(0 0 0 / .4); }
+
+/* Screens: the work pages' bento. Six columns; each tile sets its size (is-lg four columns by two rows, is-sm two by
+   one at 2:1, is-wide three by one) and the grid places them in order, filling gaps. */
+.h01-work .h01-group { align-self: stretch; container-type: inline-size; }
+.h01-bento { width: 100%; margin: 0; padding: 0; list-style: none; display: grid; grid-auto-flow: row dense; grid-template-columns: repeat(6, 1fr); grid-auto-rows: calc(((100cqw - 60px) / 3 + 12px) / 2); gap: 12px; }
+.h01-bento li { position: relative; overflow: hidden; border-radius: 8px; background: var(--h01-tile); }
+/* A hairline border drawn over the image, so the screenshot can't cover it. */
+.h01-bento li::after { content: ''; position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 1px var(--h01-hair); pointer-events: none; }
+.h01-bento .is-lg { grid-column: span 4; grid-row: span 2; }
+.h01-bento .is-sm { grid-column: span 2; }
+.h01-bento .is-wide { grid-column: span 3; }
+/* The design tile: the company's mark in white, centred on its brand colour, about a third of the tile's height. */
+.h01-bento-brand { position: relative; }
+.h01-bento .h01-bento-brand img { position: absolute; left: var(--x, 50%); top: var(--y, 50%); width: 36%; height: 36%; object-fit: contain; transform: translate(-50%, -50%) scale(var(--z, 1)); }
+.h01-bento-brand span { position: absolute; left: var(--x, 50%); top: var(--y, 50%); transform: translate(-50%, -50%) scale(var(--z, 1)); width: 36%; height: 36%; background: #fff; -webkit-mask: var(--logo) center / contain no-repeat; mask: var(--logo) center / contain no-repeat; }
+.h01-bento button { display: block; width: 100%; height: 100%; padding: 0; border: 0; background: none; cursor: zoom-in; }
+.h01-bento video { display: block; width: 100%; height: 100%; object-fit: cover; object-position: var(--x, 50%) var(--y, 50%); transform: scale(var(--z, 1)); transform-origin: var(--x, 50%) var(--y, 50%); }
+/* Each screenshot is zoomed into its focus point. On hover the whole tile eases in 3% from its centre, the same for
+   every tile (screenshots and videos), to hint that it opens. */
+.h01-bento img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: var(--x) var(--y); transform: scale(var(--z, 1)); transform-origin: var(--x) var(--y); }
+.h01-bento button { transition: transform .4s ease; }
+.h01-bento button:hover { transform: scale(1.03); }
+@media (prefers-reduced-motion: reduce) { .h01-bento button { transition: none; } .h01-bento button:hover { transform: none; } }
+/* ?tune: drag a tile to move its focus, scroll to zoom; a readout on each tile and a bar to copy the values. */
+.h01-bento[data-tune] button, .h01-bento[data-tune] .h01-bento-brand { cursor: grab; touch-action: none; }
+.h01-bento[data-tune] button:hover { transform: none; }
+.h01-bento[data-tune] li[data-active]::after { box-shadow: inset 0 0 0 4px #f04a00; z-index: 2; }
+/* Each tile's own controls: its values and a Set button that writes them into the page. */
+.h01-tune-read { position: absolute; left: 6px; right: 6px; bottom: 6px; display: flex; gap: 8px; align-items: center; justify-content: space-between; padding: 3px 4px 3px 8px; border-radius: 6px; background: rgb(0 0 0 / .75); color: #fff; font: 11px/1.4 ui-monospace, monospace; z-index: 3; }
+.h01-bento .h01-tune-read button { all: unset; padding: 2px 10px; border-radius: 4px; background: #f04a00; color: #fff; cursor: pointer; }
+.h01-shown { display: block; max-width: calc(100vw - 144px); max-height: calc(100vh - 80px); width: auto; height: auto; border-radius: 8px; background: #fff; }
+@media (max-width: 720px) {
+  .h01-bento { grid-template-columns: 1fr 1fr; grid-auto-rows: auto; }
+  .h01-bento li.is-sm, .h01-bento li.is-wide { grid-column: auto; aspect-ratio: 2 / 1; }
+  .h01-bento li.is-lg { grid-column: span 2; grid-row: auto; aspect-ratio: 16 / 9; }
+  /* An odd tile left alone on the last row takes the full width instead of leaving a hole. */
+  .h01-bento li:not(.is-lg):last-child:nth-child(even) { grid-column: span 2; aspect-ratio: 2 / 1; }
+  .h01-shown { max-width: calc(100vw - 32px); }
+}
+
+/* The case study preview: title, opening paragraph and Read more, all one link. Read more works like the home links:
+   black text with an accent arrow, the text turning accent and underlined on hover. */
+.h01-story { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; text-decoration: none; color: var(--h01-text); }
+.h01-story .h01-desc { max-width: none; }
+.h01-readmore { margin-top: 8px; display: inline-flex; align-items: center; gap: 4px; color: var(--h01-text); transition: color .2s ease; }
+.h01-readmore svg { color: var(--h01-accent); transition: translate .2s ease; }
+.h01-story:hover .h01-readmore svg { translate: 2px 0; }
+.h01-story:hover .h01-readmore { color: var(--h01-accent); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+
+/* CV page: contacts under the name, then each entry as a row of dates beside what happened. */
+/* The CV header reads as one block: name and role together (4px), contacts a step below (16px), the intro after
+   (32px), then a hairline closes the header before Experience. */
+/* The work pages and the CV run the 1024 frame, so their text lines up with the home page and the footer. Case studies stay 880. */
+.h01-case.h01-work .h01-col { width: min(100%, 1024px); }
+.h01-cv .h01-byline { margin-top: 4px; }
+.h01-cv .h01-byline .h01-role { font-size: 16px; line-height: 24px; color: var(--h01-copy); }
+.h01-cv-contacts { margin-top: 16px; color: var(--h01-label); }
+.h01-cv .h01-cv-contacts + .h01-intro { margin-top: 32px; max-width: none; }
+.h01-cv-contacts a { color: var(--h01-label); text-decoration: underline; text-decoration-color: var(--h01-hair); text-underline-offset: 3px; }
+.h01-cv-contacts a:hover { color: var(--h01-accent); text-decoration-color: var(--h01-accent); }
+/* The name row stays pinned while the CV scrolls, its center level with the corner mark's (24px + 64px / 2 = 56px, so
+   the 34px row pins at 39px). Once pinned it gets a page-colored backing that runs up to the window top and 16px below,
+   so scrolling text passes cleanly behind; unpinned it has none, so nothing covers the lines under the name. */
+.h01-cv-head { position: sticky; top: 39px; z-index: 2; width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+/* Once pinned, the row gets a backing that runs 40px below it and fades out, so text scrolls away well clear of the name. */
+.h01-cv-head[data-stuck='true']::before { content: ''; position: absolute; z-index: -1; inset: -39px -16px -40px; background: linear-gradient(to bottom, var(--h01-bg) calc(100% - 24px), transparent); }
+@media (max-width: 720px) {
+  .h01-cv-head { top: 23px; }
+  .h01-cv-head[data-stuck='true']::before { top: -23px; }
+}
+.h01-cv-pdf { flex-shrink: 0; padding: 8px 16px; border: 1px solid var(--h01-hair); border-radius: 999px; transition: background .15s ease, color .15s ease; }
+.h01-cv-pdf:hover { border-color: var(--h01-accent); background: var(--h01-accent); color: var(--primary-foreground, #fff); }
+.h01-cv-pdf:hover span { color: inherit; text-decoration: none; }
+.h01-cv-pdf:hover svg { color: inherit; }
+.h01-cv-pdf:hover svg { translate: none; }
+.h01-cv .h01-intro + .h01-group { margin-top: 48px; padding-top: 48px; border-top: 1px solid var(--h01-hair); }
+/* Section labels sit 24px above their list, so they read as titles of the open rows below, not glued to the first one. */
+.h01-cv .h01-group > .h01-label { margin-bottom: 20px; }
+.h01-cv-list { width: 100%; margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 32px; }
+.h01-cv-row { display: grid; grid-template-columns: 160px 1fr; gap: 24px; }
+.h01-cv-when { color: var(--h01-caption); font-variant-numeric: tabular-nums; }
+.h01-cv-what { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
+.h01-cv-bullets { margin: 8px 0 0; padding-left: 16px; display: flex; flex-direction: column; gap: 8px; max-width: 600px; color: var(--h01-text); }
+.h01-cv-bullets li::marker { color: var(--h01-caption); }
+.h01-cv .h01-group + .h01-group { margin-top: 64px; }
+@media (max-width: 720px) { .h01-cv-row { grid-template-columns: 1fr; gap: 4px; } }
+
+/* Link previews: a 240x120 picture of a side project's site floats above its link on hover or focus. */
+.h01-peek { position: relative; display: inline; }
+.h01-peek-box {
+  position: absolute; left: 50%; bottom: calc(100% + 8px); z-index: 20;
+  width: 240px; height: 120px; overflow: hidden;
+  border: 1px solid var(--h01-hair); border-radius: 8px; background: var(--h01-tile);
+  box-shadow: 0 8px 24px rgb(0 0 0 / .12);
+  opacity: 0; visibility: hidden; pointer-events: none;
+  translate: -50% 4px; transition: opacity .18s ease, translate .18s ease, visibility 0s .18s;
+}
+.h01-peek-box img {
+  position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; object-fit: cover; object-position: top;
+}
+@media (hover: hover) {
+  .h01-peek:hover .h01-peek-box,
+  .h01-peek:has(:focus-visible) .h01-peek-box { opacity: 1; visibility: visible; translate: -50% 0; transition-delay: 0s; }
+}
+/* The list links start at the column edge: their preview lines up with the link's left edge instead of its center. */
+.h01-items .h01-peek-box { left: 0; translate: 0 4px; }
+@media (hover: hover) {
+  .h01-items .h01-peek:hover .h01-peek-box,
+  .h01-items .h01-peek:has(:focus-visible) .h01-peek-box { translate: 0 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .h01-peek-box, .h01-peek-box img { transition: none; }
+  .h01-peek-box { translate: -50% 0; }
+  .h01-items .h01-peek-box { translate: 0 0; }
+}

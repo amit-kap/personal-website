@@ -1,9 +1,186 @@
-/* Vite entry — framework imports only.
-   Glaze's globals.css brings Tailwind, the token contract and the base layer;
-   the site's theme is the generated Glaze theme "personal-website".
-   The site's own design system (fonts, type scale, motion, utilities) lives
-   in portfolio-theme.css. */
-@import "@amit-kap/glaze/globals.css";
-@import "./theme/personal-website.css";
-@import "lenis/dist/lenis.css";
-@import "./portfolio-theme.css";
+/* Tokens from Paper (07 — Anti-slop home). Plain CSS; no framework. */
+@import "@fontsource-variable/inter";
+
+:root {
+  --background: color-mix(in srgb, var(--primary) 4%, white); /* white with a 4% tint of the primary, about #FEF8F5 */
+  --foreground: #111111;
+  --ink: #111133;
+  --copy: #454542;
+  --muted: #70706d;
+  --border: #ececec;
+  --primary: #f04a00;
+  --primary-hover: #d63e00;
+  --radius-container: 14px;
+  /* The type scale: five sizes for the whole page. */
+  --fs-s: 14px;   /* labels, nav, meta, status, small text */
+  --fs-m: 18px;   /* body, buttons */
+  --fs-l: 24px;   /* case study title */
+  --fs-xl: 48px;  /* closing headline (36px on phones) */
+  --fs-xxl: 60px; /* hero headline */
+  --column: 800px;
+  --font: "Inter Variable", "Inter", system-ui, sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { background: var(--background); }
+body { font-family: var(--font); color: var(--foreground); -webkit-font-smoothing: antialiased; }
+a { color: inherit; }
+
+/* Hero: a fixed 16:9 stage. On wide screens the videos and the text share it, and every size, gap and
+   position is in container units (cqw, 1cqw = 1% of the stage width), so text and film scale together and
+   stay in sync at any screen size. The numbers are the 1440px design divided by 14.4. */
+.hero-track { position: relative; }
+/* Pinned while the scroll shrink runs (Home.tsx). It is one block: film, text and top bar scale together. */
+/* The same scale inside the hero, in cqw (1cqw = 1% of the film width; the 1440px design / 14.4), so text scales with the film. */
+.hero { --h-s: .972cqw; --h-m: 1.25cqw; --h-xxl: 4.167cqw; }
+.hero { position: sticky; top: 0; width: 100%; container-type: inline-size; transform-origin: 50% 0; overflow: hidden; will-change: transform; }
+.hero .stage { position: relative; width: 100%; aspect-ratio: 16 / 9; overflow: hidden; }
+.hero .art { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: fill; display: block; }
+.hero .intro { z-index: 1; }
+.hero.is-looping .intro { visibility: hidden; }
+.hero .inner { position: absolute; inset: 0; z-index: 3; padding: 0 8.333cqw; }
+.hero header { display: flex; justify-content: space-between; align-items: center; padding-top: 3.264cqw; }
+.logo { display: inline-flex; text-decoration: none; }
+.logo img { display: block; height: 3.056cqw; width: auto; }
+.hero nav a { text-decoration: none; font-size: var(--h-s); margin-left: 1.944cqw; }
+.copy { margin-top: 6.389cqw; max-width: 52.8cqw; }
+
+/* Cinematic entrance: each piece fades in and settles down into place, one after another
+   (--i is its beat: both title lines together, paragraph, button, then the top bar). */
+/* The numbers come from src/lib/titlesAnimation.json, set on the hero by Home.tsx (--gap, --fade, --move,
+   --push-d, --line-offset, --nudge, --nudge-time). */
+.hero { --push: var(--push-d, 1.1cqw); }
+.hero .rv { --extra: 0s; transition: opacity var(--fade, .8s) ease-out calc(var(--i) * var(--gap, .45s) + var(--extra)), transform var(--move, .9s) cubic-bezier(.2, .7, .2, 1) calc(var(--i) * var(--gap, .45s) + var(--extra)),
+  translate var(--nudge-time, .6s) var(--nudge-ease, cubic-bezier(.37, 0, .63, 1)) var(--nudge-delay, 0s); }
+/* The nudge moves each title line on its own (the `translate` property, separate from the entrance's
+   `transform`); the bottom line follows by --nudge-line-delay. */
+/* Smoother start and stop than a cubic-bezier: "smootherstep" (6t^5 - 15t^4 + 10t^3) has zero speed AND zero
+   acceleration at both ends, so the nudge eases in and settles with no abrupt onset or landing. Falls back to
+   the sine curve where linear() is not supported. */
+@supports (transition-timing-function: linear(0, 1)) {
+  .hero { --nudge-ease: linear(0, 0.0003, 0.0022, 0.0071, 0.0161, 0.0298, 0.0488, 0.0733, 0.1035, 0.1392, 0.18, 0.2255, 0.2752, 0.3283, 0.384, 0.4416, 0.5, 0.5584, 0.616, 0.6717, 0.7248, 0.7745, 0.82, 0.8608, 0.8965, 0.9267, 0.9512, 0.9702, 0.9839, 0.9929, 0.9978, 0.9997, 1); }
+}
+h1.nudged .soft, h1.nudged .line { translate: calc(var(--nudge, 1.5cqw) * -1) 0; }
+h1 .line { --nudge-delay: var(--nudge-line-delay, 0s); }
+h1 .soft, h1 .line { will-change: translate; }
+/* The return is a little slower than the move out, so it settles softly. */
+h1:not(.nudged) { --nudge-time: var(--nudge-back-time, 0.93s); }
+.hero .line { --extra: var(--line-offset, 0s); }
+.hero.wait .rv { opacity: 0; transform: translateY(calc(var(--push) * -1)); }
+h1 { font-size: var(--h-xxl); line-height: 1.08; font-weight: 500; letter-spacing: -0.02em; color: var(--ink); }
+h1 .soft, h1 .line { display: block; }
+/* Letters disco: one or more letters at a time light up in the primary colour (set by Home.tsx). */
+.ch { transition: color var(--disco-out, .15s) ease-out; }
+.ch.on { color: var(--primary); transition: color var(--disco-in, .04s) ease-out; }
+h1 .soft { color: #55556a; font-weight: 400; }
+p.sub { margin-top: 2.222cqw; font-size: var(--h-m); line-height: 1.6; color: #2a2a3c; max-width: 38.9cqw; }
+.cta { margin-top: 2.778cqw; display: flex; align-items: center; gap: 1.528cqw; }
+.hero .btn { font-size: var(--h-m); padding: 0.956cqw 1.764cqw; gap: 0.735cqw; }
+
+.btn { display: inline-flex; align-items: center; gap: 10px; background: var(--primary); color: #fff; font-weight: 500; font-size: var(--fs-m);
+       padding: 13px 24px; border-radius: 999px; text-decoration: none; }
+.btn:hover { background: var(--primary-hover); }
+
+/* Film grain over both videos, under the text. */
+.hero .grain { position: absolute; inset: -50%; z-index: 2; pointer-events: none; opacity: 0.28; mix-blend-mode: overlay;
+  background-size: 256px 256px;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='256' height='256'><filter id='n' x='0' y='0' width='100%25' height='100%25' color-interpolation-filters='sRGB'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='2.5 0 0 0 -0.75  2.5 0 0 0 -0.75  2.5 0 0 0 -0.75  0 0 0 0 1'/></filter><rect width='256' height='256' filter='url(%23n)'/></svg>");
+  animation: grain .8s steps(4) infinite; }
+@keyframes grain { 0% { transform: translate(0, 0); } 25% { transform: translate(-3%, 2%); } 50% { transform: translate(2%, -3%); } 75% { transform: translate(-2%, -1%); } 100% { transform: translate(0, 0); } }
+@media (prefers-reduced-motion: reduce) { .hero .grain { animation: none; } .hero .rv { transition: none; } }
+
+/* Editorial column */
+.column { width: 100%; max-width: var(--column); margin: 0 auto; }
+section.case { padding-top: 152px; }
+.eyebrow { font-size: var(--fs-s); color: var(--muted); }
+.cover { margin-top: 16px; border-radius: var(--radius-container); overflow: hidden; aspect-ratio: 800 / 440; background: #f3f3f1; } /* placeholder until the cover is chosen */
+.cover img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.case-row { margin-top: 24px; display: flex; justify-content: space-between; align-items: flex-start; gap: 24px; }
+.case-row h2 { font-size: var(--fs-l); line-height: 1.25; font-weight: 500; letter-spacing: -0.01em; }
+.case-row p { margin-top: 8px; font-size: var(--fs-s); line-height: 1.5; color: var(--copy); }
+.pill { flex-shrink: 0; display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--border); border-radius: 999px;
+        padding: 9px 16px; font-size: var(--fs-s); font-weight: 500; text-decoration: none; }
+.pill span { color: var(--primary); }
+
+section.bio { padding-top: 144px; display: flex; gap: 40px; align-items: flex-start; }
+.bio img { width: 64px; height: 64px; border-radius: 50%; object-fit: cover; flex-shrink: 0; display: none; } /* hidden for now: remove display: none to bring the photo back */
+.bio-text { display: grid; gap: 20px; flex: 1; min-width: 0; }
+.bio p { font-size: var(--fs-m); line-height: 1.7; color: var(--copy); }
+.bio b { color: var(--foreground); font-weight: 500; }
+.bio a { color: var(--primary); text-decoration: none; }
+
+section.closing { padding-top: 192px; display: flex; flex-direction: column; align-items: flex-start; gap: 32px; }
+.closing h2 { font-size: var(--fs-xl); line-height: 1.1; font-weight: 500; letter-spacing: -0.02em; }
+.closing > div { width: 100%; min-width: 0; }
+.closing p { margin-top: 24px; font-size: var(--fs-s); color: var(--copy); }
+/* Availability status: a small fixed 6px dot in the hero cape's blue, with a 12px dot of the same colour
+   behind it that blinks. */
+.status { display: flex; align-items: center; gap: 10px; }
+.dot { position: relative; width: 12px; height: 12px; flex-shrink: 0; }
+.dot::before, .dot::after { content: ""; position: absolute; border-radius: 50%; background: #3f6096; }
+.dot::before { inset: 0; animation: blink 1.6s ease-in-out infinite; }
+.dot::after { inset: 3px; }
+@keyframes blink { 0%, 100% { opacity: 0; } 50% { opacity: .5; } }
+@media (prefers-reduced-motion: reduce) { .dot::before { animation: none; opacity: 0; } }
+.closing-actions { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
+footer { padding: 112px 0 64px; }
+/* The links and the city are grouped in one row under a top border. */
+.footer-inner { border-top: 1px solid var(--border); padding-top: 24px; display: flex; justify-content: space-between; align-items: center; }
+.links { display: flex; gap: 22px; }
+.links a { display: inline-flex; width: 22px; height: 22px; align-items: center; justify-content: center; text-decoration: none; }
+.links svg { width: 18px; height: 18px; }
+.city { font-size: var(--fs-s); color: var(--muted); }
+.city time { font-variant-numeric: tabular-nums; }
+
+@media (max-width: 860px) {
+  /* Phones: the film keeps its 16:9 shape on top and the text sits below it, at normal reading sizes. */
+  .hero { container-type: normal; --push: 12px; }
+  h1.nudged .soft, h1.nudged .line { translate: none; }
+  .hero .inner { position: static; padding: 0 16px; }
+  .hero header { position: absolute; top: 0; left: 0; right: 0; z-index: 3; padding: 14px 16px 0; }
+  .logo img { height: 32px; }
+  :root { --fs-xl: 36px; }
+  .hero nav a { font-size: var(--fs-s); margin-left: 20px; }
+  .copy { margin-top: 32px; max-width: none; }
+  h1 { font-size: var(--fs-xl); line-height: 1.15; }
+  p.sub { margin-top: 20px; font-size: var(--fs-m); line-height: 1.5; max-width: none; }
+  .cta { margin-top: 28px; gap: 16px; }
+    .hero .btn { font-size: var(--fs-m); padding: 12px 22px; gap: 10px; }
+  .column { padding: 0 16px; }
+  section.case { padding-top: 72px; }
+    section.bio { padding-top: 96px; gap: 20px; }
+  .bio p { font-size: var(--fs-m); line-height: 1.6; }
+  section.closing { padding-top: 120px; flex-direction: column; align-items: flex-start; }
+  .closing h2 { line-height: 1.15; }
+  .case-row { flex-direction: column; }
+}
+
+/* Media loading state (src/lib/mediaLoader.ts): a soft shimmer in the tile colour until the file arrives. */
+img[data-loading], video[data-loading] {
+  color: transparent; /* hides the alt text and broken-image icon while it loads */
+  background: linear-gradient(100deg, var(--h01-tile, var(--border)) 30%, var(--h01-bg, var(--background)) 50%, var(--h01-tile, var(--border)) 70%) 0 0 / 300% 100%;
+  animation: media-shimmer 1.4s ease-in-out infinite;
+}
+@keyframes media-shimmer { from { background-position: 100% 0; } to { background-position: 0 0; } }
+
+/* The full-screen viewer has no size until its file arrives, so it shows a small spinner instead. */
+.h01-lightbox:has(.h01-shown[data-loading])::before {
+  content: '';
+  position: fixed; top: 50%; left: 50%;
+  width: 28px; height: 28px; margin: -14px 0 0 -14px;
+  border-radius: 50%;
+  border: 2px solid rgb(255 255 255 / .25);
+  border-top-color: #fff;
+  animation: media-spin .8s linear infinite;
+}
+.h01-lightbox .h01-shown[data-loading] { background: none; animation: none; }
+@keyframes media-spin { to { transform: rotate(360deg); } }
+
+@media (prefers-reduced-motion: reduce) {
+  img[data-loading], video[data-loading] { animation: none; background: var(--h01-tile, var(--border)); }
+  .h01-lightbox:has(.h01-shown[data-loading])::before { animation-duration: 2.4s; }
+}
+
+/* Selected text, across the site: the primary as the text colour on a light tint of it. */
+:root { --selection: var(--primary); --selection-bg: color-mix(in srgb, var(--primary) 22%, white); }
+::selection { background: var(--selection-bg); color: var(--selection); }
