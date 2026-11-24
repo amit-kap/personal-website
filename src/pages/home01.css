@@ -70,11 +70,13 @@ html[data-theme='dark']:has(.h01), html[data-theme='dark'] body:has(.h01) { back
 }
 .h01-title b { font-weight: 600; }
 /* The home hero is the page's one statement, so it runs larger than the work page titles. */
-.h01-center:not(.h01-case) .h01-title { font-size: 36px; line-height: 40px; }
+.h01-center:not(.h01-case) .h01-title { font-size: 36px; line-height: 44px; } /* 1.22, the same ratio as the closing line */
 /* Each line stays whole on wide screens (the first runs a little past the 468px text column). */
 @media (min-width: 901px) { .h01-center:not(.h01-case) .h01-title .h01-line { white-space: nowrap; } }
-/* Hero to Bio: more than the 40px between sections, so the hero still stands apart, but part of the same column. */
-.h01-center:not(.h01-case) .h01-title + .h01-group { margin-top: 56px; }
+/* Home rhythm on the 8px grid: 48px from the header to the hero and between sections, 64px from the hero to the
+   first section so the statement stands apart. Inside every section: 12px label to content, 16px between items. */
+.h01-center:not(.h01-case) .h01-title + .h01-group { margin-top: 64px; }
+.h01-center:not(.h01-case) .h01-group + .h01-group { margin-top: 48px; }
 .h01-title .h01-line { display: block; }
 
 /* The rotating word: one word at a time, a short fade and lift between them. */

@@ -3,7 +3,8 @@ import { Maximize2 } from 'lucide-react'
 import './home01.css'
 import SiteFooter from './SiteFooter'
 import { getWorkBySlug } from '@/lib/content'
-import { Bento, Byline, CornerMark, StoryPreview, useViewer, WorkTabs, type Tab, type Tile } from './WorkParts'
+import { Bento, Byline, CornerMark, StoryPreview, WorkTabs, type Tab, type Tile } from './WorkParts'
+import { useViewer } from './useViewer'
 
 /* Veriti has no live product, so the tabs switch full screenshots instead. Each tab names a screen and the decision
    behind it. */

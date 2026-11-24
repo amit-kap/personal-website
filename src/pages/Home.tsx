@@ -60,7 +60,7 @@ function Caret({ text, holding }: { text: string; holding: boolean }) {
   const block = useRef<HTMLSpanElement>(null)
   const last = useRef<number | null>(null)
   const id = useRef(0)
-  const [ghosts, setGhosts] = useState<{ id: number; x: number; w: number }[]>([])
+  const [ghosts, setGhosts] = useState<{ id: number; x: number; y: number; w: number }[]>([])
 
   useLayoutEffect(() => {
     const el = slot.current
@@ -81,7 +81,7 @@ function Caret({ text, holding }: { text: string; holding: boolean }) {
       ],
       { duration: 160, easing: 'cubic-bezier(.2, .8, .2, 1)' },
     )
-    setGhosts((g) => [...g.slice(-10), { id: ++id.current, x: left, w }])
+    setGhosts((g) => [...g.slice(-10), { id: ++id.current, x: left, y: el.offsetTop, w }])
   }, [text])
 
   return (
@@ -90,7 +90,7 @@ function Caret({ text, holding }: { text: string; holding: boolean }) {
         <span
           key={g.id}
           className="h01-caret-glow"
-          style={{ left: g.x, top: slot.current?.offsetTop, width: g.w }}
+          style={{ left: g.x, top: g.y, width: g.w }}
           aria-hidden="true"
           onAnimationEnd={() => setGhosts((all) => all.filter((t) => t.id !== g.id))}
         />

@@ -3,7 +3,8 @@ import { Maximize2, X } from 'lucide-react'
 import './home01.css'
 import SiteFooter from './SiteFooter'
 import { getWorkBySlug } from '@/lib/content'
-import { Bento, Byline, CornerMark, StoryPreview, useViewer, WorkTabs, type Tab, type Tile } from './WorkParts'
+import { Bento, Byline, CornerMark, StoryPreview, WorkTabs, type Tab, type Tile } from './WorkParts'
+import { useViewer } from './useViewer'
 
 const base = import.meta.env.BASE_URL
 

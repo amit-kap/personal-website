@@ -154,3 +154,29 @@ footer { padding: 112px 0 64px; }
   .closing h2 { line-height: 1.15; }
   .case-row { flex-direction: column; }
 }
+
+/* Media loading state (src/lib/mediaLoader.ts): a soft shimmer in the tile colour until the file arrives. */
+img[data-loading], video[data-loading] {
+  color: transparent; /* hides the alt text and broken-image icon while it loads */
+  background: linear-gradient(100deg, var(--h01-tile, var(--border)) 30%, var(--h01-bg, var(--background)) 50%, var(--h01-tile, var(--border)) 70%) 0 0 / 300% 100%;
+  animation: media-shimmer 1.4s ease-in-out infinite;
+}
+@keyframes media-shimmer { from { background-position: 100% 0; } to { background-position: 0 0; } }
+
+/* The full-screen viewer has no size until its file arrives, so it shows a small spinner instead. */
+.h01-lightbox:has(.h01-shown[data-loading])::before {
+  content: '';
+  position: fixed; top: 50%; left: 50%;
+  width: 28px; height: 28px; margin: -14px 0 0 -14px;
+  border-radius: 50%;
+  border: 2px solid rgb(255 255 255 / .25);
+  border-top-color: #fff;
+  animation: media-spin .8s linear infinite;
+}
+.h01-lightbox .h01-shown[data-loading] { background: none; animation: none; }
+@keyframes media-spin { to { transform: rotate(360deg); } }
+
+@media (prefers-reduced-motion: reduce) {
+  img[data-loading], video[data-loading] { animation: none; background: var(--h01-tile, var(--border)); }
+  .h01-lightbox:has(.h01-shown[data-loading])::before { animation-duration: 2.4s; }
+}

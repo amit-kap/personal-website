@@ -9,12 +9,13 @@ import CheckPointPage from '@/pages/CheckPointPage'
 import CvPage from '@/pages/CvPage'
 
 /* Home is the new version (3d-screens-back). HomeAS keeps the anti-slop
-   superhero home on the side; dev only, not prerendered or in the sitemap. */
+   superhero home on the side; dev only, not prerendered or in the sitemap.
+   Its videos live in media-archive/as-hero, outside public/, so they don't ship. */
 export default function App() {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
-      <Route path="/as-hero" element={<HomeAS />} />
+      {import.meta.env.DEV && <Route path="/as-hero" element={<HomeAS />} />}
       <Route path="/case-studies/:slug" element={<CaseStudy />} />
       <Route path="/agent" element={<AgentView />} />
       <Route path="/cv" element={<CvPage />} />

@@ -116,10 +116,10 @@ function useTitleNudge(waiting: boolean, h1: RefObject<HTMLHeadingElement | null
 const COLUMN = 800
 const COLUMN_RADIUS = 14
 
-function useHeroShrink(track: RefObject<HTMLDivElement | null>, hero: RefObject<HTMLElement | null>) {
+function useHeroShrink(trackRef: RefObject<HTMLDivElement | null>, heroRef: RefObject<HTMLElement | null>) {
   useEffect(() => {
-    const wrap = track.current
-    const el = hero.current
+    const wrap = trackRef.current
+    const el = heroRef.current
     if (!wrap || !el) return
     const desktop = matchMedia('(min-width: 861px)')
     const reduced = matchMedia('(prefers-reduced-motion: reduce)')
@@ -161,7 +161,7 @@ function useHeroShrink(track: RefObject<HTMLDivElement | null>, hero: RefObject<
       reduced.removeEventListener('change', measure)
       reset()
     }
-  }, [track, hero])
+  }, [trackRef, heroRef])
 }
 
 /* Local time in Tel Aviv, 24-hour, refreshed on the minute. */

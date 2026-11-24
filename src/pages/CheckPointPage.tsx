@@ -3,7 +3,8 @@ import { Maximize2 } from 'lucide-react'
 import './home01.css'
 import SiteFooter from './SiteFooter'
 import { getWorkBySlug } from '@/lib/content'
-import { Bento, Byline, CornerMark, StoryPreview, useViewer, VideoTile, WorkTabs, type Tab, type Tile } from './WorkParts'
+import { Bento, Byline, CornerMark, StoryPreview, VideoTile, WorkTabs, type Tab, type Tile } from './WorkParts'
+import { useViewer } from './useViewer'
 
 /* The tabs switch full screenshots of the management console. Each names a screen and the decision behind it. */
 const TABS: (Tab & { file: string })[] = [

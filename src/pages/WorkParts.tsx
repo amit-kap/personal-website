@@ -1,7 +1,8 @@
-import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react'
+import { useEffect, useRef, type CSSProperties, type ReactNode } from 'react'
 import { Link } from 'react-router-dom'
-import { ArrowLeft, ArrowRight, X } from 'lucide-react'
+import { ArrowLeft, ArrowRight } from 'lucide-react'
 import { getCaseStudyBySlug, type ContentImage } from '@/lib/content'
+import type { Shown } from './useViewer'
 
 /* Shared parts of the work pages (Shift, Veriti): the corner mark, the byline, the tabs under the product, the screens
    bento, the full-screen viewer and the case study preview. Styles live in home01.css. */
@@ -74,31 +75,6 @@ export function WorkTabs({ tabs, active, onPick, label }: { tabs: Tab[]; active:
       ))}
     </ul>
   )
-}
-
-export type Shown = { src: string; alt: string; video?: boolean }
-
-/** A full-screen viewer for one image or video. Returns the dialog to render and a function that opens it. */
-export function useViewer() {
-  const ref = useRef<HTMLDialogElement>(null)
-  const [shown, setShown] = useState<Shown | null>(null)
-  const show = (item: Shown) => {
-    setShown(item)
-    ref.current?.showModal()
-  }
-  const dialog = (
-    <dialog ref={ref} className="h01-lightbox" aria-label={shown?.alt} onClose={() => setShown(null)} onClick={(e) => e.target === e.currentTarget && ref.current?.close()}>
-      <button type="button" className="h01-lightbox-close" aria-label="Close" onClick={() => ref.current?.close()}>
-        <X size={20} strokeWidth={1.5} aria-hidden />
-      </button>
-      {shown?.video ? (
-        <video className="h01-shown" src={shown.src} autoPlay muted loop playsInline controls />
-      ) : shown ? (
-        <img className="h01-shown" src={shown.src} alt={shown.alt} />
-      ) : null}
-    </dialog>
-  )
-  return { show, dialog }
 }
 
 /** One bento tile: an image file zoomed into a focus point (x/y in % of the image, zoom z), or a looping video

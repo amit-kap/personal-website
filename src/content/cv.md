@@ -1,6 +1,6 @@
 # Amit Kaplinsky
 
-**Product Design & Engineering**
+**Senior Product Designer**
 
 Tel Aviv · [amitka111@gmail.com](mailto:amitka111@gmail.com) · [+972 54-4878882](https://wa.me/972544878882) · [LinkedIn](https://www.linkedin.com/in/amitkaplinsky) · [amitkap.com](https://amitkap.com)
 
