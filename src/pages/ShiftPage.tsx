@@ -23,10 +23,10 @@ const TILES: Tile[] = [
   { video: 'shift-motion-v2.mp4', poster: 'shift-motion-poster.webp', alt: 'Shift product film', size: 'lg' },
   { brand: 'shift', color: '#111111', alt: 'Shift logo' },
   { file: '03-inventory-vendors-card.webp', alt: 'Vendor card: security score', x: 37.2, y: 30, z: 4.9 },
-  { file: '07-assessment-flow-1.webp', alt: "Assessment: the agent's recommendation", x: 19.6, y: 70.4, z: 5, size: 'wide' },
-  { file: '04-vendor-access-graph.webp', alt: 'Access graph: a resource and the sensitive data it holds', x: 52.4, y: 25.8, z: 3.6, size: 'wide' },
-  { file: '05-threat-center.webp', alt: 'Threat center: an alert', x: 0, y: 33.7, z: 8.5 },
-  { file: '06-integrations-grid.webp', alt: 'Integrations', x: 59.8, y: 97.5, z: 3.5 },
+  { file: '07-assessment-flow-1.webp', alt: "Assessment: the agent's recommendation", x: 19.5, y: 70.5, z: 5, size: 'wide' },
+  { file: '04-vendor-access-graph.webp', alt: 'Access graph: a resource and the sensitive data it holds', x: 51.7, y: 24, z: 3.6, size: 'wide' },
+  { file: '05-threat-center.webp', alt: 'Threat center: an alert', x: 0, y: 38.6, z: 5.1 },
+  { file: '06-integrations-grid.webp', alt: 'Integrations', x: 59.1, y: 88.2, z: 5.1 },
   { file: '00-login.webp', alt: 'Login', x: 0, y: 20.3, z: 2.4 },
 ]
 

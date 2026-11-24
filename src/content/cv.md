@@ -4,7 +4,7 @@
 
 Tel Aviv · [amitka111@gmail.com](mailto:amitka111@gmail.com) · [+972 54-4878882](https://wa.me/972544878882) · [LinkedIn](https://www.linkedin.com/in/amitkaplinsky) · [amitkap.com](https://amitkap.com)
 
-From design school to the advertising industry, then to high-tech cybersecurity, where I've spent the last twelve years helping companies ship complete product experiences to their users.
+I went from design school to advertising, then into cybersecurity, where I've spent the last twelve years designing products end to end, from the first idea to what ships.
 
 ## Experience
 

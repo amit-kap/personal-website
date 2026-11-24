@@ -2,6 +2,7 @@
    superhero home (HomeAS, index.css) keeps its look. Values are the Paper frame's, 1440×960. */
 .h01 {
   --h01-bg: #ffffff;
+  --h01-shade: 90%; /* strength of the text fade over the screen wall, at its left edge */
   --h01-text: #000000;
   --h01-name: #111111;
   --h01-copy: #545454;
@@ -30,6 +31,7 @@
 /* Dark theme: set by the footer switch (or the system, until the visitor picks), on <html data-theme>. */
 html[data-theme='dark'] .h01 {
   --h01-bg: #111111;
+  --h01-shade: 90%;
   --h01-text: #f2f2f0;
   --h01-name: #ffffff;
   --h01-copy: #b4b4b0;
@@ -177,7 +179,7 @@ html[data-theme='dark']:has(.h01), html[data-theme='dark'] body:has(.h01) { back
 .h01 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 
 /* The screen wall (ScreenWall.tsx), in the right side of the page: a flat background of three columns drifting
-   up and down in a loop on one tilted plane, faded into the page at its edges. No hover, no clicks. */
+   up and down in a loop on one tilted plane, with no fade at its edges. No hover, no clicks. */
 .h01-wall { position: sticky; top: 0; height: 100vh; overflow: hidden; pointer-events: none; }
 .wall-wrap { position: absolute; inset: 0; }
 .wall {
@@ -198,16 +200,6 @@ html[data-theme='dark']:has(.h01), html[data-theme='dark'] body:has(.h01) { back
 .wall-tile { flex: 0 0 auto; aspect-ratio: 16 / 10; border-radius: 8px; overflow: hidden; background: var(--h01-tile); box-shadow: 0 0 0 1px var(--h01-hair); }
 .wall-tile img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 0 0; opacity: .5; filter: grayscale(1); }
 
-/* Fades the wall into the white page: hard on the left edge (towards the text), soft at top and bottom. */
-.wall-shade {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background:
-    linear-gradient(90deg, var(--h01-bg) 0%, transparent 24%),
-    linear-gradient(180deg, var(--h01-bg) 0%, transparent 16%, transparent 84%, var(--h01-bg) 100%);
-}
-
 @media (prefers-reduced-motion: reduce) {
   .wall-col, .wall-col.down { animation: none; }
 }
@@ -215,7 +207,6 @@ html[data-theme='dark']:has(.h01), html[data-theme='dark'] body:has(.h01) { back
 @media (max-width: 900px) {
   .h01-wall { position: relative; height: 480px; }
   .wall { inset: -40% -40% -40% -10%; }
-  .wall-shade { background: linear-gradient(180deg, var(--h01-bg) 0%, transparent 20%, transparent 80%, var(--h01-bg) 100%); }
 }
 
 /* Layered layout (Home): a centred 1024px frame (Paper used 1440), as in Paper. The text sits at x 120 inside it, on top of
@@ -223,34 +214,36 @@ html[data-theme='dark']:has(.h01), html[data-theme='dark'] body:has(.h01) { back
    Wider than 1024 the frame stays centred; narrower, it starts at the window's left edge. */
 .h01-center { display: block; }
 .h01-center .h01-wall { position: fixed; inset: 0; height: auto; z-index: 0; }
-/* The wall and its fade start where the 1024 frame starts. */
+/* The wall starts where the 1024 frame starts. */
 .h01-center .wall-wrap { left: max(0px, calc(50% - 512px)); clip-path: inset(0 max(0px, calc(50vw - 512px)) 0 0); } /* cut at the frame's right edge; the wall keeps its size */
 /* Wider than the frame the wall is laid out as on a 1440 window: a fixed 1232px box from the frame's left edge, cut at the
    frame's right edge, so it sits in the same place and at the same size on every large screen. */
 @media (min-width: 901px) {
   .h01-center .wall-wrap { right: auto; width: 1232px; clip-path: inset(0 calc(100% - 1024px) 0 0); }
 }
-.h01-center .wall { inset: -30% -6% -30% 14%; translate: -150px 0; } /* starts under the right part of the text */
-/* Only the centre and right columns show; the left one keeps its place, so the tiles keep their size. */
-.h01-center .wall-col:nth-child(1) { visibility: hidden; }
-/* The column lets clicks through to the screens; only its text and links take them. Text at x 120, as in Paper. */
-.h01-center .h01-col { position: relative; z-index: 1; width: min(100%, 548px); margin-left: max(0px, calc(50% - 512px)); pointer-events: none; }
-.h01-center .h01-col > * { pointer-events: auto; }
+.h01-center .wall { inset: -30% -6% -30% -17%; translate: -150px 0; } /* four columns; widened to the left so the tiles keep their size */
+/* Screens fade out towards the text: 50% on the right strip, then 40, 30 and 15% on the left one. */
+.h01-center .wall-col:nth-child(4) img { opacity: .5; }
+.h01-center .wall-col:nth-child(3) img { opacity: .4; }
+.h01-center .wall-col:nth-child(2) img { opacity: .3; }
+.h01-center .wall-col:nth-child(1) img { opacity: .15; }
+/* A fade under the text only, left to right, in the page colour (white in light, #111 in dark): --h01-shade at the left (set per theme),
+   down to nothing at 512px, the text column's right edge (the column is half the 1024 frame). No fade at the top or bottom. */
 .h01-center .wall-shade {
-  background:
-    /* Page colour behind the text at half strength (was 94% at the left), then a long eased fade so it never reads as an edge (light and dark). */
-    linear-gradient(90deg,
-      color-mix(in srgb, var(--h01-bg) 47%, transparent) 0, color-mix(in srgb, var(--h01-bg) 45%, transparent) 440px,
-      color-mix(in srgb, var(--h01-bg) 35%, transparent) 600px, color-mix(in srgb, var(--h01-bg) 21%, transparent) 760px,
-      color-mix(in srgb, var(--h01-bg) 9%, transparent) 920px, transparent 1120px),
-    linear-gradient(180deg, var(--h01-bg) 0%, transparent 16%, transparent 84%, var(--h01-bg) 100%);
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--h01-bg) var(--h01-shade), transparent) 0, transparent 512px);
 }
+@media (max-width: 900px) { .h01-center .wall-shade { display: none; } }
+/* The column lets clicks through to the screens; only its text and links take them. Text at x 120, as in Paper. */
+.h01-center .h01-col { position: relative; z-index: 1; width: min(100%, 512px); margin-left: max(0px, calc(50% - 512px)); pointer-events: none; }
+.h01-center .h01-col > * { pointer-events: auto; }
 
 @media (max-width: 900px) {
   .h01-center .h01-col { margin-left: 0; }
   .h01-center .h01-wall { position: relative; inset: auto; height: 480px; }
   .h01-center .wall { inset: -40% -40% -40% -40%; }
-  .h01-center .wall-shade { background: linear-gradient(180deg, var(--h01-bg) 0%, transparent 20%, transparent 80%, var(--h01-bg) 100%); }
 }
 
 /* Footer: a fixed bar along the bottom of the window, the full width of the view. Its text starts where

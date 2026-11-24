@@ -149,13 +149,12 @@ export default function Home() {
           <div className="h01-label">About</div>
           <div className="h01-bio">
             <p className="h01-para">
-              My path took me from design school to the advertising industry, then into high-tech cybersecurity, where
-              I've spent the <Link to="/cv">last twelve years</Link> helping companies ship complete product experiences
-              to their users.
+              I went from design school to advertising, then into cybersecurity, where I've spent the{' '}
+              <Link to="/cv">last twelve years</Link> designing products end to end, from the first idea to what ships.
             </p>
             <p className="h01-para">
               I've designed security products from <Link to="/work/checkpoint">Check Point</Link> to AI-native startups, including as founding designer
-              at <Link to="/work/shift">Shift</Link> and <Link to="/work/veriti">Veriti</Link>.
+              at <Link to="/work/veriti">Veriti</Link> and <Link to="/work/shift">Shift</Link>.
             </p>
           </div>
         </section>
@@ -226,7 +225,7 @@ export default function Home() {
       </main>
 
       <aside className="h01-wall" aria-hidden="true">
-        <ScreenWall columns={3} />
+        <ScreenWall columns={4} />
       </aside>
     </div>
   )

@@ -9,9 +9,9 @@ import { useViewer } from './useViewer'
 const TILES: Tile[] = [
   { file: '02.webp', alt: 'Dashboard', x: 8.8, y: 14.3, z: 1.9, size: 'lg' },
   { brand: 'veriti', color: '#2A085C', alt: 'Veriti logo', original: true },
-  { file: '07.webp', alt: 'Settings', x: 45.9, y: 17.5, z: 4.6 },
-  { file: '04.webp', alt: 'Insights: an exposure traced to the control change that fixes it', x: 67.5, y: 21.1, z: 2.1, size: 'wide' },
-  { file: '05.webp', alt: 'Indicators: threat indicators with composable filters', x: 9.3, y: 19.4, z: 2.3, size: 'wide' },
+  { file: '07.webp', alt: 'Settings', x: 45, y: 48.1, z: 4.6 },
+  { file: '04.webp', alt: 'Insights: an exposure traced to the control change that fixes it', x: 66.4, y: 21.9, z: 1.7, size: 'wide' },
+  { file: '05.webp', alt: 'Indicators: threat indicators with composable filters', x: 9.2, y: 18.8, z: 3.1, size: 'wide' },
   { file: '01.webp', alt: 'Login', x: 0.7, y: 8.5, z: 1.4 },
   { file: '03.webp', alt: 'Posture: one score backed by assets, exposure and impact', x: 31.5, y: 50.1, z: 1 },
   { file: '06.webp', alt: 'Am I protected? Ask about any CVE', x: 54.9, y: 17.8, z: 2 },
