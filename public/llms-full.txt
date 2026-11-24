@@ -532,30 +532,29 @@ John Bryce · 2010 to 2011
 
 ## Education
 
-### B.A. Economics
-
-Tel Aviv University · 1994 to 1996
-
 ### Diploma, Digital Communications & Media
 
 Camera Obscura School of Arts · 1996 to 2000
+
+### B.A. Economics
+
+Tel Aviv University · 1994 to 1996
 
 ## Skills
 
 ### Skills
 
-- Product design
 - Design systems
-- Problem framing
-- Scope definition
-- Complex data & workflows
-- Stakeholder alignment
-- AI-native workflows
-- Prototyping to production
+- AI and human-agent product design
+- Complex security data & workflows
+- Design team leadership
+- Mobile apps (iOS and Android)
+- Prototyping in code to production
 
 ### Tools
 
 - Figma
+- Paper
 - Cursor
 - Claude Code
 - Codex

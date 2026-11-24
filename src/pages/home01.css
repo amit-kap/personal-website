@@ -463,22 +463,32 @@ html[data-theme='dark'] .h01-app { box-shadow: 0 0 0 1px var(--h01-hair), 0 4px 
 .h01-story:hover .h01-readmore { color: var(--h01-accent); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
 
 /* CV page: contacts under the name, then each entry as a row of dates beside what happened. */
-.h01-cv-contacts { margin-top: 8px; color: var(--h01-label); }
-.h01-cv .h01-cv-contacts + .h01-intro { margin-top: 24px; }
+/* The CV header reads as one block: name and role together (4px), contacts a step below (16px), the intro after
+   (32px), then a hairline closes the header before Experience. */
+.h01-cv .h01-byline { margin-top: 4px; }
+.h01-cv .h01-byline .h01-role { font-size: 16px; line-height: 24px; color: var(--h01-copy); }
+.h01-cv-contacts { margin-top: 16px; color: var(--h01-label); }
+.h01-cv .h01-cv-contacts + .h01-intro { margin-top: 32px; max-width: 600px; }
 .h01-cv-contacts a { color: var(--h01-label); text-decoration: underline; text-decoration-color: var(--h01-hair); text-underline-offset: 3px; }
 .h01-cv-contacts a:hover { color: var(--h01-accent); text-decoration-color: var(--h01-accent); }
 /* The name row stays pinned while the CV scrolls, its center level with the corner mark's (24px + 64px / 2 = 56px, so
    the 34px row pins at 39px). Once pinned it gets a page-colored backing that runs up to the window top and 16px below,
    so scrolling text passes cleanly behind; unpinned it has none, so nothing covers the lines under the name. */
 .h01-cv-head { position: sticky; top: 39px; z-index: 2; width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
-.h01-cv-head[data-stuck='true']::before { content: ''; position: absolute; z-index: -1; inset: -39px -16px -16px; background: var(--h01-bg); }
+/* Once pinned, the row gets a backing that runs 40px below it and fades out, so text scrolls away well clear of the name. */
+.h01-cv-head[data-stuck='true']::before { content: ''; position: absolute; z-index: -1; inset: -39px -16px -40px; background: linear-gradient(to bottom, var(--h01-bg) calc(100% - 24px), transparent); }
 @media (max-width: 720px) {
   .h01-cv-head { top: 23px; }
   .h01-cv-head[data-stuck='true']::before { top: -23px; }
 }
-.h01-cv-pdf { flex-shrink: 0; }
+.h01-cv-pdf { flex-shrink: 0; padding: 8px 16px; border: 1px solid var(--h01-hair); border-radius: 999px; transition: background .15s ease, color .15s ease; }
+.h01-cv-pdf:hover { border-color: var(--h01-accent); background: var(--h01-accent); color: var(--primary-foreground, #fff); }
+.h01-cv-pdf:hover span { color: inherit; text-decoration: none; }
+.h01-cv-pdf:hover svg { color: inherit; }
 .h01-cv-pdf:hover svg { translate: none; }
-.h01-cv .h01-intro + .h01-group { margin-top: 48px; }
+.h01-cv .h01-intro + .h01-group { margin-top: 48px; padding-top: 48px; border-top: 1px solid var(--h01-hair); }
+/* Section labels sit 24px above their list, so they read as titles of the open rows below, not glued to the first one. */
+.h01-cv .h01-group > .h01-label { margin-bottom: 20px; }
 .h01-cv-list { width: 100%; margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 32px; }
 .h01-cv-row { display: grid; grid-template-columns: 160px 1fr; gap: 24px; }
 .h01-cv-when { color: var(--h01-caption); font-variant-numeric: tabular-nums; }

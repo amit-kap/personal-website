@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Download } from 'lucide-react'
+import { ArrowRight, Download } from 'lucide-react'
 import ReactMarkdown from 'react-markdown'
 import './home01.css'
 import SiteFooter from './SiteFooter'
@@ -9,9 +9,11 @@ import { CornerMark } from './WorkParts'
 
 const base = import.meta.env.BASE_URL
 const PDF = `${base}Amit Kaplinsky CV 10-2026.pdf`
+/* Workplaces with a work page on the site link to it from the company name. */
+const WORK_PAGES: Record<string, string> = { shift: '/work/shift', veriti: '/work/veriti', checkpoint: '/work/checkpoint' }
 
 /* The CV, from src/content/cv.md, in the work pages' centered column with the home page's type: the name and contacts,
-   then each role as a row of dates beside company, role and what I did. No links out to the work pages. The PDF in public/ is the download. */
+   then each role as a row of dates beside company, role and what I did. Companies with a work page link to it. The PDF in public/ is the download. */
 export default function CvPage() {
   const cv = getCV()
   const { header } = cv
@@ -67,7 +69,13 @@ export default function CvPage() {
               <li key={e.slug} className="h01-cv-row">
                 <span className="h01-cv-when">{e.period.replace(/ to /, ' – ')}</span>
                 <div className="h01-cv-what">
-                  <span className="h01-name">{e.company}</span>
+                  {WORK_PAGES[e.slug] ? (
+                    <Link className="h01-link h01-name" to={WORK_PAGES[e.slug]}>
+                      <span>{e.company}</span> <ArrowRight aria-hidden />
+                    </Link>
+                  ) : (
+                    <span className="h01-name">{e.company}</span>
+                  )}
                   <span className="h01-desc">
                     {e.role}, {e.context}
                   </span>
