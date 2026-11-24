@@ -55,9 +55,10 @@ export default function ScreenWall({ columns = 3 }: { columns?: number }) {
       <div className="wall">
         {columnsOf(columns).map((col, c) => (
           <div key={c} className={`wall-col${c % 2 ? ' down' : ''}`} style={{ '--d': DURATIONS[c] } as CSSProperties}>
-            {/* Each column is its list four times: the two halves are identical, so moving it by half loops without
-                a seam, and half is still taller than the view, so no gap shows. */}
-            {[0, 1, 2, 3].map((copy) =>
+            {/* Each column is its list repeated an even number of times (at least four): the two halves are identical,
+                so moving it by half loops without a seam. Short columns repeat more, so half always holds 8 or more
+                tiles and stays taller than the view, so no gap shows. */}
+            {Array.from({ length: 2 * Math.max(2, Math.ceil(8 / col.length)) }, (_, copy) =>
               col.map((s) => (
                 <div key={`${copy}-${s.file}`} className="wall-tile">
                   <img src={src(s.file)} alt="" width={720} height={450} loading="lazy" decoding="async" />
