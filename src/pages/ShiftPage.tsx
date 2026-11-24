@@ -6,7 +6,6 @@ import { getWorkBySlug } from '@/lib/content'
 import { Bento, Byline, CornerMark, StoryPreview, WorkTabs, type Tab, type Tile } from './WorkParts'
 import { useViewer } from './useViewer'
 
-const base = import.meta.env.BASE_URL
 
 // The live Shift app loads on demand; a loader in a frame of the same shape stands in until it does, then the app fades in.
 const ShiftApp = lazy(() => import('@/shift-ui/prototypes/ShiftAppPrototype'))

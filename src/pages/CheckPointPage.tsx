@@ -24,7 +24,6 @@ const TILES: Tile[] = [
 export default function CheckPointPage() {
   const work = getWorkBySlug('checkpoint')
   const viewer = useViewer()
-  const base = import.meta.env.BASE_URL
 
   return (
     <div className="h01 h01-center h01-case h01-work">

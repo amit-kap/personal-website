@@ -116,7 +116,9 @@ export function Bento({ tiles, images, onOpen }: { tiles: Tile[]; images: Record
   // The wheel needs a non-passive listener to stop the page scrolling while a tile is zoomed.
   const list = useRef<HTMLUListElement>(null)
   const latest = useRef({ tiles, edits })
-  latest.current = { tiles, edits }
+  useEffect(() => {
+    latest.current = { tiles, edits }
+  })
   useEffect(() => {
     const el = list.current
     if (!tune || !el) return
