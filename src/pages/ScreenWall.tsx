@@ -6,30 +6,25 @@ import type { CSSProperties } from 'react'
 const base = import.meta.env.BASE_URL
 const src = (file: string) => `${base}home01/wall/${file}-tile.webp`
 
-type Screen = { file: string; product: 'shift' | 'veriti' | 'checkpoint' | 'onyxia' }
+type Screen = { file: string; product: 'shift' | 'veriti' | 'checkpoint' }
 const SCREENS: Screen[] = [
   { file: 'shift-01-shift-dashboard', product: 'shift' },
   { file: 'veriti-02', product: 'veriti' },
   { file: 'checkpoint-05-dashboard', product: 'checkpoint' },
   { file: 'shift-05-threat-center', product: 'shift' },
-  { file: 'onyxia-01-SSM-1', product: 'onyxia' },
   { file: 'veriti-03', product: 'veriti' },
   { file: 'shift-04-vendor-access-graph', product: 'shift' },
   { file: 'checkpoint-01-details', product: 'checkpoint' },
   { file: 'veriti-04', product: 'veriti' },
   { file: 'shift-02-inventory-vendors-page', product: 'shift' },
-  { file: 'onyxia-03-frameworks', product: 'onyxia' },
   { file: 'checkpoint-04-timeline', product: 'checkpoint' },
   { file: 'veriti-05', product: 'veriti' },
   { file: 'shift-07-assessment-flow-1', product: 'shift' },
-  { file: 'onyxia-04-insights', product: 'onyxia' },
   { file: 'checkpoint-03-summary', product: 'checkpoint' },
   { file: 'veriti-06', product: 'veriti' },
   { file: 'shift-06-integrations-grid', product: 'shift' },
-  { file: 'onyxia-05-p-hub', product: 'onyxia' },
   { file: 'checkpoint-06-mainPage', product: 'checkpoint' },
   { file: 'veriti-07', product: 'veriti' },
-  { file: 'onyxia-06-report-1', product: 'onyxia' },
 ]
 
 /* Each column drifts at about 7px a second, a little different per column so they never line up,
@@ -42,7 +37,7 @@ const DURATIONS = ['510s', '480s', '570s', '450s', '540s']
 const columnsOf = (n: number) => {
   const shift = SCREENS.filter((s) => s.product === 'shift')
   const others = SCREENS.filter((s) => s.product !== 'shift')
-  const byProduct = ['veriti', 'checkpoint', 'onyxia'].map((p) => others.filter((s) => s.product === p))
+  const byProduct = ['veriti', 'checkpoint'].map((p) => others.filter((s) => s.product === p))
   const mixed = Array.from({ length: Math.max(...byProduct.map((g) => g.length)) }, (_, i) => byProduct.map((g) => g[i])).flat().filter(Boolean) as Screen[]
   const veriti = mixed.filter((s) => s.product === 'veriti').slice(0, Math.ceil(shift.length / 2))
   const right = shift.filter((_, i) => i % 2 === 0).flatMap((s, k) => [s, veriti[k]]).filter(Boolean)

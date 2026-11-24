@@ -186,7 +186,7 @@ html[data-theme='dark']:has(.h01), html[data-theme='dark'] body:has(.h01) { back
   display: flex;
   align-items: flex-start; /* each column is as tall as its tiles, so -50% is exactly one half */
   gap: 24px;
-  transform: perspective(2200px) rotateX(18deg) rotateY(-12deg) rotate(6deg);
+  transform: perspective(1600px) rotateX(26deg) rotateY(-22deg) rotate(12deg);
   transform-origin: 50% 40%;
 }
 .wall-col { flex: 1 1 0; display: flex; flex-direction: column; gap: 24px; animation: wall-up var(--d, 100s) linear infinite; will-change: transform; }
@@ -196,7 +196,7 @@ html[data-theme='dark']:has(.h01), html[data-theme='dark'] body:has(.h01) { back
 @keyframes wall-down { from { translate: 0 calc(-50% - 12px); } to { translate: 0 0; } }
 
 .wall-tile { flex: 0 0 auto; aspect-ratio: 16 / 10; border-radius: 8px; overflow: hidden; background: var(--h01-tile); box-shadow: 0 0 0 1px var(--h01-hair); }
-.wall-tile img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 0 0; opacity: .35; filter: grayscale(1); }
+.wall-tile img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 0 0; opacity: .5; filter: grayscale(1); }
 
 /* Fades the wall into the white page: hard on the left edge (towards the text), soft at top and bottom. */
 .wall-shade {
@@ -225,17 +225,24 @@ html[data-theme='dark']:has(.h01), html[data-theme='dark'] body:has(.h01) { back
 .h01-center .h01-wall { position: fixed; inset: 0; height: auto; z-index: 0; }
 /* The wall and its fade start where the 1024 frame starts. */
 .h01-center .wall-wrap { left: max(0px, calc(50% - 512px)); clip-path: inset(0 max(0px, calc(50vw - 512px)) 0 0); } /* cut at the frame's right edge; the wall keeps its size */
+/* Wider than the frame the wall is laid out as on a 1440 window: a fixed 1232px box from the frame's left edge, cut at the
+   frame's right edge, so it sits in the same place and at the same size on every large screen. */
+@media (min-width: 901px) {
+  .h01-center .wall-wrap { right: auto; width: 1232px; clip-path: inset(0 calc(100% - 1024px) 0 0); }
+}
 .h01-center .wall { inset: -30% -6% -30% 14%; translate: -150px 0; } /* starts under the right part of the text */
+/* Only the centre and right columns show; the left one keeps its place, so the tiles keep their size. */
+.h01-center .wall-col:nth-child(1) { visibility: hidden; }
 /* The column lets clicks through to the screens; only its text and links take them. Text at x 120, as in Paper. */
 .h01-center .h01-col { position: relative; z-index: 1; width: min(100%, 548px); margin-left: max(0px, calc(50% - 512px)); pointer-events: none; }
 .h01-center .h01-col > * { pointer-events: auto; }
 .h01-center .wall-shade {
   background:
-    /* Solid page colour behind the text, then a long eased fade so it never reads as an edge (light and dark). */
+    /* Page colour behind the text at half strength (was 94% at the left), then a long eased fade so it never reads as an edge (light and dark). */
     linear-gradient(90deg,
-      color-mix(in srgb, var(--h01-bg) 94%, transparent) 0, color-mix(in srgb, var(--h01-bg) 90%, transparent) 440px,
-      color-mix(in srgb, var(--h01-bg) 70%, transparent) 600px, color-mix(in srgb, var(--h01-bg) 42%, transparent) 760px,
-      color-mix(in srgb, var(--h01-bg) 18%, transparent) 920px, transparent 1120px),
+      color-mix(in srgb, var(--h01-bg) 47%, transparent) 0, color-mix(in srgb, var(--h01-bg) 45%, transparent) 440px,
+      color-mix(in srgb, var(--h01-bg) 35%, transparent) 600px, color-mix(in srgb, var(--h01-bg) 21%, transparent) 760px,
+      color-mix(in srgb, var(--h01-bg) 9%, transparent) 920px, transparent 1120px),
     linear-gradient(180deg, var(--h01-bg) 0%, transparent 16%, transparent 84%, var(--h01-bg) 100%);
 }
 
