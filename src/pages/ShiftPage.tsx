@@ -1,5 +1,5 @@
 import { lazy, Suspense, useRef, useState } from 'react'
-import { Maximize2, X } from 'lucide-react'
+import { Loader2, Maximize2, X } from 'lucide-react'
 import './home01.css'
 import SiteFooter from './SiteFooter'
 import { getWorkBySlug } from '@/lib/content'
@@ -8,7 +8,7 @@ import { useViewer } from './useViewer'
 
 const base = import.meta.env.BASE_URL
 
-// The live Shift app loads on demand; the dashboard screenshot stands in until it does.
+// The live Shift app loads on demand; a loader in a frame of the same shape stands in until it does, then the app fades in.
 const ShiftApp = lazy(() => import('@/shift-ui/prototypes/ShiftAppPrototype'))
 
 /* One tab per screen of the live app, with the decision behind it; picking one switches the app to that screen. */
@@ -70,7 +70,13 @@ export default function ShiftPage() {
           <Maximize2 size={16} strokeWidth={1.5} aria-hidden /> Enlarge
         </button>
         <div className="h01-app" role="group" aria-label="Shift product, interactive">
-          <Suspense fallback={hero ? <img src={hero.src} width={hero.width} height={hero.height} alt="Shift home dashboard" /> : null}>
+          <Suspense
+            fallback={
+              <div className="h01-app-loading" role="status" aria-label="Loading the Shift product">
+                <Loader2 size={24} strokeWidth={1.5} aria-hidden />
+              </div>
+            }
+          >
             {large ? (
               hero && <img src={hero.src} width={hero.width} height={hero.height} alt="" />
             ) : (

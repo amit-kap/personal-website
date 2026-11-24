@@ -407,6 +407,13 @@ html[data-theme='dark'] .h01-article img { box-shadow: 0 0 0 1px var(--h01-hair)
 .h01-byline .h01-role { margin-top: 0; }
 .h01-app { width: 100%; margin-top: 12px; border-radius: 8px; overflow: hidden; background: var(--h01-tile); box-shadow: 0 0 0 1px var(--h01-hair), 0 4px 16px rgb(0 0 0 / .06); }
 .h01-app > img { display: block; width: 100%; height: auto; }
+/* While the live app loads: an empty frame of the same shape (2880:1452) with a small spinner, then the app fades in over it. */
+.h01-app-loading { aspect-ratio: 2880 / 1452; display: grid; place-items: center; color: var(--h01-caption); }
+.h01-app-loading svg { animation: h01-spin 1s linear infinite; }
+.h01-app > div:not(.h01-app-loading) { animation: h01-app-in .35s ease both; }
+@keyframes h01-spin { to { rotate: 360deg; } }
+@keyframes h01-app-in { from { opacity: 0; } to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .h01-app-loading svg, .h01-app > div:not(.h01-app-loading) { animation: none; } }
 /* Enlarge sits on the right above the app; the intro runs across the full column. */
 .h01-enlarge { align-self: flex-end; margin-top: 32px; display: inline-flex; align-items: center; gap: 8px; padding: 0; border: 0; background: none; font: inherit; color: var(--h01-label); cursor: pointer; }
 .h01-enlarge:hover { color: var(--h01-accent); }
@@ -439,7 +446,7 @@ html[data-theme='dark'] .h01-app { box-shadow: 0 0 0 1px var(--h01-hair), 0 4px 
 /* Screens: the work pages' bento. Six columns; each tile sets its size (is-lg four columns by two rows, is-sm two by
    one at 2:1, is-wide three by one) and the grid places them in order, filling gaps. */
 .h01-work .h01-group { align-self: stretch; container-type: inline-size; }
-.h01-bento { width: 100%; margin: 0; padding: 0; list-style: none; display: grid; grid-auto-flow: row dense; grid-template-columns: repeat(6, 1fr); grid-auto-rows: calc(((100cqw - 40px) / 3 + 8px) / 2); gap: 8px; }
+.h01-bento { width: 100%; margin: 0; padding: 0; list-style: none; display: grid; grid-auto-flow: row dense; grid-template-columns: repeat(6, 1fr); grid-auto-rows: calc(((100cqw - 60px) / 3 + 12px) / 2); gap: 12px; }
 .h01-bento li { position: relative; overflow: hidden; border-radius: 8px; background: var(--h01-tile); }
 /* A hairline border drawn over the image, so the screenshot can't cover it. */
 .h01-bento li::after { content: ''; position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 1px var(--h01-hair); pointer-events: none; }

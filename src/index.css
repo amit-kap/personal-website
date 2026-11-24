@@ -181,7 +181,6 @@ img[data-loading], video[data-loading] {
   .h01-lightbox:has(.h01-shown[data-loading])::before { animation-duration: 2.4s; }
 }
 
-/* Selected text, across the site: white on solid blue, the primary's complement (hue 18° + 180°), darkened so white
-   text stays readable (4.8:1). */
-:root { --selection: #0079b3; }
-::selection { background: var(--selection); color: #fff; }
+/* Selected text, across the site: the primary as the text colour on a light tint of it. */
+:root { --selection: var(--primary); --selection-bg: color-mix(in srgb, var(--primary) 22%, white); }
+::selection { background: var(--selection-bg); color: var(--selection); }
