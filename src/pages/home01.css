@@ -505,3 +505,32 @@ html[data-theme='dark'] .h01-app { box-shadow: 0 0 0 1px var(--h01-hair), 0 4px 
 .h01-cv-bullets li::marker { color: var(--h01-caption); }
 .h01-cv .h01-group + .h01-group { margin-top: 64px; }
 @media (max-width: 720px) { .h01-cv-row { grid-template-columns: 1fr; gap: 4px; } }
+
+/* Link previews: a 240x120 picture of a side project's site floats above its link on hover or focus. */
+.h01-peek { position: relative; display: inline; }
+.h01-peek-box {
+  position: absolute; left: 50%; bottom: calc(100% + 8px); z-index: 20;
+  width: 240px; height: 120px; overflow: hidden;
+  border: 1px solid var(--h01-hair); border-radius: 8px; background: var(--h01-tile);
+  box-shadow: 0 8px 24px rgb(0 0 0 / .12);
+  opacity: 0; visibility: hidden; pointer-events: none;
+  translate: -50% 4px; transition: opacity .18s ease, translate .18s ease, visibility 0s .18s;
+}
+.h01-peek-box img {
+  position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; object-fit: cover; object-position: top;
+}
+@media (hover: hover) {
+  .h01-peek:hover .h01-peek-box,
+  .h01-peek:has(:focus-visible) .h01-peek-box { opacity: 1; visibility: visible; translate: -50% 0; transition-delay: 0s; }
+}
+/* The list links start at the column edge: their preview lines up with the link's left edge instead of its center. */
+.h01-items .h01-peek-box { left: 0; translate: 0 4px; }
+@media (hover: hover) {
+  .h01-items .h01-peek:hover .h01-peek-box,
+  .h01-items .h01-peek:has(:focus-visible) .h01-peek-box { translate: 0 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .h01-peek-box, .h01-peek-box img { transition: none; }
+  .h01-peek-box { translate: -50% 0; }
+  .h01-items .h01-peek-box { translate: 0 0; }
+}

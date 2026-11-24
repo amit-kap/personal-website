@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react'
 import { Link } from 'react-router-dom'
 import { ArrowRight, ArrowUpRight, Send } from 'lucide-react'
 import './home01.css'
@@ -101,6 +101,18 @@ function Caret({ text, holding }: { text: string; holding: boolean }) {
   )
 }
 
+/* A small picture of a side project's site, shown above its link on hover or keyboard focus (240x120). */
+function Peek({ to, children }: { to: string; children: ReactNode }) {
+  return (
+    <span className="h01-peek">
+      {children}
+      <span className="h01-peek-box" aria-hidden="true">
+        <img src={`${base}previews/${to}.jpg`} alt="" width={240} height={120} loading="lazy" />
+      </span>
+    </span>
+  )
+}
+
 function Arrow() {
   return <ArrowUpRight size={16} strokeWidth={2} aria-hidden />
 }
@@ -165,15 +177,15 @@ export default function Home() {
           {/* Each side project links to its live site. */}
           <ul className="h01-items">
             <li>
-              <a className="h01-link" href="https://glaze-studio.amitkap.com" target="_blank" rel="noreferrer" data-umami-event="side-project-glaze">
+              <Peek to="glaze"><a className="h01-link" href="https://glaze-studio.amitkap.com" target="_blank" rel="noreferrer" data-umami-event="side-project-glaze">
                 <span>Glaze</span> <Arrow />
-              </a>
+              </a></Peek>
               <span className="h01-desc">Component library</span>
             </li>
             <li>
-              <a className="h01-link" href="https://monocle.amitkap.com" target="_blank" rel="noreferrer" data-umami-event="side-project-monocle">
+              <Peek to="monocle"><a className="h01-link" href="https://monocle.amitkap.com" target="_blank" rel="noreferrer" data-umami-event="side-project-monocle">
                 <span>Monocle</span> <Arrow />
-              </a>
+              </a></Peek>
               <span className="h01-desc">Markdown editor</span>
             </li>
             {/* Not live yet: the name is plain text, with no link or arrow, until it ships. */}
