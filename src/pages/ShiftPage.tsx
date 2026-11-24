@@ -20,15 +20,15 @@ const TABS: Tab[] = [
 
 /* The bento: the product film as the large tile, then screenshots. Each tile zooms into one readable detail (focus
    point x/y in % of the image, zoom z); clicking a tile opens the whole thing. */
-const FILM = { src: `${base}shift-motion-v2.mp4`, poster: `${base}shift-motion-poster.webp` }
 const TILES: Tile[] = [
+  { video: 'shift-motion-v2.mp4', poster: 'shift-motion-poster.webp', alt: 'Shift product film', size: 'lg' },
   { brand: 'shift', color: '#111111', alt: 'Shift logo' },
-  { file: '03-inventory-vendors-card.webp', alt: 'Vendor card: security score', x: 38, y: 30.5, z: 6.5 },
-  { file: '07-assessment-flow-1.webp', alt: "Assessment: the agent's recommendation", x: 19.5, y: 75.75, z: 5, size: 'wide' },
+  { file: '03-inventory-vendors-card.webp', alt: 'Vendor card: security score', x: 37.2, y: 30, z: 4.9 },
+  { file: '07-assessment-flow-1.webp', alt: "Assessment: the agent's recommendation", x: 19.6, y: 70.4, z: 5, size: 'wide' },
   { file: '04-vendor-access-graph.webp', alt: 'Access graph: a resource and the sensitive data it holds', x: 52.4, y: 25.8, z: 3.6, size: 'wide' },
-  { file: '05-threat-center.webp', alt: 'Threat center: an alert', x: 0.6, y: 34.7, z: 4.4 },
-  { file: '06-integrations-grid.webp', alt: 'Integrations', x: 60.7, y: 96.6, z: 3.1 },
-  { file: '00-login.webp', alt: 'Login', x: 88.9, y: 46.3, z: 2.9 },
+  { file: '05-threat-center.webp', alt: 'Threat center: an alert', x: 0, y: 33.7, z: 8.5 },
+  { file: '06-integrations-grid.webp', alt: 'Integrations', x: 59.8, y: 97.5, z: 3.5 },
+  { file: '00-login.webp', alt: 'Login', x: 0, y: 20.3, z: 2.4 },
 ]
 
 /* The Shift work page in the case study's centered column, with the home page's type: the title, the live product,
@@ -100,11 +100,6 @@ export default function ShiftPage() {
         <WorkTabs tabs={TABS} active={screen} onPick={setScreen} label="Shift screens" />
 
         <Bento
-          lead={
-            <button type="button" aria-label="Play the Shift product film" onClick={() => viewer.show({ src: FILM.src, alt: 'Shift product film', video: true })}>
-              <video src={FILM.src} poster={FILM.poster} autoPlay muted loop playsInline preload="metadata" aria-hidden="true" />
-            </button>
-          }
           tiles={TILES}
           images={work?.bodyImages ?? {}}
           onOpen={viewer.show}

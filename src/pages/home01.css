@@ -440,17 +440,24 @@ html[data-theme='dark'] .h01-app { box-shadow: 0 0 0 1px var(--h01-hair), 0 4px 
 .h01-bento .is-sm { grid-column: span 2; }
 .h01-bento .is-wide { grid-column: span 3; }
 /* The design tile: the company's mark in white, centred on its brand colour, about a third of the tile's height. */
-.h01-bento-brand { display: grid; place-items: center; }
-.h01-bento .h01-bento-brand img { width: 36%; height: 36%; object-fit: contain; transform: none; }
-.h01-bento-brand span { width: 36%; height: 36%; background: #fff; -webkit-mask: var(--logo) center / contain no-repeat; mask: var(--logo) center / contain no-repeat; }
+.h01-bento-brand { position: relative; }
+.h01-bento .h01-bento-brand img { position: absolute; left: var(--x, 50%); top: var(--y, 50%); width: 36%; height: 36%; object-fit: contain; transform: translate(-50%, -50%) scale(var(--z, 1)); }
+.h01-bento-brand span { position: absolute; left: var(--x, 50%); top: var(--y, 50%); transform: translate(-50%, -50%) scale(var(--z, 1)); width: 36%; height: 36%; background: #fff; -webkit-mask: var(--logo) center / contain no-repeat; mask: var(--logo) center / contain no-repeat; }
 .h01-bento button { display: block; width: 100%; height: 100%; padding: 0; border: 0; background: none; cursor: zoom-in; }
-.h01-bento video { display: block; width: 100%; height: 100%; object-fit: cover; }
+.h01-bento video { display: block; width: 100%; height: 100%; object-fit: cover; object-position: var(--x, 50%) var(--y, 50%); transform: scale(var(--z, 1)); transform-origin: var(--x, 50%) var(--y, 50%); }
 /* Each screenshot is zoomed into its focus point. On hover the whole tile eases in 3% from its centre, the same for
    every tile (screenshots and videos), to hint that it opens. */
 .h01-bento img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: var(--x) var(--y); transform: scale(var(--z, 1)); transform-origin: var(--x) var(--y); }
 .h01-bento button { transition: transform .4s ease; }
 .h01-bento button:hover { transform: scale(1.03); }
 @media (prefers-reduced-motion: reduce) { .h01-bento button { transition: none; } .h01-bento button:hover { transform: none; } }
+/* ?tune: drag a tile to move its focus, scroll to zoom; a readout on each tile and a bar to copy the values. */
+.h01-bento[data-tune] button, .h01-bento[data-tune] .h01-bento-brand { cursor: grab; touch-action: none; }
+.h01-bento[data-tune] button:hover { transform: none; }
+.h01-bento[data-tune] li[data-active]::after { box-shadow: inset 0 0 0 4px #f04a00; z-index: 2; }
+/* Each tile's own controls: its values and a Set button that writes them into the page. */
+.h01-tune-read { position: absolute; left: 6px; right: 6px; bottom: 6px; display: flex; gap: 8px; align-items: center; justify-content: space-between; padding: 3px 4px 3px 8px; border-radius: 6px; background: rgb(0 0 0 / .75); color: #fff; font: 11px/1.4 ui-monospace, monospace; z-index: 3; }
+.h01-bento .h01-tune-read button { all: unset; padding: 2px 10px; border-radius: 4px; background: #f04a00; color: #fff; cursor: pointer; }
 .h01-shown { display: block; max-width: calc(100vw - 144px); max-height: calc(100vh - 80px); width: auto; height: auto; border-radius: 8px; background: #fff; }
 @media (max-width: 720px) {
   .h01-bento { grid-template-columns: 1fr 1fr; grid-auto-rows: auto; }

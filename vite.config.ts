@@ -112,10 +112,51 @@ function titlesAnimationPlugin(): Plugin {
   }
 }
 
+/* Dev only: the ?tune mode on the work pages saves a tile's placement straight into its page. POST /__tile with
+   { page, kind, key, x, y, z } rewrites (or adds) the x, y and z on that tile's line in src/pages/<Page>.tsx. */
+function tileTunePlugin(): Plugin {
+  const pages: Record<string, string> = { shift: 'ShiftPage.tsx', veriti: 'VeritiPage.tsx', checkpoint: 'CheckPointPage.tsx' }
+  return {
+    name: 'tile-tune',
+    apply: 'serve',
+    configureServer(server) {
+      server.middlewares.use('/__tile', (req, res) => {
+        if (req.method !== 'POST') {
+          res.statusCode = 404
+          res.end()
+          return
+        }
+        let body = ''
+        req.on('data', (chunk) => (body += chunk))
+        req.on('end', () => {
+          try {
+            const { page, kind, key, x, y, z } = JSON.parse(body) as { page: string; kind: string; key: string; x: number; y: number; z: number }
+            const name = pages[page]
+            if (!name || !['file', 'video', 'brand'].includes(kind) || ![x, y, z].every(Number.isFinite) || !/^[\w./-]+$/.test(key)) throw new Error('bad input')
+            const target = path.resolve(__dirname, 'src/pages', name)
+            const lines = fs.readFileSync(target, 'utf8').split('\n')
+            const token = `${kind}: '${key}'`
+            const i = lines.findIndex((l) => l.includes(token))
+            if (i < 0) throw new Error('tile not found')
+            const xyz = /x: [\d.-]+, y: [\d.-]+, z: [\d.-]+/
+            lines[i] = xyz.test(lines[i]) ? lines[i].replace(xyz, `x: ${x}, y: ${y}, z: ${z}`) : lines[i].replace(token, `${token}, x: ${x}, y: ${y}, z: ${z}`)
+            fs.writeFileSync(target, lines.join('\n'))
+            res.statusCode = 204
+            res.end()
+          } catch (e) {
+            res.statusCode = 400
+            res.end(String((e as Error).message))
+          }
+        })
+      })
+    },
+  }
+}
+
 export default defineConfig({
   // Cloudflare Pages serves from the domain root, so dev and build agree.
   base: '/',
-  plugins: [react(), tailwindcss(), contentPlugin(), titlesAnimationPlugin()],
+  plugins: [react(), tailwindcss(), contentPlugin(), titlesAnimationPlugin(), tileTunePlugin()],
   server: {
     port: process.env.PORT ? Number(process.env.PORT) : 5175,
   },
