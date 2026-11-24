@@ -30,22 +30,6 @@ A third-party security platform connecting agent-led assessment, vendor access, 
 
 I joined Shift as its first designer. I helped define the human-agent operating model, then built the design system, onboarding, and core workflows connecting vendor evidence, access, exposure, and risk decisions.
 
-### Onyxia | Product Design Team Lead
-
-URL: https://amitkap.com/work/onyxia-cyber
-
-**Product thesis**
-
-CISO priorities, connected to operational follow-through.
-
-**Summary**
-
-Connecting benchmarks and SLAs to the owners, tasks, progress, and delays behind them.
-
-**Case study content**
-
-At the time, Onyxia was developing a data platform for CISOs, connecting security products, BI, Jira, ServiceNow, and operational systems. I led product design during a six-month engagement, translating benchmarks and SLAs into workflows that connected executive priorities with owners, tasks, progress, and delays.
-
 ### Veriti | Founding Designer
 
 URL: https://amitkap.com/work/veriti
@@ -61,22 +45,6 @@ Safe, multi-vendor remediation connecting a known exposure to an explained and a
 **Case study content**
 
 As Founding Designer, I helped define a product for safe, multi-vendor remediation. Veriti connected a known exposure to the configuration gap that allowed it through, then explained the proposed control change and its expected effect before requesting approval.
-
-### Semperis | UX Team Lead
-
-URL: https://amitkap.com/work/semperis
-
-**Product thesis**
-
-From recovery to prevention.
-
-**Summary**
-
-A product language for Active Directory recovery, continuous risk, attention, and action.
-
-**Case study content**
-
-I led the UX transition as Semperis expanded from Active Directory recovery into continuous identity security. Alongside building the in-house design team, I defined how vulnerabilities, dangerous configurations, alerts, insights, severity, urgency, and required actions should appear across the product.
 
 ### Check Point Software | UX Expert
 

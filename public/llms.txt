@@ -10,9 +10,7 @@
 ## Work
 
 - [Shift | Founding Designer](https://amitkap.com/work/shift): A third-party security platform connecting agent-led assessment, vendor access, exposure, and human judgment.
-- [Onyxia | Product Design Team Lead](https://amitkap.com/work/onyxia-cyber): Connecting benchmarks and SLAs to the owners, tasks, progress, and delays behind them.
 - [Veriti | Founding Designer](https://amitkap.com/work/veriti): Safe, multi-vendor remediation connecting a known exposure to an explained and approved control change.
-- [Semperis | UX Team Lead](https://amitkap.com/work/semperis): A product language for Active Directory recovery, continuous risk, attention, and action.
 - [Check Point Software | UX Expert](https://amitkap.com/work/checkpoint): Enterprise security management reorganized around products, objects, policies, and daily security work.
 
 ## Writing
@@ -30,6 +28,6 @@
 ## Links
 
 - Website: https://amitkap.com/
-- About: https://amitkap.com/about
+- CV: https://amitkap.com/cv
 - CV (PDF): https://amitkap.com/Amit%20Kaplinsky%20CV%2010-2026.pdf
 - LinkedIn: https://www.linkedin.com/in/amitkaplinsky

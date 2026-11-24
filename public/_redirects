@@ -3,6 +3,9 @@
 /writing  /  302
 # The blog index is hidden for now; articles link back to their work pages.
 /blog  /  302
-# The /cv page was replaced by the downloadable PDF. 302, since the file is
-# renamed with each new version (see src/lib/cvPdf.ts).
-/cv  /Amit%20Kaplinsky%20CV%2010-2026.pdf  302
+# Retired pages: the About and Work with me pages, and the work pages for
+# companies now covered only on the CV (/cv is its own page again).
+/about  /  301
+/work-with-me  /  301
+/work/onyxia-cyber  /cv  301
+/work/semperis  /cv  301

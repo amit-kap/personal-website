@@ -6,7 +6,7 @@ import { parse as parseYaml } from 'yaml'
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 
 export const SITE_URL = 'https://amitkap.com'
-export const OG_IMAGE = `${SITE_URL}/og-v3.png`
+export const OG_IMAGE = `${SITE_URL}/og-v4.png`
 
 const staticRoutes = [
   {
@@ -17,16 +17,9 @@ const staticRoutes = [
     priority: '1.0',
   },
   {
-    path: '/about',
-    title: 'About',
-    description: 'Product designer with more than a decade of cybersecurity products, making complex products clear and trustworthy in any domain.',
-    type: 'website',
-    priority: '0.8',
-  },
-  {
-    path: '/work-with-me',
-    title: 'Work with me',
-    description: "Senior product design for founders of complex B2B, AI and dev-tool products: diagnose what's unclear, plan the fixes, and build them with your team.",
+    path: '/cv',
+    title: 'CV',
+    description: 'Senior product designer: founding designer at Shift and Veriti, design team lead at Onyxia and Semperis, UX expert at Check Point. Twelve years of security products.',
     type: 'website',
     priority: '0.8',
   },
@@ -70,11 +63,14 @@ function fullTitle(title, path) {
   return path === '/' ? title : `${title} | Amit Kaplinsky`
 }
 
+/* Only companies with a work page in src/App.tsx get a route; the others appear on the CV only. */
+const WORK_PAGES = new Set(['shift', 'veriti', 'checkpoint'])
+
 export function getSiteRoutes() {
   const experience = experienceBySlug()
   const works = directories('src/content/experience').flatMap((slug) => {
     const entry = experience.get(slug)
-    if (!entry) return []
+    if (!entry || !WORK_PAGES.has(slug)) return []
     const { data } = frontMatter(read(`src/content/experience/${slug}/work.md`))
     const description = typeof data.blurb === 'string' ? data.blurb.trim() : ''
     if (!description) return []
