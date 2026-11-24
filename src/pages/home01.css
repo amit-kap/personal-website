@@ -132,6 +132,7 @@ html[data-theme='dark']:has(.h01), html[data-theme='dark'] body:has(.h01) { back
 .h01-items { display: flex; flex-direction: column; gap: 16px; margin: 0; padding: 0; list-style: none; }
 .h01-items li { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
 .h01-desc { color: var(--h01-label); }
+.h01-soon { color: var(--h01-text); }
 .h01-link { display: inline-flex; align-items: center; gap: 4px; text-decoration: none; color: var(--h01-text); }
 .h01-link svg { width: 16px; height: 16px; color: var(--h01-accent); flex-shrink: 0; transition: translate .2s ease; }
 .h01-link:hover svg { translate: 2px -2px; }
@@ -413,9 +414,11 @@ html[data-theme='dark'] .h01-article img { box-shadow: 0 0 0 1px var(--h01-hair)
 .h01-tab:hover { border-top-color: var(--h01-label); }
 .h01-tab:hover .h01-name { color: var(--h01-text); }
 .h01-tab:hover .h01-desc { color: var(--h01-label); }
+.h01-soon { color: var(--h01-text); }
 .h01-tab[aria-pressed='true'] { border-top-color: var(--h01-accent); }
 .h01-tab[aria-pressed='true'] .h01-name { color: var(--h01-text); }
 .h01-tab[aria-pressed='true'] .h01-desc { color: var(--h01-label); }
+.h01-soon { color: var(--h01-text); }
 @media (max-width: 720px) { .h01-tabs { grid-auto-flow: row; gap: 16px; } }
 /* The enlarged app: as big as the window allows at the screen's shape, over a dimmed page. */
 .h01-lightbox { width: 100vw; height: 100vh; max-width: none; max-height: none; margin: 0; padding: 0; border: 0; background: transparent; display: none; place-items: center; }
@@ -426,30 +429,35 @@ html[data-theme='dark'] .h01-article img { box-shadow: 0 0 0 1px var(--h01-hair)
 .h01-lightbox-close { position: fixed; top: 16px; right: 16px; width: 40px; height: 40px; display: grid; place-items: center; border: 0; border-radius: 50%; background: #fff; color: #000; cursor: pointer; }
 html[data-theme='dark'] .h01-app { box-shadow: 0 0 0 1px var(--h01-hair), 0 4px 16px rgb(0 0 0 / .4); }
 
-/* Screens: a small bento of every Shift screenshot. Six columns; a small tile is two columns by one row at 2:1, a large
-   tile four by two, a wide tile three by one. The images fill their tiles from the top left. */
+/* Screens: the work pages' bento. Six columns; each tile sets its size (is-lg four columns by two rows, is-sm two by
+   one at 2:1, is-wide three by one) and the grid places them in order, filling gaps. */
 .h01-work .h01-group { align-self: stretch; container-type: inline-size; }
-.h01-bento { width: 100%; margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(6, 1fr); grid-auto-rows: calc(((100cqw - 40px) / 3 + 8px) / 2); gap: 8px; }
+.h01-bento { width: 100%; margin: 0; padding: 0; list-style: none; display: grid; grid-auto-flow: row dense; grid-template-columns: repeat(6, 1fr); grid-auto-rows: calc(((100cqw - 40px) / 3 + 8px) / 2); gap: 8px; }
 .h01-bento li { position: relative; overflow: hidden; border-radius: 8px; background: var(--h01-tile); }
 /* A hairline border drawn over the image, so the screenshot can't cover it. */
 .h01-bento li::after { content: ''; position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 1px var(--h01-hair); pointer-events: none; }
-.h01-bento li:nth-child(1) { grid-area: 1 / 1 / 3 / 5; }
-.h01-bento li:nth-child(2) { grid-area: 1 / 5 / 2 / 7; }
-.h01-bento li:nth-child(3) { grid-area: 2 / 5 / 3 / 7; }
-.h01-bento li:nth-child(4) { grid-area: 3 / 1 / 4 / 4; }
-.h01-bento li:nth-child(5) { grid-area: 3 / 4 / 4 / 7; }
-.h01-bento li:nth-child(6) { grid-area: 4 / 1 / 5 / 4; }
-.h01-bento li:nth-child(7) { grid-area: 4 / 4 / 5 / 7; }
+.h01-bento .is-lg { grid-column: span 4; grid-row: span 2; }
+.h01-bento .is-sm { grid-column: span 2; }
+.h01-bento .is-wide { grid-column: span 3; }
+/* The design tile: the company's mark in white, centred on its brand colour, about a third of the tile's height. */
+.h01-bento-brand { display: grid; place-items: center; }
+.h01-bento .h01-bento-brand img { width: 36%; height: 36%; object-fit: contain; transform: none; }
+.h01-bento-brand span { width: 36%; height: 36%; background: #fff; -webkit-mask: var(--logo) center / contain no-repeat; mask: var(--logo) center / contain no-repeat; }
 .h01-bento button { display: block; width: 100%; height: 100%; padding: 0; border: 0; background: none; cursor: zoom-in; }
 .h01-bento video { display: block; width: 100%; height: 100%; object-fit: cover; }
-/* Each screenshot is zoomed into its focus point; hovering eases it back a little to hint that it opens. */
-.h01-bento img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: var(--x) var(--y); transform: scale(var(--z, 1)); transform-origin: var(--x) var(--y); transition: transform .4s ease; }
-.h01-bento button:hover img { transform: scale(calc(var(--z, 1) * .92)); }
+/* Each screenshot is zoomed into its focus point. On hover the whole tile eases in 3% from its centre, the same for
+   every tile (screenshots and videos), to hint that it opens. */
+.h01-bento img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: var(--x) var(--y); transform: scale(var(--z, 1)); transform-origin: var(--x) var(--y); }
+.h01-bento button { transition: transform .4s ease; }
+.h01-bento button:hover { transform: scale(1.03); }
+@media (prefers-reduced-motion: reduce) { .h01-bento button { transition: none; } .h01-bento button:hover { transform: none; } }
 .h01-shown { display: block; max-width: calc(100vw - 144px); max-height: calc(100vh - 80px); width: auto; height: auto; border-radius: 8px; background: #fff; }
 @media (max-width: 720px) {
   .h01-bento { grid-template-columns: 1fr 1fr; grid-auto-rows: auto; }
-  .h01-bento li:nth-child(n) { grid-area: auto; aspect-ratio: 2 / 1; }
-  .h01-bento li:first-child { grid-column: span 2; aspect-ratio: 16 / 9; }
+  .h01-bento li.is-sm, .h01-bento li.is-wide { grid-column: auto; aspect-ratio: 2 / 1; }
+  .h01-bento li.is-lg { grid-column: span 2; grid-row: auto; aspect-ratio: 16 / 9; }
+  /* An odd tile left alone on the last row takes the full width instead of leaving a hole. */
+  .h01-bento li:not(.is-lg):last-child:nth-child(even) { grid-column: span 2; aspect-ratio: 2 / 1; }
   .h01-shown { max-width: calc(100vw - 32px); }
 }
 

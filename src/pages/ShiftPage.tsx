@@ -22,9 +22,10 @@ const TABS: Tab[] = [
    point x/y in % of the image, zoom z); clicking a tile opens the whole thing. */
 const FILM = { src: `${base}shift-motion-v2.mp4`, poster: `${base}shift-motion-poster.webp` }
 const TILES: Tile[] = [
+  { brand: 'shift', color: '#111111', alt: 'Shift logo' },
   { file: '03-inventory-vendors-card.webp', alt: 'Vendor card: security score', x: 38, y: 30.5, z: 6.5 },
-  { file: '07-assessment-flow-1.webp', alt: "Assessment: the agent's recommendation", x: 19.5, y: 75.75, z: 5 },
-  { file: '04-vendor-access-graph.webp', alt: 'Access graph: a resource and the sensitive data it holds', x: 52.4, y: 25.8, z: 3.6 },
+  { file: '07-assessment-flow-1.webp', alt: "Assessment: the agent's recommendation", x: 19.5, y: 75.75, z: 5, size: 'wide' },
+  { file: '04-vendor-access-graph.webp', alt: 'Access graph: a resource and the sensitive data it holds', x: 52.4, y: 25.8, z: 3.6, size: 'wide' },
   { file: '05-threat-center.webp', alt: 'Threat center: an alert', x: 0.6, y: 34.7, z: 4.4 },
   { file: '06-integrations-grid.webp', alt: 'Integrations', x: 60.7, y: 96.6, z: 3.1 },
   { file: '00-login.webp', alt: 'Login', x: 88.9, y: 46.3, z: 2.9 },
@@ -50,9 +51,10 @@ export default function ShiftPage() {
         <Byline company="Shift" role="Founding Designer" years="2024-2026" />
 
         <p className="h01-text h01-intro">
-          I joined Shift as its first designer, when the team was five people, and stayed as it grew past twenty. Together
-          we turned a pile of Excel sheets and long email correspondence into a workflow that saves security teams time and improves their security,
-          used by our design partners and early customers.
+          I joined Shift as its first designer when the team was five people, and stayed as it grew past twenty. Vendor
+          security reviews ran on spreadsheets and long email threads. We replaced them with one workflow: an AI agent runs
+          the assessment, and the security team reviews its findings and makes the call. Design partners and early customers
+          used it to cut manual review hours and raise vendor onboarding completion.
         </p>
 
         {/* The real product, live: click the sidebar to move between Home, Inventory and Assessments. Enlarge opens it

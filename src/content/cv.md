@@ -42,7 +42,7 @@ From design school to the advertising industry, then to high-tech cybersecurity,
 **UX Expert** · 03/2014 to 08/2020 · Enterprise security management
 
 - Planned and led WatchTower from concept to its 2019 iOS and Android launch: defined the audience with a major partner, set scope, ran usability testing, and adapted an enterprise release process to ship a consumer-style app.
-- Reorganized security management spread across 20+ tabs into one system built around administrators’ daily work, inside an R&D organization of hundreds of developers.
+- Joined the combined effort to redesign security management, from a cluster of 20+ tabs into a modern platform built around administrators’ daily work, inside an R&D organization of hundreds of developers.
 
 ## Certificates
 

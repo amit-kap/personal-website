@@ -180,3 +180,8 @@ img[data-loading], video[data-loading] {
   img[data-loading], video[data-loading] { animation: none; background: var(--h01-tile, var(--border)); }
   .h01-lightbox:has(.h01-shown[data-loading])::before { animation-duration: 2.4s; }
 }
+
+/* Selected text, across the site: white on solid blue, the primary's complement (hue 18° + 180°), darkened so white
+   text stays readable (4.8:1). */
+:root { --selection: #0079b3; }
+::selection { background: var(--selection); color: #fff; }

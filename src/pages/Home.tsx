@@ -162,19 +162,24 @@ export default function Home() {
 
         <section className="h01-group">
           <div className="h01-label">Side projects</div>
-          {/* TODO: real links for Glaze and Monocle. */}
+          {/* Each side project links to its live site. */}
           <ul className="h01-items">
             <li>
-              <a className="h01-link" href="#">
+              <a className="h01-link" href="https://glaze-studio.amitkap.com" target="_blank" rel="noreferrer" data-umami-event="side-project-glaze">
                 <span>Glaze</span> <Arrow />
               </a>
               <span className="h01-desc">Component library</span>
             </li>
             <li>
-              <a className="h01-link" href="#">
+              <a className="h01-link" href="https://monocle.amitkap.com" target="_blank" rel="noreferrer" data-umami-event="side-project-monocle">
                 <span>Monocle</span> <Arrow />
               </a>
               <span className="h01-desc">Markdown editor</span>
+            </li>
+            {/* Not live yet: the name is plain text, with no link or arrow, until it ships. */}
+            <li>
+              <span className="h01-soon">Turntable</span>
+              <span className="h01-desc">Record player for your Apple Music library · Coming soon</span>
             </li>
           </ul>
         </section>

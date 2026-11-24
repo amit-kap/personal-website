@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { ArrowLeft, ArrowRight } from 'lucide-react'
 import { getCaseStudyBySlug, type ContentImage } from '@/lib/content'
 import type { Shown } from './useViewer'
+import { logoFor } from '@/lib/workLogos'
 
 /* Shared parts of the work pages (Shift, Veriti): the corner mark, the byline, the tabs under the product, the screens
    bento, the full-screen viewer and the case study preview. Styles live in home01.css. */
@@ -79,7 +80,16 @@ export function WorkTabs({ tabs, active, onPick, label }: { tabs: Tab[]; active:
 
 /** One bento tile: an image file zoomed into a focus point (x/y in % of the image, zoom z), or a looping video
     (`video` and its `poster`, paths under public/) shown whole. */
-export type Tile = { file: string; alt: string; x: number; y: number; z: number } | { video: string; poster: string; alt: string }
+export type Tile = (
+  | { file: string; alt: string; x: number; y: number; z: number }
+  | { video: string; poster: string; alt: string }
+  /** A design tile: the company's mark (src/content/experience/<brand>/icon.svg), in white, centred on its brand colour.
+      `original` keeps the mark in its own colours instead. */
+  | { brand: string; color: string; alt: string; original?: boolean }
+) & { size?: TileSize }
+
+/** Tile sizes on the six-column bento: large is four columns by two rows, small two by one, wide three by one. */
+export type TileSize = 'lg' | 'sm' | 'wide'
 
 /** A muted looping video tile that opens full size when clicked. */
 export function VideoTile({ src, poster, alt, onOpen }: { src: string; poster: string; alt: string; onOpen: (s: Shown) => void }) {
@@ -96,17 +106,26 @@ export function Bento({ lead, tiles, images, onOpen }: { lead?: ReactNode; tiles
     <section className="h01-group">
       <div className="h01-label">Screens</div>
       <ul className="h01-bento">
-        {lead && <li>{lead}</li>}
+        {lead && <li className="is-lg">{lead}</li>}
         {tiles.map((t) => {
+          const size = `is-${t.size ?? 'sm'}`
+          if ('brand' in t) {
+            const logo = logoFor(t.brand)
+            return (
+              <li key={`brand-${t.brand}`} className={`${size} h01-bento-brand`} style={{ background: t.color }} role="img" aria-label={t.alt}>
+                {logo && (t.original ? <img src={logo} alt="" data-no-loader /> : <span style={{ '--logo': `url("${logo}")` } as CSSProperties} />)}
+              </li>
+            )
+          }
           if ('video' in t)
             return (
-              <li key={t.video}>
+              <li key={t.video} className={size}>
                 <VideoTile src={`${base}${t.video}`} poster={`${base}${t.poster}`} alt={t.alt} onOpen={onOpen} />
               </li>
             )
           const img = images[t.file]
           return img ? (
-            <li key={t.file}>
+            <li key={t.file} className={size}>
               <button type="button" aria-label={`${t.alt}, open full screen`} onClick={() => onOpen({ src: img.src, alt: t.alt })}>
                 <img
                   src={img.src}
