@@ -77,7 +77,7 @@ html[data-theme='dark']:has(.h01), html[data-theme='dark'] body:has(.h01) { back
 @media (min-width: 901px) { .h01-center:not(.h01-case) .h01-title .h01-line { white-space: nowrap; } }
 /* Home rhythm on the 8px grid: 48px from the header to the hero and between sections, 64px from the hero to the
    first section so the statement stands apart. Inside every section: 12px label to content, 16px between items. */
-.h01-center:not(.h01-case) .h01-title + .h01-group { margin-top: 64px; }
+.h01-center:not(.h01-case) .h01-title + .h01-group { margin-top: 48px; }
 .h01-center:not(.h01-case) .h01-group + .h01-group { margin-top: 48px; }
 .h01-title .h01-line { display: block; }
 
