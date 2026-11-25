@@ -407,6 +407,30 @@ html[data-theme='dark'] .h01-article img { box-shadow: 0 0 0 1px var(--h01-hair)
   .h01-article td:first-child { white-space: normal; }
 }
 
+/* Case study text size switch: fixed under the AK mark, centred on it. The two A's show small and large. */
+.h01-size { position: fixed; z-index: 3; top: 42px; left: 96px; padding: 2px; border-radius: 10px; background: var(--h01-bg); }
+.h01-size button span { font-size: 12px; line-height: 1; }
+.h01-size button + button span { font-size: 17px; }
+/* Where the column clears the corner (as the title's higher start does), it sits in a row under the mark; narrower, beside it. */
+@media (min-width: 1040px) { .h01-size { top: 100px; left: 24px; } }
+@media (max-width: 720px) { .h01-size { top: 24px; left: 80px; } }
+/* The default size: the site's 14px text, with the headings stepped down to match the other pages. */
+.h01-article[data-size='small'] { font-size: 14px; line-height: 22px; }
+.h01-article[data-size='small'] .h01-title { font-size: var(--h01-title); line-height: 34px; letter-spacing: -.01em; }
+.h01-article[data-size='small'] .h01-sub { margin-top: 8px; font-size: 16px; line-height: 24px; }
+.h01-article[data-size='small'] p { margin-top: 16px; }
+.h01-article[data-size='small'] h3 { margin-top: 64px; font-size: 18px; line-height: 24px; letter-spacing: 0; }
+.h01-article[data-size='small'] h3 + p, .h01-article[data-size='small'] h3 + ul { margin-top: 12px; }
+.h01-article[data-size='small'] .h01-prose > .h01-tldr + p { margin-top: 32px; font-size: 16px; line-height: 26px; }
+.h01-article[data-size='small'] .h01-tldr { padding: 20px 24px; gap: 8px; }
+.h01-article[data-size='small'] .h01-stats strong { font-size: 36px; line-height: 40px; }
+.h01-article[data-size='small'] .h01-stats span { font-size: 14px; line-height: 20px; }
+.h01-article[data-size='small'] blockquote { margin-top: 56px; font-size: 20px; line-height: 28px; }
+.h01-article[data-size='small'] ul { margin-top: 16px; gap: 8px; }
+.h01-article[data-size='small'] table { font-size: 14px; line-height: 20px; }
+.h01-article[data-size='small'] figure { margin: 40px 0; }
+.h01-article[data-size='small'] figcaption { font-size: 12px; line-height: 16px; }
+
 /* Work pages (Shift): the case study's centered column with the home page's type. The live product sits under the title. */
 .h01-work .h01-title { margin-top: 0; text-wrap: balance; }
 .h01-byline { margin-top: 12px; display: flex; flex-wrap: wrap; gap: 8px; }

@@ -1,4 +1,4 @@
-import { useEffect, useRef, type CSSProperties } from 'react'
+import { useEffect, useRef, useState, type CSSProperties } from 'react'
 import { Link, Navigate, useParams } from 'react-router-dom'
 import { ArrowLeft } from 'lucide-react'
 import ReactMarkdown from 'react-markdown'
@@ -15,10 +15,31 @@ const workName = (slug: string) => WORKS[slug] ?? slug
 /* A case study in the home page's single column: the AK mark in the corner as the way back, the title, then the story from
    src/content/writing/<slug>/index.md. The markdown's first H1 is the page title and the H3 under it the subtitle;
    its --- rules are dropped, and images come from the folder next to the markdown. */
+/* Reading size: "large" is the case study's own reading type, "small" the site's default text size like the other pages.
+   The pick is remembered in this browser. */
+type ReadSize = 'large' | 'small'
+const SIZE_KEY = 'case-study-size'
+function readSize(): ReadSize {
+  try {
+    return localStorage.getItem(SIZE_KEY) === 'small' ? 'small' : 'large'
+  } catch {
+    return 'large'
+  }
+}
+
 export default function CaseStudy() {
   const { slug = '' } = useParams()
   const study = getCaseStudyBySlug(slug)
   const corner = useRef<HTMLAnchorElement>(null)
+  const [size, setSize] = useState<ReadSize>(readSize)
+  const pickSize = (next: ReadSize) => {
+    try {
+      localStorage.setItem(SIZE_KEY, next)
+    } catch {
+      /* not remembered, still applied */
+    }
+    setSize(next)
+  }
 
   // The ring around the mark fills as the page scrolls.
   useEffect(() => {
@@ -54,7 +75,17 @@ export default function CaseStudy() {
           <ArrowLeft className="h01-corner-arrow" size={20} strokeWidth={1.5} aria-hidden />
         </Link>
 
-        <article className="h01-article">
+        {/* Text size, fixed under the back mark: the case study's reading size or the site's default size. */}
+        <div className="h01-switch h01-size" role="group" aria-label="Text size">
+          <button type="button" className={size === 'small' ? 'on' : undefined} aria-pressed={size === 'small'} onClick={() => pickSize('small')} aria-label="Default text size" title="Default text size">
+            <span aria-hidden="true">A</span>
+          </button>
+          <button type="button" className={size === 'large' ? 'on' : undefined} aria-pressed={size === 'large'} onClick={() => pickSize('large')} aria-label="Large text size" title="Large text size">
+            <span aria-hidden="true">A</span>
+          </button>
+        </div>
+
+        <article className="h01-article" data-size={size}>
           <h1 className="h01-title">{study.title}</h1>
           <p className="h01-sub">{sub}</p>
           <p className="h01-meta">
