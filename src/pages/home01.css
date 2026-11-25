@@ -618,7 +618,9 @@ html[data-theme='dark'] .h01-app { box-shadow: 0 0 0 1px var(--h01-hair), 0 4px 
 /* Page-load entrance (home only): the wall's tiles flip in first, then the column's blocks rise 8px and fade in, one after another. */
 @keyframes h01-enter { from { opacity: 0; translate: 0 8px; } }
 @keyframes h01-footer-in { from { translate: 0 100%; } }
-@keyframes wall-flip { from { opacity: 0; transform: rotateX(90deg); } }
+/* Each tile flips from 90deg to flat in one move: the curve carries it about 15deg past flat without stopping there,
+   and the only slow-down is the settle onto 0. */
+@keyframes wall-flip { from { opacity: 0; transform: rotateX(90deg); } to { transform: rotateX(0deg); } }
 @media (prefers-reduced-motion: no-preference) {
   /* The text waits for the wall: held until the tiles start (data-flip='run', set in ScreenWall.tsx), then it begins 1s
      after the first tile. */
@@ -637,6 +639,6 @@ html[data-theme='dark'] .h01-app { box-shadow: 0 0 0 1px var(--h01-hair), 0 4px 
   /* Wall tiles flip in on their X axis, as a diagonal wave from top right to bottom left (order and delays set in ScreenWall.tsx); held edge-on until it says run. */
   /* Real 3D: the wall's perspective reaches the tiles, so each one turns about its centre on the tilted plane. */
   .h01-center .wall, .h01-center .wall-col { transform-style: preserve-3d; }
-  .h01-center .wall-tile { animation: wall-flip 1s cubic-bezier(.16, 1, .3, 1) var(--flip-delay, 0s) both paused; backface-visibility: hidden; }
+  .h01-center .wall-tile { animation: wall-flip 1.1s cubic-bezier(.3, 1.75, .5, 1) var(--flip-delay, 0s) both paused; backface-visibility: hidden; }
   .h01-center .wall[data-flip='run'] .wall-tile { animation-play-state: running; }
 }
