@@ -28,15 +28,19 @@ function useTelAvivTime() {
 type Theme = 'light' | 'dark'
 const STORAGE_KEY = 'theme'
 
-/* The theme follows the system until the visitor picks one; the pick is remembered in this browser. */
+const DARK_QUERY = '(prefers-color-scheme: dark)'
+const systemTheme = (): Theme => (window.matchMedia(DARK_QUERY).matches ? 'dark' : 'light')
+
+/* The theme follows the browser / system, live. A footer pick overrides it for this tab session only,
+   and a later system change takes over again. */
 function readTheme(): Theme {
   try {
-    const saved = localStorage.getItem(STORAGE_KEY)
+    const saved = sessionStorage.getItem(STORAGE_KEY)
     if (saved === 'light' || saved === 'dark') return saved
   } catch {
     /* storage can be blocked; fall back to the system */
   }
-  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+  return systemTheme()
 }
 
 function useTheme() {
@@ -44,9 +48,22 @@ function useTheme() {
   useEffect(() => {
     document.documentElement.dataset.theme = theme
   }, [theme])
+  useEffect(() => {
+    const media = window.matchMedia(DARK_QUERY)
+    const follow = () => {
+      try {
+        sessionStorage.removeItem(STORAGE_KEY)
+      } catch {
+        /* nothing to clear */
+      }
+      setTheme(systemTheme())
+    }
+    media.addEventListener('change', follow)
+    return () => media.removeEventListener('change', follow)
+  }, [])
   const pick = (next: Theme) => {
     try {
-      localStorage.setItem(STORAGE_KEY, next)
+      sessionStorage.setItem(STORAGE_KEY, next)
     } catch {
       /* not remembered, still applied */
     }
