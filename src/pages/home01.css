@@ -621,11 +621,11 @@ html[data-theme='dark'] .h01-app { box-shadow: 0 0 0 1px var(--h01-hair), 0 4px 
 @keyframes wall-flip { from { opacity: 0; transform: rotateX(90deg); } }
 @media (prefers-reduced-motion: no-preference) {
   /* The text waits for the wall: held until the tiles start (data-flip='run', set in ScreenWall.tsx), then it begins 1s
-     after the first tile (whose own delay is 150ms). */
-  .h01-center:not(.h01-case) .h01-col > * { animation: h01-enter .6s cubic-bezier(.2, .8, .2, 1) both paused; animation-delay: calc(var(--i, 9) * 60ms + 1150ms); }
+     after the first tile. */
+  .h01-center:not(.h01-case) .h01-col > * { animation: h01-enter .6s cubic-bezier(.2, .8, .2, 1) both paused; animation-delay: calc(var(--i, 9) * 60ms + 1000ms); }
   .h01-center:not(.h01-case):has(.wall[data-flip='run']) .h01-col > * { animation-play-state: running; }
   /* Last, the footer bar slides up from below the window into place, just after the links above it. */
-  .h01-center:not(.h01-case) .h01-col > .h01-footer { animation-name: h01-footer-in; animation-duration: .7s; animation-timing-function: cubic-bezier(.16, 1, .3, 1); animation-delay: 1900ms; }
+  .h01-center:not(.h01-case) .h01-col > .h01-footer { animation-name: h01-footer-in; animation-duration: .7s; animation-timing-function: cubic-bezier(.16, 1, .3, 1); animation-delay: 1750ms; }
   .h01-center:not(.h01-case) .h01-col > :nth-child(1) { --i: 0; }
   .h01-center:not(.h01-case) .h01-col > :nth-child(2) { --i: 1; }
   .h01-center:not(.h01-case) .h01-col > :nth-child(3) { --i: 2; }

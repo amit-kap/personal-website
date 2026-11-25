@@ -54,8 +54,8 @@ const columnsOf = (n: number) => {
    diagonal (its height and its distance from the right edge, each as a share of the view, added together). Tiles near
    each other start close together, so the wave flows across the columns instead of stepping from one to the next.
    Only the tiles in view take part; the rest flip at once, out of sight. It waits for the visible screenshots to
-   decode (at most 700ms) so no tile flips in empty. */
-const FLIP_START = 150 // ms before the first tile
+   decode (at most 200ms) so no tile flips in empty. */
+const FLIP_START = 0 // ms before the first tile
 const FLIP_SPREAD = 1000 // ms from the first tile to the last
 
 function useFlipIn() {
@@ -72,7 +72,14 @@ function useFlipIn() {
     all.forEach((t) => (t.style.animation = ''))
     // In view, and not one of the far tiles that pass behind the wall's camera, whose projected box is huge.
     const seen = tiles.filter(({ r }) => r.width < window.innerWidth && r.bottom > 0 && r.top < window.innerHeight && r.right > view.left && r.left < right)
-    const along = ({ r }: { r: DOMRect }) => (r.top + r.height / 2) / window.innerHeight + (right - (r.left + r.width / 2)) / (right - view.left)
+    // Measured on the part of each tile that shows, so the first tile to move is one you can see (the top right ones
+    // are partly above the window and cut by the frame's right edge).
+    const clamp = (v: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, v))
+    const along = ({ r }: { r: DOMRect }) => {
+      const x = (clamp(r.left, view.left, right) + clamp(r.right, view.left, right)) / 2
+      const y = (clamp(r.top, 0, window.innerHeight) + clamp(r.bottom, 0, window.innerHeight)) / 2
+      return y / window.innerHeight + (right - x) / (right - view.left)
+    }
     const steps = seen.map(along)
     const first = Math.min(...steps)
     const range = Math.max(...steps) - first || 1
@@ -83,8 +90,14 @@ function useFlipIn() {
       done = true
       el.dataset.flip = 'run'
     }
-    const timer = setTimeout(run, 700)
-    Promise.all(seen.map(({ t }) => t.querySelector('img')?.decode().catch(() => {}))).then(run)
+    // The screenshots in view load now rather than lazily; the wave waits for them at most 200ms.
+    const imgs = seen.map(({ t }) => t.querySelector('img')).filter((i): i is HTMLImageElement => !!i)
+    imgs.forEach((i) => {
+      i.loading = 'eager'
+      i.fetchPriority = 'high'
+    })
+    const timer = setTimeout(run, 200)
+    Promise.all(imgs.map((i) => i.decode().catch(() => {}))).then(run)
     return () => clearTimeout(timer)
   }, [])
   return wall
