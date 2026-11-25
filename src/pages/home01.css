@@ -615,11 +615,17 @@ html[data-theme='dark'] .h01-app { box-shadow: 0 0 0 1px var(--h01-hair), 0 4px 
   .h01-items .h01-peek-box { translate: 0 0; }
 }
 
-/* Page-load entrance (home only): the column's blocks rise 8px and fade in, one after another; the wall fades in behind them. */
+/* Page-load entrance (home only): the wall's tiles flip in first, then the column's blocks rise 8px and fade in, one after another. */
 @keyframes h01-enter { from { opacity: 0; translate: 0 8px; } }
-@keyframes h01-fade { from { opacity: 0; } }
+@keyframes h01-footer-in { from { translate: 0 100%; } }
+@keyframes wall-flip { from { opacity: 0; transform: rotateX(90deg); } }
 @media (prefers-reduced-motion: no-preference) {
-  .h01-center:not(.h01-case) .h01-col > * { animation: h01-enter .6s cubic-bezier(.2, .8, .2, 1) both; animation-delay: calc(var(--i, 9) * 60ms + 80ms); }
+  /* The text waits for the wall: held until the tiles start (data-flip='run', set in ScreenWall.tsx), then it begins 1s
+     after the first tile (whose own delay is 150ms). */
+  .h01-center:not(.h01-case) .h01-col > * { animation: h01-enter .6s cubic-bezier(.2, .8, .2, 1) both paused; animation-delay: calc(var(--i, 9) * 60ms + 1150ms); }
+  .h01-center:not(.h01-case):has(.wall[data-flip='run']) .h01-col > * { animation-play-state: running; }
+  /* Last, the footer bar slides up from below the window into place, just after the links above it. */
+  .h01-center:not(.h01-case) .h01-col > .h01-footer { animation-name: h01-footer-in; animation-duration: .7s; animation-timing-function: cubic-bezier(.16, 1, .3, 1); animation-delay: 1900ms; }
   .h01-center:not(.h01-case) .h01-col > :nth-child(1) { --i: 0; }
   .h01-center:not(.h01-case) .h01-col > :nth-child(2) { --i: 1; }
   .h01-center:not(.h01-case) .h01-col > :nth-child(3) { --i: 2; }
@@ -628,5 +634,9 @@ html[data-theme='dark'] .h01-app { box-shadow: 0 0 0 1px var(--h01-hair), 0 4px 
   .h01-center:not(.h01-case) .h01-col > :nth-child(6) { --i: 5; }
   .h01-center:not(.h01-case) .h01-col > :nth-child(7) { --i: 6; }
   .h01-center:not(.h01-case) .h01-col > :nth-child(8) { --i: 7; }
-  .h01-center:not(.h01-case) .h01-wall { animation: h01-fade 1.2s ease-out .2s both; }
+  /* Wall tiles flip in on their X axis, as a diagonal wave from top right to bottom left (order and delays set in ScreenWall.tsx); held edge-on until it says run. */
+  /* Real 3D: the wall's perspective reaches the tiles, so each one turns about its centre on the tilted plane. */
+  .h01-center .wall, .h01-center .wall-col { transform-style: preserve-3d; }
+  .h01-center .wall-tile { animation: wall-flip 1s cubic-bezier(.16, 1, .3, 1) var(--flip-delay, 0s) both paused; backface-visibility: hidden; }
+  .h01-center .wall[data-flip='run'] .wall-tile { animation-play-state: running; }
 }
