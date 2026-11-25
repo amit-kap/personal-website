@@ -5,11 +5,18 @@ import { Bot, Moon, Sun, User } from 'lucide-react'
 /* The small footer at the end of the new pages: name, local time in Tel Aviv,
    the human / agent view switch and the light / dark switch. */
 
-/* Local time in Tel Aviv, 24-hour, refreshed on the minute. */
-const telAvivTime = () =>
-  new Intl.DateTimeFormat('en-GB', { timeZone: 'Asia/Jerusalem', hour: '2-digit', minute: '2-digit', hour12: false }).format(
-    new Date(),
-  )
+/* Local time in Tel Aviv, 24-hour, with its UTC offset (GMT+2 / GMT+3 in summer), refreshed on the minute. */
+const telAvivTime = () => {
+  const parts = new Intl.DateTimeFormat('en-GB', {
+    timeZone: 'Asia/Jerusalem',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+    timeZoneName: 'shortOffset',
+  }).formatToParts(new Date())
+  const get = (type: Intl.DateTimeFormatPartTypes) => parts.find((p) => p.type === type)?.value ?? ''
+  return `${get('hour')}:${get('minute')} ${get('timeZoneName')}`.trim()
+}
 
 function useTelAvivTime() {
   const [time, setTime] = useState(telAvivTime)
@@ -83,18 +90,18 @@ export default function SiteFooter() {
       <span className="h01-grow" />
       <nav className="h01-switch" aria-label="View">
         <Link to="/" className={agent ? undefined : 'on'} aria-current={agent ? undefined : 'page'} aria-label="Human view" title="Human view">
-          <User size={16} strokeWidth={1.75} aria-hidden />
+          <User size={16} strokeWidth={1.5} aria-hidden />
         </Link>
         <Link to="/agent" className={agent ? 'on' : undefined} aria-current={agent ? 'page' : undefined} aria-label="Agent view" title="Agent view">
-          <Bot size={16} strokeWidth={1.75} aria-hidden />
+          <Bot size={16} strokeWidth={1.5} aria-hidden />
         </Link>
       </nav>
       <div className="h01-switch" role="group" aria-label="Theme">
         <button type="button" className={theme === 'light' ? 'on' : undefined} aria-pressed={theme === 'light'} onClick={() => setTheme('light')} aria-label="Light mode" title="Light mode">
-          <Sun size={16} strokeWidth={1.75} aria-hidden />
+          <Sun size={16} strokeWidth={1.5} aria-hidden />
         </button>
         <button type="button" className={theme === 'dark' ? 'on' : undefined} aria-pressed={theme === 'dark'} onClick={() => setTheme('dark')} aria-label="Dark mode" title="Dark mode">
-          <Moon size={16} strokeWidth={1.75} aria-hidden />
+          <Moon size={16} strokeWidth={1.5} aria-hidden />
         </button>
       </div>
       <span>

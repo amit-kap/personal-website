@@ -114,7 +114,7 @@ function Peek({ to, children }: { to: string; children: ReactNode }) {
 }
 
 function Arrow() {
-  return <ArrowUpRight size={16} strokeWidth={2} aria-hidden />
+  return <ArrowUpRight size={16} strokeWidth={1.5} aria-hidden />
 }
 
 export default function Home() {
@@ -164,7 +164,7 @@ export default function Home() {
           <ul className="h01-items">
             <li>
               <Link className="h01-link" to="/case-studies/designing-for-the-supervisor">
-                <span>Designing for the supervisor</span> <ArrowRight size={16} strokeWidth={2} aria-hidden />
+                <span>Designing for the supervisor</span> <ArrowRight size={16} strokeWidth={1.5} aria-hidden />
               </Link>
               <span className="h01-desc">How risk analysts oversee AI agents at Shift</span>
             </li>
@@ -206,7 +206,7 @@ export default function Home() {
 
         <nav className="h01-icons" aria-label="Links">
           <a href="mailto:amitka111@gmail.com" aria-label="Email">
-            <Send size={16} strokeWidth={1.8} aria-hidden />
+            <Send size={16} strokeWidth={1.5} aria-hidden />
           </a>
           <a href="https://www.linkedin.com/in/amitkaplinsky" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
             <svg width="22" height="22" viewBox="0 0 22 22" fill="currentColor" aria-hidden="true">
@@ -214,7 +214,7 @@ export default function Home() {
             </svg>
           </a>
           <a href="https://github.com/amit-kap" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
               <path d="M10 14.667v-2.667a3.2 3.2 0 0 0-0.667-2.333c2 0 4-1.333 4-3.667 0.053-0.833-0.18-1.653-0.666-2.333 0.187-0.767 0.187-1.567 0-2.334 0 0-0.667 0-2 1-1.760-0.333-3.573-0.333-5.334 0C4 1.333 3.333 1.333 3.333 1.333c-0.2 0.767-0.2 1.567 0 2.334A3.602 3.602 0 0 0 2.667 6c0 2.333 2 3.667 4 3.667-0.26 0.327-0.453 0.7-0.567 1.1-0.113 0.4-0.147 0.82-0.1 1.233v2.667" />
               <path d="M6 12c-3.007 1.333-3.333-1.333-4.667-1.333" />
             </svg>

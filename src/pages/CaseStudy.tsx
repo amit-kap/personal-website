@@ -51,7 +51,7 @@ export default function CaseStudy() {
             <circle className="h01-ring" cx="32" cy="32" r="30" />
           </svg>
           <img src={`${base}home01/ak-logo.svg`} alt="" width={36} height={20} />
-          <ArrowLeft className="h01-corner-arrow" size={20} strokeWidth={2} aria-hidden />
+          <ArrowLeft className="h01-corner-arrow" size={20} strokeWidth={1.5} aria-hidden />
         </Link>
 
         <article className="h01-article">

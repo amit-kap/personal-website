@@ -43,7 +43,7 @@ export default function CvPage() {
         <div className="h01-cv-head" ref={head} data-stuck={stuck}>
           <h1 className="h01-title">{header.name}</h1>
           <a className="h01-link h01-cv-pdf" href={PDF} download>
-            <span>Download</span> <Download size={16} strokeWidth={2} aria-hidden />
+            <span>Download</span> <Download size={16} strokeWidth={1.5} aria-hidden />
           </a>
         </div>
         <p className="h01-byline">
@@ -71,7 +71,7 @@ export default function CvPage() {
                 <div className="h01-cv-what">
                   {WORK_PAGES[e.slug] ? (
                     <Link className="h01-link h01-name" to={WORK_PAGES[e.slug]}>
-                      <span>{e.company}</span> <ArrowRight aria-hidden />
+                      <span>{e.company}</span> <ArrowRight strokeWidth={1.5} aria-hidden />
                     </Link>
                   ) : (
                     <span className="h01-name">{e.company}</span>
