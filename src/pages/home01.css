@@ -153,9 +153,11 @@ html[data-theme='dark']:has(.h01), html[data-theme='dark'] body:has(.h01) { back
 .h01-closing { margin-top: 16px; max-width: 431px; font-size: var(--h01-title); line-height: 34px; font-weight: 400; }
 .h01-closing a { font-weight: 600; text-decoration: none; }
 
-.h01-icons { margin-top: 48px; display: flex; align-items: center; gap: 24px; }
-.h01-icons a { display: flex; color: var(--h01-text); }
-.h01-icons a:hover { color: var(--h01-accent); }
+.h01-actions { margin-top: 16px; display: flex; flex-wrap: wrap; gap: 12px; } /* 16px: the same gap as the status line to the closing line */
+/* Text links under the pills: LinkedIn · X · GitHub. */
+.h01-social { margin-top: 24px; display: flex; align-items: center; gap: 8px; color: var(--h01-label); }
+.h01-social a { color: var(--h01-label); text-decoration: none; }
+.h01-social a:hover { color: var(--h01-accent); }
 
 /* Narrow screens: one column. */
 @media (max-width: 900px) {
@@ -505,11 +507,11 @@ html[data-theme='dark'] .h01-app { box-shadow: 0 0 0 1px var(--h01-hair), 0 4px 
   .h01-cv-head { top: 23px; }
   .h01-cv-head[data-stuck='true']::before { top: -23px; }
 }
-.h01-cv-pdf { flex-shrink: 0; padding: 8px 16px; border: 1px solid var(--h01-hair); border-radius: 999px; transition: background .15s ease, color .15s ease; }
-.h01-cv-pdf:hover { border-color: var(--h01-accent); background: var(--h01-accent); color: var(--primary-foreground, #fff); }
-.h01-cv-pdf:hover span { color: inherit; text-decoration: none; }
-.h01-cv-pdf:hover svg { color: inherit; }
-.h01-cv-pdf:hover svg { translate: none; }
+/* Pill button: the CV download and the home Contact me. */
+.h01-pill { flex-shrink: 0; padding: 8px 16px; border: 1px solid var(--h01-hair); border-radius: 999px; transition: background .15s ease, color .15s ease; }
+.h01-pill:hover { border-color: var(--h01-accent); background: var(--h01-accent); color: var(--primary-foreground, #fff); }
+.h01-pill:hover span { color: inherit; text-decoration: none; }
+.h01-pill:hover svg { color: inherit; translate: none; }
 .h01-cv .h01-intro + .h01-group { margin-top: 48px; padding-top: 48px; border-top: 1px solid var(--h01-hair); }
 /* Section labels sit 24px above their list, so they read as titles of the open rows below, not glued to the first one. */
 .h01-cv .h01-group > .h01-label { margin-bottom: 20px; }

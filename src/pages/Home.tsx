@@ -1,9 +1,10 @@
 import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react'
 import { Link } from 'react-router-dom'
-import { ArrowRight, ArrowUpRight, Send } from 'lucide-react'
+import { ArrowRight, ArrowUpRight, Download, Send } from 'lucide-react'
 import './home01.css'
 import ScreenWall from './ScreenWall'
 import SiteFooter from './SiteFooter'
+import { CV_PDF_URL } from '@/lib/cvPdf'
 
 const base = import.meta.env.BASE_URL
 
@@ -204,21 +205,21 @@ export default function Home() {
           Building something that doesn't feel right yet? <a href="mailto:amitka111@gmail.com">Let's talk.</a>
         </p>
 
-        <nav className="h01-icons" aria-label="Links">
-          <a href="mailto:amitka111@gmail.com" aria-label="Email">
-            <Send size={16} strokeWidth={1.5} aria-hidden />
+        <div className="h01-actions">
+          <a className="h01-link h01-pill" href="mailto:amitka111@gmail.com">
+            <span>Contact me</span> <Send size={16} strokeWidth={1.5} aria-hidden />
           </a>
-          <a href="https://www.linkedin.com/in/amitkaplinsky" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
-            <svg width="22" height="22" viewBox="0 0 22 22" fill="currentColor" aria-hidden="true">
-              <path fillRule="evenodd" d="M18.945 18.945L15.68 18.945 15.68 13.384C15.68 11.86 15.101 11.007 13.894 11.007 12.581 11.007 11.895 11.895 11.895 13.384L11.895 18.945 8.749 18.945 8.749 8.352 11.895 8.352 11.895 9.779C11.895 9.779 12.842 8.028 15.09 8.028 17.336 8.028 18.945 9.4 18.945 12.238L18.945 18.945ZM4.996 6.965C3.924 6.965 3.056 6.09 3.056 5.01 3.056 3.931 3.924 3.056 4.996 3.056 6.067 3.056 6.935 3.931 6.935 5.01 6.935 6.09 6.067 6.965 4.996 6.965ZM3.371 18.945L6.651 18.945 6.651 8.352 3.371 8.352 3.371 18.945Z" />
-            </svg>
+          <a className="h01-link h01-pill" href={CV_PDF_URL} download>
+            <span>Resume</span> <Download size={16} strokeWidth={1.5} aria-hidden />
           </a>
-          <a href="https://github.com/amit-kap" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <path d="M10 14.667v-2.667a3.2 3.2 0 0 0-0.667-2.333c2 0 4-1.333 4-3.667 0.053-0.833-0.18-1.653-0.666-2.333 0.187-0.767 0.187-1.567 0-2.334 0 0-0.667 0-2 1-1.760-0.333-3.573-0.333-5.334 0C4 1.333 3.333 1.333 3.333 1.333c-0.2 0.767-0.2 1.567 0 2.334A3.602 3.602 0 0 0 2.667 6c0 2.333 2 3.667 4 3.667-0.26 0.327-0.453 0.7-0.567 1.1-0.113 0.4-0.147 0.82-0.1 1.233v2.667" />
-              <path d="M6 12c-3.007 1.333-3.333-1.333-4.667-1.333" />
-            </svg>
-          </a>
+        </div>
+
+        <nav className="h01-social" aria-label="Links">
+          <a href="https://www.linkedin.com/in/amitkaplinsky" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+          <span aria-hidden="true">·</span>
+          <a href="https://x.com/Amitka111" target="_blank" rel="noopener noreferrer">X</a>
+          <span aria-hidden="true">·</span>
+          <a href="https://github.com/amit-kap" target="_blank" rel="noopener noreferrer">GitHub</a>
         </nav>
 
         <SiteFooter />

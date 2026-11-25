@@ -6,9 +6,8 @@ import './home01.css'
 import SiteFooter from './SiteFooter'
 import { getCV } from '@/lib/content'
 import { CornerMark } from './WorkParts'
+import { CV_PDF_URL } from '@/lib/cvPdf'
 
-const base = import.meta.env.BASE_URL
-const PDF = `${base}Amit Kaplinsky CV 10-2026.pdf`
 /* Workplaces with a work page on the site link to it from the company name. */
 const WORK_PAGES: Record<string, string> = { shift: '/work/shift', veriti: '/work/veriti', checkpoint: '/work/checkpoint' }
 
@@ -42,7 +41,7 @@ export default function CvPage() {
         {/* The name, with the PDF download at the right end of the same row. */}
         <div className="h01-cv-head" ref={head} data-stuck={stuck}>
           <h1 className="h01-title">{header.name}</h1>
-          <a className="h01-link h01-cv-pdf" href={PDF} download>
+          <a className="h01-link h01-pill h01-cv-pdf" href={CV_PDF_URL} download>
             <span>Download</span> <Download size={16} strokeWidth={1.5} aria-hidden />
           </a>
         </div>
