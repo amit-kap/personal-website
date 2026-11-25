@@ -69,6 +69,9 @@ const expImageModules = import.meta.glob<{ default: string }>([
 const defaultImageDimensions = { width: 1920, height: 1080 };
 
 const imageDimensionsByPath: Record<string, { width: number; height: number }> = {
+  '../content/writing/designing-for-the-supervisor/banner.png': { width: 2880, height: 720 },
+  '../content/writing/sailing-the-data-oceans/banner.png': { width: 2880, height: 720 },
+  '../content/writing/falling-down-the-rabbit-hole/banner.png': { width: 2880, height: 720 },
   '../content/experience/onyxia-cyber/03-frameworks.webp': { width: 1920, height: 930 },
   '../content/experience/onyxia-cyber/04-insights.webp': { width: 1920, height: 930 },
   '../content/experience/onyxia-cyber/05-p-hub.webp': { width: 1920, height: 930 },
@@ -124,6 +127,7 @@ export function getCV(): CV {
 
 const writingImageModules = import.meta.glob<{ default: string }>([
   '../content/writing/designing-for-the-supervisor/cover-v2.webp',
+  '../content/writing/designing-for-the-supervisor/banner.png',
   '../content/writing/designing-for-the-supervisor/vanta.webp',
   '../content/writing/designing-for-the-supervisor/drata.webp',
   '../content/writing/designing-for-the-supervisor/safe.webp',
@@ -133,12 +137,14 @@ const writingImageModules = import.meta.glob<{ default: string }>([
   '../content/writing/designing-for-the-supervisor/fleet-dashboard.webp',
   '../content/writing/designing-for-the-supervisor/channel-per-assessment.webp',
   '../content/writing/sailing-the-data-oceans/cover-v2.webp',
+  '../content/writing/sailing-the-data-oceans/banner.png',
   '../content/writing/sailing-the-data-oceans/outlook-layout.webp',
   '../content/writing/sailing-the-data-oceans/dropdown-row.webp',
   '../content/writing/sailing-the-data-oceans/picker-container.webp',
   '../content/writing/sailing-the-data-oceans/picker-2.webp',
   '../content/writing/sailing-the-data-oceans/search-results-picker.webp',
   '../content/writing/falling-down-the-rabbit-hole/cover-v3.webp',
+  '../content/writing/falling-down-the-rabbit-hole/banner.png',
   '../content/writing/falling-down-the-rabbit-hole/OtherVendors.webp',
   '../content/writing/falling-down-the-rabbit-hole/InitialConcept.webp',
   '../content/writing/falling-down-the-rabbit-hole/HomeTabConcepts.webp',
@@ -237,6 +243,7 @@ export interface CaseStudy {
   excerpt: string;                 // 1–2 sentence summary for blog cards and SEO
   featured: boolean;
   coverImage?: ContentImage;
+  bannerImage?: ContentImage;      // optional wide image above the title (front matter `banner:`)
   body: string;                    // markdown body (includes H1)
   bodyImages: Record<string, ContentImage>;
 }
@@ -256,7 +263,9 @@ function buildCaseStudies(): CaseStudy[] {
       if (key) coverImage = images[key];
     }
 
-    out.push({ ...parsed, coverImage, bodyImages: images });
+    const bannerImage = parsed.banner ? images[parsed.banner] : undefined;
+
+    out.push({ ...parsed, coverImage, bannerImage, bodyImages: images });
   }
   // Keep related stories alongside the product work they expand on.
   return out.sort((a, b) => {

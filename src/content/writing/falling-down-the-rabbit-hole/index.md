@@ -2,6 +2,7 @@
 work: checkpoint
 excerpt: How a Check Point team adapted an enterprise product process to ship WatchTower for iOS and Android.
 cover: cover-v3.webp
+banner: banner.png
 ---
 
 # Falling down the rabbit hole

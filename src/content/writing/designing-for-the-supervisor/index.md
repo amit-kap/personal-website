@@ -3,6 +3,7 @@ work: shift
 excerpt: How a market scan and product-strategy reframe turned third-party risk from an analyst workspace into a system for supervising AI agents.
 featured: true
 cover: cover-v2.webp
+banner: banner.png
 ---
 
 # Designing for the Supervisor

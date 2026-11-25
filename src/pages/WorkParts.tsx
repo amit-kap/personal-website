@@ -33,7 +33,7 @@ export function CornerMark() {
         <circle className="h01-ring" cx="32" cy="32" r="30" />
       </svg>
       <img src={`${base}home01/ak-logo.svg`} alt="" width={36} height={20} />
-      <ArrowLeft className="h01-corner-arrow" size={20} strokeWidth={2} aria-hidden />
+      <ArrowLeft className="h01-corner-arrow" size={20} strokeWidth={1.5} aria-hidden />
     </Link>
   )
 }
@@ -246,7 +246,7 @@ export function StoryPreview({ slug }: { slug: string }) {
         <span className="h01-name">{story.title}</span>
         <span className="h01-desc">{lead.replace(/\[([^\]]+)\]\([^)]+\)/g, '$1').replace(/[*_]/g, '')}</span>
         <span className="h01-readmore">
-          Read more <ArrowRight size={16} strokeWidth={2} aria-hidden />
+          Read more <ArrowRight size={16} strokeWidth={1.5} aria-hidden />
         </span>
       </Link>
     </section>

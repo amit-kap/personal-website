@@ -77,8 +77,8 @@ html[data-theme='dark']:has(.h01), html[data-theme='dark'] body:has(.h01) { back
 @media (min-width: 901px) { .h01-center:not(.h01-case) .h01-title .h01-line { white-space: nowrap; } }
 /* Home rhythm on the 8px grid: 48px from the header to the hero and between sections, 64px from the hero to the
    first section so the statement stands apart. Inside every section: 12px label to content, 16px between items. */
-.h01-center:not(.h01-case) .h01-title + .h01-group { margin-top: 64px; }
-.h01-center:not(.h01-case) .h01-group + .h01-group { margin-top: 48px; }
+.h01-center:not(.h01-case) .h01-title + .h01-group { margin-top: 48px; }
+.h01-center:not(.h01-case) .h01-group + .h01-group { margin-top: 32px; }
 .h01-title .h01-line { display: block; }
 
 /* The rotating word: one word at a time, a short fade and lift between them. */
@@ -130,6 +130,17 @@ html[data-theme='dark']:has(.h01), html[data-theme='dark'] body:has(.h01) { back
 .h01-group + .h01-group { margin-top: 40px; }
 /* Section labels read as small caps headings, so they never look like the grey line under each item. */
 .h01-label { margin-bottom: 8px; color: var(--h01-caption); font-size: 12px; line-height: 16px; letter-spacing: .06em; text-transform: uppercase; }
+/* A home section label is also its open / close button: + when closed, − when open. The body folds by its grid row. */
+.h01-fold-toggle { display: inline-flex; align-items: center; gap: 6px; padding: 0; border: 0; background: none; font-family: inherit; cursor: pointer; }
+.h01-fold-toggle svg { flex-shrink: 0; transition: color .15s ease; }
+.h01-fold-toggle:hover, .h01-fold-toggle:hover svg { color: var(--h01-accent); }
+.h01-fold { display: grid; grid-template-rows: 1fr; align-self: stretch; transition: grid-template-rows .25s ease, opacity .25s ease; }
+.h01-fold-inner { min-height: 0; overflow: hidden; }
+.h01-group[data-settled='true'] .h01-fold-inner { overflow: visible; }
+.h01-group[data-open='false'] .h01-fold { grid-template-rows: 0fr; opacity: 0; }
+.h01-group[data-open='false'] { gap: 0; }
+.h01-group[data-open='false'] .h01-label { margin-bottom: 0; }
+@media (prefers-reduced-motion: reduce) { .h01-fold { transition: none; } }
 /* Each item is its name (with the arrow) and a grey line under it, like the name and role at the top. */
 .h01-items { display: flex; flex-direction: column; gap: 16px; margin: 0; padding: 0; list-style: none; }
 .h01-items li { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
@@ -153,9 +164,11 @@ html[data-theme='dark']:has(.h01), html[data-theme='dark'] body:has(.h01) { back
 .h01-closing { margin-top: 16px; max-width: 431px; font-size: var(--h01-title); line-height: 34px; font-weight: 400; }
 .h01-closing a { font-weight: 600; text-decoration: none; }
 
-.h01-icons { margin-top: 48px; display: flex; align-items: center; gap: 24px; }
-.h01-icons a { display: flex; color: var(--h01-text); }
-.h01-icons a:hover { color: var(--h01-accent); }
+.h01-actions { margin-top: 16px; display: flex; flex-wrap: wrap; gap: 12px; } /* 16px: the same gap as the status line to the closing line */
+/* Text links under the pills: LinkedIn · X · GitHub. */
+.h01-social { margin-top: 24px; display: flex; align-items: center; gap: 8px; color: var(--h01-label); }
+.h01-social a { color: var(--h01-label); text-decoration: none; }
+.h01-social a:hover { color: var(--h01-accent); }
 
 /* Narrow screens: one column. */
 @media (max-width: 900px) {
@@ -330,6 +343,19 @@ html[data-theme='dark']:has(.h01), html[data-theme='dark'] body:has(.h01) { back
 .h01-ring { stroke: var(--h01-accent); stroke-dasharray: 188.5; stroke-dashoffset: calc(188.5 * (1 - var(--read, 0))); }
 /* Blog type: 18px body on a 32px line, section headings at 28px with wide space above, so the hierarchy reads at a glance. */
 .h01-article { width: 100%; font-size: 18px; line-height: 32px; }
+/* An optional banner (front matter `banner:`): it runs the full window width from the top, behind the title and
+   subtitle, which stay on the column and sit at its foot. The negative margin cancels the column's top padding. */
+.h01-case:has(.h01-hero) { overflow-x: clip; }
+.h01-article .h01-hero { position: relative; isolation: isolate; display: flex; flex-direction: column; justify-content: flex-end; min-height: max(25vw, 320px); margin: -128px 0 0; padding: 136px 0 40px; }
+.h01-article .h01-hero > .h01-banner { position: absolute; z-index: -2; top: 0; left: calc(50% - 50vw); width: 100vw; max-width: none; height: 100%; margin: 0; object-fit: cover; border-radius: 0; box-shadow: none; }
+/* A dark wash rising from the foot keeps the white text readable on any picture. */
+.h01-article .h01-hero::after { content: ""; position: absolute; z-index: -1; top: 0; bottom: 0; left: calc(50% - 50vw); width: 100vw; background: linear-gradient(to top, rgb(0 0 0 / .7), rgb(0 0 0 / .15) 70%); }
+.h01-article .h01-hero .h01-title { color: #fff; }
+.h01-article .h01-hero .h01-sub { color: rgb(255 255 255 / .8); }
+.h01-article .h01-hero .h01-meta { margin-bottom: 0; color: rgb(255 255 255 / .65); }
+.h01-article .h01-hero + * { margin-top: 40px; }
+@media (min-width: 1040px) { .h01-article .h01-hero { margin-top: -80px; } }
+@media (max-width: 720px) { .h01-article .h01-hero { margin-top: -96px; min-height: 280px; padding: 112px 0 24px; } }
 .h01-article .h01-title { margin-top: 0; font-size: 48px; line-height: 56px; font-weight: 600; letter-spacing: -.025em; text-wrap: balance; }
 .h01-article .h01-sub { margin-top: 12px; font-size: 22px; line-height: 32px; color: var(--h01-label); text-wrap: balance; }
 .h01-meta { margin-top: 24px; margin-bottom: 40px; font-size: 14px; line-height: 20px; color: var(--h01-caption); }
@@ -393,6 +419,30 @@ html[data-theme='dark'] .h01-article img { box-shadow: 0 0 0 1px var(--h01-hair)
   .h01-article table { font-size: 15px; line-height: 22px; }
   .h01-article td:first-child { white-space: normal; }
 }
+
+/* Case study text size switch: fixed under the AK mark, centred on it. The two A's show small and large. */
+.h01-size { position: fixed; z-index: 3; top: 42px; left: 96px; padding: 2px; border-radius: 10px; background: var(--h01-bg); }
+.h01-size button span { font-size: 12px; line-height: 1; }
+.h01-size button + button span { font-size: 17px; }
+/* Where the column clears the corner (as the title's higher start does), it sits in a row under the mark; narrower, beside it. */
+@media (min-width: 1040px) { .h01-size { top: 100px; left: 24px; } }
+@media (max-width: 720px) { .h01-size { top: 24px; left: 80px; } }
+/* The default size: the site's 14px text, with the headings stepped down to match the other pages. */
+.h01-article[data-size='small'] { font-size: 14px; line-height: 22px; }
+.h01-article[data-size='small'] .h01-title { font-size: var(--h01-title); line-height: 34px; letter-spacing: -.01em; }
+.h01-article[data-size='small'] .h01-sub { margin-top: 8px; font-size: 16px; line-height: 24px; }
+.h01-article[data-size='small'] p { margin-top: 16px; }
+.h01-article[data-size='small'] h3 { margin-top: 64px; font-size: 18px; line-height: 24px; letter-spacing: 0; }
+.h01-article[data-size='small'] h3 + p, .h01-article[data-size='small'] h3 + ul { margin-top: 12px; }
+.h01-article[data-size='small'] .h01-prose > .h01-tldr + p { margin-top: 32px; font-size: 16px; line-height: 26px; }
+.h01-article[data-size='small'] .h01-tldr { padding: 20px 24px; gap: 8px; }
+.h01-article[data-size='small'] .h01-stats strong { font-size: 36px; line-height: 40px; }
+.h01-article[data-size='small'] .h01-stats span { font-size: 14px; line-height: 20px; }
+.h01-article[data-size='small'] blockquote { margin-top: 56px; font-size: 20px; line-height: 28px; }
+.h01-article[data-size='small'] ul { margin-top: 16px; gap: 8px; }
+.h01-article[data-size='small'] table { font-size: 14px; line-height: 20px; }
+.h01-article[data-size='small'] figure { margin: 40px 0; }
+.h01-article[data-size='small'] figcaption { font-size: 12px; line-height: 16px; }
 
 /* Work pages (Shift): the case study's centered column with the home page's type. The live product sits under the title. */
 .h01-work .h01-title { margin-top: 0; text-wrap: balance; }
@@ -505,11 +555,11 @@ html[data-theme='dark'] .h01-app { box-shadow: 0 0 0 1px var(--h01-hair), 0 4px 
   .h01-cv-head { top: 23px; }
   .h01-cv-head[data-stuck='true']::before { top: -23px; }
 }
-.h01-cv-pdf { flex-shrink: 0; padding: 8px 16px; border: 1px solid var(--h01-hair); border-radius: 999px; transition: background .15s ease, color .15s ease; }
-.h01-cv-pdf:hover { border-color: var(--h01-accent); background: var(--h01-accent); color: var(--primary-foreground, #fff); }
-.h01-cv-pdf:hover span { color: inherit; text-decoration: none; }
-.h01-cv-pdf:hover svg { color: inherit; }
-.h01-cv-pdf:hover svg { translate: none; }
+/* Pill button: the CV download and the home Contact me. */
+.h01-pill { flex-shrink: 0; padding: 8px 16px; border: 1px solid var(--h01-hair); border-radius: 999px; transition: background .15s ease, color .15s ease; }
+.h01-pill:hover { border-color: var(--h01-accent); background: var(--h01-accent); color: var(--primary-foreground, #fff); }
+.h01-pill:hover span { color: inherit; text-decoration: none; }
+.h01-pill:hover svg { color: inherit; translate: none; }
 .h01-cv .h01-intro + .h01-group { margin-top: 48px; padding-top: 48px; border-top: 1px solid var(--h01-hair); }
 /* Section labels sit 24px above their list, so they read as titles of the open rows below, not glued to the first one. */
 .h01-cv .h01-group > .h01-label { margin-bottom: 20px; }

@@ -1,9 +1,10 @@
-import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react'
+import { useEffect, useId, useLayoutEffect, useRef, useState, type ReactNode } from 'react'
 import { Link } from 'react-router-dom'
-import { ArrowRight, ArrowUpRight, Send } from 'lucide-react'
+import { ArrowRight, ArrowUpRight, Download, Minus, Plus, Send } from 'lucide-react'
 import './home01.css'
 import ScreenWall from './ScreenWall'
 import SiteFooter from './SiteFooter'
+import { CV_PDF_URL } from '@/lib/cvPdf'
 
 const base = import.meta.env.BASE_URL
 
@@ -114,7 +115,38 @@ function Peek({ to, children }: { to: string; children: ReactNode }) {
 }
 
 function Arrow() {
-  return <ArrowUpRight size={16} strokeWidth={2} aria-hidden />
+  return <ArrowUpRight size={16} strokeWidth={1.5} aria-hidden />
+}
+
+/* A home section whose label toggles it open and closed; closed by default. */
+function Section({ label, children }: { label: string; children: ReactNode }) {
+  const [open, setOpen] = useState(false)
+  /* Clipped only while folding; once fully open, overflow shows so the side-project previews aren't cut off. */
+  const [settled, setSettled] = useState(false)
+  const id = useId()
+  const Icon = open ? Minus : Plus
+  const toggle = () => {
+    const next = !open
+    setOpen(next)
+    setSettled(next && window.matchMedia('(prefers-reduced-motion: reduce)').matches)
+  }
+  return (
+    <section className="h01-group" data-open={open} data-settled={settled}>
+      <button type="button" className="h01-label h01-fold-toggle" aria-expanded={open} aria-controls={id} onClick={toggle}>
+        <Icon size={12} strokeWidth={1.5} aria-hidden /> {label}
+      </button>
+      <div
+        className="h01-fold"
+        id={id}
+        inert={!open}
+        onTransitionEnd={(e) => {
+          if (e.target === e.currentTarget && e.propertyName === 'grid-template-rows' && open) setSettled(true)
+        }}
+      >
+        <div className="h01-fold-inner">{children}</div>
+      </div>
+    </section>
+  )
 }
 
 export default function Home() {
@@ -145,8 +177,7 @@ export default function Home() {
         </h1>
 
         {/* About, as the first section (Paper "home" frame): the companies are linked in the sentence. */}
-        <section className="h01-group">
-          <div className="h01-label">About</div>
+        <Section label="About">
           <div className="h01-bio">
             <p className="h01-para">
               I went from design school to advertising, then into cybersecurity, where I've spent the{' '}
@@ -157,22 +188,20 @@ export default function Home() {
               at <Link to="/work/veriti">Veriti</Link> and <Link to="/work/shift">Shift</Link>.
             </p>
           </div>
-        </section>
+        </Section>
 
-        <section className="h01-group">
-          <div className="h01-label">Latest case study</div>
+        <Section label="Latest case study">
           <ul className="h01-items">
             <li>
               <Link className="h01-link" to="/case-studies/designing-for-the-supervisor">
-                <span>Designing for the supervisor</span> <ArrowRight size={16} strokeWidth={2} aria-hidden />
+                <span>Designing for the supervisor</span> <ArrowRight size={16} strokeWidth={1.5} aria-hidden />
               </Link>
               <span className="h01-desc">How risk analysts oversee AI agents at Shift</span>
             </li>
           </ul>
-        </section>
+        </Section>
 
-        <section className="h01-group">
-          <div className="h01-label">Side projects</div>
+        <Section label="Side projects">
           {/* Each side project links to its live site. */}
           <ul className="h01-items">
             <li>
@@ -193,7 +222,7 @@ export default function Home() {
               <span className="h01-desc">Record player for your Apple Music library · Coming soon</span>
             </li>
           </ul>
-        </section>
+        </Section>
 
         <p className="h01-status">
           <span className="h01-dot" aria-hidden="true" />
@@ -204,21 +233,21 @@ export default function Home() {
           Building something that doesn't feel right yet? <a href="mailto:amitka111@gmail.com">Let's talk.</a>
         </p>
 
-        <nav className="h01-icons" aria-label="Links">
-          <a href="mailto:amitka111@gmail.com" aria-label="Email">
-            <Send size={16} strokeWidth={1.8} aria-hidden />
+        <div className="h01-actions">
+          <a className="h01-link h01-pill" href="mailto:amitka111@gmail.com">
+            <span>Contact me</span> <Send size={16} strokeWidth={1.5} aria-hidden />
           </a>
-          <a href="https://www.linkedin.com/in/amitkaplinsky" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
-            <svg width="22" height="22" viewBox="0 0 22 22" fill="currentColor" aria-hidden="true">
-              <path fillRule="evenodd" d="M18.945 18.945L15.68 18.945 15.68 13.384C15.68 11.86 15.101 11.007 13.894 11.007 12.581 11.007 11.895 11.895 11.895 13.384L11.895 18.945 8.749 18.945 8.749 8.352 11.895 8.352 11.895 9.779C11.895 9.779 12.842 8.028 15.09 8.028 17.336 8.028 18.945 9.4 18.945 12.238L18.945 18.945ZM4.996 6.965C3.924 6.965 3.056 6.09 3.056 5.01 3.056 3.931 3.924 3.056 4.996 3.056 6.067 3.056 6.935 3.931 6.935 5.01 6.935 6.09 6.067 6.965 4.996 6.965ZM3.371 18.945L6.651 18.945 6.651 8.352 3.371 8.352 3.371 18.945Z" />
-            </svg>
+          <a className="h01-link h01-pill" href={CV_PDF_URL} download>
+            <span>Resume</span> <Download size={16} strokeWidth={1.5} aria-hidden />
           </a>
-          <a href="https://github.com/amit-kap" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <path d="M10 14.667v-2.667a3.2 3.2 0 0 0-0.667-2.333c2 0 4-1.333 4-3.667 0.053-0.833-0.18-1.653-0.666-2.333 0.187-0.767 0.187-1.567 0-2.334 0 0-0.667 0-2 1-1.760-0.333-3.573-0.333-5.334 0C4 1.333 3.333 1.333 3.333 1.333c-0.2 0.767-0.2 1.567 0 2.334A3.602 3.602 0 0 0 2.667 6c0 2.333 2 3.667 4 3.667-0.26 0.327-0.453 0.7-0.567 1.1-0.113 0.4-0.147 0.82-0.1 1.233v2.667" />
-              <path d="M6 12c-3.007 1.333-3.333-1.333-4.667-1.333" />
-            </svg>
-          </a>
+        </div>
+
+        <nav className="h01-social" aria-label="Links">
+          <a href="https://www.linkedin.com/in/amitkaplinsky" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+          <span aria-hidden="true">·</span>
+          <a href="https://x.com/Amitka111" target="_blank" rel="noopener noreferrer">X</a>
+          <span aria-hidden="true">·</span>
+          <a href="https://github.com/amit-kap" target="_blank" rel="noopener noreferrer">GitHub</a>
         </nav>
 
         <SiteFooter />
