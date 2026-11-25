@@ -2,6 +2,7 @@
 work: veriti
 excerpt: How we designed a composable filter grammar for high-volume security insights inside an existing product.
 cover: cover-v2.webp
+banner: banner.png
 ---
 
 # Sailing the Data Oceans

@@ -202,6 +202,7 @@ export interface ParsedCaseStudy {
   excerpt: string
   featured: boolean
   cover?: string
+  banner?: string
   body: string
 }
 
@@ -210,7 +211,7 @@ export function parseCaseStudies(files: Record<string, string>): ParsedCaseStudy
   const out: ParsedCaseStudy[] = []
   for (const [slug, raw] of Object.entries(files)) {
     const { frontMatter, body } = stripFrontMatter(raw)
-    const fm = frontMatter as { work?: string; excerpt?: string; featured?: boolean; cover?: string }
+    const fm = frontMatter as { work?: string; excerpt?: string; featured?: boolean; cover?: string; banner?: string }
     if (!fm.work) continue
     const trimmed = body.trim()
     out.push({
@@ -220,6 +221,7 @@ export function parseCaseStudies(files: Record<string, string>): ParsedCaseStudy
       excerpt: fm.excerpt ?? '',
       featured: fm.featured === true,
       cover: fm.cover,
+      banner: fm.banner,
       body: trimmed,
     })
   }

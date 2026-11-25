@@ -60,6 +60,7 @@ export default function CaseStudy() {
 
   const sub = study.body.match(/^###\s+(.+)$/m)?.[1] ?? ''
   const minutes = Math.max(1, Math.round(study.body.split(/\s+/).length / 220))
+  const meta = `${workName(study.workSlug)} · ${minutes} min read`
   const body = study.body.replace(/^#\s+.+$/m, '').replace(/^###\s+.+$/m, '')
 
   return (
@@ -86,11 +87,21 @@ export default function CaseStudy() {
         </div>
 
         <article className="h01-article" data-size={size}>
-          <h1 className="h01-title">{study.title}</h1>
-          <p className="h01-sub">{sub}</p>
-          <p className="h01-meta">
-            {workName(study.workSlug)} · {minutes} min read
-          </p>
+          {/* With a banner, the title, subtitle and meta line sit on it; the image runs the full window width behind them. */}
+          {study.bannerImage ? (
+            <header className="h01-hero">
+              <img className="h01-banner" src={study.bannerImage.src} width={study.bannerImage.width} height={study.bannerImage.height} alt="" />
+              <h1 className="h01-title">{study.title}</h1>
+              <p className="h01-sub">{sub}</p>
+              <p className="h01-meta">{meta}</p>
+            </header>
+          ) : (
+            <>
+              <h1 className="h01-title">{study.title}</h1>
+              <p className="h01-sub">{sub}</p>
+              <p className="h01-meta">{meta}</p>
+            </>
+          )}
           <div className="h01-prose">
           <ReactMarkdown
             remarkPlugins={[remarkGfm]}

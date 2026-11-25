@@ -343,6 +343,19 @@ html[data-theme='dark']:has(.h01), html[data-theme='dark'] body:has(.h01) { back
 .h01-ring { stroke: var(--h01-accent); stroke-dasharray: 188.5; stroke-dashoffset: calc(188.5 * (1 - var(--read, 0))); }
 /* Blog type: 18px body on a 32px line, section headings at 28px with wide space above, so the hierarchy reads at a glance. */
 .h01-article { width: 100%; font-size: 18px; line-height: 32px; }
+/* An optional banner (front matter `banner:`): it runs the full window width from the top, behind the title and
+   subtitle, which stay on the column and sit at its foot. The negative margin cancels the column's top padding. */
+.h01-case:has(.h01-hero) { overflow-x: clip; }
+.h01-article .h01-hero { position: relative; isolation: isolate; display: flex; flex-direction: column; justify-content: flex-end; min-height: max(25vw, 320px); margin: -128px 0 0; padding: 136px 0 40px; }
+.h01-article .h01-hero > .h01-banner { position: absolute; z-index: -2; top: 0; left: calc(50% - 50vw); width: 100vw; max-width: none; height: 100%; margin: 0; object-fit: cover; border-radius: 0; box-shadow: none; }
+/* A dark wash rising from the foot keeps the white text readable on any picture. */
+.h01-article .h01-hero::after { content: ""; position: absolute; z-index: -1; top: 0; bottom: 0; left: calc(50% - 50vw); width: 100vw; background: linear-gradient(to top, rgb(0 0 0 / .7), rgb(0 0 0 / .15) 70%); }
+.h01-article .h01-hero .h01-title { color: #fff; }
+.h01-article .h01-hero .h01-sub { color: rgb(255 255 255 / .8); }
+.h01-article .h01-hero .h01-meta { margin-bottom: 0; color: rgb(255 255 255 / .65); }
+.h01-article .h01-hero + * { margin-top: 40px; }
+@media (min-width: 1040px) { .h01-article .h01-hero { margin-top: -80px; } }
+@media (max-width: 720px) { .h01-article .h01-hero { margin-top: -96px; min-height: 280px; padding: 112px 0 24px; } }
 .h01-article .h01-title { margin-top: 0; font-size: 48px; line-height: 56px; font-weight: 600; letter-spacing: -.025em; text-wrap: balance; }
 .h01-article .h01-sub { margin-top: 12px; font-size: 22px; line-height: 32px; color: var(--h01-label); text-wrap: balance; }
 .h01-meta { margin-top: 24px; margin-bottom: 40px; font-size: 14px; line-height: 20px; color: var(--h01-caption); }
