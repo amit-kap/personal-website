@@ -78,7 +78,7 @@ html[data-theme='dark']:has(.h01), html[data-theme='dark'] body:has(.h01) { back
 /* Home rhythm on the 8px grid: 48px from the header to the hero and between sections, 64px from the hero to the
    first section so the statement stands apart. Inside every section: 12px label to content, 16px between items. */
 .h01-center:not(.h01-case) .h01-title + .h01-group { margin-top: 48px; }
-.h01-center:not(.h01-case) .h01-group + .h01-group { margin-top: 48px; }
+.h01-center:not(.h01-case) .h01-group + .h01-group { margin-top: 32px; }
 .h01-title .h01-line { display: block; }
 
 /* The rotating word: one word at a time, a short fade and lift between them. */
@@ -130,6 +130,17 @@ html[data-theme='dark']:has(.h01), html[data-theme='dark'] body:has(.h01) { back
 .h01-group + .h01-group { margin-top: 40px; }
 /* Section labels read as small caps headings, so they never look like the grey line under each item. */
 .h01-label { margin-bottom: 8px; color: var(--h01-caption); font-size: 12px; line-height: 16px; letter-spacing: .06em; text-transform: uppercase; }
+/* A home section label is also its open / close button: + when closed, − when open. The body folds by its grid row. */
+.h01-fold-toggle { display: inline-flex; align-items: center; gap: 6px; padding: 0; border: 0; background: none; font-family: inherit; cursor: pointer; }
+.h01-fold-toggle svg { flex-shrink: 0; transition: color .15s ease; }
+.h01-fold-toggle:hover, .h01-fold-toggle:hover svg { color: var(--h01-accent); }
+.h01-fold { display: grid; grid-template-rows: 1fr; align-self: stretch; transition: grid-template-rows .25s ease, opacity .25s ease; }
+.h01-fold-inner { min-height: 0; overflow: hidden; }
+.h01-group[data-settled='true'] .h01-fold-inner { overflow: visible; }
+.h01-group[data-open='false'] .h01-fold { grid-template-rows: 0fr; opacity: 0; }
+.h01-group[data-open='false'] { gap: 0; }
+.h01-group[data-open='false'] .h01-label { margin-bottom: 0; }
+@media (prefers-reduced-motion: reduce) { .h01-fold { transition: none; } }
 /* Each item is its name (with the arrow) and a grey line under it, like the name and role at the top. */
 .h01-items { display: flex; flex-direction: column; gap: 16px; margin: 0; padding: 0; list-style: none; }
 .h01-items li { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }

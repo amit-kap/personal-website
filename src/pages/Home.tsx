@@ -1,6 +1,6 @@
-import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react'
+import { useEffect, useId, useLayoutEffect, useRef, useState, type ReactNode } from 'react'
 import { Link } from 'react-router-dom'
-import { ArrowRight, ArrowUpRight, Download, Send } from 'lucide-react'
+import { ArrowRight, ArrowUpRight, Download, Minus, Plus, Send } from 'lucide-react'
 import './home01.css'
 import ScreenWall from './ScreenWall'
 import SiteFooter from './SiteFooter'
@@ -118,6 +118,37 @@ function Arrow() {
   return <ArrowUpRight size={16} strokeWidth={1.5} aria-hidden />
 }
 
+/* A home section whose label toggles it open and closed; closed by default. */
+function Section({ label, children }: { label: string; children: ReactNode }) {
+  const [open, setOpen] = useState(false)
+  /* Clipped only while folding; once fully open, overflow shows so the side-project previews aren't cut off. */
+  const [settled, setSettled] = useState(false)
+  const id = useId()
+  const Icon = open ? Minus : Plus
+  const toggle = () => {
+    const next = !open
+    setOpen(next)
+    setSettled(next && window.matchMedia('(prefers-reduced-motion: reduce)').matches)
+  }
+  return (
+    <section className="h01-group" data-open={open} data-settled={settled}>
+      <button type="button" className="h01-label h01-fold-toggle" aria-expanded={open} aria-controls={id} onClick={toggle}>
+        <Icon size={12} strokeWidth={1.5} aria-hidden /> {label}
+      </button>
+      <div
+        className="h01-fold"
+        id={id}
+        inert={!open}
+        onTransitionEnd={(e) => {
+          if (e.target === e.currentTarget && e.propertyName === 'grid-template-rows' && open) setSettled(true)
+        }}
+      >
+        <div className="h01-fold-inner">{children}</div>
+      </div>
+    </section>
+  )
+}
+
 export default function Home() {
   const { text, word, holding } = useTypedWord()
 
@@ -146,8 +177,7 @@ export default function Home() {
         </h1>
 
         {/* About, as the first section (Paper "home" frame): the companies are linked in the sentence. */}
-        <section className="h01-group">
-          <div className="h01-label">About</div>
+        <Section label="About">
           <div className="h01-bio">
             <p className="h01-para">
               I went from design school to advertising, then into cybersecurity, where I've spent the{' '}
@@ -158,10 +188,9 @@ export default function Home() {
               at <Link to="/work/veriti">Veriti</Link> and <Link to="/work/shift">Shift</Link>.
             </p>
           </div>
-        </section>
+        </Section>
 
-        <section className="h01-group">
-          <div className="h01-label">Latest case study</div>
+        <Section label="Latest case study">
           <ul className="h01-items">
             <li>
               <Link className="h01-link" to="/case-studies/designing-for-the-supervisor">
@@ -170,10 +199,9 @@ export default function Home() {
               <span className="h01-desc">How risk analysts oversee AI agents at Shift</span>
             </li>
           </ul>
-        </section>
+        </Section>
 
-        <section className="h01-group">
-          <div className="h01-label">Side projects</div>
+        <Section label="Side projects">
           {/* Each side project links to its live site. */}
           <ul className="h01-items">
             <li>
@@ -194,7 +222,7 @@ export default function Home() {
               <span className="h01-desc">Record player for your Apple Music library · Coming soon</span>
             </li>
           </ul>
-        </section>
+        </Section>
 
         <p className="h01-status">
           <span className="h01-dot" aria-hidden="true" />
